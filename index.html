@@ -163,7 +163,31 @@
       background: #eef2ff;
       color: var(--primary);
     }
+/* Language toggle on login screen */
+.login-lang-toggle {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: background 0.2s;
+  padding: 0;
+}
 
+.login-lang-toggle:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.login-lang-toggle svg {
+  width: 28px;
+  height: 19px;
+}
     /* --- MAIN APP (hidden until logged in) --- */
     #app {
       display: none;
@@ -955,36 +979,59 @@
 
   <!-- ============ LOGIN SCREEN ============ -->
   <div id="login-screen">
-    <div class="login-box">
-      <div class="brand" style="justify-content:center;padding:0 0 30px 0;">
-        <div class="brand-mark">N</div>
-        <div>
-          <strong style="font-size:20px;color:#182033;">NOKJ Academy</strong>
-          <small style="color:#6b7280;font-size:13px;">Student Portal</small>
-        </div>
-      </div>
+  <!-- Language toggle on login screen -->
+  <button
+    id="login-lang-toggle"
+    type="button"
+    title="Change language"
+    aria-label="Change language"
+    class="login-lang-toggle"
+  >
+    <svg id="login-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
+      <rect width="60" height="40" fill="#012169"/>
+      <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
+      <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
+      <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
+      <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
+    </svg>
+    <svg id="login-flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
+      <rect width="60" height="13.33" fill="#FFFFFF"/>
+      <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
+      <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
+    </svg>
+  </button>
 
-      <h2>Welcome back</h2>
-      <p class="sub">Sign in to access your dashboard</p>
-
-      <form id="login-form" autocomplete="off">
-        <label for="login-email">Email address</label>
-        <input type="email" id="login-email" placeholder="student@nokj.com" value="student@nokj.com" />
-
-        <label for="login-password">Password</label>
-        <input type="password" id="login-password" placeholder="••••••••" value="password123" />
-
-        <button type="submit" class="login-btn">Sign in</button>
-        <div id="login-error" class="login-error"></div>
-      </form>
-
-      <div class="demo-hint">
-        <strong>Demo accounts:</strong><br />
-        Student: <code>student@nokj.com</code> / <code>password123</code><br />
-        Admin: <code>admin@nokj.com</code> / <code>admin123</code>
+  <div class="login-box">
+    <!-- rest of your login box content stays the same -->
+    <div class="brand" style="justify-content:center;padding:0 0 30px 0;">
+      <div class="brand-mark">N</div>
+      <div>
+        <strong style="font-size:20px;color:#182033;">NOKJ Academy</strong>
+        <small style="color:#6b7280;font-size:13px;">Student Portal</small>
       </div>
     </div>
+
+    <h2>Welcome back</h2>
+    <p class="sub">Sign in to access your dashboard</p>
+
+    <form id="login-form" autocomplete="off">
+      <label for="login-email">Email address</label>
+      <input type="email" id="login-email" placeholder="student@nokj.com" value="student@nokj.com" />
+
+      <label for="login-password">Password</label>
+      <input type="password" id="login-password" placeholder="••••••••" value="password123" />
+
+      <button type="submit" class="login-btn">Sign in</button>
+      <div id="login-error" class="login-error"></div>
+    </form>
+
+    <div class="demo-hint">
+      <strong>Demo accounts:</strong><br />
+      Student: <code>student@nokj.com</code> / <code>password123</code><br />
+      Admin: <code>admin@nokj.com</code> / <code>admin123</code>
+    </div>
   </div>
+</div>
 
   <!-- ============ MAIN APP ============ -->
   <div id="app">
@@ -1456,8 +1503,10 @@
       var pages = document.querySelectorAll('.page');
       var navButtons = document.querySelectorAll('[data-page]');
       var langToggle = document.getElementById('language-toggle');
-      var flagUK = document.getElementById('flag-uk');
-      var flagRU = document.getElementById('flag-ru');
+     var flagUK = document.getElementById('flag-uk');
+var flagRU = document.getElementById('flag-ru');
+var loginFlagUK = document.getElementById('login-flag-uk');
+var loginFlagRU = document.getElementById('login-flag-ru');
 
       // ----- Language -----
       var currentLang = localStorage.getItem('nokj-language') || 'en';

@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>NOKJ Academy</title>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --primary-light: #eef2ff;
+      --ink: #182033;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --bg: #f6f7fb;
+      --white: #ffffff;
+      --success: #059669;
+      --warning: #b45309;
+      --danger: #dc2626;
+      --radius: 18px;
+      --shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: Inter, Arial, Helvetica, sans-serif;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .sidebar {
+      width: 245px;
+      min-height: 100vh;
+      padding: 26px 15px;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      inset: 0 auto 0 0;
+      color: white;
+      background: linear-gradient(180deg, #312e81, #4f46e5 60%, #3730a3);
+    }
+
+    .brand {
+      padding: 0 12px 30px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      color: var(--primary-dark);
+      font-size: 18px;
+      font-weight: 900;
+      border-radius: 13px;
+      background: white;
+    }
+
+    .brand strong,
+    .brand small {
+      display: block;
+    }
+
+    .brand strong {
+      font-size: 16px;
+    }
+
+    .brand small {
+      margin-top: 2px;
+      color: #c7d2fe;
+      font-size: 11px;
+    }
+
+    .nav-label {
+      padding: 0 12px;
+      margin: 8px 0 9px;
+      color: #c7d2fe;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .nav-button {
+      width: 100%;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #e0e7ff;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: left;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+    }
+
+    .nav-button:hover,
+    .nav-button.active {
+      color: white;
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .nav-icon {
+      width: 20px;
+      font-size: 17px;
+      text-align: center;
+    }
+
+    .help-card {
+      padding: 15px;
+      margin: auto 8px 0;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .help-card strong,
+    .help-card span {
+      display: block;
+    }
+
+    .help-card strong {
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+
+    .help-card span {
+      color: #e0e7ff;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    main {
+      min-height: 100vh;
+      margin-left: 245px;
+    }
+
+    .topbar {
+      min-height: 76px;
+      padding: 15px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+    }
+
+    .search {
+      width: min(410px, 100%);
+      padding: 10px 13px;
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fafafa;
+    }
+
+    .search input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+    }
+
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .notification {
+      width: 40px;
+      height: 40px;
+      font-size: 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: white;
+    }
+
+    .avatar {
+      width: 39px;
+      height: 39px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 850;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f97316, #db2777);
+    }
+
+    .user-name strong,
+    .user-name span {
+      display: block;
+    }
+
+    .user-name strong {
+      font-size: 12px;
+    }
+
+    .user-name span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .page {
+      display: none;
+      max-width: 1380px;
+      padding: 35px 36px 100px;
+      margin: 0 auto;
+    }
+
+    .page.active {
+      display: block;
+      animation: appear 0.2s ease;
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .heading {
+      margin-bottom: 25px;
+    }
+
+    .heading h1 {
+      margin: 0;
+      font-size: clamp(25px, 4vw, 31px);
+      letter-spacing: -1px;
+    }
+
+    .heading p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .hero {
+      min-height: 190px;
+      padding: 28px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      overflow: hidden;
+      position: relative;
+      color: white;
+      border-radius: var(--radius);
+      background: linear-gradient(120deg, #3730a3, #4f46e5, #7c3aed);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      width: 260px;
+      height: 260px;
+      content: "";
+      position: absolute;
+      right: -95px;
+      top: -145px;
+      border: 30px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: #c7d2fe;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .hero h2 {
+      max-width: 610px;
+      margin: 0;
+      font-size: clamp(22px, 3vw, 30px);
+      letter-spacing: -0.7px;
+    }
+
+    .hero p:not(.eyebrow) {
+      margin: 10px 0 0;
+      color: #e0e7ff;
+      font-size: 13px;
+    }
+
+    .primary-button,
+    .secondary-button {
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 10px;
+    }
+
+    .primary-button {
+      color: white;
+      border: 0;
+      background: var(--primary);
+    }
+
+    .hero .primary-button {
+      min-width: 125px;
+      color: var(--primary-dark);
+      background: white;
+      z-index: 1;
+    }
+
+    .secondary-button {
+      color: var(--primary);
+      border: 1px solid #c7d2fe;
+      background: white;
+    }
+
+    .stats {
+      margin: 23px 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .stat-card,
+    .panel,
+    .course,
+    .assignment-card,
+    .announcement-card,
+    .profile-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.025);
+    }
+
+    .stat-card {
+      padding: 17px;
+    }
+
+    .stat-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .stat-head span:last-child {
+      width: 33px;
+      height: 33px;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      border-radius: 10px;
+      background: var(--primary-light);
+    }
+
+    .stat-number {
+      margin: 15px 0 4px;
+      font-size: 26px;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
+
+    .stat-note {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.45fr 0.85fr;
+      gap: 21px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 21px;
+    }
+
+    .panel {
+      padding: 20px;
+    }
+
+    .panel-title {
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .panel-title h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .link-button {
+      padding: 0;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
+      border: 0;
+      background: transparent;
+    }
+
+    .lesson-row,
+    .simple-row {
+      padding: 13px 0;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      border-top: 1px solid #f0f1f4;
+    }
+
+    .lesson-row:first-of-type,
+    .simple-row:first-of-type {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .time {
+      width: 44px;
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .color-bar {
+      width: 4px;
+      height: 38px;
+      border-radius: 5px;
+      background: #6366f1;
+    }
+
+    .orange { background: #f97316; }
+    .green { background: #10b981; }
+
+    .row-main {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .row-main strong,
+    .row-main span {
+      display: block;
+    }
+
+    .row-main strong {
+      overflow: hidden;
+      font-size: 13px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .row-main span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .pill {
+      padding: 5px 8px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+      border-radius: 8px;
+      background: #f3f4f6;
+    }
+
+    .pill.danger {
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+
+    .pill.warning {
+      color: #92400e;
+      background: #fef3c7;
+    }
+
+    .pill.success {
+      color: #047857;
+      background: #d1fae5;
+    }
+
+    .round-icon {
+      width: 39px;
+      height: 39px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      font-size: 17px;
+      border-radius: 12px;
+      background: #ede9fe;
+    }
+
+    .round-icon.yellow { background: #fef3c7; }
+    .round-icon.blue { background: #dbeafe; }
+
+    .progress-item + .progress-item {
+      margin-top: 17px;
+    }
+
+    .progress-top {
+      margin-bottom: 7px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .progress-top span:last-child {
+      color: var(--muted);
+    }
+
+    .track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #eef0f4;
+    }
+
+    .fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #4f46e5, #818cf8);
+    }
+
+    .section-actions {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 17px;
+    }
+
+    .course {
+      overflow: hidden;
+    }
+
+    .course-cover {
+      height: 110px;
+      padding: 18px;
+      display: flex;
+      align-items: flex-end;
+      color: white;
+      font-size: 20px;
+      font-weight: 850;
+      background: linear-gradient(135deg, #4f46e5, #818cf8);
+    }
+
+    .course-cover.orange-cover {
+      background: linear-gradient(135deg, #ea580c, #fb923c);
+    }
+
+    .course-cover.green-cover {
+      background: linear-gradient(135deg, #047857, #34d399);
+    }
+
+    .course-body {
+      padding: 17px;
+    }
+
+    .course-body h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .course-body p {
+      margin: 6px 0 15px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .course-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .assignment-list,
+    .announcement-list {
+      display: grid;
+      gap: 13px;
+    }
+
+    .assignment-card,
+    .announcement-card {
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .assignment-card h3,
+    .announcement-card h3 {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .assignment-card p,
+    .announcement-card p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .assignment-card .secondary-button {
+      margin-left: auto;
+    }
+
+    .announcement-card {
+      align-items: flex-start;
+    }
+
+    .profile-card {
+      max-width: 760px;
+      padding: 25px;
+    }
+
+    .profile-top {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .profile-top .avatar {
+      width: 64px;
+      height: 64px;
+      font-size: 19px;
+    }
+
+    .profile-top h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+
+    .profile-top p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .details {
+      margin-top: 24px;
+      padding-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 19px;
+      border-top: 1px solid var(--line);
+    }
+
+    .details small,
+    .details strong {
+      display: block;
+    }
+
+    .details small {
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .details strong {
+      font-size: 13px;
+    }
+
+    .mobile-nav {
+      display: none;
+    }
+
+    @media (max-width: 1030px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .course-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 790px) {
+      .sidebar {
+        display: none;
+      }
+
+      main {
+        margin-left: 0;
+      }
+
+      .topbar {
+        min-height: 64px;
+        padding: 12px 16px;
+      }
+
+      .search,
+      .user-name {
+        display: none;
+      }
+
+      .page {
+        padding: 25px 16px 90px;
+      }
+
+      .hero {
+        min-height: 210px;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mobile-nav {
+        padding: 7px 7px calc(7px + env(safe-area-inset-bottom));
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 20;
+        border-top: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(10px);
+      }
+
+      .mobile-nav .nav-button {
+        padding: 5px 1px;
+        display: grid;
+        justify-items: center;
+        gap: 3px;
+        color: var(--muted);
+        font-size: 9px;
+        text-align: center;
+        border-radius: 9px;
+      }
+
+      .mobile-nav .nav-button.active {
+        color: var(--primary);
+        background: var(--primary-light);
+      }
+
+      .mobile-nav .nav-icon {
+        font-size: 16px;
+      }
+
+      .mobile-nav .nav-button span:last-child {
+        display: block;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats {
+        gap: 10px;
+      }
+
+      .stat-card {
+        padding: 14px;
+      }
+
+      .stat-number {
+        font-size: 22px;
+      }
+
+      .panel {
+        padding: 17px;
+      }
+
+      .course-grid,
+      .details {
+        grid-template-columns: 1fr;
+      }
+
+      .assignment-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .assignment-card .secondary-button {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">N</div>
+      <div>
+        <strong>NOKJ Academy</strong>
+        <small>Student Portal</small>
+      </div>
+    </div>
+
+    <p class="nav-label">Menu</p>
+
+    <button class="nav-button active" data-page="dashboard">
+      <span class="nav-icon">⌂</span> Dashboard
+    </button>
+    <button class="nav-button" data-page="timetable">
+      <span class="nav-icon">▦</span> Timetable
+    </button>
+    <button class="nav-button" data-page="courses">
+      <span class="nav-icon">▣</span> My courses
+    </button>
+    <button class="nav-button" data-page="assignments">
+      <span class="nav-icon">✓</span> Assignments
+    </button>
+    <button class="nav-button" data-page="announcements">
+      <span class="nav-icon">◉</span> Announcements
+    </button>
+
+    <p class="nav-label">Account</p>
+
+    <button class="nav-button" data-page="profile">
+      <span class="nav-icon">◌</span> My profile
+    </button>
+
+    <div class="help-card">
+      <strong>Need help?</strong>
+      <span>Contact the NOKJ Academy support team for assistance.</span>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <label class="search">
+        <span>⌕</span>
+        <input type="search" placeholder="Search courses, lessons or assignments" />
+      </label>
+
+      <div class="user-area">
+        <button class="notification" id="notification-button" aria-label="Notifications">🔔</button>
+        <span class="avatar">AS</span>
+        <span class="user-name">
+          <strong>Alex Student</strong>
+          <span>Year 10</span>
+        </span>
+      </div>
+    </header>
+
+    <section class="page active" id="dashboard">
+      <div class="heading">
+        <h1>Good afternoon, Alex 👋</h1>
+        <p>Here is everything you need to stay on track today.</p>
+      </div>
+
+      <div class="hero">
+        <div>
+          <p class="eyebrow">Thursday, 27 August</p>
+          <h2>Your next class is Mathematics at 15:30.</h2>
+          <p>Topic: Quadratic equations and graphical interpretation. Room B-12.</p>
+        </div>
+        <button class="primary-button" data-page="timetable">View timetable</button>
+      </div>
+
+      <div class="stats">
+        <article class="stat-card">
+          <div class="stat-head"><span>Lessons today</span><span>▦</span></div>
+          <div class="stat-number">3</div>
+          <div class="stat-note">1 lesson remaining</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-head"><span>Pending work</span><span>✓</span></div>
+          <div class="stat-number">4</div>
+          <div class="stat-note">2 due this week</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-head"><span>Average grade</span><span>★</span></div>
+          <div class="stat-number">86%</div>
+          <div class="stat-note">Up 4% this term</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-head"><span>Course progress</span><span>↗</span></div>
+          <div class="stat-number">72%</div>
+          <div class="stat-note">Across all courses</div>
+        </article>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="stack">
+          <article class="panel">
+            <div class="panel-title">
+              <h3>Today’s timetable</h3>
+              <button class="link-button" data-page="timetable">Full timetable</button>
+            </div>
+
+            <div class="lesson-row">
+              <span class="time">09:00</span>
+              <span class="color-bar"></span>
+              <div class="row-main">
+                <strong>English Literature</strong>
+                <span>Ms. Evans · Room A-04</span>
+              </div>
+              <span class="pill">Completed</span>
+            </div>
+
+            <div class="lesson-row">
+              <span class="time">12:00</span>
+              <span class="color-bar orange"></span>
+              <div class="row-main">
+                <strong>Biology</strong>
+                <span>Mr. Carter · Science Lab 2</span>
+              </div>
+              <span class="pill">Completed</span>
+            </div>
+
+            <div class="lesson-row">
+              <span class="time">15:30</span>
+              <span class="color-bar green"></span>
+              <div class="row-main">
+                <strong>Mathematics</strong>
+                <span>Dr. Wilson · Room B-12</span>
+              </div>
+              <span class="pill">Next</span>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-title">
+              <h3>Upcoming assignments</h3>
+              <button class="link-button" data-page="assignments">All assignments</button>
+            </div>
+
+            <div class="simple-row">
+              <span class="round-icon yellow">✎</span>
+              <div class="row-main">
+                <strong>Essay: Themes in Macbeth</strong>
+                <span>English Literature · Due tomorrow at 23:59</span>
+              </div>
+              <span class="pill danger">Due soon</span>
+            </div>
+
+            <div class="simple-row">
+              <span class="round-icon blue">∑</span>
+              <div class="row-main">
+                <strong>Algebra practice set</strong>
+                <span>Mathematics · Due 30 August</span>
+              </div>
+              <span class="pill warning">In progress</span>
+            </div>
+
+            <div class="simple-row">
+              <span class="round-icon">⌬</span>
+              <div class="row-main">
+                <strong>Cell structure quiz</strong>
+                <span>Biology · Due 2 September</span>
+              </div>
+              <span class="pill">Not started</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="stack">
+          <article class="panel">
+            <div class="panel-title">
+              <h3>Your progress</h3>
+              <button class="link-button" data-page="courses">My courses</button>
+            </div>
+
+            <div class="progress-item">
+              <div class="progress-top"><span>Mathematics</span><span>82%</span></div>
+              <div class="track"><div class="fill" style="width: 82%"></div></div>
+            </div>
+
+            <div class="progress-item">
+              <div class="progress-top"><span>English Literature</span><span>71%</span></div>
+              <div class="track"><div class="fill" style="width: 71%"></div></div>
+            </div>
+
+            <div class="progress-item">
+              <div class="progress-top"><span>Biology</span><span>64%</span></div>
+              <div class="track"><div class="fill" style="width: 64%"></div></div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-title">
+              <h3>Latest updates</h3>
+              <button class="link-button" data-page="announcements">See all</button>
+            </div>
+
+            <div class="simple-row">
+              <span class="round-icon">📌</span>
+              <div class="row-main">
+                <strong>Mid-term timetable published</strong>
+                <span>The assessment timetable is now available.</span>
+              </div>
+            </div>
+
+            <div class="simple-row">
+              <span class="round-icon yellow">📚</span>
+              <div class="row-main">
+                <strong>Extended library hours</strong>
+                <span>The library is open until 18:00 this week.</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="timetable">
+      <div class="heading">
+        <h1>My timetable</h1>
+        <p>Your weekly lesson schedule will appear here.</p>
+      </div>
+
+      <article class="panel">
+        <div class="panel-title">
+          <h3>Thursday, 27 August</h3>
+          <button class="secondary-button">Today</button>
+        </div>
+
+        <div class="lesson-row">
+          <span class="time">09:00</span>
+          <span class="color-bar"></span>
+          <div class="row-main">
+            <strong>English Literature</strong>
+            <span>Ms. Evans · Room A-04</span>
+          </div>
+          <span class="pill">Completed</span>
+        </div>
+
+        <div class="lesson-row">
+          <span class="time">12:00</span>
+          <span class="color-bar orange"></span>
+          <div class="row-main">
+            <strong>Biology</strong>
+            <span>Mr. Carter · Science Lab 2</span>
+          </div>
+          <span class="pill">Completed</span>
+        </div>
+
+        <div class="lesson-row">
+          <span class="time">15:30</span>
+          <span class="color-bar green"></span>
+          <div class="row-main">
+            <strong>Mathematics</strong>
+            <span>Dr. Wilson · Room B-12</span>
+          </div>
+          <span class="pill">Next</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="page" id="courses">
+      <div class="heading">
+        <h1>My courses</h1>
+        <p>Continue learning and track your progress in every course.</p>
+      </div>
+
+      <div class="course-grid">
+        <article class="course">
+          <div class="course-cover">Mathematics</div>
+          <div class="course-body">
+            <h3>Mathematics: Year 10</h3>
+            <p>Current topic: Quadratic equations</p>
+            <div class="track"><div class="fill" style="width: 82%"></div></div>
+            <div class="course-footer"><span>82% complete</span><button class="link-button">Open course</button></div>
+          </div>
+        </article>
+
+        <article class="course">
+          <div class="course-cover orange-cover">Biology</div>
+          <div class="course-body">
+            <h3>Biology: Year 10</h3>
+            <p>Current topic: Cells and organisms</p>
+            <div class="track"><div class="fill" style="width: 64%"></div></div>
+            <div class="course-footer"><span>64% complete</span><button class="link-button">Open course</button></div>
+          </div>
+        </article>
+
+        <article class="course">
+          <div class="course-cover green-cover">English</div>
+          <div class="course-body">
+            <h3>English Literature</h3>
+            <p>Current topic: Shakespeare’s Macbeth</p>
+            <div class="track"><div class="fill" style="width: 71%"></div></div>
+            <div class="course-footer"><span>71% complete</span><button class="link-button">Open course</button></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="page" id="assignments">
+      <div class="heading">
+        <h1>Assignments</h1>
+        <p>Keep track of your work, deadlines, and teacher feedback.</p>
+      </div>
+
+      <div class="assignment-list">
+        <article class="assignment-card">
+          <span class="round-icon yellow">✎</span>
+          <div class="row-main">
+            <h3>Essay: Themes in Macbeth</h3>
+            <p>English Literature · 800–1,000 words · Due 28 August at 23:59</p>
+          </div>
+          <span class="pill danger">Due soon</span>
+          <button class="secondary-button assignment-button">Open assignment</button>
+        </article>
+
+        <article class="assignment-card">
+          <span class="round-icon blue">∑</span>
+          <div class="row-main">
+            <h3>Algebra practice set</h3>
+            <p>Mathematics · Questions 1–25 · Due 30 August</p>
+          </div>
+          <span class="pill warning">In progress</span>
+          <button class="secondary-button assignment-button">Open assignment</button>
+        </article>
+
+        <article class="assignment-card">
+          <span class="round-icon">⌬</span>
+          <div class="row-main">
+            <h3>Cell structure quiz</h3>
+            <p>Biology · Online quiz · Due 2 September</p>
+          </div>
+          <span class="pill">Not started</span>
+          <button class="secondary-button assignment-button">Open assignment</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="page" id="announcements">
+      <div class="heading">
+        <h1>Announcements</h1>
+        <p>Important news and updates from NOKJ Academy.</p>
+      </div>
+
+      <div class="announcement-list">
+        <article class="announcement-card">
+          <span class="round-icon">📌</span>
+          <div>
+            <h3>Mid-term assessment timetable published</h3>
+            <p>The timetable for mid-term assessments is now available. Check your course pages and speak with your teacher if you have any questions.</p>
+            <p><strong>Posted today</strong></p>
+          </div>
+        </article>
+
+        <article class="announcement-card">
+          <span class="round-icon yellow">📚</span>
+          <div>
+            <h3>Extended library opening hours</h3>
+            <p>The school library will remain open until 18:00 from Monday to Thursday during assessment week.</p>
+            <p><strong>Posted yesterday</strong></p>
+          </div>
+        </article>
+
+        <article class="announcement-card">
+          <span class="round-icon blue">🏆</span>
+          <div>
+            <h3>Student science fair registration</h3>
+            <p>Registration for the annual student science fair is open until 5 September. Speak with your science teacher to take part.</p>
+            <p><strong>Posted 25 August</strong></p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="page" id="profile">
+      <div class="heading">
+        <h1>My profile</h1>
+        <p>View your student account information.</p>
+      </div>
+
+      <article class="profile-card">
+        <div class="profile-top">
+          <span class="avatar">AS</span>
+          <div>
+            <h2>Alex Student</h2>
+            <p>Year 10 student · NOKJ Academy</p>
+          </div>
+        </div>
+
+        <div class="details">
+          <div><small>Student ID</small><strong>NOKJ-2026-1048</strong></div>
+          <div><small>Email address</small><strong>alex.student@example.com</strong></div>
+          <div><small>Year group</small><strong>Year 10</strong></div>
+          <div><small>Academic year</small><strong>2026–2027</strong></div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <nav class="mobile-nav">
+    <button class="nav-button active" data-page="dashboard"><span class="nav-icon">⌂</span><span>Home</span></button>
+    <button class="nav-button" data-page="timetable"><span class="nav-icon">▦</span><span>Schedule</span></button>
+    <button class="nav-button" data-page="courses"><span class="nav-icon">▣</span><span>Courses</span></button>
+    <button class="nav-button" data-page="assignments"><span class="nav-icon">✓</span><span>Work</span></button>
+    <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span><span>Profile</span></button>
+  </nav>
+
+  <script>
+    const pages = document.querySelectorAll(".page");
+    const buttons = document.querySelectorAll("[data-page]");
+
+    function openPage(pageName) {
+      pages.forEach((page) => {
+        page.classList.toggle("active", page.id === pageName);
+      });
+
+      buttons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.page === pageName);
+      });
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => openPage(button.dataset.page));
+    });
+
+    document.getElementById("notification-button").addEventListener("click", () => {
+      alert("You have 2 new announcements and 1 assignment due tomorrow.");
+    });
+
+    document.querySelectorAll(".assignment-button").forEach((button) => {
+      button.addEventListener("click", () => {
+        alert("Assignment details and submissions will be added in the next development step.");
+      });
+    });
+  </script>
+</body>
+</html>

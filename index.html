@@ -1680,12 +1680,16 @@ var loginFlagRU = document.getElementById('login-flag-ru');
         document.title = (lang === 'ru') ? 'NOKJ Academy — Портал ученика' : 'NOKJ Academy';
 
         if (lang === 'ru') {
-          flagUK.style.display = 'none';
-          flagRU.style.display = 'block';
-        } else {
-          flagUK.style.display = 'block';
-          flagRU.style.display = 'none';
-        }
+  flagUK.style.display = 'none';
+  flagRU.style.display = 'block';
+  loginFlagUK.style.display = 'none';
+  loginFlagRU.style.display = 'block';
+} else {
+  flagUK.style.display = 'block';
+  flagRU.style.display = 'none';
+  loginFlagUK.style.display = 'block';
+  loginFlagRU.style.display = 'none';
+}
       }
 
       function setLanguage(lang) {
@@ -1796,7 +1800,11 @@ var loginFlagRU = document.getElementById('login-flag-ru');
       if (langToggle) {
         langToggle.addEventListener('click', toggleLanguage);
       }
-
+// Login screen language toggle
+var loginLangToggle = document.getElementById('login-lang-toggle');
+if (loginLangToggle) {
+  loginLangToggle.addEventListener('click', toggleLanguage);
+}
       // Notification bell
       var notifBtn = document.getElementById('notification-button');
       if (notifBtn) {

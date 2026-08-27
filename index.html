@@ -5,75 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#4f46e5" />
   <title>NOKJ Academy</title>
-.language-picker {
-  position: relative;
-}
-
-.language-button {
-  min-width: 62px;
-  height: 40px;
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  color: var(--ink);
-  font-size: 12px;
-  font-weight: 800;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: white;
-}
-
-.language-menu {
-  width: 142px;
-  padding: 6px;
-  display: none;
-  position: absolute;
-  top: 47px;
-  right: 0;
-  z-index: 30;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: white;
-  box-shadow: var(--shadow);
-}
-
-.language-menu.open {
-  display: block;
-}
-
-.language-option {
-  width: 100%;
-  padding: 10px;
-  display: flex;
-  gap: 9px;
-  align-items: center;
-  color: var(--ink);
-  font-size: 12px;
-  font-weight: 700;
-  text-align: left;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-}
-
-.language-option:hover,
-.language-option.active {
-  color: var(--primary-dark);
-  background: var(--primary-light);
-}
-
-@media (max-width: 790px) {
-  .language-button {
-    min-width: 55px;
-    height: 36px;
-  }
-
-  .language-menu {
-    top: 43px;
-  }
-}
+  
   <style>
     :root {
       --primary: #4f46e5;
@@ -934,22 +866,23 @@
       </label>
 
       <div class="user-area">
-        <div class="language-picker">
-  <button class="language-button" id="language-toggle" aria-label="Change language">
-    <span>🌐</span>
-    <span id="language-label">EN</span>
-  </button>
-
-  <div class="language-menu" id="language-menu">
-    <button class="language-option active" data-language="en">
-      <span>🇬🇧</span> English
-    </button>
-
-    <button class="language-option" data-language="ru">
-      <span>🇷🇺</span> Русский
-    </button>
-  </div>
-</div>
+        <button
+  id="language-toggle"
+  type="button"
+  title="Change language"
+  aria-label="Change language"
+  style="
+    width: 42px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+  "
+>🇬🇧</button>
         <button class="notification" id="notification-button" aria-label="Notifications">🔔</button>
         <span class="avatar">AS</span>
         <span class="user-name">

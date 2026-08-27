@@ -48,10 +48,36 @@
       min-height: 100vh;
       padding: 20px;
       background: linear-gradient(135deg, #312e81, #4f46e5, #7c3aed);
+      position: relative;
     }
 
     #login-screen.hidden {
       display: none;
+    }
+
+    .login-lang-toggle {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      transition: background 0.2s;
+      padding: 0;
+    }
+
+    .login-lang-toggle:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .login-lang-toggle svg {
+      width: 28px;
+      height: 19px;
     }
 
     .login-box {
@@ -163,32 +189,8 @@
       background: #eef2ff;
       color: var(--primary);
     }
-/* Language toggle on login screen */
-.login-lang-toggle {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.15);
-  cursor: pointer;
-  transition: background 0.2s;
-  padding: 0;
-}
 
-.login-lang-toggle:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-.login-lang-toggle svg {
-  width: 28px;
-  height: 19px;
-}
-    /* --- MAIN APP (hidden until logged in) --- */
+    /* --- MAIN APP --- */
     #app {
       display: none;
     }
@@ -438,6 +440,213 @@
       font-size: 14px;
     }
 
+    /* --- ADMIN DASHBOARD STATS --- */
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .admin-stat-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+
+    .admin-stat-card .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .admin-stat-card .number {
+      margin-top: 8px;
+      font-size: 28px;
+      font-weight: 850;
+    }
+
+    .admin-stat-card .change {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--success);
+    }
+
+    /* --- TABLES --- */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+
+    .table-toolbar {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .table-toolbar .left {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .table-toolbar .right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .table-toolbar input[type="text"],
+    .table-toolbar select {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 13px;
+      background: white;
+    }
+
+    .table-toolbar input[type="text"]:focus,
+    .table-toolbar select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .add-btn {
+      padding: 8px 16px;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      border: 0;
+      border-radius: 8px;
+      background: var(--primary);
+    }
+
+    .add-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    table th {
+      padding: 14px 16px;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 2px solid var(--line);
+      background: #fafafa;
+    }
+
+    table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0f1f4;
+    }
+
+    table tr:hover td {
+      background: #fafafa;
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 6px;
+    }
+
+    .status-badge.active {
+      color: #047857;
+      background: #d1fae5;
+    }
+
+    .status-badge.warning {
+      color: #92400e;
+      background: #fef3c7;
+    }
+
+    .status-badge.inactive {
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+
+    .status-badge.paid {
+      color: #047857;
+      background: #d1fae5;
+    }
+
+    .status-badge.unpaid {
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+
+    .status-badge.pending {
+      color: #92400e;
+      background: #fef3c7;
+    }
+
+    .action-btn {
+      padding: 4px 10px;
+      font-size: 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      margin-right: 4px;
+    }
+
+    .action-btn.edit {
+      color: var(--primary);
+      border-color: #c7d2fe;
+    }
+
+    .action-btn.edit:hover {
+      background: var(--primary-light);
+    }
+
+    .action-btn.delete {
+      color: var(--danger);
+      border-color: #fecaca;
+    }
+
+    .action-btn.delete:hover {
+      background: #fee2e2;
+    }
+
+    .table-summary {
+      padding: 14px 20px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+      background: #fafafa;
+    }
+
+    .table-summary strong {
+      color: var(--primary);
+    }
+
+    .table-summary .total {
+      font-weight: 700;
+    }
+
+    .table-summary .total.income {
+      color: var(--success);
+    }
+
+    .table-summary .total.expense {
+      color: var(--danger);
+    }
+
+    /* --- HERO --- */
     .hero {
       min-height: 190px;
       padding: 28px;
@@ -868,13 +1077,106 @@
       font-size: 13px;
     }
 
+    /* --- MODAL --- */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      max-width: 500px;
+      width: 100%;
+      padding: 30px;
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal h2 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
+    }
+
+    .modal p.sub {
+      margin: 0 0 20px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .modal label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .modal input,
+    .modal select {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fafafa;
+    }
+
+    .modal input:focus,
+    .modal select:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: white;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+
+    .modal-actions button {
+      padding: 10px 20px;
+      font-weight: 700;
+      border: 0;
+      border-radius: 8px;
+    }
+
+    .modal-actions .cancel-btn {
+      color: var(--muted);
+      background: #f3f4f6;
+    }
+
+    .modal-actions .cancel-btn:hover {
+      background: #e5e7eb;
+    }
+
+    .modal-actions .save-btn {
+      color: white;
+      background: var(--primary);
+    }
+
+    .modal-actions .save-btn:hover {
+      background: var(--primary-dark);
+    }
+
     .mobile-nav {
       display: none;
     }
 
     /* --- RESPONSIVE --- */
     @media (max-width: 1030px) {
-      .stats {
+      .stats, .admin-stats {
         grid-template-columns: repeat(2, 1fr);
       }
       .course-grid {
@@ -941,10 +1243,21 @@
       .mobile-nav .nav-button span:last-child {
         display: block;
       }
+      .table-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .table-toolbar .left,
+      .table-toolbar .right {
+        flex-wrap: wrap;
+      }
+      .admin-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
     @media (max-width: 480px) {
-      .stats {
+      .stats, .admin-stats {
         gap: 10px;
       }
       .stat-card {
@@ -971,6 +1284,16 @@
       .login-box {
         padding: 28px 20px;
       }
+      .modal {
+        padding: 20px;
+      }
+      table {
+        font-size: 12px;
+      }
+      table th,
+      table td {
+        padding: 8px 10px;
+      }
     }
   </style>
 </head>
@@ -979,59 +1302,58 @@
 
   <!-- ============ LOGIN SCREEN ============ -->
   <div id="login-screen">
-  <!-- Language toggle on login screen -->
-  <button
-    id="login-lang-toggle"
-    type="button"
-    title="Change language"
-    aria-label="Change language"
-    class="login-lang-toggle"
-  >
-    <svg id="login-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
-      <rect width="60" height="40" fill="#012169"/>
-      <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
-      <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
-      <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
-      <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
-    </svg>
-    <svg id="login-flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
-      <rect width="60" height="13.33" fill="#FFFFFF"/>
-      <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
-      <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
-    </svg>
-  </button>
+    <!-- Language toggle on login screen -->
+    <button
+      id="login-lang-toggle"
+      type="button"
+      title="Change language"
+      aria-label="Change language"
+      class="login-lang-toggle"
+    >
+      <svg id="login-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
+        <rect width="60" height="40" fill="#012169"/>
+        <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
+        <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
+        <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
+        <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
+      </svg>
+      <svg id="login-flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
+        <rect width="60" height="13.33" fill="#FFFFFF"/>
+        <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
+        <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
+      </svg>
+    </button>
 
-  <div class="login-box">
-    <!-- rest of your login box content stays the same -->
-    <div class="brand" style="justify-content:center;padding:0 0 30px 0;">
-      <div class="brand-mark">N</div>
-      <div>
-        <strong style="font-size:20px;color:#182033;">NOKJ Academy</strong>
-        <small style="color:#6b7280;font-size:13px;">Student Portal</small>
+    <div class="login-box">
+      <div class="brand" style="justify-content:center;padding:0 0 30px 0;">
+        <div class="brand-mark">N</div>
+        <div>
+          <strong style="font-size:20px;color:#182033;">NOKJ Academy</strong>
+          <small style="color:#6b7280;font-size:13px;">Student Portal</small>
+        </div>
+      </div>
+
+      <h2>Welcome back</h2>
+      <p class="sub">Sign in to access your dashboard</p>
+
+      <form id="login-form" autocomplete="off">
+        <label for="login-email">Email address</label>
+        <input type="email" id="login-email" placeholder="student@nokj.com" value="student@nokj.com" />
+
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" value="password123" />
+
+        <button type="submit" class="login-btn">Sign in</button>
+        <div id="login-error" class="login-error"></div>
+      </form>
+
+      <div class="demo-hint">
+        <strong>Demo accounts:</strong><br />
+        Student: <code>student@nokj.com</code> / <code>password123</code><br />
+        Admin: <code>admin@nokj.com</code> / <code>admin123</code>
       </div>
     </div>
-
-    <h2>Welcome back</h2>
-    <p class="sub">Sign in to access your dashboard</p>
-
-    <form id="login-form" autocomplete="off">
-      <label for="login-email">Email address</label>
-      <input type="email" id="login-email" placeholder="student@nokj.com" value="student@nokj.com" />
-
-      <label for="login-password">Password</label>
-      <input type="password" id="login-password" placeholder="••••••••" value="password123" />
-
-      <button type="submit" class="login-btn">Sign in</button>
-      <div id="login-error" class="login-error"></div>
-    </form>
-
-    <div class="demo-hint">
-      <strong>Demo accounts:</strong><br />
-      Student: <code>student@nokj.com</code> / <code>password123</code><br />
-      Admin: <code>admin@nokj.com</code> / <code>admin123</code>
-    </div>
   </div>
-</div>
 
   <!-- ============ MAIN APP ============ -->
   <div id="app">
@@ -1067,6 +1389,15 @@
 
       <button class="nav-button" data-page="profile">
         <span class="nav-icon">◌</span> My profile
+      </button>
+
+      <!-- Admin-only navigation -->
+      <p class="nav-label" id="admin-nav-label" style="display:none;">Management</p>
+      <button class="nav-button" data-page="students" id="admin-students-btn" style="display:none;">
+        <span class="nav-icon">👥</span> Students
+      </button>
+      <button class="nav-button" data-page="budget" id="admin-budget-btn" style="display:none;">
+        <span class="nav-icon">💰</span> Budget
       </button>
 
       <div class="help-card">
@@ -1130,6 +1461,32 @@
         <div class="heading">
           <h1 id="greeting">Good afternoon, Alex 👋</h1>
           <p>Here is everything you need to stay on track today.</p>
+        </div>
+
+        <!-- Admin Dashboard Stats (hidden for students) -->
+        <div id="admin-stats-container" style="display:none;">
+          <div class="admin-stats">
+            <div class="admin-stat-card">
+              <div class="label">Total Students</div>
+              <div class="number" id="total-students">0</div>
+              <div class="change">Active this term</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="label">Total Revenue</div>
+              <div class="number" id="total-revenue">$0</div>
+              <div class="change">This month</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="label">Total Expenses</div>
+              <div class="number" id="total-expenses">$0</div>
+              <div class="change">This month</div>
+            </div>
+            <div class="admin-stat-card">
+              <div class="label">Net Profit</div>
+              <div class="number" id="net-profit">$0</div>
+              <div class="change" id="net-profit-change">This month</div>
+            </div>
+          </div>
         </div>
 
         <div class="hero">
@@ -1447,6 +1804,105 @@
           </div>
         </article>
       </section>
+
+      <!-- ===== STUDENT RECORDS (Admin only) ===== -->
+      <section class="page" id="students">
+        <div class="heading">
+          <h1>Student Records</h1>
+          <p>Manage all student information, grades, and attendance.</p>
+        </div>
+
+        <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="primary-button" id="add-student-btn">+ Add Student</button>
+          <button class="secondary-button" id="export-students-btn">📥 Export CSV</button>
+        </div>
+
+        <div class="table-container">
+          <div class="table-toolbar">
+            <div class="left">
+              <input type="text" id="student-search" placeholder="Search students..." />
+              <select id="student-filter">
+                <option value="all">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Warning">Warning</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+            <div class="right">
+              <span id="student-count" style="font-size:13px;color:var(--muted);">0 students</span>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>Attendance</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="student-table-body">
+              <!-- Rows inserted by JavaScript -->
+            </tbody>
+          </table>
+          <div class="table-summary">
+            <span>Total Students: <strong id="student-total">0</strong></span>
+            <span>Average Grade: <strong id="student-avg-grade">0%</strong></span>
+            <span>Average Attendance: <strong id="student-avg-attendance">0%</strong></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== BUDGET (Admin only) ===== -->
+      <section class="page" id="budget">
+        <div class="heading">
+          <h1>Budget &amp; Finance</h1>
+          <p>Track income, expenses, and financial health of NOKJ Academy.</p>
+        </div>
+
+        <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="primary-button" id="add-budget-btn">+ Add Entry</button>
+          <button class="secondary-button" id="export-budget-btn">📥 Export CSV</button>
+        </div>
+
+        <div class="table-container">
+          <div class="table-toolbar">
+            <div class="left">
+              <input type="text" id="budget-search" placeholder="Search entries..." />
+              <select id="budget-filter">
+                <option value="all">All Types</option>
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
+              </select>
+            </div>
+            <div class="right">
+              <span id="budget-count" style="font-size:13px;color:var(--muted);">0 entries</span>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="budget-table-body">
+              <!-- Rows inserted by JavaScript -->
+            </tbody>
+          </table>
+          <div class="table-summary">
+            <span>Total Income: <strong class="total income" id="budget-total-income">$0</strong></span>
+            <span>Total Expenses: <strong class="total expense" id="budget-total-expense">$0</strong></span>
+            <span>Net: <strong class="total" id="budget-net">$0</strong></span>
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <nav class="mobile-nav">
@@ -1456,6 +1912,23 @@
       <button class="nav-button" data-page="assignments"><span class="nav-icon">✓</span><span>Work</span></button>
       <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span><span>Profile</span></button>
     </nav>
+  </div>
+
+  <!-- ============ MODAL ============ -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <h2 id="modal-title">Add Entry</h2>
+      <p class="sub" id="modal-sub">Fill in the details below.</p>
+      <form id="modal-form">
+        <div id="modal-fields">
+          <!-- Fields injected by JavaScript -->
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="modal-cancel">Cancel</button>
+          <button type="submit" class="save-btn" id="modal-save">Save</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- ============ JAVASCRIPT ============ -->
@@ -1482,36 +1955,114 @@
         }
       };
 
+      // ----- DEFAULT DATA -----
+      const DEFAULT_STUDENTS = [
+        { id: 1, name: 'Alex Student', grade: 86, attendance: 92, status: 'Active' },
+        { id: 2, name: 'Sarah Chen', grade: 91, attendance: 95, status: 'Active' },
+        { id: 3, name: 'Marcus Webb', grade: 73, attendance: 78, status: 'Warning' },
+        { id: 4, name: 'Emma Johnson', grade: 94, attendance: 98, status: 'Active' },
+        { id: 5, name: 'James Kim', grade: 65, attendance: 70, status: 'Warning' },
+        { id: 6, name: 'Lisa Patel', grade: 82, attendance: 85, status: 'Active' }
+      ];
+
+      const DEFAULT_BUDGET = [
+        { id: 1, category: 'Student Fees', type: 'Income', amount: 12000, date: '2026-08-01', status: 'Paid' },
+        { id: 2, category: 'Staff Salaries', type: 'Expense', amount: -8500, date: '2026-08-05', status: 'Paid' },
+        { id: 3, category: 'Lab Equipment', type: 'Expense', amount: -2300, date: '2026-08-10', status: 'Paid' },
+        { id: 4, category: 'Government Grant', type: 'Income', amount: 5000, date: '2026-08-15', status: 'Pending' },
+        { id: 5, category: 'Utilities', type: 'Expense', amount: -1200, date: '2026-08-20', status: 'Unpaid' },
+        { id: 6, category: 'Online Learning Platform', type: 'Expense', amount: -800, date: '2026-08-22', status: 'Paid' }
+      ];
+
+      // ----- Data Storage -----
+      let students = [];
+      let budgetEntries = [];
+      let nextStudentId = 1;
+      let nextBudgetId = 1;
+
       // ----- DOM refs -----
-      var loginScreen = document.getElementById('login-screen');
-      var app = document.getElementById('app');
-      var loginForm = document.getElementById('login-form');
-      var loginEmail = document.getElementById('login-email');
-      var loginPassword = document.getElementById('login-password');
-      var loginError = document.getElementById('login-error');
+      const loginScreen = document.getElementById('login-screen');
+      const app = document.getElementById('app');
+      const loginForm = document.getElementById('login-form');
+      const loginEmail = document.getElementById('login-email');
+      const loginPassword = document.getElementById('login-password');
+      const loginError = document.getElementById('login-error');
 
-      var userAvatar = document.getElementById('user-avatar');
-      var userDisplayName = document.getElementById('user-display-name');
-      var userRole = document.getElementById('user-role');
-      var profileAvatar = document.getElementById('profile-avatar');
-      var profileName = document.getElementById('profile-name');
-      var profileRoleText = document.getElementById('profile-role-text');
-      var profileEmail = document.getElementById('profile-email');
-      var greeting = document.getElementById('greeting');
-      var logoutBtn = document.getElementById('logout-btn');
+      const userAvatar = document.getElementById('user-avatar');
+      const userDisplayName = document.getElementById('user-display-name');
+      const userRole = document.getElementById('user-role');
+      const profileAvatar = document.getElementById('profile-avatar');
+      const profileName = document.getElementById('profile-name');
+      const profileRoleText = document.getElementById('profile-role-text');
+      const profileEmail = document.getElementById('profile-email');
+      const greeting = document.getElementById('greeting');
+      const logoutBtn = document.getElementById('logout-btn');
 
-      var pages = document.querySelectorAll('.page');
-      var navButtons = document.querySelectorAll('[data-page]');
-      var langToggle = document.getElementById('language-toggle');
-     var flagUK = document.getElementById('flag-uk');
-var flagRU = document.getElementById('flag-ru');
-var loginFlagUK = document.getElementById('login-flag-uk');
-var loginFlagRU = document.getElementById('login-flag-ru');
+      const pages = document.querySelectorAll('.page');
+      const navButtons = document.querySelectorAll('[data-page]');
+      const langToggle = document.getElementById('language-toggle');
+      const flagUK = document.getElementById('flag-uk');
+      const flagRU = document.getElementById('flag-ru');
+      const loginFlagUK = document.getElementById('login-flag-uk');
+      const loginFlagRU = document.getElementById('login-flag-ru');
+      const loginLangToggle = document.getElementById('login-lang-toggle');
+
+      // Admin elements
+      const adminNavLabel = document.getElementById('admin-nav-label');
+      const adminStudentsBtn = document.getElementById('admin-students-btn');
+      const adminBudgetBtn = document.getElementById('admin-budget-btn');
+      const adminStatsContainer = document.getElementById('admin-stats-container');
+
+      // Student table elements
+      const studentTableBody = document.getElementById('student-table-body');
+      const studentSearch = document.getElementById('student-search');
+      const studentFilter = document.getElementById('student-filter');
+      const studentCount = document.getElementById('student-count');
+      const studentTotal = document.getElementById('student-total');
+      const studentAvgGrade = document.getElementById('student-avg-grade');
+      const studentAvgAttendance = document.getElementById('student-avg-attendance');
+      const addStudentBtn = document.getElementById('add-student-btn');
+      const exportStudentsBtn = document.getElementById('export-students-btn');
+
+      // Budget table elements
+      const budgetTableBody = document.getElementById('budget-table-body');
+      const budgetSearch = document.getElementById('budget-search');
+      const budgetFilter = document.getElementById('budget-filter');
+      const budgetCount = document.getElementById('budget-count');
+      const budgetTotalIncome = document.getElementById('budget-total-income');
+      const budgetTotalExpense = document.getElementById('budget-total-expense');
+      const budgetNet = document.getElementById('budget-net');
+      const addBudgetBtn = document.getElementById('add-budget-btn');
+      const exportBudgetBtn = document.getElementById('export-budget-btn');
+
+      // Modal elements
+      const modalOverlay = document.getElementById('modal-overlay');
+      const modalTitle = document.getElementById('modal-title');
+      const modalSub = document.getElementById('modal-sub');
+      const modalForm = document.getElementById('modal-form');
+      const modalFields = document.getElementById('modal-fields');
+      const modalCancel = document.getElementById('modal-cancel');
+      const modalSave = document.getElementById('modal-save');
+
+      // Admin stats
+      const totalStudentsEl = document.getElementById('total-students');
+      const totalRevenueEl = document.getElementById('total-revenue');
+      const totalExpensesEl = document.getElementById('total-expenses');
+      const netProfitEl = document.getElementById('net-profit');
+      const netProfitChange = document.getElementById('net-profit-change');
+
+      // Current user
+      let currentUser = null;
+
+      // Modal state
+      let modalMode = 'add'; // 'add' or 'edit'
+      let modalType = 'student'; // 'student' or 'budget'
+      let editingId = null;
 
       // ----- Language -----
-      var currentLang = localStorage.getItem('nokj-language') || 'en';
+      let currentLang = localStorage.getItem('nokj-language') || 'en';
 
-      var translations = {
+      const translations = {
         'Student Portal': 'Портал ученика',
         'Menu': 'Меню',
         'Dashboard': 'Главная',
@@ -1607,15 +2158,94 @@ var loginFlagRU = document.getElementById('login-flag-ru');
         'Demo accounts:': 'Демо-аккаунты:',
         'Admin': 'Администратор',
         'Student': 'Ученик',
-        'Logout': 'Выйти'
+        'Logout': 'Выйти',
+        'Student Records': 'Список учеников',
+        'Manage all student information, grades, and attendance.': 'Управление информацией об учениках, оценках и посещаемости.',
+        'Add Student': 'Добавить ученика',
+        'Export CSV': 'Экспорт CSV',
+        'Search students...': 'Поиск учеников...',
+        'All Status': 'Все статусы',
+        'Active': 'Активен',
+        'Warning': 'Предупреждение',
+        'Inactive': 'Неактивен',
+        'Name': 'Имя',
+        'Grade': 'Оценка',
+        'Attendance': 'Посещаемость',
+        'Status': 'Статус',
+        'Actions': 'Действия',
+        'Total Students': 'Всего учеников',
+        'Average Grade': 'Средняя оценка',
+        'Budget & Finance': 'Бюджет и финансы',
+        'Track income, expenses, and financial health of NOKJ Academy.': 'Отслеживание доходов, расходов и финансового состояния NOKJ Academy.',
+        'Add Entry': 'Добавить запись',
+        'Search entries...': 'Поиск записей...',
+        'All Types': 'Все типы',
+        'Income': 'Доход',
+        'Expense': 'Расход',
+        'Category': 'Категория',
+        'Type': 'Тип',
+        'Amount': 'Сумма',
+        'Date': 'Дата',
+        'Total Income': 'Общий доход',
+        'Total Expenses': 'Общие расходы',
+        'Net': 'Баланс',
+        'Add Student Record': 'Добавить ученика',
+        'Edit Student Record': 'Редактировать ученика',
+        'Enter student details': 'Введите данные ученика',
+        'Add Budget Entry': 'Добавить запись в бюджет',
+        'Edit Budget Entry': 'Редактировать запись в бюджете',
+        'Enter budget details': 'Введите данные бюджета',
+        'Cancel': 'Отмена',
+        'Save': 'Сохранить'
       };
 
-      var originalText = new WeakMap();
-      var searchInput = document.querySelector('.search input');
-      var originalPlaceholder = '';
+      const originalText = new WeakMap();
+      const searchInput = document.querySelector('.search input');
+      let originalPlaceholder = '';
 
       if (searchInput) {
         originalPlaceholder = searchInput.placeholder;
+      }
+
+      // ----- Data Management -----
+      function loadData() {
+        const savedStudents = localStorage.getItem('nokj-students');
+        const savedBudget = localStorage.getItem('nokj-budget');
+        const savedStudentId = localStorage.getItem('nokj-next-student-id');
+        const savedBudgetId = localStorage.getItem('nokj-next-budget-id');
+
+        if (savedStudents) {
+          try {
+            students = JSON.parse(savedStudents);
+            nextStudentId = parseInt(savedStudentId) || Math.max(...students.map(s => s.id), 0) + 1;
+          } catch (e) {
+            students = DEFAULT_STUDENTS.slice();
+            nextStudentId = 7;
+          }
+        } else {
+          students = DEFAULT_STUDENTS.slice();
+          nextStudentId = 7;
+        }
+
+        if (savedBudget) {
+          try {
+            budgetEntries = JSON.parse(savedBudget);
+            nextBudgetId = parseInt(savedBudgetId) || Math.max(...budgetEntries.map(b => b.id), 0) + 1;
+          } catch (e) {
+            budgetEntries = DEFAULT_BUDGET.slice();
+            nextBudgetId = 7;
+          }
+        } else {
+          budgetEntries = DEFAULT_BUDGET.slice();
+          nextBudgetId = 7;
+        }
+      }
+
+      function saveData() {
+        localStorage.setItem('nokj-students', JSON.stringify(students));
+        localStorage.setItem('nokj-budget', JSON.stringify(budgetEntries));
+        localStorage.setItem('nokj-next-student-id', String(nextStudentId));
+        localStorage.setItem('nokj-next-budget-id', String(nextBudgetId));
       }
 
       // ----- Navigation -----
@@ -1631,14 +2261,14 @@ var loginFlagRU = document.getElementById('login-flag-ru');
 
       // ----- Translation -----
       function applyTranslation(lang) {
-        var walker = document.createTreeWalker(
+        const walker = document.createTreeWalker(
           document.body,
           NodeFilter.SHOW_TEXT,
           {
             acceptNode: function(node) {
-              var parent = node.parentElement;
+              const parent = node.parentElement;
               if (!parent) return NodeFilter.FILTER_REJECT;
-              var tag = parent.tagName;
+              const tag = parent.tagName;
               if (tag === 'SCRIPT' || tag === 'STYLE') return NodeFilter.FILTER_REJECT;
               if (node.nodeValue.trim() === '') return NodeFilter.FILTER_REJECT;
               return NodeFilter.FILTER_ACCEPT;
@@ -1646,8 +2276,8 @@ var loginFlagRU = document.getElementById('login-flag-ru');
           }
         );
 
-        var node;
-        var nodesToTranslate = [];
+        let node;
+        const nodesToTranslate = [];
         while ((node = walker.nextNode())) {
           nodesToTranslate.push(node);
         }
@@ -1656,10 +2286,10 @@ var loginFlagRU = document.getElementById('login-flag-ru');
           if (!originalText.has(textNode)) {
             originalText.set(textNode, textNode.nodeValue);
           }
-          var original = originalText.get(textNode);
-          var trimmed = original.trim();
-          var leading = original.match(/^\s*/)[0];
-          var trailing = original.match(/\s*$/)[0];
+          const original = originalText.get(textNode);
+          const trimmed = original.trim();
+          const leading = original.match(/^\s*/)[0];
+          const trailing = original.match(/\s*$/)[0];
 
           if (lang === 'ru' && translations[trimmed] !== undefined) {
             textNode.nodeValue = leading + translations[trimmed] + trailing;
@@ -1680,16 +2310,16 @@ var loginFlagRU = document.getElementById('login-flag-ru');
         document.title = (lang === 'ru') ? 'NOKJ Academy — Портал ученика' : 'NOKJ Academy';
 
         if (lang === 'ru') {
-  flagUK.style.display = 'none';
-  flagRU.style.display = 'block';
-  loginFlagUK.style.display = 'none';
-  loginFlagRU.style.display = 'block';
-} else {
-  flagUK.style.display = 'block';
-  flagRU.style.display = 'none';
-  loginFlagUK.style.display = 'block';
-  loginFlagRU.style.display = 'none';
-}
+          flagUK.style.display = 'none';
+          flagRU.style.display = 'block';
+          loginFlagUK.style.display = 'none';
+          loginFlagRU.style.display = 'block';
+        } else {
+          flagUK.style.display = 'block';
+          flagRU.style.display = 'none';
+          loginFlagUK.style.display = 'block';
+          loginFlagRU.style.display = 'none';
+        }
       }
 
       function setLanguage(lang) {
@@ -1699,15 +2329,308 @@ var loginFlagRU = document.getElementById('login-flag-ru');
       }
 
       function toggleLanguage() {
-        var nextLang = (currentLang === 'en') ? 'ru' : 'en';
+        const nextLang = (currentLang === 'en') ? 'ru' : 'en';
         setLanguage(nextLang);
+      }
+
+      // ----- Render Functions -----
+      function renderStudents() {
+        const search = studentSearch.value.toLowerCase();
+        const filter = studentFilter.value;
+
+        let filtered = students.filter(function(s) {
+          const matchesSearch = s.name.toLowerCase().includes(search);
+          const matchesFilter = filter === 'all' || s.status === filter;
+          return matchesSearch && matchesFilter;
+        });
+
+        // Sort by name
+        filtered.sort(function(a, b) {
+          return a.name.localeCompare(b.name);
+        });
+
+        studentTableBody.innerHTML = '';
+
+        filtered.forEach(function(s) {
+          const tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td><strong>' + s.name + '</strong></td>' +
+            '<td>' + s.grade + '%</td>' +
+            '<td>' + s.attendance + '%</td>' +
+            '<td><span class="status-badge ' + s.status.toLowerCase() + '">' + s.status + '</span></td>' +
+            '<td>' +
+              '<button class="action-btn edit" data-id="' + s.id + '" data-type="student">✏️</button>' +
+              '<button class="action-btn delete" data-id="' + s.id + '" data-type="student">🗑️</button>' +
+            '</td>';
+          studentTableBody.appendChild(tr);
+        });
+
+        // Update counts
+        const total = students.length;
+        studentCount.textContent = filtered.length + ' students';
+        studentTotal.textContent = total;
+
+        const avgGrade = total > 0 ? Math.round(students.reduce(function(sum, s) { return sum + s.grade; }, 0) / total) : 0;
+        const avgAttendance = total > 0 ? Math.round(students.reduce(function(sum, s) { return sum + s.attendance; }, 0) / total) : 0;
+        studentAvgGrade.textContent = avgGrade + '%';
+        studentAvgAttendance.textContent = avgAttendance + '%';
+
+        // Update admin stats
+        updateAdminStats();
+      }
+
+      function renderBudget() {
+        const search = budgetSearch.value.toLowerCase();
+        const filter = budgetFilter.value;
+
+        let filtered = budgetEntries.filter(function(b) {
+          const matchesSearch = b.category.toLowerCase().includes(search);
+          const matchesFilter = filter === 'all' || b.type === filter;
+          return matchesSearch && matchesFilter;
+        });
+
+        // Sort by date (newest first)
+        filtered.sort(function(a, b) {
+          return b.date.localeCompare(a.date);
+        });
+
+        budgetTableBody.innerHTML = '';
+
+        filtered.forEach(function(b) {
+          const tr = document.createElement('tr');
+          const isIncome = b.type === 'Income';
+          const amountDisplay = isIncome ? '+' + b.amount : '-' + Math.abs(b.amount);
+          const amountClass = isIncome ? 'income' : 'expense';
+          tr.innerHTML =
+            '<td><strong>' + b.category + '</strong></td>' +
+            '<td>' + b.type + '</td>' +
+            '<td class="' + amountClass + '" style="font-weight:700;">$' + amountDisplay + '</td>' +
+            '<td>' + b.date + '</td>' +
+            '<td><span class="status-badge ' + b.status.toLowerCase() + '">' + b.status + '</span></td>' +
+            '<td>' +
+              '<button class="action-btn edit" data-id="' + b.id + '" data-type="budget">✏️</button>' +
+              '<button class="action-btn delete" data-id="' + b.id + '" data-type="budget">🗑️</button>' +
+            '</td>';
+          budgetTableBody.appendChild(tr);
+        });
+
+        // Update counts
+        const total = budgetEntries.length;
+        budgetCount.textContent = filtered.length + ' entries';
+
+        const totalIncome = budgetEntries
+          .filter(function(b) { return b.type === 'Income'; })
+          .reduce(function(sum, b) { return sum + b.amount; }, 0);
+
+        const totalExpense = budgetEntries
+          .filter(function(b) { return b.type === 'Expense'; })
+          .reduce(function(sum, b) { return sum + Math.abs(b.amount); }, 0);
+
+        budgetTotalIncome.textContent = '$' + totalIncome.toLocaleString();
+        budgetTotalExpense.textContent = '$' + totalExpense.toLocaleString();
+        budgetNet.textContent = '$' + (totalIncome - totalExpense).toLocaleString();
+        budgetNet.style.color = (totalIncome - totalExpense) >= 0 ? 'var(--success)' : 'var(--danger)';
+
+        // Update admin stats
+        updateAdminStats();
+      }
+
+      function updateAdminStats() {
+        if (!currentUser || currentUser.role !== 'Admin') return;
+
+        const total = students.length;
+        totalStudentsEl.textContent = total;
+
+        const totalIncome = budgetEntries
+          .filter(function(b) { return b.type === 'Income'; })
+          .reduce(function(sum, b) { return sum + b.amount; }, 0);
+
+        const totalExpense = budgetEntries
+          .filter(function(b) { return b.type === 'Expense'; })
+          .reduce(function(sum, b) { return sum + Math.abs(b.amount); }, 0);
+
+        totalRevenueEl.textContent = '$' + totalIncome.toLocaleString();
+        totalExpensesEl.textContent = '$' + totalExpense.toLocaleString();
+
+        const net = totalIncome - totalExpense;
+        netProfitEl.textContent = '$' + net.toLocaleString();
+        netProfitEl.style.color = net >= 0 ? 'var(--success)' : 'var(--danger)';
+        netProfitChange.textContent = net >= 0 ? 'Profit' : 'Loss';
+        netProfitChange.style.color = net >= 0 ? 'var(--success)' : 'var(--danger)';
+      }
+
+      // ----- Modal Functions -----
+      function openModal(type, mode, data) {
+        modalType = type;
+        modalMode = mode;
+
+        if (mode === 'add') {
+          if (type === 'student') {
+            modalTitle.textContent = currentLang === 'ru' ? 'Добавить ученика' : 'Add Student';
+            modalSub.textContent = currentLang === 'ru' ? 'Введите данные ученика' : 'Enter student details';
+            modalFields.innerHTML =
+              '<label>Name</label><input type="text" id="modal-name" placeholder="Full name" />' +
+              '<label>Grade (%)</label><input type="number" id="modal-grade" placeholder="0-100" min="0" max="100" />' +
+              '<label>Attendance (%)</label><input type="number" id="modal-attendance" placeholder="0-100" min="0" max="100" />' +
+              '<label>Status</label><select id="modal-status"><option value="Active">Active</option><option value="Warning">Warning</option><option value="Inactive">Inactive</option></select>';
+            editingId = null;
+          } else {
+            modalTitle.textContent = currentLang === 'ru' ? 'Добавить запись в бюджет' : 'Add Budget Entry';
+            modalSub.textContent = currentLang === 'ru' ? 'Введите данные бюджета' : 'Enter budget details';
+            modalFields.innerHTML =
+              '<label>Category</label><input type="text" id="modal-category" placeholder="e.g. Student Fees" />' +
+              '<label>Type</label><select id="modal-type"><option value="Income">Income</option><option value="Expense">Expense</option></select>' +
+              '<label>Amount ($)</label><input type="number" id="modal-amount" placeholder="Enter amount" min="0" step="1" />' +
+              '<label>Date</label><input type="date" id="modal-date" />' +
+              '<label>Status</label><select id="modal-status"><option value="Paid">Paid</option><option value="Pending">Pending</option><option value="Unpaid">Unpaid</option></select>';
+            editingId = null;
+          }
+        } else {
+          // Edit mode
+          if (type === 'student') {
+            modalTitle.textContent = currentLang === 'ru' ? 'Редактировать ученика' : 'Edit Student Record';
+            modalSub.textContent = currentLang === 'ru' ? 'Введите данные ученика' : 'Enter student details';
+            const s = students.find(function(st) { return st.id === data.id; });
+            if (s) {
+              editingId = s.id;
+              modalFields.innerHTML =
+                '<label>Name</label><input type="text" id="modal-name" value="' + s.name + '" />' +
+                '<label>Grade (%)</label><input type="number" id="modal-grade" value="' + s.grade + '" min="0" max="100" />' +
+                '<label>Attendance (%)</label><input type="number" id="modal-attendance" value="' + s.attendance + '" min="0" max="100" />' +
+                '<label>Status</label><select id="modal-status"><option value="Active"' + (s.status === 'Active' ? ' selected' : '') + '>Active</option><option value="Warning"' + (s.status === 'Warning' ? ' selected' : '') + '>Warning</option><option value="Inactive"' + (s.status === 'Inactive' ? ' selected' : '') + '>Inactive</option></select>';
+            }
+          } else {
+            modalTitle.textContent = currentLang === 'ru' ? 'Редактировать запись в бюджете' : 'Edit Budget Entry';
+            modalSub.textContent = currentLang === 'ru' ? 'Введите данные бюджета' : 'Enter budget details';
+            const b = budgetEntries.find(function(bg) { return bg.id === data.id; });
+            if (b) {
+              editingId = b.id;
+              const isIncome = b.type === 'Income';
+              modalFields.innerHTML =
+                '<label>Category</label><input type="text" id="modal-category" value="' + b.category + '" />' +
+                '<label>Type</label><select id="modal-type"><option value="Income"' + (isIncome ? ' selected' : '') + '>Income</option><option value="Expense"' + (!isIncome ? ' selected' : '') + '>Expense</option></select>' +
+                '<label>Amount ($)</label><input type="number" id="modal-amount" value="' + Math.abs(b.amount) + '" min="0" step="1" />' +
+                '<label>Date</label><input type="date" id="modal-date" value="' + b.date + '" />' +
+                '<label>Status</label><select id="modal-status"><option value="Paid"' + (b.status === 'Paid' ? ' selected' : '') + '>Paid</option><option value="Pending"' + (b.status === 'Pending' ? ' selected' : '') + '>Pending</option><option value="Unpaid"' + (b.status === 'Unpaid' ? ' selected' : '') + '>Unpaid</option></select>';
+            }
+          }
+        }
+
+        modalOverlay.classList.add('open');
+      }
+
+      function closeModal() {
+        modalOverlay.classList.remove('open');
+        modalForm.reset();
+      }
+
+      function handleModalSubmit(e) {
+        e.preventDefault();
+
+        if (modalType === 'student') {
+          const name = document.getElementById('modal-name').value.trim();
+          const grade = parseFloat(document.getElementById('modal-grade').value);
+          const attendance = parseFloat(document.getElementById('modal-attendance').value);
+          const status = document.getElementById('modal-status').value;
+
+          if (!name || isNaN(grade) || isNaN(attendance)) {
+            alert(currentLang === 'ru' ? 'Пожалуйста, заполните все поля' : 'Please fill in all fields');
+            return;
+          }
+
+          if (modalMode === 'add') {
+            students.push({ id: nextStudentId++, name: name, grade: grade, attendance: attendance, status: status });
+          } else {
+            const index = students.findIndex(function(s) { return s.id === editingId; });
+            if (index !== -1) {
+              students[index] = { id: editingId, name: name, grade: grade, attendance: attendance, status: status };
+            }
+          }
+
+          saveData();
+          renderStudents();
+          closeModal();
+        } else {
+          const category = document.getElementById('modal-category').value.trim();
+          const type = document.getElementById('modal-type').value;
+          const amount = parseFloat(document.getElementById('modal-amount').value);
+          const date = document.getElementById('modal-date').value;
+          const status = document.getElementById('modal-status').value;
+
+          if (!category || isNaN(amount) || !date) {
+            alert(currentLang === 'ru' ? 'Пожалуйста, заполните все поля' : 'Please fill in all fields');
+            return;
+          }
+
+          const finalAmount = type === 'Income' ? amount : -amount;
+
+          if (modalMode === 'add') {
+            budgetEntries.push({ id: nextBudgetId++, category: category, type: type, amount: finalAmount, date: date, status: status });
+          } else {
+            const index = budgetEntries.findIndex(function(b) { return b.id === editingId; });
+            if (index !== -1) {
+              budgetEntries[index] = { id: editingId, category: category, type: type, amount: finalAmount, date: date, status: status };
+            }
+          }
+
+          saveData();
+          renderBudget();
+          closeModal();
+        }
+      }
+
+      function deleteEntry(type, id) {
+        const confirmMsg = currentLang === 'ru' ? 'Вы уверены, что хотите удалить эту запись?' : 'Are you sure you want to delete this entry?';
+        if (!confirm(confirmMsg)) return;
+
+        if (type === 'student') {
+          students = students.filter(function(s) { return s.id !== id; });
+          renderStudents();
+        } else {
+          budgetEntries = budgetEntries.filter(function(b) { return b.id !== id; });
+          renderBudget();
+        }
+        saveData();
+        updateAdminStats();
+      }
+
+      // ----- Export CSV -----
+      function exportCSV(data, headers, filename) {
+        let csv = headers.join(',') + '\n';
+        data.forEach(function(row) {
+          csv += row.join(',') + '\n';
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function exportStudentsCSV() {
+        const headers = ['Name', 'Grade', 'Attendance', 'Status'];
+        const data = students.map(function(s) {
+          return [s.name, s.grade + '%', s.attendance + '%', s.status];
+        });
+        exportCSV(data, headers, 'students.csv');
+      }
+
+      function exportBudgetCSV() {
+        const headers = ['Category', 'Type', 'Amount', 'Date', 'Status'];
+        const data = budgetEntries.map(function(b) {
+          const amountDisplay = b.type === 'Income' ? '+' + b.amount : '-' + Math.abs(b.amount);
+          return [b.category, b.type, '$' + amountDisplay, b.date, b.status];
+        });
+        exportCSV(data, headers, 'budget.csv');
       }
 
       // ----- Login -----
       function login(email, password) {
-        var user = DEMO_USERS[email];
+        const user = DEMO_USERS[email];
         if (user && user.password === password) {
-          // Save session
+          currentUser = user;
           localStorage.setItem('nokj-user', JSON.stringify({
             email: email,
             name: user.name,
@@ -1730,7 +2653,7 @@ var loginFlagRU = document.getElementById('login-flag-ru');
         app.classList.add('logged-in');
 
         // Update UI with user info
-        var initials = user.initials;
+        const initials = user.initials;
         userAvatar.textContent = initials;
         userAvatar.className = 'avatar' + (user.avatarClass ? ' ' + user.avatarClass : '');
         userDisplayName.textContent = user.name;
@@ -1743,9 +2666,25 @@ var loginFlagRU = document.getElementById('login-flag-ru');
         profileEmail.textContent = user.displayEmail;
 
         // Update greeting
-        var time = new Date().getHours();
-        var greetingText = (time < 12) ? 'Good morning' : (time < 17) ? 'Good afternoon' : 'Good evening';
+        const time = new Date().getHours();
+        let greetingText = (time < 12) ? 'Good morning' : (time < 17) ? 'Good afternoon' : 'Good evening';
         greeting.textContent = greetingText + ', ' + user.name + ' 👋';
+
+        // Show/hide admin features
+        if (user.role === 'Admin') {
+          adminNavLabel.style.display = 'block';
+          adminStudentsBtn.style.display = 'flex';
+          adminBudgetBtn.style.display = 'flex';
+          adminStatsContainer.style.display = 'block';
+          renderStudents();
+          renderBudget();
+          updateAdminStats();
+        } else {
+          adminNavLabel.style.display = 'none';
+          adminStudentsBtn.style.display = 'none';
+          adminBudgetBtn.style.display = 'none';
+          adminStatsContainer.style.display = 'none';
+        }
 
         // Re-apply language after login
         applyTranslation(currentLang);
@@ -1753,6 +2692,7 @@ var loginFlagRU = document.getElementById('login-flag-ru');
 
       function logout() {
         localStorage.removeItem('nokj-user');
+        currentUser = null;
         loginScreen.classList.remove('hidden');
         app.classList.remove('logged-in');
         loginPassword.value = '';
@@ -1761,11 +2701,12 @@ var loginFlagRU = document.getElementById('login-flag-ru');
       }
 
       function checkSession() {
-        var saved = localStorage.getItem('nokj-user');
+        const saved = localStorage.getItem('nokj-user');
         if (saved) {
           try {
-            var user = JSON.parse(saved);
+            const user = JSON.parse(saved);
             if (user && user.email && DEMO_USERS[user.email]) {
+              currentUser = user;
               showApp(user);
               return;
             }
@@ -1781,8 +2722,8 @@ var loginFlagRU = document.getElementById('login-flag-ru');
       // Login form
       loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        var email = loginEmail.value.trim();
-        var password = loginPassword.value.trim();
+        const email = loginEmail.value.trim();
+        const password = loginPassword.value.trim();
         login(email, password);
       });
 
@@ -1796,20 +2737,21 @@ var loginFlagRU = document.getElementById('login-flag-ru');
         });
       });
 
-      // Language toggle
+      // Language toggle (main app)
       if (langToggle) {
         langToggle.addEventListener('click', toggleLanguage);
       }
-// Login screen language toggle
-var loginLangToggle = document.getElementById('login-lang-toggle');
-if (loginLangToggle) {
-  loginLangToggle.addEventListener('click', toggleLanguage);
-}
+
+      // Language toggle (login screen)
+      if (loginLangToggle) {
+        loginLangToggle.addEventListener('click', toggleLanguage);
+      }
+
       // Notification bell
-      var notifBtn = document.getElementById('notification-button');
+      const notifBtn = document.getElementById('notification-button');
       if (notifBtn) {
         notifBtn.addEventListener('click', function() {
-          var msg = (currentLang === 'ru')
+          const msg = (currentLang === 'ru')
             ? 'У вас 2 новых объявления и 1 задание со сроком сдачи завтра.'
             : 'You have 2 new announcements and 1 assignment due tomorrow.';
           alert(msg);
@@ -1819,14 +2761,70 @@ if (loginLangToggle) {
       // Assignment buttons
       document.querySelectorAll('.assignment-button').forEach(function(btn) {
         btn.addEventListener('click', function() {
-          var msg = (currentLang === 'ru')
+          const msg = (currentLang === 'ru')
             ? 'Подробности задания и отправка файлов будут добавлены на следующем этапе.'
             : 'Assignment details and submissions will be added in the next development step.';
           alert(msg);
         });
       });
 
-      // Enter key on login form submits
+      // Student table events (delegation)
+      studentTableBody.addEventListener('click', function(e) {
+        const target = e.target.closest('button');
+        if (!target) return;
+        const id = parseInt(target.dataset.id);
+        const type = target.dataset.type;
+
+        if (target.classList.contains('delete')) {
+          deleteEntry(type, id);
+        } else if (target.classList.contains('edit')) {
+          const s = students.find(function(st) { return st.id === id; });
+          if (s) openModal('student', 'edit', s);
+        }
+      });
+
+      // Budget table events (delegation)
+      budgetTableBody.addEventListener('click', function(e) {
+        const target = e.target.closest('button');
+        if (!target) return;
+        const id = parseInt(target.dataset.id);
+        const type = target.dataset.type;
+
+        if (target.classList.contains('delete')) {
+          deleteEntry(type, id);
+        } else if (target.classList.contains('edit')) {
+          const b = budgetEntries.find(function(bg) { return bg.id === id; });
+          if (b) openModal('budget', 'edit', b);
+        }
+      });
+
+      // Add buttons
+      addStudentBtn.addEventListener('click', function() {
+        openModal('student', 'add');
+      });
+
+      addBudgetBtn.addEventListener('click', function() {
+        openModal('budget', 'add');
+      });
+
+      // Export buttons
+      exportStudentsBtn.addEventListener('click', exportStudentsCSV);
+      exportBudgetBtn.addEventListener('click', exportBudgetCSV);
+
+      // Search/filter
+      studentSearch.addEventListener('input', renderStudents);
+      studentFilter.addEventListener('change', renderStudents);
+      budgetSearch.addEventListener('input', renderBudget);
+      budgetFilter.addEventListener('change', renderBudget);
+
+      // Modal events
+      modalCancel.addEventListener('click', closeModal);
+      modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) closeModal();
+      });
+      modalForm.addEventListener('submit', handleModalSubmit);
+
+      // Enter key on password field submits login
       loginPassword.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
           loginForm.dispatchEvent(new Event('submit'));
@@ -1834,6 +2832,8 @@ if (loginLangToggle) {
       });
 
       // ----- Init -----
+      loadData();
+
       // Set initial language
       setLanguage(currentLang);
 

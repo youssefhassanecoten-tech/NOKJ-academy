@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#4f46e5" />
   <title>NOKJ Academy</title>
-  
+
   <style>
     :root {
       --primary: #4f46e5;
@@ -866,23 +866,40 @@
       </label>
 
       <div class="user-area">
+        <!-- Language toggle button: shows UK or Russian flag as inline SVG -->
         <button
-  id="language-toggle"
-  type="button"
-  title="Change language"
-  aria-label="Change language"
-  style="
-    width: 42px;
-    height: 40px;
-    display: grid;
-    place-items: center;
-    font-size: 20px;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    background: white;
-    cursor: pointer;
-  "
->🇬🇧</button>
+          id="language-toggle"
+          type="button"
+          title="Change language"
+          aria-label="Change language"
+          style="
+            width: 42px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            padding: 0;
+          "
+        >
+          <!-- UK flag SVG (default) -->
+          <svg id="flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
+            <rect width="60" height="40" fill="#012169"/>
+            <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
+            <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
+            <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
+            <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
+          </svg>
+          <!-- Russian flag SVG (hidden by default) -->
+          <svg id="flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
+            <rect width="60" height="13.33" fill="#FFFFFF"/>
+            <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
+            <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
+          </svg>
+        </button>
+
         <button class="notification" id="notification-button" aria-label="Notifications">🔔</button>
         <span class="avatar">AS</span>
         <span class="user-name">
@@ -1248,230 +1265,243 @@
   </nav>
 
   <script>
-   <script>
-  const pages = document.querySelectorAll(".page");
-  const navigationButtons = document.querySelectorAll("[data-page]");
-  const languageToggle = document.getElementById("language-toggle");
-  const languageMenu = document.getElementById("language-menu");
-  const languageLabel = document.getElementById("language-label");
-  const languageOptions = document.querySelectorAll("[data-language]");
-  const originalText = new WeakMap();
-  const originalPlaceholders = new WeakMap();
+    (function() {
+      // ----- DOM references -----
+      const pages = document.querySelectorAll(".page");
+      const navButtons = document.querySelectorAll("[data-page]");
+      const langToggle = document.getElementById("language-toggle");
+      const flagUK = document.getElementById("flag-uk");
+      const flagRU = document.getElementById("flag-ru");
 
-  let currentLanguage = localStorage.getItem("nokj-language") || "en";
+      // ----- Language state -----
+      let currentLang = localStorage.getItem("nokj-language") || "en";
 
-  const translations = {
-    "Student Portal": "Портал ученика",
-    "Menu": "Меню",
-    "Dashboard": "Главная",
-    "Timetable": "Расписание",
-    "My courses": "Мои курсы",
-    "Assignments": "Задания",
-    "Announcements": "Объявления",
-    "Account": "Аккаунт",
-    "My profile": "Мой профиль",
-    "Need help?": "Нужна помощь?",
-    "Contact the NOKJ Academy support team for assistance.": "Свяжитесь со службой поддержки NOKJ Academy.",
-    "Alex Student": "Алекс Студент",
-    "Year 10": "10 класс",
-    "Good afternoon, Alex 👋": "Добрый день, Алекс 👋",
-    "Here is everything you need to stay on track today.": "Здесь всё, что нужно, чтобы быть в курсе дел сегодня.",
-    "Thursday, 27 August": "Четверг, 27 августа",
-    "Your next class is Mathematics at 15:30.": "Ваш следующий урок — математика в 15:30.",
-    "Topic: Quadratic equations and graphical interpretation. Room B-12.": "Тема: квадратные уравнения и графическая интерпретация. Кабинет B-12.",
-    "View timetable": "Посмотреть расписание",
-    "Lessons today": "Уроков сегодня",
-    "1 lesson remaining": "Остался 1 урок",
-    "Pending work": "Незавершённые задания",
-    "2 due this week": "2 задания на этой неделе",
-    "Average grade": "Средняя оценка",
-    "Up 4% this term": "На 4% выше в этом семестре",
-    "Course progress": "Прогресс по курсам",
-    "Across all courses": "По всем курсам",
-    "Today’s timetable": "Расписание на сегодня",
-    "Full timetable": "Полное расписание",
-    "English Literature": "Английская литература",
-    "Ms. Evans · Room A-04": "Мисс Эванс · Кабинет A-04",
-    "Completed": "Завершено",
-    "Biology": "Биология",
-    "Mr. Carter · Science Lab 2": "Мистер Картер · Лаборатория 2",
-    "Mathematics": "Математика",
-    "Dr. Wilson · Room B-12": "Доктор Уилсон · Кабинет B-12",
-    "Next": "Далее",
-    "Upcoming assignments": "Ближайшие задания",
-    "All assignments": "Все задания",
-    "Essay: Themes in Macbeth": "Эссе: темы в «Макбете»",
-    "English Literature · Due tomorrow at 23:59": "Английская литература · Срок: завтра в 23:59",
-    "Due soon": "Скоро срок",
-    "Algebra practice set": "Практика по алгебре",
-    "Mathematics · Due 30 August": "Математика · Срок: 30 августа",
-    "In progress": "В процессе",
-    "Cell structure quiz": "Тест: строение клетки",
-    "Biology · Due 2 September": "Биология · Срок: 2 сентября",
-    "Not started": "Не начато",
-    "Your progress": "Ваш прогресс",
-    "Mathematics: Year 10": "Математика: 10 класс",
-    "Current topic: Quadratic equations": "Текущая тема: квадратные уравнения",
-    "82% complete": "82% выполнено",
-    "Open course": "Открыть курс",
-    "Biology: Year 10": "Биология: 10 класс",
-    "Current topic: Cells and organisms": "Текущая тема: клетки и организмы",
-    "64% complete": "64% выполнено",
-    "Current topic: Shakespeare’s Macbeth": "Текущая тема: «Макбет» Шекспира",
-    "71% complete": "71% выполнено",
-    "My timetable": "Моё расписание",
-    "Your weekly lesson schedule will appear here.": "Здесь появится ваше расписание уроков на неделю.",
-    "Today": "Сегодня",
-    "Keep track of your work, deadlines, and teacher feedback.": "Следите за заданиями, сроками и отзывами преподавателей.",
-    "English Literature · 800–1,000 words · Due 28 August at 23:59": "Английская литература · 800–1 000 слов · Срок: 28 августа, 23:59",
-    "Open assignment": "Открыть задание",
-    "Mathematics · Questions 1–25 · Due 30 August": "Математика · Задания 1–25 · Срок: 30 августа",
-    "Biology · Online quiz · Due 2 September": "Биология · Онлайн-тест · Срок: 2 сентября",
-    "Important news and updates from NOKJ Academy.": "Важные новости и обновления от NOKJ Academy.",
-    "Mid-term assessment timetable published": "Опубликовано расписание промежуточных оценок",
-    "The timetable for mid-term assessments is now available. Check your course pages and speak with your teacher if you have any questions.": "Расписание промежуточных оценок уже доступно. Проверьте страницы курсов и обратитесь к преподавателю, если у вас есть вопросы.",
-    "Posted today": "Опубликовано сегодня",
-    "Extended library opening hours": "Продлённые часы работы библиотеки",
-    "The school library will remain open until 18:00 from Monday to Thursday during assessment week.": "Школьная библиотека будет открыта до 18:00 с понедельника по четверг во время недели оценивания.",
-    "Posted yesterday": "Опубликовано вчера",
-    "Student science fair registration": "Регистрация на школьную научную ярмарку",
-    "Registration for the annual student science fair is open until 5 September. Speak with your science teacher to take part.": "Регистрация на ежегодную школьную научную ярмарку открыта до 5 сентября. Обратитесь к учителю естественных наук, чтобы принять участие.",
-    "Posted 25 August": "Опубликовано 25 августа",
-    "View your student account information.": "Просмотр информации о вашей учётной записи.",
-    "Year 10 student · NOKJ Academy": "Ученик 10 класса · NOKJ Academy",
-    "Student ID": "Номер ученика",
-    "Email address": "Адрес электронной почты",
-    "Year group": "Класс",
-    "Academic year": "Учебный год",
-    "Home": "Главная",
-    "Schedule": "Расписание",
-    "Courses": "Курсы",
-    "Work": "Задания",
-    "Profile": "Профиль"
-  };
+      // ----- Translation map (English -> Russian) -----
+      const translations = {
+        "Student Portal": "Портал ученика",
+        "Menu": "Меню",
+        "Dashboard": "Главная",
+        "Timetable": "Расписание",
+        "My courses": "Мои курсы",
+        "Assignments": "Задания",
+        "Announcements": "Объявления",
+        "Account": "Аккаунт",
+        "My profile": "Мой профиль",
+        "Need help?": "Нужна помощь?",
+        "Contact the NOKJ Academy support team for assistance.": "Свяжитесь со службой поддержки NOKJ Academy.",
+        "Alex Student": "Алекс Студент",
+        "Year 10": "10 класс",
+        "Good afternoon, Alex 👋": "Добрый день, Алекс 👋",
+        "Here is everything you need to stay on track today.": "Здесь всё, что нужно, чтобы быть в курсе дел сегодня.",
+        "Thursday, 27 August": "Четверг, 27 августа",
+        "Your next class is Mathematics at 15:30.": "Ваш следующий урок — математика в 15:30.",
+        "Topic: Quadratic equations and graphical interpretation. Room B-12.": "Тема: квадратные уравнения и графическая интерпретация. Кабинет B-12.",
+        "View timetable": "Посмотреть расписание",
+        "Lessons today": "Уроков сегодня",
+        "1 lesson remaining": "Остался 1 урок",
+        "Pending work": "Незавершённые задания",
+        "2 due this week": "2 задания на этой неделе",
+        "Average grade": "Средняя оценка",
+        "Up 4% this term": "На 4% выше в этом семестре",
+        "Course progress": "Прогресс по курсам",
+        "Across all courses": "По всем курсам",
+        "Today’s timetable": "Расписание на сегодня",
+        "Full timetable": "Полное расписание",
+        "English Literature": "Английская литература",
+        "Ms. Evans · Room A-04": "Мисс Эванс · Кабинет A-04",
+        "Completed": "Завершено",
+        "Biology": "Биология",
+        "Mr. Carter · Science Lab 2": "Мистер Картер · Лаборатория 2",
+        "Mathematics": "Математика",
+        "Dr. Wilson · Room B-12": "Доктор Уилсон · Кабинет B-12",
+        "Next": "Далее",
+        "Upcoming assignments": "Ближайшие задания",
+        "All assignments": "Все задания",
+        "Essay: Themes in Macbeth": "Эссе: темы в «Макбете»",
+        "English Literature · Due tomorrow at 23:59": "Английская литература · Срок: завтра в 23:59",
+        "Due soon": "Скоро срок",
+        "Algebra practice set": "Практика по алгебре",
+        "Mathematics · Due 30 August": "Математика · Срок: 30 августа",
+        "In progress": "В процессе",
+        "Cell structure quiz": "Тест: строение клетки",
+        "Biology · Due 2 September": "Биология · Срок: 2 сентября",
+        "Not started": "Не начато",
+        "Your progress": "Ваш прогресс",
+        "Mathematics: Year 10": "Математика: 10 класс",
+        "Current topic: Quadratic equations": "Текущая тема: квадратные уравнения",
+        "82% complete": "82% выполнено",
+        "Open course": "Открыть курс",
+        "Biology: Year 10": "Биология: 10 класс",
+        "Current topic: Cells and organisms": "Текущая тема: клетки и организмы",
+        "64% complete": "64% выполнено",
+        "Current topic: Shakespeare’s Macbeth": "Текущая тема: «Макбет» Шекспира",
+        "71% complete": "71% выполнено",
+        "My timetable": "Моё расписание",
+        "Your weekly lesson schedule will appear here.": "Здесь появится ваше расписание уроков на неделю.",
+        "Today": "Сегодня",
+        "Keep track of your work, deadlines, and teacher feedback.": "Следите за заданиями, сроками и отзывами преподавателей.",
+        "English Literature · 800–1,000 words · Due 28 August at 23:59": "Английская литература · 800–1 000 слов · Срок: 28 августа, 23:59",
+        "Open assignment": "Открыть задание",
+        "Mathematics · Questions 1–25 · Due 30 August": "Математика · Задания 1–25 · Срок: 30 августа",
+        "Biology · Online quiz · Due 2 September": "Биология · Онлайн-тест · Срок: 2 сентября",
+        "Important news and updates from NOKJ Academy.": "Важные новости и обновления от NOKJ Academy.",
+        "Mid-term assessment timetable published": "Опубликовано расписание промежуточных оценок",
+        "The timetable for mid-term assessments is now available. Check your course pages and speak with your teacher if you have any questions.": "Расписание промежуточных оценок уже доступно. Проверьте страницы курсов и обратитесь к преподавателю, если у вас есть вопросы.",
+        "Posted today": "Опубликовано сегодня",
+        "Extended library opening hours": "Продлённые часы работы библиотеки",
+        "The school library will remain open until 18:00 from Monday to Thursday during assessment week.": "Школьная библиотека будет открыта до 18:00 с понедельника по четверг во время недели оценивания.",
+        "Posted yesterday": "Опубликовано вчера",
+        "Student science fair registration": "Регистрация на школьную научную ярмарку",
+        "Registration for the annual student science fair is open until 5 September. Speak with your science teacher to take part.": "Регистрация на ежегодную школьную научную ярмарку открыта до 5 сентября. Обратитесь к учителю естественных наук, чтобы принять участие.",
+        "Posted 25 August": "Опубликовано 25 августа",
+        "View your student account information.": "Просмотр информации о вашей учётной записи.",
+        "Year 10 student · NOKJ Academy": "Ученик 10 класса · NOKJ Academy",
+        "Student ID": "Номер ученика",
+        "Email address": "Адрес электронной почты",
+        "Year group": "Класс",
+        "Academic year": "Учебный год",
+        "Home": "Главная",
+        "Schedule": "Расписание",
+        "Courses": "Курсы",
+        "Work": "Задания",
+        "Profile": "Профиль"
+      };
 
-  function openPage(pageName) {
-    pages.forEach((page) => {
-      page.classList.toggle("active", page.id === pageName);
-    });
+      // ----- Store original text for each text node -----
+      const originalText = new WeakMap();
 
-    navigationButtons.forEach((button) => {
-      button.classList.toggle("active", button.dataset.page === pageName);
-    });
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  function translateTextNodes(language) {
-    const walker = document.createTreeWalker(
-      document.body,
-      NodeFilter.SHOW_TEXT
-    );
-
-    const textNodes = [];
-    let node;
-
-    while ((node = walker.nextNode())) {
-      const parentTag = node.parentElement ? node.parentElement.tagName : "";
-
-      if (parentTag === "SCRIPT" || parentTag === "STYLE") {
-        continue;
+      // ----- Store original placeholder for search input -----
+      const searchInput = document.querySelector(".search input");
+      let originalPlaceholder = "";
+      if (searchInput) {
+        originalPlaceholder = searchInput.placeholder;
       }
 
-      if (node.nodeValue.trim()) {
-        textNodes.push(node);
-      }
-    }
-
-    textNodes.forEach((textNode) => {
-      if (!originalText.has(textNode)) {
-        originalText.set(textNode, textNode.nodeValue);
-      }
-
-      const englishText = originalText.get(textNode);
-      const trimmedText = englishText.trim();
-      const leadingSpace = englishText.match(/^\s*/)[0];
-      const trailingSpace = englishText.match(/\s*$/)[0];
-
-      if (language === "ru" && translations[trimmedText]) {
-        textNode.nodeValue = leadingSpace + translations[trimmedText] + trailingSpace;
-      } else {
-        textNode.nodeValue = englishText;
-      }
-    });
-
-    document.querySelectorAll("[placeholder]").forEach((input) => {
-      if (!originalPlaceholders.has(input)) {
-        originalPlaceholders.set(input, input.placeholder);
+      // ----- Navigation: switch pages -----
+      function openPage(pageName) {
+        pages.forEach(function(page) {
+          page.classList.toggle("active", page.id === pageName);
+        });
+        navButtons.forEach(function(btn) {
+          btn.classList.toggle("active", btn.dataset.page === pageName);
+        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
-      const englishPlaceholder = originalPlaceholders.get(input);
+      // ----- Translate all visible text nodes and the search placeholder -----
+      function applyTranslation(lang) {
+        // 1. Translate text nodes
+        const walker = document.createTreeWalker(
+          document.body,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode: function(node) {
+              var parent = node.parentElement;
+              if (!parent) return NodeFilter.FILTER_REJECT;
+              var tag = parent.tagName;
+              if (tag === "SCRIPT" || tag === "STYLE") return NodeFilter.FILTER_REJECT;
+              if (node.nodeValue.trim() === "") return NodeFilter.FILTER_REJECT;
+              return NodeFilter.FILTER_ACCEPT;
+            }
+          }
+        );
 
-      if (language === "ru" && englishPlaceholder === "Search courses, lessons or assignments") {
-        input.placeholder = "Поиск курсов, уроков или заданий";
-      } else {
-        input.placeholder = englishPlaceholder;
+        var node;
+        var nodesToTranslate = [];
+        while ((node = walker.nextNode())) {
+          nodesToTranslate.push(node);
+        }
+
+        nodesToTranslate.forEach(function(textNode) {
+          // Store original English text only once
+          if (!originalText.has(textNode)) {
+            originalText.set(textNode, textNode.nodeValue);
+          }
+
+          var original = originalText.get(textNode);
+          var trimmed = original.trim();
+          var leading = original.match(/^\s*/)[0];
+          var trailing = original.match(/\s*$/)[0];
+
+          if (lang === "ru" && translations[trimmed] !== undefined) {
+            textNode.nodeValue = leading + translations[trimmed] + trailing;
+          } else {
+            textNode.nodeValue = original;
+          }
+        });
+
+        // 2. Translate search placeholder
+        if (searchInput) {
+          if (lang === "ru") {
+            searchInput.placeholder = "Поиск курсов, уроков или заданий";
+          } else {
+            searchInput.placeholder = originalPlaceholder;
+          }
+        }
+
+        // 3. Update document language and title
+        document.documentElement.lang = lang;
+        document.title = (lang === "ru") ? "NOKJ Academy — Портал ученика" : "NOKJ Academy";
+
+        // 4. Show/hide flag SVGs
+        if (lang === "ru") {
+          flagUK.style.display = "none";
+          flagRU.style.display = "block";
+        } else {
+          flagUK.style.display = "block";
+          flagRU.style.display = "none";
+        }
       }
-    });
-  }
 
-  function setLanguage(language) {
-    currentLanguage = language;
-    localStorage.setItem("nokj-language", language);
+      // ----- Set language and persist -----
+      function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem("nokj-language", lang);
+        applyTranslation(lang);
+      }
 
-    languageLabel.textContent = language.toUpperCase();
-    document.documentElement.lang = language;
-    document.title = language === "ru" ? "NOKJ Academy — Портал ученика" : "NOKJ Academy";
+      // ----- Toggle between English and Russian -----
+      function toggleLanguage() {
+        var nextLang = (currentLang === "en") ? "ru" : "en";
+        setLanguage(nextLang);
+      }
 
-    translateTextNodes(language);
+      // ----- Event: navigation buttons -----
+      navButtons.forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          openPage(btn.dataset.page);
+        });
+      });
 
-    languageOptions.forEach((option) => {
-      option.classList.toggle("active", option.dataset.language === language);
-    });
-  }
+      // ----- Event: language toggle (click to switch) -----
+      if (langToggle) {
+        langToggle.addEventListener("click", toggleLanguage);
+      }
 
-  navigationButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      openPage(button.dataset.page);
-    });
-  });
+      // ----- Event: notification bell -----
+      var notifBtn = document.getElementById("notification-button");
+      if (notifBtn) {
+        notifBtn.addEventListener("click", function() {
+          var msg = (currentLang === "ru")
+            ? "У вас 2 новых объявления и 1 задание со сроком сдачи завтра."
+            : "You have 2 new announcements and 1 assignment due tomorrow.";
+          alert(msg);
+        });
+      }
 
-  languageToggle.addEventListener("click", () => {
-    languageMenu.classList.toggle("open");
-  });
+      // ----- Event: assignment "Open assignment" buttons -----
+      document.querySelectorAll(".assignment-button").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          var msg = (currentLang === "ru")
+            ? "Подробности задания и отправка файлов будут добавлены на следующем этапе."
+            : "Assignment details and submissions will be added in the next development step.";
+          alert(msg);
+        });
+      });
 
-  languageOptions.forEach((option) => {
-    option.addEventListener("click", () => {
-      setLanguage(option.dataset.language);
-      languageMenu.classList.remove("open");
-    });
-  });
-
-  document.addEventListener("click", (event) => {
-    if (!event.target.closest(".language-picker")) {
-      languageMenu.classList.remove("open");
-    }
-  });
-
-  document.getElementById("notification-button").addEventListener("click", () => {
-    const message = currentLanguage === "ru"
-      ? "У вас 2 новых объявления и 1 задание со сроком сдачи завтра."
-      : "You have 2 new announcements and 1 assignment due tomorrow.";
-
-    alert(message);
-  });
-
-  document.querySelectorAll(".assignment-button").forEach((button) => {
-    button.addEventListener("click", () => {
-      const message = currentLanguage === "ru"
-        ? "Подробности задания и отправка файлов будут добавлены на следующем этапе."
-        : "Assignment details and submissions will be added in the next development step.";
-
-      alert(message);
-    });
-  });
-
-  setLanguage(currentLanguage);
+      // ----- Initialise: apply saved language -----
+      setLanguage(currentLang);
+    })();
   </script>
 </body>
 </html>

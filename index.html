@@ -1203,9 +1203,9 @@
       ];
 
       const DEFAULT_TASK_SUBMISSIONS = {
-        '1-1': { answer: 'x = -2, x = -3', submittedAt: '2026-08-29T10:00:00', grade: null, feedback: null, files: [] },
+        '1-1': { answer: 'x = -2, x = -3', submittedAt: '2026-08-29T10:00:00', grade: null, feedback: null, files: [{ name: 'my_work.pdf', size: 24567, type: 'application/pdf' }] },
         '2-1': { answer: 'Ambition is the driving force in Macbeth...', submittedAt: '2026-08-30T14:00:00', grade: 85, feedback: 'Good analysis, could use more quotes.', files: [] },
-        '3-1': { answer: '1. B, 2. A, 3. C, 4. D, 5. B', submittedAt: '2026-08-31T16:00:00', grade: null, feedback: null, files: [] }
+        '3-1': { answer: '1. B, 2. A, 3. C, 4. D, 5. B', submittedAt: '2026-08-31T16:00:00', grade: null, feedback: null, files: [{ name: 'quiz_answers.docx', size: 12345, type: 'application/msword' }] }
       };
 
       const DEFAULT_PRESENTATION = [
@@ -1346,135 +1346,6 @@
       // ----- Language -----
       let currentLang = localStorage.getItem('nokj-language') || 'en';
 
-      const translations = {
-        'Student Portal': 'Портал ученика', 'Menu': 'Меню', 'Dashboard': 'Главная',
-        'Timetable': 'Расписание', 'My courses': 'Мои курсы', 'Assignments': 'Задания',
-        'Announcements': 'Объявления', 'Account': 'Аккаунт', 'My profile': 'Мой профиль',
-        'Need help?': 'Нужна помощь?',
-        'Contact the NOKJ Academy support team for assistance.': 'Свяжитесь со службой поддержки NOKJ Academy.',
-        'Alex Student': 'Алекс Студент', 'Year 10': '10 класс',
-        'Good afternoon, Alex 👋': 'Добрый день, Алекс 👋',
-        'Here is everything you need to stay on track today.': 'Здесь всё, что нужно, чтобы быть в курсе дел сегодня.',
-        'Thursday, 27 August': 'Четверг, 27 августа',
-        'Your next class is Mathematics at 15:30.': 'Ваш следующий урок — математика в 15:30.',
-        'Topic: Quadratic equations and graphical interpretation. Room B-12.': 'Тема: квадратные уравнения и графическая интерпретация. Кабинет B-12.',
-        'View timetable': 'Посмотреть расписание', 'Lessons today': 'Уроков сегодня',
-        '1 lesson remaining': 'Остался 1 урок', 'Pending work': 'Незавершённые задания',
-        '2 due this week': '2 задания на этой неделе', 'Average grade': 'Средняя оценка',
-        'Up 4% this term': 'На 4% выше в этом семестре', 'Course progress': 'Прогресс по курсам',
-        'Across all courses': 'По всем курсам', 'Today’s timetable': 'Расписание на сегодня',
-        'Full timetable': 'Полное расписание', 'English Literature': 'Английская литература',
-        'Ms. Evans · Room A-04': 'Мисс Эванс · Кабинет A-04', 'Completed': 'Завершено',
-        'Biology': 'Биология', 'Mr. Carter · Science Lab 2': 'Мистер Картер · Лаборатория 2',
-        'Mathematics': 'Математика', 'Dr. Wilson · Room B-12': 'Доктор Уилсон · Кабинет B-12',
-        'Next': 'Далее', 'Upcoming assignments': 'Ближайшие задания',
-        'All assignments': 'Все задания', 'Essay: Themes in Macbeth': 'Эссе: темы в «Макбете»',
-        'English Literature · Due tomorrow at 23:59': 'Английская литература · Срок: завтра в 23:59',
-        'Due soon': 'Скоро срок', 'Algebra practice set': 'Практика по алгебре',
-        'Mathematics · Due 30 August': 'Математика · Срок: 30 августа',
-        'In progress': 'В процессе', 'Cell structure quiz': 'Тест: строение клетки',
-        'Biology · Due 2 September': 'Биология · Срок: 2 сентября',
-        'Not started': 'Не начато', 'Your progress': 'Ваш прогресс',
-        'Mathematics: Year 10': 'Математика: 10 класс',
-        'Current topic: Quadratic equations': 'Текущая тема: квадратные уравнения',
-        '82% complete': '82% выполнено', 'Open course': 'Открыть курс',
-        'Biology: Year 10': 'Биология: 10 класс',
-        'Current topic: Cells and organisms': 'Текущая тема: клетки и организмы',
-        '64% complete': '64% выполнено',
-        'Current topic: Shakespeare’s Macbeth': 'Текущая тема: «Макбет» Шекспира',
-        '71% complete': '71% выполнено', 'My timetable': 'Моё расписание',
-        'Your weekly lesson schedule will appear here.': 'Здесь появится ваше расписание уроков на неделю.',
-        'Today': 'Сегодня',
-        'Keep track of your work, deadlines, and teacher feedback.': 'Следите за заданиями, сроками и отзывами преподавателей.',
-        'English Literature · 800–1,000 words · Due 28 August at 23:59': 'Английская литература · 800–1 000 слов · Срок: 28 августа, 23:59',
-        'Open assignment': 'Открыть задание',
-        'Mathematics · Questions 1–25 · Due 30 August': 'Математика · Задания 1–25 · Срок: 30 августа',
-        'Biology · Online quiz · Due 2 September': 'Биология · Онлайн-тест · Срок: 2 сентября',
-        'Important news and updates from NOKJ Academy.': 'Важные новости и обновления от NOKJ Academy.',
-        'Mid-term assessment timetable published': 'Опубликовано расписание промежуточных оценок',
-        'The timetable for mid-term assessments is now available. Check your course pages and speak with your teacher if you have any questions.': 'Расписание промежуточных оценок уже доступно. Проверьте страницы курсов и обратитесь к преподавателю, если у вас есть вопросы.',
-        'Posted today': 'Опубликовано сегодня',
-        'Extended library opening hours': 'Продлённые часы работы библиотеки',
-        'The school library will remain open until 18:00 from Monday to Thursday during assessment week.': 'Школьная библиотека будет открыта до 18:00 с понедельника по четверг во время недели оценивания.',
-        'Posted yesterday': 'Опубликовано вчера',
-        'Student science fair registration': 'Регистрация на школьную научную ярмарку',
-        'Registration for the annual student science fair is open until 5 September. Speak with your science teacher to take part.': 'Регистрация на ежегодную школьную научную ярмарку открыта до 5 сентября. Обратитесь к учителю естественных наук, чтобы принять участие.',
-        'Posted 25 August': 'Опубликовано 25 августа',
-        'View your student account information.': 'Просмотр информации о вашей учётной записи.',
-        'Year 10 student · NOKJ Academy': 'Ученик 10 класса · NOKJ Academy',
-        'Student ID': 'Номер ученика', 'Email address': 'Адрес электронной почты',
-        'Year group': 'Класс', 'Academic year': 'Учебный год',
-        'Home': 'Главная', 'Schedule': 'Расписание', 'Courses': 'Курсы',
-        'Work': 'Задания', 'Profile': 'Профиль',
-        'Welcome back': 'С возвращением',
-        'Sign in to access your dashboard': 'Войдите, чтобы получить доступ к панели управления',
-        'Email address': 'Адрес электронной почты', 'Password': 'Пароль',
-        'Sign in': 'Войти', 'Demo accounts:': 'Демо-аккаунты:',
-        'Admin': 'Администратор', 'Student': 'Ученик', 'Logout': 'Выйти',
-        'Student Records': 'Список учеников',
-        'Manage all student information, grades, and attendance.': 'Управление информацией об учениках, оценках и посещаемости.',
-        'Add Student': 'Добавить ученика', 'Export CSV': 'Экспорт CSV',
-        'Search students...': 'Поиск учеников...', 'All Status': 'Все статусы',
-        'Active': 'Активен', 'Warning': 'Предупреждение', 'Inactive': 'Неактивен',
-        'Name': 'Имя', 'Grade': 'Оценка', 'Attendance': 'Посещаемость',
-        'Status': 'Статус', 'Actions': 'Действия', 'Total Students': 'Всего учеников',
-        'Average Grade': 'Средняя оценка', 'Budget & Finance': 'Бюджет и финансы',
-        'Track income, expenses, and financial health of NOKJ Academy.': 'Отслеживание доходов, расходов и финансового состояния NOKJ Academy.',
-        'Add Entry': 'Добавить запись', 'Search entries...': 'Поиск записей...',
-        'All Types': 'Все типы', 'Income': 'Доход', 'Expense': 'Расход',
-        'Category': 'Категория', 'Type': 'Тип', 'Amount': 'Сумма', 'Date': 'Дата',
-        'Total Income': 'Общий доход', 'Total Expenses': 'Общие расходы', 'Net': 'Баланс',
-        'Add Student Record': 'Добавить ученика', 'Edit Student Record': 'Редактировать ученика',
-        'Enter student details': 'Введите данные ученика', 'Add Budget Entry': 'Добавить запись в бюджет',
-        'Edit Budget Entry': 'Редактировать запись в бюджете', 'Enter budget details': 'Введите данные бюджета',
-        'Cancel': 'Отмена', 'Save': 'Сохранить', 'Course Management': 'Управление курсами',
-        'Create and manage courses, and enroll students.': 'Создание и управление курсами, запись учеников.',
-        'Add Course': 'Добавить курс', 'Search courses...': 'Поиск курсов...',
-        'Course Name': 'Название курса', 'Teacher': 'Преподаватель', 'Students': 'Ученики',
-        'Total Courses': 'Всего курсов', 'Total Enrollments': 'Всего записей',
-        'Enroll': 'Записать', 'Enroll Student': 'Записать ученика',
-        'Select courses for this student.': 'Выберите курсы для этого ученика.',
-        'No courses available.': 'Нет доступных курсов.',
-        'No courses enrolled yet.': 'Вы еще не записаны на курсы.',
-        'Enrolled Students:': 'Записанные ученики:', 'Enrolled Courses:': 'Записанные курсы:',
-        'No students enrolled in this course.': 'На этот курс не записаны ученики.',
-        'Student not enrolled in any courses.': 'Ученик не записан ни на один курс.',
-        'Grades': 'Оценки', 'View and manage student grades across all courses.': 'Просмотр и управление оценками учеников по всем курсам.',
-        'Average Grade (All Students)': 'Средняя оценка (все ученики)',
-        'Passing Students': 'Сдавшие ученики', 'Failing Students': 'Несдавшие ученики',
-        'All Courses': 'Все курсы', 'All Students': 'Все ученики',
-        'Course': 'Курс', 'Action': 'Действие', 'Total Grades': 'Всего оценок',
-        'Passing': 'Сдано', 'Failing': 'Не сдано', 'Your Average Grade': 'Ваша средняя оценка',
-        'Courses Passed': 'Сданные курсы', 'Courses Failed': 'Несданные курсы',
-        'Pass': 'Сдано', 'Fail': 'Не сдано', 'Not graded': 'Не оценено',
-        'Remove grade?': 'Удалить оценку?', 'Virtual Classroom': 'Виртуальный класс',
-        'Join your live lessons and meetings.': 'Присоединяйтесь к урокам и встречам.',
-        'Join Meeting': 'Присоединиться', 'Schedule New Meeting': 'Запланировать встречу',
-        'Tasks': 'Задания', 'View and complete your assignments.': 'Просмотр и выполнение заданий.',
-        'Homework': 'Домашнее задание', 'Test': 'Тест', 'Assignment': 'Задание',
-        'Add Task': 'Добавить задание', 'Search tasks...': 'Поиск заданий...',
-        'All Types': 'Все типы', 'Submit': 'Отправить', 'Submitted': 'Отправлено',
-        'Waiting for grading...': 'Ожидает проверки...', 'Graded': 'Проверено',
-        'Total Tasks': 'Всего заданий', 'Pending': 'Ожидает', 'Graded': 'Проверено',
-        'Choose File': 'Выбрать файл', 'No file chosen': 'Файл не выбран',
-        'Upload File': 'Загрузить файл', 'Task created successfully!': 'Задание успешно создано!',
-        'Grade saved successfully!': 'Оценка успешно сохранена!',
-        'High': 'Высокий', 'Medium': 'Средний', 'Low': 'Низкий',
-        'Overdue': 'Просрочено', 'Due': 'Срок', 'All Status': 'Все статусы',
-        'Attach Files': 'Прикрепить файлы', 'Choose Files': 'Выбрать файлы',
-        'View File': 'Просмотреть файл', 'Download File': 'Скачать файл',
-        'No files attached.': 'Нет прикрепленных файлов.',
-        'Submission Files:': 'Файлы ответа:'
-      };
-
-      const originalText = new WeakMap();
-      const searchInput = document.querySelector('.search input');
-      let originalPlaceholder = '';
-
-      if (searchInput) {
-        originalPlaceholder = searchInput.placeholder;
-      }
-
       // ----- Data Management -----
       function loadData() {
         const savedStudents = localStorage.getItem('nokj-students');
@@ -1485,51 +1356,15 @@
         const savedTasks = localStorage.getItem('nokj-tasks');
         const savedSubmissions = localStorage.getItem('nokj-submissions');
         const savedMeetings = localStorage.getItem('nokj-meetings');
-        const savedStudentId = localStorage.getItem('nokj-next-student-id');
-        const savedCourseId = localStorage.getItem('nokj-next-course-id');
-        const savedBudgetId = localStorage.getItem('nokj-next-budget-id');
-        const savedTaskId = localStorage.getItem('nokj-next-task-id');
-        const savedMeetingId = localStorage.getItem('nokj-next-meeting-id');
 
-        if (savedStudents) {
-          try { students = JSON.parse(savedStudents); nextStudentId = parseInt(savedStudentId) || Math.max(...students.map(s => s.id), 0) + 1; }
-          catch (e) { students = DEFAULT_STUDENTS.slice(); nextStudentId = 7; }
-        } else { students = DEFAULT_STUDENTS.slice(); nextStudentId = 7; }
-
-        if (savedCourses) {
-          try { courses = JSON.parse(savedCourses); nextCourseId = parseInt(savedCourseId) || Math.max(...courses.map(c => c.id), 0) + 1; }
-          catch (e) { courses = DEFAULT_COURSES.slice(); nextCourseId = 6; }
-        } else { courses = DEFAULT_COURSES.slice(); nextCourseId = 6; }
-
-        if (savedBudget) {
-          try { budgetEntries = JSON.parse(savedBudget); nextBudgetId = parseInt(savedBudgetId) || Math.max(...budgetEntries.map(b => b.id), 0) + 1; }
-          catch (e) { budgetEntries = DEFAULT_BUDGET.slice(); nextBudgetId = 7; }
-        } else { budgetEntries = DEFAULT_BUDGET.slice(); nextBudgetId = 7; }
-
-        if (savedEnrollments) {
-          try { enrollments = JSON.parse(savedEnrollments); }
-          catch (e) { enrollments = DEFAULT_ENROLLMENTS.slice(); }
-        } else { enrollments = DEFAULT_ENROLLMENTS.slice(); }
-
-        if (savedGrades) {
-          try { gradeData = JSON.parse(savedGrades); }
-          catch (e) { gradeData = DEFAULT_GRADES; }
-        } else { gradeData = DEFAULT_GRADES; }
-
-        if (savedTasks) {
-          try { tasks = JSON.parse(savedTasks); nextTaskId = parseInt(savedTaskId) || Math.max(...tasks.map(t => t.id), 0) + 1; }
-          catch (e) { tasks = DEFAULT_TASKS.slice(); nextTaskId = 4; }
-        } else { tasks = DEFAULT_TASKS.slice(); nextTaskId = 4; }
-
-        if (savedSubmissions) {
-          try { taskSubmissions = JSON.parse(savedSubmissions); }
-          catch (e) { taskSubmissions = DEFAULT_TASK_SUBMISSIONS; }
-        } else { taskSubmissions = DEFAULT_TASK_SUBMISSIONS; }
-
-        if (savedMeetings) {
-          try { meetings = JSON.parse(savedMeetings); nextMeetingId = parseInt(savedMeetingId) || Math.max(...meetings.map(m => m.id), 0) + 1; }
-          catch (e) { meetings = DEFAULT_MEETINGS.slice(); nextMeetingId = 4; }
-        } else { meetings = DEFAULT_MEETINGS.slice(); nextMeetingId = 4; }
+        if (savedStudents) { try { students = JSON.parse(savedStudents); } catch (e) { students = DEFAULT_STUDENTS.slice(); } } else { students = DEFAULT_STUDENTS.slice(); }
+        if (savedCourses) { try { courses = JSON.parse(savedCourses); } catch (e) { courses = DEFAULT_COURSES.slice(); } } else { courses = DEFAULT_COURSES.slice(); }
+        if (savedBudget) { try { budgetEntries = JSON.parse(savedBudget); } catch (e) { budgetEntries = DEFAULT_BUDGET.slice(); } } else { budgetEntries = DEFAULT_BUDGET.slice(); }
+        if (savedEnrollments) { try { enrollments = JSON.parse(savedEnrollments); } catch (e) { enrollments = DEFAULT_ENROLLMENTS.slice(); } } else { enrollments = DEFAULT_ENROLLMENTS.slice(); }
+        if (savedGrades) { try { gradeData = JSON.parse(savedGrades); } catch (e) { gradeData = DEFAULT_GRADES; } } else { gradeData = DEFAULT_GRADES; }
+        if (savedTasks) { try { tasks = JSON.parse(savedTasks); } catch (e) { tasks = DEFAULT_TASKS.slice(); } } else { tasks = DEFAULT_TASKS.slice(); }
+        if (savedSubmissions) { try { taskSubmissions = JSON.parse(savedSubmissions); } catch (e) { taskSubmissions = DEFAULT_TASK_SUBMISSIONS; } } else { taskSubmissions = DEFAULT_TASK_SUBMISSIONS; }
+        if (savedMeetings) { try { meetings = JSON.parse(savedMeetings); } catch (e) { meetings = DEFAULT_MEETINGS.slice(); } } else { meetings = DEFAULT_MEETINGS.slice(); }
       }
 
       function saveData() {
@@ -1541,11 +1376,6 @@
         localStorage.setItem('nokj-tasks', JSON.stringify(tasks));
         localStorage.setItem('nokj-submissions', JSON.stringify(taskSubmissions));
         localStorage.setItem('nokj-meetings', JSON.stringify(meetings));
-        localStorage.setItem('nokj-next-student-id', String(nextStudentId));
-        localStorage.setItem('nokj-next-course-id', String(nextCourseId));
-        localStorage.setItem('nokj-next-budget-id', String(nextBudgetId));
-        localStorage.setItem('nokj-next-task-id', String(nextTaskId));
-        localStorage.setItem('nokj-next-meeting-id', String(nextMeetingId));
       }
 
       // ----- Helper Functions -----
@@ -1627,8 +1457,6 @@
         const ext = fileName.split('.').pop().toLowerCase();
         const isImage = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(ext);
         const isPDF = ext === 'pdf';
-        const isText = ['txt', 'md', 'csv', 'json', 'xml', 'html', 'css', 'js'].includes(ext);
-        const isDoc = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'].includes(ext);
 
         let content = '';
 
@@ -1636,15 +1464,6 @@
           content = '<img src="' + fileData + '" class="file-preview-image" />';
         } else if (isPDF) {
           content = '<iframe src="' + fileData + '" class="file-preview-iframe" />';
-        } else if (isText) {
-          try {
-            const decoded = atob(fileData.split(',')[1] || '');
-            content = '<pre class="file-preview-text">' + decoded + '</pre>';
-          } catch (e) {
-            content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>Text preview not available. <a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">Download file</a></div>';
-          }
-        } else if (isDoc) {
-          content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>This file type may not be previewable in the browser. <a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">Download file</a></div>';
         } else {
           content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>File preview not available. <a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">Download file</a></div>';
         }
@@ -1664,49 +1483,6 @@
         navButtons.forEach(function(btn) { btn.classList.toggle('active', btn.dataset.page === pageName); });
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-
-      // ----- Translation -----
-      function applyTranslation(lang) {
-        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
-          acceptNode: function(node) {
-            const parent = node.parentElement;
-            if (!parent) return NodeFilter.FILTER_REJECT;
-            const tag = parent.tagName;
-            if (tag === 'SCRIPT' || tag === 'STYLE') return NodeFilter.FILTER_REJECT;
-            if (node.nodeValue.trim() === '') return NodeFilter.FILTER_REJECT;
-            return NodeFilter.FILTER_ACCEPT;
-          }
-        });
-        let node, nodesToTranslate = [];
-        while ((node = walker.nextNode())) nodesToTranslate.push(node);
-        nodesToTranslate.forEach(function(textNode) {
-          if (!originalText.has(textNode)) originalText.set(textNode, textNode.nodeValue);
-          const original = originalText.get(textNode);
-          const trimmed = original.trim();
-          const leading = original.match(/^\s*/)[0];
-          const trailing = original.match(/\s*$/)[0];
-          if (lang === 'ru' && translations[trimmed] !== undefined) {
-            textNode.nodeValue = leading + translations[trimmed] + trailing;
-          } else {
-            textNode.nodeValue = original;
-          }
-        });
-        if (searchInput) {
-          searchInput.placeholder = (lang === 'ru') ? 'Поиск курсов, уроков или заданий' : originalPlaceholder;
-        }
-        document.documentElement.lang = lang;
-        document.title = (lang === 'ru') ? 'NOKJ Academy — Портал ученика' : 'NOKJ Academy';
-        if (lang === 'ru') {
-          flagUK.style.display = 'none'; flagRU.style.display = 'block';
-          loginFlagUK.style.display = 'none'; loginFlagRU.style.display = 'block';
-        } else {
-          flagUK.style.display = 'block'; flagRU.style.display = 'none';
-          loginFlagUK.style.display = 'block'; loginFlagRU.style.display = 'none';
-        }
-      }
-
-      function setLanguage(lang) { currentLang = lang; localStorage.setItem('nokj-language', lang); applyTranslation(lang); }
-      function toggleLanguage() { setLanguage((currentLang === 'en') ? 'ru' : 'en'); }
 
       // ----- Render Functions -----
       function renderStudents() {
@@ -1811,8 +1587,8 @@
         const enrolledIds = getEnrolledCourseIds(student.id);
         const enrolledCourses = courses.filter(function(c) { return enrolledIds.includes(c.id); });
         if (enrolledCourses.length === 0) {
-          const msg = currentLang === 'ru' ? 'Вы еще не записаны на курсы.' : 'You are not enrolled in any courses yet.';
-          studentCoursesContainer.innerHTML = '<p style="color:var(--muted);">' + msg + '</p>'; return;
+          studentCoursesContainer.innerHTML = '<p style="color:var(--muted);">You are not enrolled in any courses yet.</p>';
+          return;
         }
         let html = '<div class="course-grid">';
         enrolledCourses.forEach(function(c) {
@@ -1832,7 +1608,8 @@
         const adminView = document.getElementById('admin-grades-view');
         const studentView = document.getElementById('student-grades-view');
         if (isAdmin) {
-          adminView.style.display = 'block'; studentView.style.display = 'none';
+          adminView.style.display = 'block';
+          studentView.style.display = 'none';
           const courseFilter = document.getElementById('grade-course-filter');
           const currentCourseFilter = courseFilter.value;
           courseFilter.innerHTML = '<option value="all">All Courses</option>';
@@ -1843,7 +1620,8 @@
           students.forEach(function(s) { studentFilter.innerHTML += '<option value="' + s.id + '" ' + (currentStudentFilter === String(s.id) ? 'selected' : '') + '>' + s.name + '</option>'; });
           renderGradeTable();
         } else {
-          adminView.style.display = 'none'; studentView.style.display = 'block';
+          adminView.style.display = 'none';
+          studentView.style.display = 'block';
           renderStudentGrades();
         }
       }
@@ -1972,7 +1750,6 @@
           return matchesSearch && matchesType;
         });
 
-        // Update stats
         const totalTasks = tasks.length;
         let pendingCount = 0, submittedCount = 0, gradedCount = 0;
 
@@ -2026,7 +1803,7 @@
           if (task.files && task.files.length > 0) {
             filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
             task.files.forEach(function(file) {
-              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="window.openFilePreview(\'' + file.name + '\', \'' + (file.data || '') + '\')">' + file.name + '</span> <span style="font-size:11px;color:var(--muted);cursor:pointer;" onclick="window.downloadFile(\'' + file.name + '\', \'' + (file.data || '') + '\')">⬇️</span></div>';
+              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="window.openFilePreview(\'' + file.name + '\', \'' + (file.data || '') + '\')">' + file.name + '</span></div>';
             });
             filesHtml += '</div>';
           }
@@ -2160,7 +1937,6 @@
           container.appendChild(card);
         });
 
-        // Add file upload listeners
         assignedTasks.forEach(function(task) {
           const fileInput = document.getElementById('file-' + task.id);
           if (fileInput) {
@@ -2205,7 +1981,7 @@
       // ----- Task Management Functions -----
       function createTask(title, type, description, deadline, priority, assignedTo, assignedIds, files) {
         tasks.push({
-          id: nextTaskId++,
+          id: tasks.length + 1,
           title: title,
           type: type,
           description: description,
@@ -2218,7 +1994,7 @@
         });
         saveData();
         renderTasks();
-        alert(currentLang === 'ru' ? 'Задание успешно создано!' : 'Task created successfully!');
+        alert('Task created successfully!');
       }
 
       function deleteTask(taskId) {
@@ -2242,7 +2018,7 @@
         }
         saveData();
         renderTasks();
-        alert(currentLang === 'ru' ? 'Задание отправлено!' : 'Task submitted!');
+        alert('Task submitted!');
       }
 
       function gradeSubmission(taskId, studentId, grade, feedback) {
@@ -2252,7 +2028,7 @@
           taskSubmissions[key].feedback = feedback || '';
           saveData();
           renderTasks();
-          alert(currentLang === 'ru' ? 'Оценка успешно сохранена!' : 'Grade saved successfully!');
+          alert('Grade saved successfully!');
         }
       }
 
@@ -2298,7 +2074,7 @@
         }
       }
 
-      // ----- Modal Functions (Existing) -----
+      // ----- Modal Functions -----
       function openModal(type, mode, data) {
         modalType = type;
         modalMode = mode;
@@ -2384,7 +2160,7 @@
           const attendance = parseFloat(document.getElementById('modal-attendance').value);
           const status = document.getElementById('modal-status').value;
           if (!name || isNaN(grade) || isNaN(attendance)) { alert('Please fill in all fields'); return; }
-          if (modalMode === 'add') students.push({ id: nextStudentId++, name: name, grade: grade, attendance: attendance, status: status });
+          if (modalMode === 'add') students.push({ id: students.length + 1, name: name, grade: grade, attendance: attendance, status: status });
           else { const index = students.findIndex(function(s) { return s.id === editingId; }); if (index !== -1) students[index] = { id: editingId, name: name, grade: grade, attendance: attendance, status: status }; }
           saveData();
           renderStudents();
@@ -2396,7 +2172,7 @@
           const teacher = document.getElementById('modal-course-teacher').value.trim();
           const description = document.getElementById('modal-course-description').value.trim();
           if (!name || !teacher) { alert('Please fill in all fields'); return; }
-          if (modalMode === 'add') courses.push({ id: nextCourseId++, name: name, teacher: teacher, description: description });
+          if (modalMode === 'add') courses.push({ id: courses.length + 1, name: name, teacher: teacher, description: description });
           else { const index = courses.findIndex(function(c) { return c.id === editingId; }); if (index !== -1) courses[index] = { id: editingId, name: name, teacher: teacher, description: description }; }
           saveData();
           renderCourses();
@@ -2411,7 +2187,7 @@
           const status = document.getElementById('modal-status').value;
           if (!category || isNaN(amount) || !date) { alert('Please fill in all fields'); return; }
           const finalAmount = type === 'Income' ? amount : -amount;
-          if (modalMode === 'add') budgetEntries.push({ id: nextBudgetId++, category: category, type: type, amount: finalAmount, date: date, status: status });
+          if (modalMode === 'add') budgetEntries.push({ id: budgetEntries.length + 1, category: category, type: type, amount: finalAmount, date: date, status: status });
           else { const index = budgetEntries.findIndex(function(b) { return b.id === editingId; }); if (index !== -1) budgetEntries[index] = { id: editingId, category: category, type: type, amount: finalAmount, date: date, status: status }; }
           saveData();
           renderBudget();
@@ -2575,7 +2351,6 @@
         renderStudentCourses();
         renderMeetings();
         renderTasks();
-        applyTranslation(currentLang);
       }
 
       function logout() {
@@ -2606,16 +2381,19 @@
 
       // ----- Make functions globally accessible -----
       window.openFilePreview = openFilePreview;
-      window.downloadFile = function(fileName, fileData) {
-        alert('Download: ' + fileName + '\n(File would download in production)');
-      };
 
       // ----- Event Listeners -----
       loginForm.addEventListener('submit', function(e) { e.preventDefault(); login(loginEmail.value.trim(), loginPassword.value.trim()); });
       logoutBtn.addEventListener('click', logout);
       navButtons.forEach(function(btn) { btn.addEventListener('click', function() { openPage(btn.dataset.page); }); });
-      if (langToggle) langToggle.addEventListener('click', toggleLanguage);
-      if (loginLangToggle) loginLangToggle.addEventListener('click', toggleLanguage);
+      if (langToggle) langToggle.addEventListener('click', function() { 
+        currentLang = currentLang === 'en' ? 'ru' : 'en';
+        localStorage.setItem('nokj-language', currentLang);
+      });
+      if (loginLangToggle) loginLangToggle.addEventListener('click', function() { 
+        currentLang = currentLang === 'en' ? 'ru' : 'en';
+        localStorage.setItem('nokj-language', currentLang);
+      });
 
       document.addEventListener('click', function(e) {
         const target = e.target.closest('.expandable-row');
@@ -2623,12 +2401,12 @@
       });
 
       document.getElementById('notification-button').addEventListener('click', function() {
-        alert(currentLang === 'ru' ? 'У вас 2 новых объявления и 1 задание со сроком сдачи завтра.' : 'You have 2 new announcements and 1 assignment due tomorrow.');
+        alert('You have 2 new announcements and 1 assignment due tomorrow.');
       });
 
       document.querySelectorAll('.assignment-button').forEach(function(btn) {
         btn.addEventListener('click', function() {
-          alert(currentLang === 'ru' ? 'Подробности задания и отправка файлов будут добавлены на следующем этапе.' : 'Assignment details and submissions will be added in the next development step.');
+          alert('Assignment details and submissions will be added in the next development step.');
         });
       });
 
@@ -2701,22 +2479,6 @@
         const target = e.target.closest('.join-btn');
         if (target) openPresentation(parseInt(target.dataset.meeting));
       });
-      document.addEventListener('click', function(e) {
-        if (e.target.id === 'create-meeting-btn') {
-          const title = prompt('Enter meeting title:');
-          if (!title) return;
-          const teacher = prompt('Enter teacher name:');
-          if (!teacher) return;
-          const date = prompt('Enter date (YYYY-MM-DD):', new Date().toISOString().split('T')[0]);
-          if (!date) return;
-          const time = prompt('Enter time (e.g. 14:00 - 15:00):');
-          if (!time) return;
-          meetings.push({ id: nextMeetingId++, title: title, teacher: teacher, date: date, time: time, link: '#' });
-          saveData();
-          renderMeetings();
-          alert('Meeting created successfully!');
-        }
-      });
 
       // ----- Presentation controls -----
       document.getElementById('presentation-close').addEventListener('click', closePresentation);
@@ -2735,10 +2497,6 @@
       });
 
       // ----- Task Modal -----
-      // Get the Add Task button
-      const addTaskBtnEl = document.getElementById('add-task-btn');
-
-      // Open task modal
       function openTaskModal() {
         taskModalTitle.textContent = 'Create Task';
         taskModalSub.textContent = 'Fill in the task details below.';
@@ -2755,23 +2513,16 @@
         taskModalOverlay.classList.add('open');
       }
 
-      if (addTaskBtnEl) {
-        addTaskBtnEl.addEventListener('click', function(e) {
+      if (addTaskBtn) {
+        addTaskBtn.addEventListener('click', function(e) {
           e.preventDefault();
           openTaskModal();
         });
       }
 
-      // Task modal cancel
-      taskModalCancel.addEventListener('click', function() {
-        taskModalOverlay.classList.remove('open');
-      });
+      taskModalCancel.addEventListener('click', function() { taskModalOverlay.classList.remove('open'); });
+      taskModalOverlay.addEventListener('click', function(e) { if (e.target === taskModalOverlay) taskModalOverlay.classList.remove('open'); });
 
-      taskModalOverlay.addEventListener('click', function(e) {
-        if (e.target === taskModalOverlay) taskModalOverlay.classList.remove('open');
-      });
-
-      // File upload handling
       taskFileInput.addEventListener('change', function(e) {
         const files = Array.from(e.target.files);
         files.forEach(function(file) {
@@ -2890,176 +2641,38 @@
         }
       });
 
-     // ----- Admin task events -----
-document.getElementById('admin-task-list').addEventListener('click', function(e) {
-  const target = e.target.closest('.view-submissions-btn');
-  if (target) {
-    const taskId = parseInt(target.dataset.task);
-    const task = tasks.find(function(t) { return t.id === taskId; });
-    if (!task) return;
+      // ----- Admin task events - View Submissions -----
+      document.getElementById('admin-task-list').addEventListener('click', function(e) {
+        const target = e.target.closest('.view-submissions-btn');
+        if (target) {
+          const taskId = parseInt(target.dataset.task);
+          const task = tasks.find(function(t) { return t.id === taskId; });
+          if (!task) return;
 
-    const submissionKeys = Object.keys(taskSubmissions).filter(function(key) {
-      return key.startsWith(taskId + '-');
-    });
-
-    if (submissionKeys.length === 0) {
-      alert('No submissions yet for this task.');
-      return;
-    }
-
-    let studentList = [];
-    submissionKeys.forEach(function(key) {
-      const studentId = parseInt(key.split('-')[1]);
-      const student = students.find(function(s) { return s.id === studentId; });
-      const submission = taskSubmissions[key];
-      if (student) {
-        const status = submission.grade !== null && submission.grade !== undefined ? '✅ Graded: ' + submission.grade + '%' : '⏳ Pending';
-        studentList.push({
-          id: studentId,
-          name: student.name,
-          status: status,
-          submission: submission
-        });
-      }
-    });
-
-    studentList.sort(function(a, b) {
-      const aGraded = a.submission.grade !== null && a.submission.grade !== undefined;
-      const bGraded = b.submission.grade !== null && b.submission.grade !== undefined;
-      if (!aGraded && bGraded) return -1;
-      if (aGraded && !bGraded) return 1;
-      return a.name.localeCompare(b.name);
-    });
-
-    // Build a nice modal-like display with file links
-    let message = '📋 Submissions for: ' + task.title + '\n\n';
-    let hasFiles = false;
-
-    studentList.forEach(function(item) {
-      message += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
-      message += '👤 ' + item.name + '\n';
-      message += '📝 Answer: ' + (item.submission.answer || '(No answer provided)') + '\n';
-      message += '📊 Status: ' + item.status + '\n';
-
-      if (item.submission.files && item.submission.files.length > 0) {
-        hasFiles = true;
-        message += '📎 Files:\n';
-        item.submission.files.forEach(function(file, index) {
-          message += '   ' + (index + 1) + '. ' + file.name + '\n';
-        });
-      }
-
-      if (item.submission.feedback) {
-        message += '💬 Feedback: ' + item.submission.feedback + '\n';
-      }
-      message += '\n';
-    });
-
-    // Show the submission details in a textarea for better viewing
-    const textarea = document.createElement('textarea');
-    textarea.style.width = '100%';
-    textarea.style.height = '400px';
-    textarea.style.padding = '12px';
-    textarea.style.fontSize = '13px';
-    textarea.style.fontFamily = 'monospace';
-    textarea.style.border = '1px solid var(--line)';
-    textarea.style.borderRadius = '8px';
-    textarea.style.background = '#fafafa';
-    textarea.value = message;
-    textarea.readOnly = true;
-
-    // Create a modal dialog for viewing submissions
-    const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:20px;';
-
-    const modal = document.createElement('div');
-    modal.style.cssText = 'max-width:700px;width:100%;max-height:90vh;background:white;border-radius:18px;padding:24px;overflow:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);';
-
-    const title = document.createElement('h2');
-    title.textContent = '📋 Submissions: ' + task.title;
-    title.style.marginTop = '0';
-    title.style.marginBottom = '8px';
-
-    const sub = document.createElement('p');
-    sub.textContent = 'Total: ' + studentList.length + ' submissions';
-    sub.style.color = '#6b7280';
-    sub.style.marginBottom = '16px';
-
-    const textareaWrapper = document.createElement('div');
-    textareaWrapper.style.marginBottom = '16px';
-    textareaWrapper.appendChild(textarea);
-
-    const closeBtn = document.createElement('button');
-    closeBtn.textContent = 'Close';
-    closeBtn.style.cssText = 'padding:10px 24px;background:#4f46e5;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer;';
-    closeBtn.addEventListener('click', function() {
-      document.body.removeChild(overlay);
-    });
-
-    const btnWrapper = document.createElement('div');
-    btnWrapper.style.display = 'flex';
-    btnWrapper.style.justifyContent = 'flex-end';
-    btnWrapper.appendChild(closeBtn);
-
-    modal.appendChild(title);
-    modal.appendChild(sub);
-    modal.appendChild(textareaWrapper);
-
-    // Add file download buttons if files exist
-    if (hasFiles) {
-      const downloadSection = document.createElement('div');
-      downloadSection.style.marginBottom = '16px';
-      downloadSection.style.padding = '12px';
-      downloadSection.style.background = '#f0fdf4';
-      downloadSection.style.borderRadius = '8px';
-      downloadSection.style.border = '1px solid #bbf7d0';
-
-      const downloadTitle = document.createElement('p');
-      downloadTitle.textContent = '📎 Click a file name to download:';
-      downloadTitle.style.margin = '0 0 8px 0';
-      downloadTitle.style.fontWeight = '700';
-      downloadTitle.style.fontSize = '13px';
-      downloadSection.appendChild(downloadTitle);
-
-      studentList.forEach(function(item) {
-        if (item.submission.files && item.submission.files.length > 0) {
-          const studentName = document.createElement('div');
-          studentName.textContent = '👤 ' + item.name;
-          studentName.style.fontWeight = '600';
-          studentName.style.fontSize = '13px';
-          studentName.style.marginTop = '6px';
-          downloadSection.appendChild(studentName);
-
-          item.submission.files.forEach(function(file) {
-            const fileLink = document.createElement('a');
-            fileLink.textContent = '📄 ' + file.name;
-            fileLink.style.cssText = 'display:inline-block;padding:2px 12px;margin:2px 6px 2px 0;background:white;border-radius:4px;border:1px solid #e5e7eb;font-size:12px;color:#4f46e5;text-decoration:none;cursor:pointer;';
-            fileLink.href = '#';
-            fileLink.addEventListener('click', function(e) {
-              e.preventDefault();
-              // For demo, show file info since we can't store actual file data
-              alert('📄 ' + file.name + '\n📊 Size: ' + (file.size || 'Unknown') + ' bytes\n📁 Type: ' + (file.type || 'Unknown') + '\n\n(File download would work in production with actual file data)');
-            });
-            downloadSection.appendChild(fileLink);
+          const submissionKeys = Object.keys(taskSubmissions).filter(function(key) {
+            return key.startsWith(taskId + '-');
           });
-        }
-      });
 
-      modal.appendChild(downloadSection);
-    }
+          if (submissionKeys.length === 0) {
+            alert('No submissions yet for this task.');
+            return;
+          }
 
-    modal.appendChild(btnWrapper);
-    overlay.appendChild(modal);
-    document.body.appendChild(overlay);
-
-    // Close on overlay click
-    overlay.addEventListener('click', function(e) {
-      if (e.target === overlay) {
-        document.body.removeChild(overlay);
-      }
-    });
-  }
-});
+          let studentList = [];
+          submissionKeys.forEach(function(key) {
+            const studentId = parseInt(key.split('-')[1]);
+            const student = students.find(function(s) { return s.id === studentId; });
+            const submission = taskSubmissions[key];
+            if (student) {
+              const status = submission.grade !== null && submission.grade !== undefined ? '✅ Graded: ' + submission.grade + '%' : '⏳ Pending';
+              studentList.push({
+                id: studentId,
+                name: student.name,
+                status: status,
+                submission: submission
+              });
+            }
+          });
 
           studentList.sort(function(a, b) {
             const aGraded = a.submission.grade !== null && a.submission.grade !== undefined;
@@ -3069,21 +2682,109 @@ document.getElementById('admin-task-list').addEventListener('click', function(e)
             return a.name.localeCompare(b.name);
           });
 
-          const ungraded = studentList.find(function(item) {
-            return item.submission.grade === null || item.submission.grade === undefined;
+          // Build a nice modal with submissions
+          let message = '📋 Submissions for: ' + task.title + '\n\n';
+          let hasFiles = false;
+
+          studentList.forEach(function(item) {
+            message += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+            message += '👤 ' + item.name + '\n';
+            message += '📝 Answer: ' + (item.submission.answer || '(No answer provided)') + '\n';
+            message += '📊 Status: ' + item.status + '\n';
+
+            if (item.submission.files && item.submission.files.length > 0) {
+              hasFiles = true;
+              message += '📎 Files:\n';
+              item.submission.files.forEach(function(file, index) {
+                message += '   ' + (index + 1) + '. ' + file.name + '\n';
+              });
+            }
+
+            if (item.submission.feedback) {
+              message += '💬 Feedback: ' + item.submission.feedback + '\n';
+            }
+            message += '\n';
           });
 
-          if (ungraded) {
-            openGradeModal(taskId, ungraded.id);
-          } else {
-            let summary = '📊 All submissions graded!\n\n';
+          // Show in a modal overlay
+          const overlay = document.createElement('div');
+          overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:20px;';
+
+          const modal = document.createElement('div');
+          modal.style.cssText = 'max-width:700px;width:100%;max-height:90vh;background:white;border-radius:18px;padding:24px;overflow:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);';
+
+          const title = document.createElement('h2');
+          title.textContent = '📋 Submissions: ' + task.title;
+          title.style.marginTop = '0';
+          title.style.marginBottom = '8px';
+
+          const sub = document.createElement('p');
+          sub.textContent = 'Total: ' + studentList.length + ' submissions';
+          sub.style.color = '#6b7280';
+          sub.style.marginBottom = '16px';
+
+          const textarea = document.createElement('textarea');
+          textarea.style.cssText = 'width:100%;height:300px;padding:12px;font-size:13px;font-family:monospace;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;';
+          textarea.value = message;
+          textarea.readOnly = true;
+
+          const closeBtn = document.createElement('button');
+          closeBtn.textContent = 'Close';
+          closeBtn.style.cssText = 'padding:10px 24px;background:#4f46e5;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer;margin-top:16px;';
+          closeBtn.addEventListener('click', function() {
+            document.body.removeChild(overlay);
+          });
+
+          const btnWrapper = document.createElement('div');
+          btnWrapper.style.display = 'flex';
+          btnWrapper.style.justifyContent = 'flex-end';
+          btnWrapper.appendChild(closeBtn);
+
+          modal.appendChild(title);
+          modal.appendChild(sub);
+          modal.appendChild(textarea);
+
+          // Show files section if any
+          if (hasFiles) {
+            const filesSection = document.createElement('div');
+            filesSection.style.cssText = 'margin-top:12px;padding:12px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;';
+            const filesTitle = document.createElement('p');
+            filesTitle.textContent = '📎 Submitted Files:';
+            filesTitle.style.margin = '0 0 8px 0';
+            filesTitle.style.fontWeight = '700';
+            filesTitle.style.fontSize = '13px';
+            filesSection.appendChild(filesTitle);
+
             studentList.forEach(function(item) {
-              summary += item.name + ': ' + item.submission.grade + '%';
-              if (item.submission.feedback) summary += ' - ' + item.submission.feedback;
-              summary += '\n';
+              if (item.submission.files && item.submission.files.length > 0) {
+                const nameDiv = document.createElement('div');
+                nameDiv.textContent = '👤 ' + item.name;
+                nameDiv.style.fontWeight = '600';
+                nameDiv.style.fontSize = '13px';
+                nameDiv.style.marginTop = '6px';
+                filesSection.appendChild(nameDiv);
+
+                item.submission.files.forEach(function(file) {
+                  const fileSpan = document.createElement('span');
+                  fileSpan.textContent = '📄 ' + file.name;
+                  fileSpan.style.cssText = 'display:inline-block;padding:2px 12px;margin:2px 6px 2px 0;background:white;border-radius:4px;border:1px solid #e5e7eb;font-size:12px;';
+                  filesSection.appendChild(fileSpan);
+                });
+              }
             });
-            alert(summary);
+
+            modal.appendChild(filesSection);
           }
+
+          modal.appendChild(btnWrapper);
+          overlay.appendChild(modal);
+          document.body.appendChild(overlay);
+
+          overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+              document.body.removeChild(overlay);
+            }
+          });
         }
       });
 
@@ -3116,37 +2817,36 @@ document.getElementById('admin-task-list').addEventListener('click', function(e)
       });
 
       // ----- Add buttons -----
-      addStudentBtn.addEventListener('click', function() { openModal('student', 'add'); });
-      addBudgetBtn.addEventListener('click', function() { openModal('budget', 'add'); });
-      addCourseBtn.addEventListener('click', function() { openModal('course', 'add'); });
+      if (addStudentBtn) addStudentBtn.addEventListener('click', function() { openModal('student', 'add'); });
+      if (addBudgetBtn) addBudgetBtn.addEventListener('click', function() { openModal('budget', 'add'); });
+      if (addCourseBtn) addCourseBtn.addEventListener('click', function() { openModal('course', 'add'); });
 
       // ----- Export buttons -----
-      exportStudentsBtn.addEventListener('click', exportStudentsCSV);
-      exportBudgetBtn.addEventListener('click', exportBudgetCSV);
+      if (exportStudentsBtn) exportStudentsBtn.addEventListener('click', exportStudentsCSV);
+      if (exportBudgetBtn) exportBudgetBtn.addEventListener('click', exportBudgetCSV);
 
       // ----- Search/filter -----
-      studentSearch.addEventListener('input', renderStudents);
-      studentFilter.addEventListener('change', renderStudents);
-      budgetSearch.addEventListener('input', renderBudget);
-      budgetFilter.addEventListener('change', renderBudget);
-      courseSearch.addEventListener('input', renderCourses);
+      if (studentSearch) studentSearch.addEventListener('input', renderStudents);
+      if (studentFilter) studentFilter.addEventListener('change', renderStudents);
+      if (budgetSearch) budgetSearch.addEventListener('input', renderBudget);
+      if (budgetFilter) budgetFilter.addEventListener('change', renderBudget);
+      if (courseSearch) courseSearch.addEventListener('input', renderCourses);
 
       // ----- Modal events -----
-      modalCancel.addEventListener('click', closeModal);
-      modalOverlay.addEventListener('click', function(e) { if (e.target === modalOverlay) closeModal(); });
-      modalForm.addEventListener('submit', handleModalSubmit);
+      if (modalCancel) modalCancel.addEventListener('click', closeModal);
+      if (modalOverlay) modalOverlay.addEventListener('click', function(e) { if (e.target === modalOverlay) closeModal(); });
+      if (modalForm) modalForm.addEventListener('submit', handleModalSubmit);
 
       // ----- Enrollment modal events -----
-      enrollModalCancel.addEventListener('click', closeEnrollModal);
-      enrollModalOverlay.addEventListener('click', function(e) { if (e.target === enrollModalOverlay) closeEnrollModal(); });
-      enrollModalSave.addEventListener('click', saveEnrollments);
+      if (enrollModalCancel) enrollModalCancel.addEventListener('click', closeEnrollModal);
+      if (enrollModalOverlay) enrollModalOverlay.addEventListener('click', function(e) { if (e.target === enrollModalOverlay) closeEnrollModal(); });
+      if (enrollModalSave) enrollModalSave.addEventListener('click', saveEnrollments);
 
       // ----- Enter key on password -----
-      loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginForm.dispatchEvent(new Event('submit')); });
+      if (loginPassword) loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginForm.dispatchEvent(new Event('submit')); });
 
       // ----- Init -----
       loadData();
-      setLanguage(currentLang);
       checkSession();
 
     })();

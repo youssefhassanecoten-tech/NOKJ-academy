@@ -167,6 +167,7 @@
       background: linear-gradient(135deg, #f97316, #db2777);
     }
     .avatar.admin-avatar { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
+    .avatar.teacher-avatar { background: linear-gradient(135deg, #059669, #34d399); }
     .user-name strong, .user-name span { display: block; }
     .user-name strong { font-size: 12px; }
     .user-name span { margin-top: 2px; color: var(--muted); font-size: 10px; }
@@ -326,7 +327,7 @@
     .presentation-overlay .presentation-slide .slide-content h2 { font-size: 42px; margin-bottom: 20px; }
     .presentation-overlay .presentation-slide .slide-content p { font-size: 20px; color: #aaa; white-space: pre-wrap; }
 
-    /* --- TASKS (Enhanced) --- */
+    /* --- TASKS --- */
     .task-grid { display: grid; gap: 17px; margin-top: 20px; }
     .task-card {
       border: 1px solid var(--line); border-radius: var(--radius);
@@ -353,6 +354,20 @@
     .task-card .task-body .task-deadline.overdue { color: var(--danger); }
     .task-card .task-body .task-deadline.upcoming { color: var(--warning); }
     .task-card .task-body .task-deadline.on-time { color: var(--success); }
+
+    .task-card .task-body .task-files {
+      margin-top: 10px; padding: 10px; background: #f8fafc; border-radius: 8px;
+    }
+    .task-card .task-body .task-files .file-item {
+      display: flex; align-items: center; gap: 8px; padding: 4px 0;
+    }
+    .task-card .task-body .task-files .file-item .file-icon {
+      font-size: 18px;
+    }
+    .task-card .task-body .task-files .file-item .file-link {
+      color: var(--primary); text-decoration: underline; cursor: pointer; font-size: 13px;
+    }
+    .task-card .task-body .task-files .file-item .file-link:hover { color: var(--primary-dark); }
 
     .task-card .task-footer {
       margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
@@ -382,6 +397,9 @@
     .task-card .task-footer .file-name {
       font-size: 12px; color: var(--muted); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
+    .task-card .task-footer .submission-file {
+      font-size: 12px; color: var(--primary); text-decoration: underline; cursor: pointer;
+    }
 
     .task-card .task-priority {
       padding: 2px 10px; border-radius: 4px; font-size: 10px; font-weight: 700;
@@ -390,7 +408,6 @@
     .task-card .task-priority.medium { background: #fef3c7; color: #92400e; }
     .task-card .task-priority.low { background: #d1fae5; color: #047857; }
 
-    /* Task admin */
     .task-admin-actions {
       display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;
       align-items: center;
@@ -403,7 +420,6 @@
       outline: none; border-color: var(--primary);
     }
 
-    /* Task stats */
     .task-stats-grid {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px;
     }
@@ -414,13 +430,55 @@
     .task-stat-card .number { font-size: 28px; font-weight: 850; }
     .task-stat-card .label { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
+    /* --- FILE PREVIEW MODAL --- */
+    .file-preview-overlay {
+      display: none; position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.8); align-items: center; justify-content: center;
+      padding: 40px;
+    }
+    .file-preview-overlay.open { display: flex; }
+    .file-preview-content {
+      max-width: 90%; max-height: 90%; background: white; border-radius: var(--radius);
+      padding: 20px; overflow: auto; position: relative;
+    }
+    .file-preview-content .preview-close {
+      position: absolute; top: 10px; right: 20px;
+      font-size: 30px; cursor: pointer; color: var(--muted);
+    }
+    .file-preview-content .preview-close:hover { color: var(--danger); }
+    .file-preview-content .file-preview-iframe {
+      width: 100%; height: 600px; border: none; border-radius: 8px;
+    }
+    .file-preview-content .file-preview-text {
+      white-space: pre-wrap; font-family: monospace; padding: 20px;
+      max-height: 600px; overflow: auto;
+    }
+    .file-preview-content .file-preview-image {
+      max-width: 100%; max-height: 600px; border-radius: 8px;
+    }
+    .file-preview-content .file-preview-fallback {
+      padding: 40px; text-align: center; color: var(--muted);
+    }
+
+    /* --- TEACHER DASHBOARD --- */
+    .teacher-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;
+    }
+    .teacher-stat-card {
+      padding: 20px; border: 1px solid var(--line); border-radius: var(--radius);
+      background: white;
+    }
+    .teacher-stat-card .label { color: var(--muted); font-size: 12px; font-weight: 700; }
+    .teacher-stat-card .number { margin-top: 8px; font-size: 28px; font-weight: 850; }
+    .teacher-stat-card .change { margin-top: 4px; font-size: 12px; color: var(--success); }
+
     /* --- MODAL --- */
     .modal-overlay {
       display: none; position: fixed; inset: 0; z-index: 100;
       background: rgba(0,0,0,0.5); align-items: center; justify-content: center; padding: 20px;
     }
     .modal-overlay.open { display: flex; }
-    .modal { max-width: 500px; width: 100%; padding: 30px; border-radius: var(--radius); background: white; box-shadow: 0 25px 60px rgba(0,0,0,0.3); }
+    .modal { max-width: 600px; width: 100%; padding: 30px; border-radius: var(--radius); background: white; box-shadow: 0 25px 60px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
     .modal h2 { margin: 0 0 8px 0; font-size: 20px; }
     .modal p.sub { margin: 0 0 20px 0; color: var(--muted); font-size: 13px; }
     .modal label { display: block; margin-bottom: 4px; font-size: 13px; font-weight: 700; }
@@ -432,6 +490,26 @@
       outline: none; border-color: var(--primary); background: white;
     }
     .modal textarea { min-height: 80px; resize: vertical; }
+    .modal .file-input-wrapper {
+      margin-bottom: 16px;
+    }
+    .modal .file-input-wrapper label {
+      display: inline-block; padding: 8px 16px;
+      background: var(--primary-light); color: var(--primary);
+      border-radius: 8px; cursor: pointer; font-weight: 600;
+    }
+    .modal .file-input-wrapper label:hover { background: var(--primary); color: white; }
+    .modal .file-input-wrapper input[type="file"] { display: none; }
+    .modal .file-list {
+      margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .modal .file-list .file-tag {
+      padding: 4px 10px; background: #f3f4f6; border-radius: 4px;
+      font-size: 12px; display: flex; align-items: center; gap: 6px;
+    }
+    .modal .file-list .file-tag .remove-file {
+      cursor: pointer; color: var(--danger);
+    }
     .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
     .modal-actions button { padding: 10px 20px; font-weight: 700; border: 0; border-radius: 8px; }
     .modal-actions .cancel-btn { color: var(--muted); background: #f3f4f6; }
@@ -507,7 +585,7 @@
 
     /* --- RESPONSIVE --- */
     @media (max-width: 1030px) {
-      .stats, .admin-stats, .grade-summary-grid, .task-stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats, .admin-stats, .grade-summary-grid, .task-stats-grid, .teacher-stats { grid-template-columns: repeat(2, 1fr); }
       .course-grid, .meeting-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 790px) {
@@ -533,12 +611,14 @@
       .table-toolbar { flex-direction: column; align-items: stretch; }
       .table-toolbar .left, .table-toolbar .right { flex-wrap: wrap; }
       .admin-stats { grid-template-columns: repeat(2, 1fr); }
-      .grade-summary-grid, .task-stats-grid { grid-template-columns: 1fr 1fr; }
+      .grade-summary-grid, .task-stats-grid, .teacher-stats { grid-template-columns: 1fr 1fr; }
       .meeting-grid { grid-template-columns: 1fr; }
       .expandable-detail .detail-content { padding: 12px 16px 12px 32px; font-size: 12px; }
+      .file-preview-content .file-preview-iframe { height: 300px; }
+      .modal { max-width: 100%; }
     }
     @media (max-width: 480px) {
-      .stats, .admin-stats, .grade-summary-grid, .task-stats-grid { gap: 10px; grid-template-columns: 1fr; }
+      .stats, .admin-stats, .grade-summary-grid, .task-stats-grid, .teacher-stats { gap: 10px; grid-template-columns: 1fr; }
       .stat-card { padding: 14px; }
       .stat-number { font-size: 22px; }
       .panel { padding: 17px; }
@@ -550,6 +630,7 @@
       table { font-size: 12px; }
       table th, table td { padding: 8px 10px; }
       .grade-cell { flex-wrap: wrap; }
+      .file-preview-content .file-preview-iframe { height: 200px; }
     }
   </style>
 </head>
@@ -736,13 +817,11 @@
         <div class="meeting-grid" id="meeting-grid"></div>
       </section>
 
-      <!-- ===== TASKS (Enhanced) ===== -->
+      <!-- ===== TASKS ===== -->
       <section class="page" id="tasks">
         <div class="heading"><h1>Tasks</h1><p id="tasks-subheading">View and complete your assignments.</p></div>
 
-        <!-- Admin View -->
         <div id="admin-tasks-view" style="display:none;">
-          <!-- Task Stats -->
           <div class="task-stats-grid">
             <div class="task-stat-card"><div class="number" id="task-total">0</div><div class="label">Total Tasks</div></div>
             <div class="task-stat-card"><div class="number" id="task-pending">0</div><div class="label">Pending</div></div>
@@ -759,9 +838,7 @@
           <div class="task-grid" id="admin-task-list"></div>
         </div>
 
-        <!-- Student View -->
         <div id="student-tasks-view" style="display:none;">
-          <!-- Task Stats -->
           <div class="task-stats-grid">
             <div class="task-stat-card"><div class="number" id="student-task-total">0</div><div class="label">Total Tasks</div></div>
             <div class="task-stat-card"><div class="number" id="student-task-pending" style="color:var(--danger);">0</div><div class="label">Pending</div></div>
@@ -787,7 +864,7 @@
         </article>
       </section>
 
-      <!-- ===== STUDENT RECORDS (Admin) ===== -->
+      <!-- ===== STUDENT RECORDS ===== -->
       <section class="page" id="students">
         <div class="heading"><h1>Student Records</h1><p>Manage all student information, grades, and attendance.</p></div>
         <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
@@ -804,7 +881,7 @@
         </div>
       </section>
 
-      <!-- ===== BUDGET (Admin) ===== -->
+      <!-- ===== BUDGET ===== -->
       <section class="page" id="budget">
         <div class="heading"><h1>Budget &amp; Finance</h1><p>Track income, expenses, and financial health of NOKJ Academy.</p></div>
         <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
@@ -821,7 +898,7 @@
         </div>
       </section>
 
-      <!-- ===== COURSE MANAGEMENT (Admin) ===== -->
+      <!-- ===== COURSE MANAGEMENT ===== -->
       <section class="page" id="courses-admin">
         <div class="heading"><h1>Course Management</h1><p>Create and manage courses, and enroll students.</p></div>
         <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
@@ -902,6 +979,14 @@
     </div>
   </div>
 
+  <!-- ===== FILE PREVIEW OVERLAY ===== -->
+  <div class="file-preview-overlay" id="file-preview-overlay">
+    <div class="file-preview-content">
+      <span class="preview-close" id="file-preview-close">&times;</span>
+      <div id="file-preview-body"></div>
+    </div>
+  </div>
+
   <!-- ===== MODALS ===== -->
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal">
@@ -960,6 +1045,13 @@
         <label>Deadline</label>
         <input type="date" id="task-modal-deadline" />
 
+        <label>Attach Files</label>
+        <div class="file-input-wrapper">
+          <label for="task-file-input">📎 Choose Files</label>
+          <input type="file" id="task-file-input" multiple />
+        </div>
+        <div class="file-list" id="task-file-list"></div>
+
         <label>Assign to</label>
         <select id="task-modal-assign">
           <option value="all">All Students</option>
@@ -967,9 +1059,7 @@
           <option value="student">Specific Student</option>
         </select>
 
-        <div id="task-modal-assign-options" style="display:none;">
-          <!-- Dynamically populated -->
-        </div>
+        <div id="task-modal-assign-options" style="display:none;"></div>
 
         <div class="modal-actions">
           <button type="button" class="cancel-btn" id="task-modal-cancel">Cancel</button>
@@ -992,7 +1082,9 @@
         <input type="text" id="grade-task-task-title" disabled />
 
         <label>Submission</label>
-        <textarea id="grade-task-submission-text" disabled style="background:#f3f4f6;"></textarea>
+        <textarea id="grade-task-submission-text" disabled style="background:#f3f4f6;min-height:60px;"></textarea>
+
+        <div id="grade-task-submission-file" style="margin-bottom:12px;"></div>
 
         <label>Grade (%)</label>
         <input type="number" id="grade-task-grade" placeholder="0-100" min="0" max="100" />
@@ -1083,7 +1175,7 @@
         { id: 3, title: 'English Literature: Macbeth Analysis', teacher: 'Ms. Evans', time: '09:00 - 10:00', date: '2026-08-30', link: '#' }
       ];
 
-      // ----- Enhanced Task Data -----
+      // ----- Enhanced Task Data with Files -----
       const DEFAULT_TASKS = [
         {
           id: 1,
@@ -1094,6 +1186,7 @@
           priority: 'high',
           assignedTo: 'all',
           assignedIds: [],
+          files: [{ name: 'Quadratic_Practice.pdf', data: 'dummy-pdf-data' }],
           createdAt: '2026-08-28'
         },
         {
@@ -1105,6 +1198,7 @@
           priority: 'medium',
           assignedTo: 'all',
           assignedIds: [],
+          files: [{ name: 'Macbeth_Instructions.docx', data: 'dummy-doc-data' }],
           createdAt: '2026-08-28'
         },
         {
@@ -1116,14 +1210,15 @@
           priority: 'medium',
           assignedTo: 'all',
           assignedIds: [],
+          files: [{ name: 'Cell_Quiz.pdf', data: 'dummy-pdf-data' }],
           createdAt: '2026-08-28'
         }
       ];
 
       const DEFAULT_TASK_SUBMISSIONS = {
-        '1-1': { answer: 'x = -2, x = -3', submittedAt: '2026-08-29T10:00:00', grade: null, feedback: null, file: null },
-        '2-1': { answer: 'Ambition is the driving force in Macbeth...', submittedAt: '2026-08-30T14:00:00', grade: 85, feedback: 'Good analysis, could use more quotes.' },
-        '3-1': { answer: '1. B, 2. A, 3. C, 4. D, 5. B', submittedAt: '2026-08-31T16:00:00', grade: null, feedback: null }
+        '1-1': { answer: 'x = -2, x = -3', submittedAt: '2026-08-29T10:00:00', grade: null, feedback: null, files: [] },
+        '2-1': { answer: 'Ambition is the driving force in Macbeth...', submittedAt: '2026-08-30T14:00:00', grade: 85, feedback: 'Good analysis, could use more quotes.', files: [] },
+        '3-1': { answer: '1. B, 2. A, 3. C, 4. D, 5. B', submittedAt: '2026-08-31T16:00:00', grade: null, feedback: null, files: [] }
       };
 
       const DEFAULT_PRESENTATION = [
@@ -1140,9 +1235,7 @@
       let nextStudentId = 1, nextCourseId = 1, nextBudgetId = 1, nextTaskId = 4, nextMeetingId = 4;
       let currentUser = null, expandedRows = {};
       let currentSlide = 0, presentationSlides = [];
-
-      // Modal state
-      let modalMode = 'add', modalType = 'student', editingId = null, enrollStudentId = null;
+      let tempTaskFiles = [];
       let gradingTaskId = null, gradingStudentId = null;
 
       // ----- DOM refs -----
@@ -1224,10 +1317,7 @@
       const enrollModalCancel = document.getElementById('enroll-modal-cancel');
       const enrollModalSave = document.getElementById('enroll-modal-save');
 
-      // Task modal
       const taskModalOverlay = document.getElementById('task-modal-overlay');
-      const taskModalTitle = document.getElementById('task-modal-title');
-      const taskModalSub = document.getElementById('task-modal-sub');
       const taskModalForm = document.getElementById('task-modal-form');
       const taskModalCancel = document.getElementById('task-modal-cancel');
       const taskModalSave = document.getElementById('task-modal-save');
@@ -1238,8 +1328,9 @@
       const taskModalDeadline = document.getElementById('task-modal-deadline');
       const taskModalAssign = document.getElementById('task-modal-assign');
       const taskModalAssignOptions = document.getElementById('task-modal-assign-options');
+      const taskFileInput = document.getElementById('task-file-input');
+      const taskFileList = document.getElementById('task-file-list');
 
-      // Grade task modal
       const gradeTaskModalOverlay = document.getElementById('grade-task-modal-overlay');
       const gradeTaskModalForm = document.getElementById('grade-task-modal-form');
       const gradeTaskModalCancel = document.getElementById('grade-task-modal-cancel');
@@ -1247,8 +1338,13 @@
       const gradeTaskStudentName = document.getElementById('grade-task-student-name');
       const gradeTaskTaskTitle = document.getElementById('grade-task-task-title');
       const gradeTaskSubmissionText = document.getElementById('grade-task-submission-text');
+      const gradeTaskSubmissionFile = document.getElementById('grade-task-submission-file');
       const gradeTaskGrade = document.getElementById('grade-task-grade');
       const gradeTaskFeedback = document.getElementById('grade-task-feedback');
+
+      const filePreviewOverlay = document.getElementById('file-preview-overlay');
+      const filePreviewBody = document.getElementById('file-preview-body');
+      const filePreviewClose = document.getElementById('file-preview-close');
 
       const totalStudentsEl = document.getElementById('total-students');
       const totalCoursesEl = document.getElementById('total-courses');
@@ -1372,7 +1468,11 @@
         'Upload File': 'Загрузить файл', 'Task created successfully!': 'Задание успешно создано!',
         'Grade saved successfully!': 'Оценка успешно сохранена!',
         'High': 'Высокий', 'Medium': 'Средний', 'Low': 'Низкий',
-        'Overdue': 'Просрочено', 'Due': 'Срок', 'All Status': 'Все статусы'
+        'Overdue': 'Просрочено', 'Due': 'Срок', 'All Status': 'Все статусы',
+        'Attach Files': 'Прикрепить файлы', 'Choose Files': 'Выбрать файлы',
+        'View File': 'Просмотреть файл', 'Download File': 'Скачать файл',
+        'No files attached.': 'Нет прикрепленных файлов.',
+        'Submission Files:': 'Файлы ответа:'
       };
 
       const originalText = new WeakMap();
@@ -1500,9 +1600,7 @@
         return labels[priority] || priority;
       }
 
-      function getTaskPriorityClass(priority) {
-        return priority || 'medium';
-      }
+      function getTaskPriorityClass(priority) { return priority || 'medium'; }
 
       function isTaskOverdue(task) {
         const today = new Date().toISOString().split('T')[0];
@@ -1527,6 +1625,46 @@
           return task.assignedIds && task.assignedIds.some(function(cid) { return studentCourses.includes(cid); });
         }
         return false;
+      }
+
+      // ----- File Preview -----
+      function openFilePreview(fileName, fileData) {
+        const body = filePreviewBody;
+        body.innerHTML = '';
+
+        const ext = fileName.split('.').pop().toLowerCase();
+        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(ext);
+        const isPDF = ext === 'pdf';
+        const isText = ['txt', 'md', 'csv', 'json', 'xml', 'html', 'css', 'js'].includes(ext);
+        const isDoc = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'].includes(ext);
+
+        let content = '';
+
+        if (isImage) {
+          content = '<img src="' + fileData + '" class="file-preview-image" />';
+        } else if (isPDF) {
+          content = '<iframe src="' + fileData + '" class="file-preview-iframe" />';
+        } else if (isText) {
+          // For text files, try to decode
+          try {
+            const decoded = atob(fileData.split(',')[1] || '');
+            content = '<pre class="file-preview-text">' + decoded + '</pre>';
+          } catch (e) {
+            content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>Text preview not available. <a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">Download file</a></div>';
+          }
+        } else if (isDoc) {
+          content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>This file type may not be previewable in the browser. <a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">Download file</a></div>';
+        } else {
+          content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>File preview not available. <a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">Download file</a></div>';
+        }
+
+        body.innerHTML = content;
+        filePreviewOverlay.classList.add('open');
+      }
+
+      function closeFilePreview() {
+        filePreviewOverlay.classList.remove('open');
+        filePreviewBody.innerHTML = '';
       }
 
       // ----- Navigation -----
@@ -1579,7 +1717,7 @@
       function setLanguage(lang) { currentLang = lang; localStorage.setItem('nokj-language', lang); applyTranslation(lang); }
       function toggleLanguage() { setLanguage((currentLang === 'en') ? 'ru' : 'en'); }
 
-      // ----- Render Functions (Existing) -----
+      // ----- Render Functions -----
       function renderStudents() {
         const search = studentSearch.value.toLowerCase();
         const filter = studentFilter.value;
@@ -1831,23 +1969,7 @@
       function nextSlide() { if (currentSlide < presentationSlides.length - 1) { currentSlide++; updateSlide(); } }
       function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlide(); } }
 
-      // ----- Enhanced Tasks Rendering -----
-      function renderTasks() {
-        if (!currentUser) return;
-        const isAdmin = currentUser.role === 'Admin';
-        const adminView = document.getElementById('admin-tasks-view');
-        const studentView = document.getElementById('student-tasks-view');
-        if (isAdmin) {
-          adminView.style.display = 'block';
-          studentView.style.display = 'none';
-          renderAdminTasks();
-        } else {
-          adminView.style.display = 'none';
-          studentView.style.display = 'block';
-          renderStudentTasks();
-        }
-      }
-
+      // ----- Task Functions with File Support -----
       function renderAdminTasks() {
         const search = document.getElementById('task-search').value.toLowerCase();
         const typeFilter = document.getElementById('task-type-filter').value;
@@ -1899,12 +2021,6 @@
           const totalStudents = students.length;
           const submittedCount = submissionKeys.length;
 
-          // Filter by status if needed
-          if (statusFilter !== 'all') {
-            const status = statusFilter === 'graded' ? gradedCount > 0 : statusFilter === 'submitted' ? submittedCount > 0 : pendingCount > 0;
-            if (!status) return;
-          }
-
           const card = document.createElement('div');
           card.className = 'task-card';
           const deadlineClass = getTaskDeadlineClass(task);
@@ -1914,6 +2030,16 @@
             task.assignedTo === 'course' ? task.assignedIds.map(function(id) { return getCourseName(id); }).join(', ') :
             task.assignedTo === 'student' ? task.assignedIds.map(function(id) { return getStudentName(id); }).join(', ') :
             'All Students';
+
+          // Build file list HTML
+          let filesHtml = '';
+          if (task.files && task.files.length > 0) {
+            filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
+            task.files.forEach(function(file) {
+              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="window.openFilePreview(\'' + file.name + '\', \'' + (file.data || '') + '\')">' + file.name + '</span> <span style="font-size:11px;color:var(--muted);cursor:pointer;" onclick="window.downloadFile(\'' + file.name + '\', \'' + (file.data || '') + '\')">⬇️</span></div>';
+            });
+            filesHtml += '</div>';
+          }
 
           card.innerHTML =
             '<div class="task-header">' +
@@ -1928,6 +2054,7 @@
             '<div class="task-body">' +
               '<div class="task-description">' + task.description + '</div>' +
               '<div class="task-deadline ' + deadlineClass + '">⏰ Due: ' + task.deadline + (isTaskOverdue(task) ? ' (Overdue!)' : '') + '</div>' +
+              filesHtml +
               '<div style="margin-top:8px;font-size:12px;color:var(--muted);">📊 ' + submittedCount + ' / ' + totalStudents + ' students submitted</div>' +
             '</div>' +
             '<div class="task-footer">' +
@@ -1945,12 +2072,10 @@
           return;
         }
 
-        // Get tasks assigned to this student
         const assignedTasks = tasks.filter(function(task) {
           return isTaskAssignedToStudent(task, student.id);
         });
 
-        // Update stats
         let pendingCount = 0, submittedCount = 0, gradedCount = 0;
 
         assignedTasks.forEach(function(task) {
@@ -1973,7 +2098,6 @@
           return;
         }
 
-        // Sort: overdue first, then by deadline
         assignedTasks.sort(function(a, b) {
           const aOverdue = isTaskOverdue(a);
           const bOverdue = isTaskOverdue(b);
@@ -1988,6 +2112,16 @@
           const deadlineClass = getTaskDeadlineClass(task);
           const priorityLabel = getTaskPriorityLabel(task.priority);
           const priorityClass = getTaskPriorityClass(task.priority);
+
+          // Build file list HTML for student view
+          let filesHtml = '';
+          if (task.files && task.files.length > 0) {
+            filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
+            task.files.forEach(function(file) {
+              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="window.openFilePreview(\'' + file.name + '\', \'' + (file.data || '') + '\')">' + file.name + '</span></div>';
+            });
+            filesHtml += '</div>';
+          }
 
           const card = document.createElement('div');
           card.className = 'task-card';
@@ -2004,15 +2138,17 @@
             statusDisplay = '<span class="submitted-status">⏳ Submitted</span>';
             footerHtml =
               '<div class="submitted-status">⏳ Submitted</div>' +
-              '<div style="font-size:12px;color:var(--muted);">Waiting for grading...</div>' +
-              (submission.file ? '<div style="font-size:12px;color:var(--muted);">📎 ' + submission.file.name + '</div>' : '');
+              '<div style="font-size:12px;color:var(--muted);">Waiting for grading...</div>';
+            if (submission.files && submission.files.length > 0) {
+              footerHtml += '<div style="font-size:12px;color:var(--muted);">📎 ' + submission.files.map(function(f) { return f.name; }).join(', ') + '</div>';
+            }
           } else {
             statusDisplay = '<span class="pill danger">⚠️ Pending</span>';
             footerHtml =
               '<input type="text" class="answer-input" id="answer-' + task.id + '" placeholder="Enter your answer..." />' +
-              '<input type="file" id="file-' + task.id + '" style="display:none;" />' +
-              '<button class="file-upload-btn" onclick="document.getElementById(\'file-' + task.id + '\').click()">📎 Upload File</button>' +
-              '<span id="file-name-' + task.id + '" class="file-name">No file chosen</span>' +
+              '<input type="file" id="file-' + task.id + '" style="display:none;" multiple />' +
+              '<button class="file-upload-btn" onclick="document.getElementById(\'file-' + task.id + '\').click()">📎 Upload Files</button>' +
+              '<span id="file-name-' + task.id + '" class="file-name">No files chosen</span>' +
               '<button class="submit-btn" data-task="' + task.id + '">Submit</button>';
           }
 
@@ -2029,6 +2165,7 @@
             '<div class="task-body">' +
               '<div class="task-description">' + task.description + '</div>' +
               '<div class="task-deadline ' + deadlineClass + '">⏰ Due: ' + task.deadline + (isTaskOverdue(task) ? ' ⚠️ Overdue!' : '') + '</div>' +
+              filesHtml +
             '</div>' +
             '<div class="task-footer">' + footerHtml + '</div>';
           container.appendChild(card);
@@ -2041,29 +2178,44 @@
             fileInput.addEventListener('change', function(e) {
               const fileNameSpan = document.getElementById('file-name-' + task.id);
               if (e.target.files && e.target.files.length > 0) {
-                fileNameSpan.textContent = e.target.files[0].name;
-                // Store file in submission data
+                const names = Array.from(e.target.files).map(function(f) { return f.name; }).join(', ');
+                fileNameSpan.textContent = names;
+                // Store files for submission
                 const studentId = students.find(function(s) { return s.name === currentUser.name; }).id;
                 const key = task.id + '-' + studentId;
                 if (!taskSubmissions[key]) {
-                  taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null, file: null };
+                  taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null, files: [] };
                 }
-                taskSubmissions[key].file = {
-                  name: e.target.files[0].name,
-                  size: e.target.files[0].size,
-                  type: e.target.files[0].type
-                };
+                taskSubmissions[key].files = Array.from(e.target.files).map(function(f) {
+                  return { name: f.name, size: f.size, type: f.type };
+                });
                 saveData();
               } else {
-                fileNameSpan.textContent = 'No file chosen';
+                fileNameSpan.textContent = 'No files chosen';
               }
             });
           }
         });
       }
 
-      // ----- Task Management Functions -----
-      function createTask(title, type, description, deadline, priority, assignedTo, assignedIds) {
+      function renderTasks() {
+        if (!currentUser) return;
+        const isAdmin = currentUser.role === 'Admin';
+        const adminView = document.getElementById('admin-tasks-view');
+        const studentView = document.getElementById('student-tasks-view');
+        if (isAdmin) {
+          adminView.style.display = 'block';
+          studentView.style.display = 'none';
+          renderAdminTasks();
+        } else {
+          adminView.style.display = 'none';
+          studentView.style.display = 'block';
+          renderStudentTasks();
+        }
+      }
+
+      // ----- Task Management Functions with File Support -----
+      function createTask(title, type, description, deadline, priority, assignedTo, assignedIds, files) {
         tasks.push({
           id: nextTaskId++,
           title: title,
@@ -2073,6 +2225,7 @@
           priority: priority || 'medium',
           assignedTo: assignedTo || 'all',
           assignedIds: assignedIds || [],
+          files: files || [],
           createdAt: new Date().toISOString().split('T')[0]
         });
         saveData();
@@ -2089,15 +2242,15 @@
         renderTasks();
       }
 
-      function submitTaskAnswer(taskId, studentId, answer, fileData) {
+      function submitTaskAnswer(taskId, studentId, answer, files) {
         const key = taskId + '-' + studentId;
         if (!taskSubmissions[key]) {
-          taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null, file: null };
+          taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null, files: [] };
         }
         taskSubmissions[key].answer = answer;
         taskSubmissions[key].submittedAt = new Date().toISOString();
-        if (fileData) {
-          taskSubmissions[key].file = fileData;
+        if (files && files.length > 0) {
+          taskSubmissions[key].files = files;
         }
         saveData();
         renderTasks();
@@ -2129,6 +2282,20 @@
         gradeTaskStudentName.value = student.name;
         gradeTaskTaskTitle.value = task.title;
         gradeTaskSubmissionText.value = submission.answer || 'No answer provided.';
+
+        // Show submitted files
+        const fileContainer = document.getElementById('grade-task-submission-file');
+        if (submission.files && submission.files.length > 0) {
+          let html = '<strong>📎 Submission Files:</strong><div style="margin-top:4px;">';
+          submission.files.forEach(function(file) {
+            html += '<span class="item-tag">📄 ' + file.name + '</span> ';
+          });
+          html += '</div>';
+          fileContainer.innerHTML = html;
+        } else {
+          fileContainer.innerHTML = '<span style="color:var(--muted);font-size:12px;">No files uploaded.</span>';
+        }
+
         gradeTaskGrade.value = submission.grade || '';
         gradeTaskFeedback.value = submission.feedback || '';
 
@@ -2144,7 +2311,7 @@
         }
       }
 
-      // ----- Modal Functions (Existing) -----
+      // ----- Modal Functions -----
       function openModal(type, mode, data) {
         modalType = type;
         modalMode = mode;
@@ -2450,6 +2617,13 @@
         app.classList.remove('logged-in');
       }
 
+      // ----- Make functions globally accessible -----
+      window.openFilePreview = openFilePreview;
+      window.downloadFile = function(fileName, fileData) {
+        // For demo, just show alert since we can't actually download without real data
+        alert('Download: ' + fileName + '\n(File would download in production)');
+      };
+
       // ----- Event Listeners -----
       loginForm.addEventListener('submit', function(e) { e.preventDefault(); login(loginEmail.value.trim(), loginPassword.value.trim()); });
       logoutBtn.addEventListener('click', logout);
@@ -2472,7 +2646,13 @@
         });
       });
 
-      // Student table events
+      // ----- File Preview Events -----
+      filePreviewClose.addEventListener('click', closeFilePreview);
+      filePreviewOverlay.addEventListener('click', function(e) {
+        if (e.target === filePreviewOverlay) closeFilePreview();
+      });
+
+      // ----- Student table events -----
       studentTableBody.addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -2482,7 +2662,7 @@
         else if (target.classList.contains('enroll')) openEnrollModal(id);
       });
 
-      // Budget table events
+      // ----- Budget table events -----
       budgetTableBody.addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -2491,7 +2671,7 @@
         else if (target.classList.contains('edit')) { const b = budgetEntries.find(function(bg) { return bg.id === id; }); if (b) openModal('budget', 'edit', b); }
       });
 
-      // Course table events
+      // ----- Course table events -----
       courseTableBody.addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -2500,7 +2680,7 @@
         else if (target.classList.contains('edit')) { const c = courses.find(function(co) { return co.id === id; }); if (c) openModal('course', 'edit', c); }
       });
 
-      // Grade table events
+      // ----- Grade table events -----
       document.getElementById('grade-table-body').addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -2530,7 +2710,7 @@
       document.getElementById('grade-course-filter').addEventListener('change', renderGrades);
       document.getElementById('grade-student-filter').addEventListener('change', renderGrades);
 
-      // Classroom events
+      // ----- Classroom events -----
       meetingGrid.addEventListener('click', function(e) {
         const target = e.target.closest('.join-btn');
         if (target) openPresentation(parseInt(target.dataset.meeting));
@@ -2552,7 +2732,7 @@
         }
       });
 
-      // Presentation controls
+      // ----- Presentation controls -----
       document.getElementById('presentation-close').addEventListener('click', closePresentation);
       document.getElementById('presentation-next').addEventListener('click', nextSlide);
       document.getElementById('presentation-prev').addEventListener('click', prevSlide);
@@ -2568,8 +2748,7 @@
         }
       });
 
-      // ----- Enhanced Task Events -----
-      // Task modal
+      // ----- Task Modal -----
       taskModalCancel.addEventListener('click', function() { taskModalOverlay.classList.remove('open'); });
       taskModalOverlay.addEventListener('click', function(e) { if (e.target === taskModalOverlay) taskModalOverlay.classList.remove('open'); });
 
@@ -2583,9 +2762,45 @@
         taskModalDeadline.value = '';
         taskModalAssign.value = 'all';
         taskModalAssignOptions.style.display = 'none';
+        taskFileList.innerHTML = '';
+        tempTaskFiles = [];
         taskModalSave.textContent = 'Create Task';
         taskModalOverlay.classList.add('open');
       });
+
+      // File upload handling
+      taskFileInput.addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        files.forEach(function(file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            tempTaskFiles.push({
+              name: file.name,
+              data: event.target.result
+            });
+            updateTaskFileList();
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+
+      function updateTaskFileList() {
+        taskFileList.innerHTML = '';
+        tempTaskFiles.forEach(function(file, index) {
+          const tag = document.createElement('span');
+          tag.className = 'file-tag';
+          tag.innerHTML = '📄 ' + file.name + ' <span class="remove-file" data-index="' + index + '">✕</span>';
+          taskFileList.appendChild(tag);
+        });
+        // Add remove handlers
+        taskFileList.querySelectorAll('.remove-file').forEach(function(el) {
+          el.addEventListener('click', function() {
+            const index = parseInt(this.dataset.index);
+            tempTaskFiles.splice(index, 1);
+            updateTaskFileList();
+          });
+        });
+      }
 
       taskModalAssign.addEventListener('change', function() {
         const val = this.value;
@@ -2632,16 +2847,22 @@
           }
         }
 
-        createTask(title, type, description, deadline, priority, assignTo, assignedIds);
+        // Use the files from tempTaskFiles
+        const files = tempTaskFiles.map(function(f) {
+          return { name: f.name, data: f.data };
+        });
+
+        createTask(title, type, description, deadline, priority, assignTo, assignedIds, files);
+        tempTaskFiles = [];
         taskModalOverlay.classList.remove('open');
       });
 
-      // Task search/filter
+      // ----- Task search/filter -----
       document.getElementById('task-search').addEventListener('input', renderTasks);
       document.getElementById('task-type-filter').addEventListener('change', renderTasks);
       document.getElementById('task-status-filter').addEventListener('change', renderTasks);
 
-      // Student task submit
+      // ----- Student task submit -----
       document.getElementById('student-task-list').addEventListener('click', function(e) {
         const target = e.target.closest('.submit-btn');
         if (target) {
@@ -2651,26 +2872,24 @@
           const student = students.find(function(s) { return s.name === currentUser.name; });
           if (!student) return;
 
-          let fileData = null;
+          let files = [];
           if (fileInput && fileInput.files && fileInput.files.length > 0) {
-            fileData = {
-              name: fileInput.files[0].name,
-              size: fileInput.files[0].size,
-              type: fileInput.files[0].type
-            };
+            files = Array.from(fileInput.files).map(function(f) {
+              return { name: f.name, size: f.size, type: f.type };
+            });
           }
 
           const answer = input ? input.value.trim() : '';
-          if (!answer && !fileData) {
+          if (!answer && files.length === 0) {
             alert('Please enter your answer or upload a file.');
             return;
           }
 
-          submitTaskAnswer(taskId, student.id, answer, fileData);
+          submitTaskAnswer(taskId, student.id, answer, files);
         }
       });
 
-      // View submissions and grade
+      // ----- Admin task events -----
       document.getElementById('admin-task-list').addEventListener('click', function(e) {
         const target = e.target.closest('.view-submissions-btn');
         if (target) {
@@ -2687,10 +2906,7 @@
             return;
           }
 
-          // Show a list of submissions with grade buttons
-          let message = '📋 Submissions for: ' + task.title + '\n\n';
           let studentList = [];
-
           submissionKeys.forEach(function(key) {
             const studentId = parseInt(key.split('-')[1]);
             const student = students.find(function(s) { return s.id === studentId; });
@@ -2706,7 +2922,6 @@
             }
           });
 
-          // Sort: ungraded first
           studentList.sort(function(a, b) {
             const aGraded = a.submission.grade !== null && a.submission.grade !== undefined;
             const bGraded = b.submission.grade !== null && b.submission.grade !== undefined;
@@ -2715,19 +2930,6 @@
             return a.name.localeCompare(b.name);
           });
 
-          let listHtml = '<div style="max-height:400px;overflow-y:auto;">';
-          studentList.forEach(function(item) {
-            listHtml +=
-              '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);">' +
-                '<span><strong>' + item.name + '</strong> - ' + item.status + '</span>' +
-                '<button class="primary-button grade-submission-btn" data-task="' + taskId + '" data-student="' + item.id + '" style="padding:4px 12px;font-size:12px;">Grade</button>' +
-              '</div>';
-          });
-          listHtml += '</div>';
-
-          // Show in a modal-like prompt (we'll use a simple alert with list)
-          // Since we can't do custom modals easily here, we'll use the grade modal
-          // Let's just open the grade modal for the first ungraded student
           const ungraded = studentList.find(function(item) {
             return item.submission.grade === null || item.submission.grade === undefined;
           });
@@ -2735,7 +2937,6 @@
           if (ungraded) {
             openGradeModal(taskId, ungraded.id);
           } else {
-            // All graded, show summary
             let summary = '📊 All submissions graded!\n\n';
             studentList.forEach(function(item) {
               summary += item.name + ': ' + item.submission.grade + '%';
@@ -2756,7 +2957,7 @@
         }
       });
 
-      // Grade task modal
+      // ----- Grade task modal -----
       gradeTaskModalCancel.addEventListener('click', function() { gradeTaskModalOverlay.classList.remove('open'); });
       gradeTaskModalOverlay.addEventListener('click', function(e) { if (e.target === gradeTaskModalOverlay) gradeTaskModalOverlay.classList.remove('open'); });
 
@@ -2775,36 +2976,33 @@
         gradeTaskModalOverlay.classList.remove('open');
       });
 
-      // Re-open grade modal from student list (for when all graded)
-      // We'll handle this via the view submissions button logic above
-
-      // ----- Add/Edit Buttons -----
+      // ----- Add buttons -----
       addStudentBtn.addEventListener('click', function() { openModal('student', 'add'); });
       addBudgetBtn.addEventListener('click', function() { openModal('budget', 'add'); });
       addCourseBtn.addEventListener('click', function() { openModal('course', 'add'); });
 
-      // Export buttons
+      // ----- Export buttons -----
       exportStudentsBtn.addEventListener('click', exportStudentsCSV);
       exportBudgetBtn.addEventListener('click', exportBudgetCSV);
 
-      // Search/filter
+      // ----- Search/filter -----
       studentSearch.addEventListener('input', renderStudents);
       studentFilter.addEventListener('change', renderStudents);
       budgetSearch.addEventListener('input', renderBudget);
       budgetFilter.addEventListener('change', renderBudget);
       courseSearch.addEventListener('input', renderCourses);
 
-      // Modal events
+      // ----- Modal events -----
       modalCancel.addEventListener('click', closeModal);
       modalOverlay.addEventListener('click', function(e) { if (e.target === modalOverlay) closeModal(); });
       modalForm.addEventListener('submit', handleModalSubmit);
 
-      // Enrollment modal events
+      // ----- Enrollment modal events -----
       enrollModalCancel.addEventListener('click', closeEnrollModal);
       enrollModalOverlay.addEventListener('click', function(e) { if (e.target === enrollModalOverlay) closeEnrollModal(); });
       enrollModalSave.addEventListener('click', saveEnrollments);
 
-      // Enter key on password field submits login
+      // ----- Enter key on password -----
       loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginForm.dispatchEvent(new Event('submit')); });
 
       // ----- Init -----

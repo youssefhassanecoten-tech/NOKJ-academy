@@ -828,8 +828,8 @@
         <span>NOKJ Academy</span>
       </div>
       <div class="auth-buttons">
-        <button class="btn-outline" onclick="showLoginScreen()">Sign In</button>
-        <button class="btn-primary" onclick="showRegisterScreen()">Join Academy</button>
+        <button class="btn-outline" id="landing-login-btn">Sign In</button>
+        <button class="btn-primary" id="landing-register-btn">Join Academy</button>
       </div>
     </header>
 
@@ -838,8 +838,8 @@
         <h1>Learn Anything, <span>Anytime</span></h1>
         <p>NOKJ Academy is your all-in-one learning platform. Join live classes, complete assignments, track your progress, and connect with teachers — all in one place.</p>
         <div class="hero-buttons">
-          <button class="btn-large primary" onclick="showRegisterScreen()">Start Learning Free</button>
-          <button class="btn-large outline" onclick="showLoginScreen()">Sign In</button>
+          <button class="btn-large primary" id="landing-start-btn">Start Learning Free</button>
+          <button class="btn-large outline" id="landing-signin-btn">Sign In</button>
         </div>
       </div>
       <div class="hero-image">
@@ -907,7 +907,7 @@
         <div id="login-error" class="login-error"></div>
       </form>
       <div class="login-footer">
-        Don't have an account? <a onclick="showRegisterScreen()">Join Academy</a>
+        Don't have an account? <a id="login-to-register">Join Academy</a>
       </div>
     </div>
   </div>
@@ -958,7 +958,7 @@
         <div id="register-error" class="register-error"></div>
       </form>
       <div class="register-footer">
-        Already have an account? <a onclick="showLoginScreen()">Sign In</a>
+        Already have an account? <a id="register-to-login">Sign In</a>
       </div>
     </div>
   </div>
@@ -1855,10 +1855,10 @@
       }
 
       function renderCourses() {
-        const search = courseSearch.value.toLowerCase();
+        const search = document.getElementById('course-search').value.toLowerCase();
         let filtered = courses.filter(function(c) { return c.name.toLowerCase().includes(search); });
         filtered.sort(function(a, b) { return a.name.localeCompare(b.name); });
-        courseTableBody.innerHTML = '';
+        document.getElementById('course-table-body').innerHTML = '';
         filtered.forEach(function(c) {
           const studentCount = getCourseStudentCount(c.id);
           const isExpanded = expandedRows['course-' + c.id] || false;
@@ -1867,7 +1867,7 @@
           tr.className = 'expandable-row';
           tr.dataset.expandId = 'course-' + c.id;
           tr.innerHTML = '<td style="cursor:pointer;"><span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon + '</span> <strong>' + c.name + '</strong><br><span style="font-size:12px;color:var(--muted);">' + c.description + '</span></td><td>' + getTeacherName(c.teacherId) + '</td><td>' + studentCount + ' students</td><td><button class="action-btn edit" data-id="' + c.id + '" data-type="course">✏️</button><button class="action-btn delete" data-id="' + c.id + '" data-type="course">🗑️</button></td>';
-          courseTableBody.appendChild(tr);
+          document.getElementById('course-table-body').appendChild(tr);
           const detailTr = document.createElement('tr');
           detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
           detailTr.dataset.parentId = 'course-' + c.id;
@@ -1877,38 +1877,38 @@
           else { studentIds.forEach(function(sid) { const s = students.find(function(st) { return st.id === sid; }); if (s) detailHtml += '<span class="item-tag">👤 ' + s.name + ' <span class="status-badge ' + s.status.toLowerCase() + '">' + s.status + '</span></span>'; }); }
           detailHtml += '</div>';
           detailTr.innerHTML = '<td colspan="4">' + detailHtml + '</td>';
-          courseTableBody.appendChild(detailTr);
+          document.getElementById('course-table-body').appendChild(detailTr);
         });
-        courseCount.textContent = filtered.length + ' courses';
-        courseTotal.textContent = courses.length;
-        courseEnrollmentsTotal.textContent = enrollments.length;
+        document.getElementById('course-count').textContent = filtered.length + ' courses';
+        document.getElementById('course-total').textContent = courses.length;
+        document.getElementById('course-enrollments-total').textContent = enrollments.length;
         updateAdminStats();
       }
 
       function renderBudget() {
-        const search = budgetSearch.value.toLowerCase();
-        const filter = budgetFilter.value;
+        const search = document.getElementById('budget-search').value.toLowerCase();
+        const filter = document.getElementById('budget-filter').value;
         let filtered = budgetEntries.filter(function(b) {
           return b.category.toLowerCase().includes(search) && (filter === 'all' || b.type === filter);
         });
         filtered.sort(function(a, b) { return b.date.localeCompare(a.date); });
-        budgetTableBody.innerHTML = '';
+        document.getElementById('budget-table-body').innerHTML = '';
         filtered.forEach(function(b) {
           const isIncome = b.type === 'Income';
           const amountDisplay = isIncome ? '+' + b.amount : '-' + Math.abs(b.amount);
           const amountClass = isIncome ? 'income' : 'expense';
           const tr = document.createElement('tr');
           tr.innerHTML = '<td><strong>' + b.category + '</strong></td><td>' + b.type + '</td><td class="' + amountClass + '" style="font-weight:700;">$' + amountDisplay + '</td><td>' + b.date + '</td><td><span class="status-badge ' + b.status.toLowerCase() + '">' + b.status + '</span></td><td><button class="action-btn edit" data-id="' + b.id + '" data-type="budget">✏️</button><button class="action-btn delete" data-id="' + b.id + '" data-type="budget">🗑️</button></td>';
-          budgetTableBody.appendChild(tr);
+          document.getElementById('budget-table-body').appendChild(tr);
         });
         const total = budgetEntries.length;
-        budgetCount.textContent = filtered.length + ' entries';
+        document.getElementById('budget-count').textContent = filtered.length + ' entries';
         const totalIncome = budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(sum, b) { return sum + b.amount; }, 0);
         const totalExpense = budgetEntries.filter(function(b) { return b.type === 'Expense'; }).reduce(function(sum, b) { return sum + Math.abs(b.amount); }, 0);
-        budgetTotalIncome.textContent = '$' + totalIncome.toLocaleString();
-        budgetTotalExpense.textContent = '$' + totalExpense.toLocaleString();
-        budgetNet.textContent = '$' + (totalIncome - totalExpense).toLocaleString();
-        budgetNet.style.color = (totalIncome - totalExpense) >= 0 ? 'var(--success)' : 'var(--danger)';
+        document.getElementById('budget-total-income').textContent = '$' + totalIncome.toLocaleString();
+        document.getElementById('budget-total-expense').textContent = '$' + totalExpense.toLocaleString();
+        document.getElementById('budget-net').textContent = '$' + (totalIncome - totalExpense).toLocaleString();
+        document.getElementById('budget-net').style.color = (totalIncome - totalExpense) >= 0 ? 'var(--success)' : 'var(--danger)';
         updateAdminStats();
       }
 
@@ -2564,6 +2564,8 @@
       }
 
       // ----- Modal Functions -----
+      let modalType, modalMode, editingId, enrollStudentId;
+
       function openModal(type, mode, data) {
         modalType = type;
         modalMode = mode;
@@ -2781,48 +2783,66 @@
       }
 
       // ----- Event Listeners -----
+      // Landing page buttons (using IDs instead of onclick)
+      document.getElementById('landing-login-btn').addEventListener('click', showLoginScreen);
+      document.getElementById('landing-register-btn').addEventListener('click', showRegisterScreen);
+      document.getElementById('landing-start-btn').addEventListener('click', showRegisterScreen);
+      document.getElementById('landing-signin-btn').addEventListener('click', showLoginScreen);
+      document.getElementById('login-to-register').addEventListener('click', showRegisterScreen);
+      document.getElementById('register-to-login').addEventListener('click', showLoginScreen);
+
+      // Login
       loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         login(loginEmail.value.trim(), loginPassword.value.trim());
       });
 
+      // Register
       registerForm.addEventListener('submit', function(e) {
         e.preventDefault();
         register(registerName.value.trim(), registerEmail.value.trim(), registerPassword.value.trim(), registerRole.value);
       });
 
+      // Logout
       logoutBtn.addEventListener('click', logout);
 
+      // Navigation
       navButtons.forEach(function(btn) {
         btn.addEventListener('click', function() {
           openPage(btn.dataset.page);
         });
       });
 
+      // Language toggles
       if (langToggle) langToggle.addEventListener('click', toggleLanguage);
       if (loginLangToggle) loginLangToggle.addEventListener('click', toggleLanguage);
       if (registerLangToggle) registerLangToggle.addEventListener('click', toggleLanguage);
 
+      // Expandable rows
       document.addEventListener('click', function(e) {
         const target = e.target.closest('.expandable-row');
         if (target && target.dataset.expandId) toggleExpand(target.dataset.expandId);
       });
 
+      // Notification bell
       document.getElementById('notification-button').addEventListener('click', function() {
         alert('You have 2 new announcements and 1 assignment due tomorrow.');
       });
 
+      // Assignment buttons
       document.querySelectorAll('.assignment-button').forEach(function(btn) {
         btn.addEventListener('click', function() {
           alert('Assignment details and submissions will be added in the next development step.');
         });
       });
 
+      // File preview close
       document.getElementById('file-preview-close').addEventListener('click', closeFilePreview);
       document.getElementById('file-preview-overlay').addEventListener('click', function(e) {
         if (e.target === this) closeFilePreview();
       });
 
+      // Student table events
       studentTableBody.addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -2834,6 +2854,7 @@
         } else if (target.classList.contains('enroll')) openEnrollModal(id);
       });
 
+      // Budget table events
       document.getElementById('budget-table-body').addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -2845,7 +2866,8 @@
         }
       });
 
-      courseTableBody.addEventListener('click', function(e) {
+      // Course table events
+      document.getElementById('course-table-body').addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
         const id = parseInt(target.dataset.id);
@@ -2856,6 +2878,7 @@
         }
       });
 
+      // Grade table events
       document.getElementById('grade-table-body').addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -2891,6 +2914,7 @@
       document.getElementById('grade-course-filter').addEventListener('change', renderGrades);
       document.getElementById('grade-student-filter').addEventListener('change', renderGrades);
 
+      // Classroom events
       meetingGrid.addEventListener('click', function(e) {
         const target = e.target.closest('.join-btn');
         if (target) {
@@ -2902,6 +2926,7 @@
         }
       });
 
+      // Presentation controls
       document.getElementById('presentation-close').addEventListener('click', closePresentation);
       document.getElementById('presentation-next').addEventListener('click', nextSlide);
       document.getElementById('presentation-prev').addEventListener('click', prevSlide);
@@ -2917,6 +2942,7 @@
         }
       });
 
+      // Calendar navigation
       document.getElementById('calendar-prev').addEventListener('click', function() {
         if (currentMonth === 0) { currentMonth = 11; currentYear--; }
         else { currentMonth--; }
@@ -2928,6 +2954,7 @@
         renderCalendar();
       });
 
+      // Schedule class modal
       addClassBtn.addEventListener('click', openScheduleModal);
       scheduleModalCancel.addEventListener('click', function() { scheduleModalOverlay.classList.remove('open'); });
       scheduleModalOverlay.addEventListener('click', function(e) {
@@ -2952,6 +2979,7 @@
         scheduleModalOverlay.classList.remove('open');
       });
 
+      // Upcoming classes join buttons (delegated)
       upcomingClassesList.addEventListener('click', function(e) {
         const target = e.target.closest('.join-btn');
         if (target) {
@@ -2960,6 +2988,7 @@
         }
       });
 
+      // Task modal
       document.getElementById('add-task-btn').addEventListener('click', function() {
         document.getElementById('task-modal-title').textContent = 'Create Task';
         document.getElementById('task-modal-sub').textContent = 'Fill in the task details below.';
@@ -3055,10 +3084,12 @@
         document.getElementById('task-modal-overlay').classList.remove('open');
       });
 
+      // Task search/filter
       document.getElementById('task-search').addEventListener('input', renderTasks);
       document.getElementById('task-type-filter').addEventListener('change', renderTasks);
       document.getElementById('task-status-filter').addEventListener('change', renderTasks);
 
+      // Student task submit
       document.getElementById('student-task-list').addEventListener('click', function(e) {
         const target = e.target.closest('.submit-btn');
         if (target) {
@@ -3081,6 +3112,7 @@
         }
       });
 
+      // View submissions
       document.getElementById('admin-task-list').addEventListener('click', function(e) {
         const target = e.target.closest('.view-submissions-btn');
         if (target) {
@@ -3138,6 +3170,7 @@
         }
       });
 
+      // Delete task
       document.getElementById('admin-task-list').addEventListener('click', function(e) {
         const target = e.target.closest('.delete');
         if (target && target.dataset.type === 'task') {
@@ -3146,6 +3179,7 @@
         }
       });
 
+      // Grade task modal
       document.getElementById('grade-task-modal-cancel').addEventListener('click', function() {
         document.getElementById('grade-task-modal-overlay').classList.remove('open');
       });
@@ -3169,10 +3203,12 @@
         renderTasks();
       });
 
+      // Add buttons
       addStudentBtn.addEventListener('click', function() { openModal('student', 'add'); });
       document.getElementById('add-budget-btn').addEventListener('click', function() { openModal('budget', 'add'); });
       document.getElementById('add-course-btn').addEventListener('click', function() { openModal('course', 'add'); });
 
+      // Export buttons
       exportStudentsBtn.addEventListener('click', function() {
         const headers = ['Name', 'Email', 'Status', 'Enrolled Courses'];
         const data = students.map(function(s) {
@@ -3204,64 +3240,34 @@
         URL.revokeObjectURL(url);
       });
 
+      // Search/filter
       studentSearch.addEventListener('input', renderStudents);
       studentFilter.addEventListener('change', renderStudents);
       document.getElementById('budget-search').addEventListener('input', renderBudget);
       document.getElementById('budget-filter').addEventListener('change', renderBudget);
       document.getElementById('course-search').addEventListener('input', renderCourses);
 
+      // Modal events
       document.getElementById('modal-cancel').addEventListener('click', closeModal);
       document.getElementById('modal-overlay').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
       });
       document.getElementById('modal-form').addEventListener('submit', handleModalSubmit);
 
+      // Enrollment modal events
       document.getElementById('enroll-modal-cancel').addEventListener('click', closeEnrollModal);
       document.getElementById('enroll-modal-overlay').addEventListener('click', function(e) {
         if (e.target === this) closeEnrollModal();
       });
       document.getElementById('enroll-modal-save').addEventListener('click', saveEnrollments);
 
+      // Enter key on login/register
       loginPassword.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') loginForm.dispatchEvent(new Event('submit'));
       });
       registerPassword.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') registerForm.dispatchEvent(new Event('submit'));
       });
-
-      // ----- Make functions globally accessible for inline onclick -----
-      window.showLoginScreen = showLoginScreen;
-      window.showRegisterScreen = showRegisterScreen;
-      window.openFilePreview = openFilePreview;
-      window.closeFilePreview = closeFilePreview;
-
-      // ----- Init -----
-           // ----- Make functions globally accessible -----
-      window.showLoginScreen = function() {
-        landingPage.classList.add('hidden');
-        loginScreen.classList.remove('hidden');
-        loginScreen.classList.add('open');
-        registerScreen.classList.remove('open');
-        registerScreen.classList.add('hidden');
-        app.classList.remove('logged-in');
-        loginError.textContent = '';
-        loginEmail.value = '';
-        loginPassword.value = '';
-      };
-
-      window.showRegisterScreen = function() {
-        landingPage.classList.add('hidden');
-        registerScreen.classList.remove('hidden');
-        registerScreen.classList.add('open');
-        loginScreen.classList.remove('open');
-        loginScreen.classList.add('hidden');
-        app.classList.remove('logged-in');
-        registerError.textContent = '';
-        registerName.value = '';
-        registerEmail.value = '';
-        registerPassword.value = '';
-        registerRole.value = 'Student';
-      };
 
       // ----- Init -----
       loadData();

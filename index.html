@@ -361,9 +361,7 @@
     .task-card .task-body .task-files .file-item {
       display: flex; align-items: center; gap: 8px; padding: 4px 0;
     }
-    .task-card .task-body .task-files .file-item .file-icon {
-      font-size: 18px;
-    }
+    .task-card .task-body .task-files .file-item .file-icon { font-size: 18px; }
     .task-card .task-body .task-files .file-item .file-link {
       color: var(--primary); text-decoration: underline; cursor: pointer; font-size: 13px;
     }
@@ -430,7 +428,7 @@
     .task-stat-card .number { font-size: 28px; font-weight: 850; }
     .task-stat-card .label { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
-    /* --- FILE PREVIEW MODAL --- */
+    /* --- FILE PREVIEW --- */
     .file-preview-overlay {
       display: none; position: fixed; inset: 0; z-index: 1000;
       background: rgba(0,0,0,0.8); align-items: center; justify-content: center;
@@ -460,25 +458,17 @@
       padding: 40px; text-align: center; color: var(--muted);
     }
 
-    /* --- TEACHER DASHBOARD --- */
-    .teacher-stats {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;
-    }
-    .teacher-stat-card {
-      padding: 20px; border: 1px solid var(--line); border-radius: var(--radius);
-      background: white;
-    }
-    .teacher-stat-card .label { color: var(--muted); font-size: 12px; font-weight: 700; }
-    .teacher-stat-card .number { margin-top: 8px; font-size: 28px; font-weight: 850; }
-    .teacher-stat-card .change { margin-top: 4px; font-size: 12px; color: var(--success); }
-
-    /* --- MODAL --- */
+    /* --- MODALS --- */
     .modal-overlay {
       display: none; position: fixed; inset: 0; z-index: 100;
       background: rgba(0,0,0,0.5); align-items: center; justify-content: center; padding: 20px;
     }
     .modal-overlay.open { display: flex; }
-    .modal { max-width: 600px; width: 100%; padding: 30px; border-radius: var(--radius); background: white; box-shadow: 0 25px 60px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
+    .modal {
+      max-width: 600px; width: 100%; padding: 30px; border-radius: var(--radius);
+      background: white; box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+      max-height: 90vh; overflow-y: auto;
+    }
     .modal h2 { margin: 0 0 8px 0; font-size: 20px; }
     .modal p.sub { margin: 0 0 20px 0; color: var(--muted); font-size: 13px; }
     .modal label { display: block; margin-bottom: 4px; font-size: 13px; font-weight: 700; }
@@ -507,9 +497,7 @@
       padding: 4px 10px; background: #f3f4f6; border-radius: 4px;
       font-size: 12px; display: flex; align-items: center; gap: 6px;
     }
-    .modal .file-list .file-tag .remove-file {
-      cursor: pointer; color: var(--danger);
-    }
+    .modal .file-list .file-tag .remove-file { cursor: pointer; color: var(--danger); }
     .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
     .modal-actions button { padding: 10px 20px; font-weight: 700; border: 0; border-radius: 8px; }
     .modal-actions .cancel-btn { color: var(--muted); background: #f3f4f6; }
@@ -585,7 +573,7 @@
 
     /* --- RESPONSIVE --- */
     @media (max-width: 1030px) {
-      .stats, .admin-stats, .grade-summary-grid, .task-stats-grid, .teacher-stats { grid-template-columns: repeat(2, 1fr); }
+      .stats, .admin-stats, .grade-summary-grid, .task-stats-grid { grid-template-columns: repeat(2, 1fr); }
       .course-grid, .meeting-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 790px) {
@@ -611,14 +599,14 @@
       .table-toolbar { flex-direction: column; align-items: stretch; }
       .table-toolbar .left, .table-toolbar .right { flex-wrap: wrap; }
       .admin-stats { grid-template-columns: repeat(2, 1fr); }
-      .grade-summary-grid, .task-stats-grid, .teacher-stats { grid-template-columns: 1fr 1fr; }
+      .grade-summary-grid, .task-stats-grid { grid-template-columns: 1fr 1fr; }
       .meeting-grid { grid-template-columns: 1fr; }
       .expandable-detail .detail-content { padding: 12px 16px 12px 32px; font-size: 12px; }
       .file-preview-content .file-preview-iframe { height: 300px; }
       .modal { max-width: 100%; }
     }
     @media (max-width: 480px) {
-      .stats, .admin-stats, .grade-summary-grid, .task-stats-grid, .teacher-stats { gap: 10px; grid-template-columns: 1fr; }
+      .stats, .admin-stats, .grade-summary-grid, .task-stats-grid { gap: 10px; grid-template-columns: 1fr; }
       .stat-card { padding: 14px; }
       .stat-number { font-size: 22px; }
       .panel { padding: 17px; }
@@ -1017,7 +1005,6 @@
   </div>
 
   <!-- ===== TASK MODAL ===== -->
-    <!-- ===== TASK MODAL ===== -->
   <div class="modal-overlay" id="task-modal-overlay">
     <div class="modal">
       <h2 id="task-modal-title">Create Task</h2>
@@ -1176,7 +1163,6 @@
         { id: 3, title: 'English Literature: Macbeth Analysis', teacher: 'Ms. Evans', time: '09:00 - 10:00', date: '2026-08-30', link: '#' }
       ];
 
-      // ----- Enhanced Task Data with Files -----
       const DEFAULT_TASKS = [
         {
           id: 1,
@@ -1318,7 +1304,10 @@
       const enrollModalCancel = document.getElementById('enroll-modal-cancel');
       const enrollModalSave = document.getElementById('enroll-modal-save');
 
+      // Task modal
       const taskModalOverlay = document.getElementById('task-modal-overlay');
+      const taskModalTitle = document.getElementById('task-modal-title');
+      const taskModalSub = document.getElementById('task-modal-sub');
       const taskModalForm = document.getElementById('task-modal-form');
       const taskModalCancel = document.getElementById('task-modal-cancel');
       const taskModalSave = document.getElementById('task-modal-save');
@@ -1331,7 +1320,9 @@
       const taskModalAssignOptions = document.getElementById('task-modal-assign-options');
       const taskFileInput = document.getElementById('task-file-input');
       const taskFileList = document.getElementById('task-file-list');
+      const addTaskBtn = document.getElementById('add-task-btn');
 
+      // Grade task modal
       const gradeTaskModalOverlay = document.getElementById('grade-task-modal-overlay');
       const gradeTaskModalForm = document.getElementById('grade-task-modal-form');
       const gradeTaskModalCancel = document.getElementById('grade-task-modal-cancel');
@@ -1646,7 +1637,6 @@
         } else if (isPDF) {
           content = '<iframe src="' + fileData + '" class="file-preview-iframe" />';
         } else if (isText) {
-          // For text files, try to decode
           try {
             const decoded = atob(fileData.split(',')[1] || '');
             content = '<pre class="file-preview-text">' + decoded + '</pre>';
@@ -1970,7 +1960,7 @@
       function nextSlide() { if (currentSlide < presentationSlides.length - 1) { currentSlide++; updateSlide(); } }
       function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlide(); } }
 
-      // ----- Task Functions with File Support -----
+      // ----- Task Functions -----
       function renderAdminTasks() {
         const search = document.getElementById('task-search').value.toLowerCase();
         const typeFilter = document.getElementById('task-type-filter').value;
@@ -2032,7 +2022,6 @@
             task.assignedTo === 'student' ? task.assignedIds.map(function(id) { return getStudentName(id); }).join(', ') :
             'All Students';
 
-          // Build file list HTML
           let filesHtml = '';
           if (task.files && task.files.length > 0) {
             filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
@@ -2114,7 +2103,6 @@
           const priorityLabel = getTaskPriorityLabel(task.priority);
           const priorityClass = getTaskPriorityClass(task.priority);
 
-          // Build file list HTML for student view
           let filesHtml = '';
           if (task.files && task.files.length > 0) {
             filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
@@ -2181,7 +2169,6 @@
               if (e.target.files && e.target.files.length > 0) {
                 const names = Array.from(e.target.files).map(function(f) { return f.name; }).join(', ');
                 fileNameSpan.textContent = names;
-                // Store files for submission
                 const studentId = students.find(function(s) { return s.name === currentUser.name; }).id;
                 const key = task.id + '-' + studentId;
                 if (!taskSubmissions[key]) {
@@ -2215,7 +2202,7 @@
         }
       }
 
-      // ----- Task Management Functions with File Support -----
+      // ----- Task Management Functions -----
       function createTask(title, type, description, deadline, priority, assignedTo, assignedIds, files) {
         tasks.push({
           id: nextTaskId++,
@@ -2284,7 +2271,6 @@
         gradeTaskTaskTitle.value = task.title;
         gradeTaskSubmissionText.value = submission.answer || 'No answer provided.';
 
-        // Show submitted files
         const fileContainer = document.getElementById('grade-task-submission-file');
         if (submission.files && submission.files.length > 0) {
           let html = '<strong>📎 Submission Files:</strong><div style="margin-top:4px;">';
@@ -2312,7 +2298,7 @@
         }
       }
 
-      // ----- Modal Functions -----
+      // ----- Modal Functions (Existing) -----
       function openModal(type, mode, data) {
         modalType = type;
         modalMode = mode;
@@ -2621,7 +2607,6 @@
       // ----- Make functions globally accessible -----
       window.openFilePreview = openFilePreview;
       window.downloadFile = function(fileName, fileData) {
-        // For demo, just show alert since we can't actually download without real data
         alert('Download: ' + fileName + '\n(File would download in production)');
       };
 
@@ -2750,10 +2735,11 @@
       });
 
       // ----- Task Modal -----
-      taskModalCancel.addEventListener('click', function() { taskModalOverlay.classList.remove('open'); });
-      taskModalOverlay.addEventListener('click', function(e) { if (e.target === taskModalOverlay) taskModalOverlay.classList.remove('open'); });
+      // Get the Add Task button
+      const addTaskBtnEl = document.getElementById('add-task-btn');
 
-      document.getElementById('add-task-btn').addEventListener('click', function() {
+      // Open task modal
+      function openTaskModal() {
         taskModalTitle.textContent = 'Create Task';
         taskModalSub.textContent = 'Fill in the task details below.';
         taskModalTitleInput.value = '';
@@ -2767,6 +2753,22 @@
         tempTaskFiles = [];
         taskModalSave.textContent = 'Create Task';
         taskModalOverlay.classList.add('open');
+      }
+
+      if (addTaskBtnEl) {
+        addTaskBtnEl.addEventListener('click', function(e) {
+          e.preventDefault();
+          openTaskModal();
+        });
+      }
+
+      // Task modal cancel
+      taskModalCancel.addEventListener('click', function() {
+        taskModalOverlay.classList.remove('open');
+      });
+
+      taskModalOverlay.addEventListener('click', function(e) {
+        if (e.target === taskModalOverlay) taskModalOverlay.classList.remove('open');
       });
 
       // File upload handling
@@ -2793,7 +2795,6 @@
           tag.innerHTML = '📄 ' + file.name + ' <span class="remove-file" data-index="' + index + '">✕</span>';
           taskFileList.appendChild(tag);
         });
-        // Add remove handlers
         taskFileList.querySelectorAll('.remove-file').forEach(function(el) {
           el.addEventListener('click', function() {
             const index = parseInt(this.dataset.index);
@@ -2848,7 +2849,6 @@
           }
         }
 
-        // Use the files from tempTaskFiles
         const files = tempTaskFiles.map(function(f) {
           return { name: f.name, data: f.data };
         });

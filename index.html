@@ -7,7 +7,7 @@
   <title>NOKJ Academy</title>
 
   <style>
-    :root {
+       :root {
       --primary: #4f46e5;
       --primary-dark: #3730a3;
       --primary-light: #eef2ff;
@@ -572,10 +572,6 @@
       transform: rotate(90deg);
     }
 
-    .expandable-row td:first-child {
-      font-weight: 700;
-    }
-
     .expandable-detail {
       display: none;
       background: #f8fafc;
@@ -713,6 +709,84 @@
 
     .table-summary .total.expense {
       color: var(--danger);
+    }
+
+    /* Grade styling */
+    .grade-pass {
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    .grade-fail {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    .grade-input {
+      width: 60px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .grade-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .grade-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .grade-cell .save-grade-btn {
+      padding: 2px 10px;
+      font-size: 11px;
+      border: 1px solid var(--primary);
+      border-radius: 4px;
+      background: var(--primary-light);
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    .grade-cell .save-grade-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .grade-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .grade-summary-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+
+    .grade-summary-card .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .grade-summary-card .value {
+      margin-top: 6px;
+      font-size: 24px;
+      font-weight: 850;
+    }
+
+    .grade-summary-card .sub {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
     }
 
     /* --- HERO --- */
@@ -1279,7 +1353,7 @@
 
     /* --- RESPONSIVE --- */
     @media (max-width: 1030px) {
-      .stats, .admin-stats {
+      .stats, .admin-stats, .grade-summary-grid {
         grid-template-columns: repeat(2, 1fr);
       }
       .course-grid {
@@ -1361,11 +1435,15 @@
         padding: 12px 16px 12px 32px;
         font-size: 12px;
       }
+      .grade-summary-grid {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     @media (max-width: 480px) {
-      .stats, .admin-stats {
+      .stats, .admin-stats, .grade-summary-grid {
         gap: 10px;
+        grid-template-columns: 1fr;
       }
       .stat-card {
         padding: 14px;
@@ -1400,6 +1478,9 @@
       table th,
       table td {
         padding: 8px 10px;
+      }
+      .grade-cell {
+        flex-wrap: wrap;
       }
     }
   </style>
@@ -1498,7 +1579,7 @@
         <span class="nav-icon">◌</span> My profile
       </button>
 
-      <!-- Admin-only navigation -->
+            <!-- Admin-only navigation -->
       <p class="nav-label" id="admin-nav-label" style="display:none;">Management</p>
       <button class="nav-button" data-page="students" id="admin-students-btn" style="display:none;">
         <span class="nav-icon">👥</span> Students
@@ -1508,6 +1589,9 @@
       </button>
       <button class="nav-button" data-page="courses-admin" id="admin-courses-btn" style="display:none;">
         <span class="nav-icon">📚</span> Courses
+      </button>
+      <button class="nav-button" data-page="grades" id="admin-grades-btn" style="display:none;">
+        <span class="nav-icon">📊</span> Grades
       </button>
 
       <div class="help-card">
@@ -2026,7 +2110,107 @@
           </div>
         </div>
       </section>
+      <!-- ===== GRADES (Admin & Student view) ===== -->
+      <section class="page" id="grades">
+        <div class="heading">
+          <h1>Grades</h1>
+          <p>View and manage student grades across all courses.</p>
+        </div>
 
+        <!-- Admin View (hidden for students) -->
+        <div id="admin-grades-view" style="display:none;">
+          <div class="grade-summary-grid">
+            <div class="grade-summary-card">
+              <div class="label">Average Grade (All Students)</div>
+              <div class="value" id="avg-grade-all">0%</div>
+              <div class="sub">Across all courses</div>
+            </div>
+            <div class="grade-summary-card">
+              <div class="label">Passing Students</div>
+              <div class="value" id="passing-students">0</div>
+              <div class="sub">Grade ≥ 60%</div>
+            </div>
+            <div class="grade-summary-card">
+              <div class="label">Failing Students</div>
+              <div class="value" id="failing-students" style="color:var(--danger);">0</div>
+              <div class="sub">Grade &lt; 60%</div>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <div class="table-toolbar">
+              <div class="left">
+                <select id="grade-course-filter">
+                  <option value="all">All Courses</option>
+                  <!-- Options populated by JavaScript -->
+                </select>
+                <select id="grade-student-filter">
+                  <option value="all">All Students</option>
+                  <!-- Options populated by JavaScript -->
+                </select>
+              </div>
+              <div class="right">
+                <span id="grade-count" style="font-size:13px;color:var(--muted);">0 entries</span>
+              </div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Course</th>
+                  <th>Grade</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="grade-table-body">
+                <!-- Rows inserted by JavaScript -->
+              </tbody>
+            </table>
+            <div class="table-summary">
+              <span>Total Grades: <strong id="grade-total">0</strong></span>
+              <span>Passing: <strong class="total income" id="grade-passing-count">0</strong></span>
+              <span>Failing: <strong class="total expense" id="grade-failing-count">0</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student View (hidden for admins) -->
+        <div id="student-grades-view" style="display:none;">
+          <div class="grade-summary-grid">
+            <div class="grade-summary-card">
+              <div class="label">Your Average Grade</div>
+              <div class="value" id="student-avg-grade-display">0%</div>
+              <div class="sub">Across all courses</div>
+            </div>
+            <div class="grade-summary-card">
+              <div class="label">Courses Passed</div>
+              <div class="value" id="student-courses-passed">0</div>
+              <div class="sub">Grade ≥ 60%</div>
+            </div>
+            <div class="grade-summary-card">
+              <div class="label">Courses Failed</div>
+              <div class="value" id="student-courses-failed" style="color:var(--danger);">0</div>
+              <div class="sub">Grade &lt; 60%</div>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Grade</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="student-grade-table-body">
+                <!-- Rows inserted by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </main>
 
     <nav class="mobile-nav">
@@ -2074,1333 +2258,1650 @@
 
   <!-- ============ JAVASCRIPT ============ -->
   <script>
-    (function() {
+  (function() {
 
-      // ----- DEMO ACCOUNTS -----
-      const DEMO_USERS = {
-        'student@nokj.com': {
-          password: 'password123',
-          name: 'Alex Student',
-          role: 'Student',
-          initials: 'AS',
-          email: 'alex.student@example.com',
-          avatarClass: ''
-        },
-        'admin@nokj.com': {
-          password: 'admin123',
-          name: 'Admin User',
-          role: 'Admin',
-          initials: 'AU',
-          email: 'admin@nokj.com',
-          avatarClass: 'admin-avatar'
-        }
-      };
-
-      // ----- DEFAULT DATA -----
-      const DEFAULT_STUDENTS = [
-        { id: 1, name: 'Alex Student', grade: 86, attendance: 92, status: 'Active' },
-        { id: 2, name: 'Sarah Chen', grade: 91, attendance: 95, status: 'Active' },
-        { id: 3, name: 'Marcus Webb', grade: 73, attendance: 78, status: 'Warning' },
-        { id: 4, name: 'Emma Johnson', grade: 94, attendance: 98, status: 'Active' },
-        { id: 5, name: 'James Kim', grade: 65, attendance: 70, status: 'Warning' },
-        { id: 6, name: 'Lisa Patel', grade: 82, attendance: 85, status: 'Active' }
-      ];
-
-      const DEFAULT_COURSES = [
-        { id: 1, name: 'Mathematics', teacher: 'Dr. Wilson', description: 'Year 10 Mathematics' },
-        { id: 2, name: 'Biology', teacher: 'Mr. Carter', description: 'Year 10 Biology' },
-        { id: 3, name: 'English Literature', teacher: 'Ms. Evans', description: 'Year 10 English Literature' },
-        { id: 4, name: 'Chemistry', teacher: 'Dr. Lee', description: 'Year 10 Chemistry' },
-        { id: 5, name: 'History', teacher: 'Mr. Thompson', description: 'Year 10 World History' }
-      ];
-
-      const DEFAULT_BUDGET = [
-        { id: 1, category: 'Student Fees', type: 'Income', amount: 12000, date: '2026-08-01', status: 'Paid' },
-        { id: 2, category: 'Staff Salaries', type: 'Expense', amount: -8500, date: '2026-08-05', status: 'Paid' },
-        { id: 3, category: 'Lab Equipment', type: 'Expense', amount: -2300, date: '2026-08-10', status: 'Paid' },
-        { id: 4, category: 'Government Grant', type: 'Income', amount: 5000, date: '2026-08-15', status: 'Pending' },
-        { id: 5, category: 'Utilities', type: 'Expense', amount: -1200, date: '2026-08-20', status: 'Unpaid' },
-        { id: 6, category: 'Online Learning Platform', type: 'Expense', amount: -800, date: '2026-08-22', status: 'Paid' }
-      ];
-
-      const DEFAULT_ENROLLMENTS = [
-        { studentId: 1, courseId: 1 },
-        { studentId: 1, courseId: 2 },
-        { studentId: 1, courseId: 3 },
-        { studentId: 2, courseId: 1 },
-        { studentId: 2, courseId: 3 },
-        { studentId: 2, courseId: 4 },
-        { studentId: 3, courseId: 2 },
-        { studentId: 3, courseId: 5 },
-        { studentId: 4, courseId: 1 },
-        { studentId: 4, courseId: 4 },
-        { studentId: 4, courseId: 5 },
-        { studentId: 5, courseId: 3 },
-        { studentId: 6, courseId: 1 },
-        { studentId: 6, courseId: 2 }
-      ];
-
-      // ----- Data Storage -----
-      let students = [];
-      let courses = [];
-      let budgetEntries = [];
-      let enrollments = [];
-      let nextStudentId = 1;
-      let nextCourseId = 1;
-      let nextBudgetId = 1;
-
-      // ----- DOM refs -----
-      const loginScreen = document.getElementById('login-screen');
-      const app = document.getElementById('app');
-      const loginForm = document.getElementById('login-form');
-      const loginEmail = document.getElementById('login-email');
-      const loginPassword = document.getElementById('login-password');
-      const loginError = document.getElementById('login-error');
-
-      const userAvatar = document.getElementById('user-avatar');
-      const userDisplayName = document.getElementById('user-display-name');
-      const userRole = document.getElementById('user-role');
-      const profileAvatar = document.getElementById('profile-avatar');
-      const profileName = document.getElementById('profile-name');
-      const profileRoleText = document.getElementById('profile-role-text');
-      const profileEmail = document.getElementById('profile-email');
-      const greeting = document.getElementById('greeting');
-      const logoutBtn = document.getElementById('logout-btn');
-
-      const pages = document.querySelectorAll('.page');
-      const navButtons = document.querySelectorAll('[data-page]');
-      const langToggle = document.getElementById('language-toggle');
-      const flagUK = document.getElementById('flag-uk');
-      const flagRU = document.getElementById('flag-ru');
-      const loginFlagUK = document.getElementById('login-flag-uk');
-      const loginFlagRU = document.getElementById('login-flag-ru');
-      const loginLangToggle = document.getElementById('login-lang-toggle');
-
-      // Admin elements
-      const adminNavLabel = document.getElementById('admin-nav-label');
-      const adminStudentsBtn = document.getElementById('admin-students-btn');
-      const adminBudgetBtn = document.getElementById('admin-budget-btn');
-      const adminCoursesBtn = document.getElementById('admin-courses-btn');
-      const adminStatsContainer = document.getElementById('admin-stats-container');
-
-      // Student table elements
-      const studentTableBody = document.getElementById('student-table-body');
-      const studentSearch = document.getElementById('student-search');
-      const studentFilter = document.getElementById('student-filter');
-      const studentCount = document.getElementById('student-count');
-      const studentTotal = document.getElementById('student-total');
-      const studentAvgGrade = document.getElementById('student-avg-grade');
-      const studentAvgAttendance = document.getElementById('student-avg-attendance');
-      const addStudentBtn = document.getElementById('add-student-btn');
-      const exportStudentsBtn = document.getElementById('export-students-btn');
-
-      // Budget table elements
-      const budgetTableBody = document.getElementById('budget-table-body');
-      const budgetSearch = document.getElementById('budget-search');
-      const budgetFilter = document.getElementById('budget-filter');
-      const budgetCount = document.getElementById('budget-count');
-      const budgetTotalIncome = document.getElementById('budget-total-income');
-      const budgetTotalExpense = document.getElementById('budget-total-expense');
-      const budgetNet = document.getElementById('budget-net');
-      const addBudgetBtn = document.getElementById('add-budget-btn');
-      const exportBudgetBtn = document.getElementById('export-budget-btn');
-
-      // Course table elements
-      const courseTableBody = document.getElementById('course-table-body');
-      const courseSearch = document.getElementById('course-search');
-      const courseCount = document.getElementById('course-count');
-      const courseTotal = document.getElementById('course-total');
-      const courseEnrollmentsTotal = document.getElementById('course-enrollments-total');
-      const addCourseBtn = document.getElementById('add-course-btn');
-
-      // Student courses container
-      const studentCoursesContainer = document.getElementById('student-courses-container');
-
-      // Modal elements
-      const modalOverlay = document.getElementById('modal-overlay');
-      const modalTitle = document.getElementById('modal-title');
-      const modalSub = document.getElementById('modal-sub');
-      const modalForm = document.getElementById('modal-form');
-      const modalFields = document.getElementById('modal-fields');
-      const modalCancel = document.getElementById('modal-cancel');
-      const modalSave = document.getElementById('modal-save');
-
-      // Enrollment modal
-      const enrollModalOverlay = document.getElementById('enroll-modal-overlay');
-      const enrollModalTitle = document.getElementById('enroll-modal-title');
-      const enrollModalSub = document.getElementById('enroll-modal-sub');
-      const enrollmentList = document.getElementById('enrollment-list');
-      const enrollModalCancel = document.getElementById('enroll-modal-cancel');
-      const enrollModalSave = document.getElementById('enroll-modal-save');
-
-      // Admin stats
-      const totalStudentsEl = document.getElementById('total-students');
-      const totalCoursesEl = document.getElementById('total-courses');
-      const totalEnrollmentsEl = document.getElementById('total-enrollments');
-      const totalRevenueEl = document.getElementById('total-revenue');
-
-      // Current user
-      let currentUser = null;
-
-      // Modal state
-      let modalMode = 'add';
-      let modalType = 'student';
-      let editingId = null;
-      let enrollStudentId = null;
-
-      // Expand/collapse state
-      let expandedRows = {};
-
-      // ----- Language -----
-      let currentLang = localStorage.getItem('nokj-language') || 'en';
-
-      const translations = {
-        'Student Portal': 'Портал ученика',
-        'Menu': 'Меню',
-        'Dashboard': 'Главная',
-        'Timetable': 'Расписание',
-        'My courses': 'Мои курсы',
-        'Assignments': 'Задания',
-        'Announcements': 'Объявления',
-        'Account': 'Аккаунт',
-        'My profile': 'Мой профиль',
-        'Need help?': 'Нужна помощь?',
-        'Contact the NOKJ Academy support team for assistance.': 'Свяжитесь со службой поддержки NOKJ Academy.',
-        'Alex Student': 'Алекс Студент',
-        'Year 10': '10 класс',
-        'Good afternoon, Alex 👋': 'Добрый день, Алекс 👋',
-        'Here is everything you need to stay on track today.': 'Здесь всё, что нужно, чтобы быть в курсе дел сегодня.',
-        'Thursday, 27 August': 'Четверг, 27 августа',
-        'Your next class is Mathematics at 15:30.': 'Ваш следующий урок — математика в 15:30.',
-        'Topic: Quadratic equations and graphical interpretation. Room B-12.': 'Тема: квадратные уравнения и графическая интерпретация. Кабинет B-12.',
-        'View timetable': 'Посмотреть расписание',
-        'Lessons today': 'Уроков сегодня',
-        '1 lesson remaining': 'Остался 1 урок',
-        'Pending work': 'Незавершённые задания',
-        '2 due this week': '2 задания на этой неделе',
-        'Average grade': 'Средняя оценка',
-        'Up 4% this term': 'На 4% выше в этом семестре',
-        'Course progress': 'Прогресс по курсам',
-        'Across all courses': 'По всем курсам',
-        'Today’s timetable': 'Расписание на сегодня',
-        'Full timetable': 'Полное расписание',
-        'English Literature': 'Английская литература',
-        'Ms. Evans · Room A-04': 'Мисс Эванс · Кабинет A-04',
-        'Completed': 'Завершено',
-        'Biology': 'Биология',
-        'Mr. Carter · Science Lab 2': 'Мистер Картер · Лаборатория 2',
-        'Mathematics': 'Математика',
-        'Dr. Wilson · Room B-12': 'Доктор Уилсон · Кабинет B-12',
-        'Next': 'Далее',
-        'Upcoming assignments': 'Ближайшие задания',
-        'All assignments': 'Все задания',
-        'Essay: Themes in Macbeth': 'Эссе: темы в «Макбете»',
-        'English Literature · Due tomorrow at 23:59': 'Английская литература · Срок: завтра в 23:59',
-        'Due soon': 'Скоро срок',
-        'Algebra practice set': 'Практика по алгебре',
-        'Mathematics · Due 30 August': 'Математика · Срок: 30 августа',
-        'In progress': 'В процессе',
-        'Cell structure quiz': 'Тест: строение клетки',
-        'Biology · Due 2 September': 'Биология · Срок: 2 сентября',
-        'Not started': 'Не начато',
-        'Your progress': 'Ваш прогресс',
-        'Mathematics: Year 10': 'Математика: 10 класс',
-        'Current topic: Quadratic equations': 'Текущая тема: квадратные уравнения',
-        '82% complete': '82% выполнено',
-        'Open course': 'Открыть курс',
-        'Biology: Year 10': 'Биология: 10 класс',
-        'Current topic: Cells and organisms': 'Текущая тема: клетки и организмы',
-        '64% complete': '64% выполнено',
-        'Current topic: Shakespeare’s Macbeth': 'Текущая тема: «Макбет» Шекспира',
-        '71% complete': '71% выполнено',
-        'My timetable': 'Моё расписание',
-        'Your weekly lesson schedule will appear here.': 'Здесь появится ваше расписание уроков на неделю.',
-        'Today': 'Сегодня',
-        'Keep track of your work, deadlines, and teacher feedback.': 'Следите за заданиями, сроками и отзывами преподавателей.',
-        'English Literature · 800–1,000 words · Due 28 August at 23:59': 'Английская литература · 800–1 000 слов · Срок: 28 августа, 23:59',
-        'Open assignment': 'Открыть задание',
-        'Mathematics · Questions 1–25 · Due 30 August': 'Математика · Задания 1–25 · Срок: 30 августа',
-        'Biology · Online quiz · Due 2 September': 'Биология · Онлайн-тест · Срок: 2 сентября',
-        'Important news and updates from NOKJ Academy.': 'Важные новости и обновления от NOKJ Academy.',
-        'Mid-term assessment timetable published': 'Опубликовано расписание промежуточных оценок',
-        'The timetable for mid-term assessments is now available. Check your course pages and speak with your teacher if you have any questions.': 'Расписание промежуточных оценок уже доступно. Проверьте страницы курсов и обратитесь к преподавателю, если у вас есть вопросы.',
-        'Posted today': 'Опубликовано сегодня',
-        'Extended library opening hours': 'Продлённые часы работы библиотеки',
-        'The school library will remain open until 18:00 from Monday to Thursday during assessment week.': 'Школьная библиотека будет открыта до 18:00 с понедельника по четверг во время недели оценивания.',
-        'Posted yesterday': 'Опубликовано вчера',
-        'Student science fair registration': 'Регистрация на школьную научную ярмарку',
-        'Registration for the annual student science fair is open until 5 September. Speak with your science teacher to take part.': 'Регистрация на ежегодную школьную научную ярмарку открыта до 5 сентября. Обратитесь к учителю естественных наук, чтобы принять участие.',
-        'Posted 25 August': 'Опубликовано 25 августа',
-        'View your student account information.': 'Просмотр информации о вашей учётной записи.',
-        'Year 10 student · NOKJ Academy': 'Ученик 10 класса · NOKJ Academy',
-        'Student ID': 'Номер ученика',
-        'Email address': 'Адрес электронной почты',
-        'Year group': 'Класс',
-        'Academic year': 'Учебный год',
-        'Home': 'Главная',
-        'Schedule': 'Расписание',
-        'Courses': 'Курсы',
-        'Work': 'Задания',
-        'Profile': 'Профиль',
-        'Welcome back': 'С возвращением',
-        'Sign in to access your dashboard': 'Войдите, чтобы получить доступ к панели управления',
-        'Email address': 'Адрес электронной почты',
-        'Password': 'Пароль',
-        'Sign in': 'Войти',
-        'Demo accounts:': 'Демо-аккаунты:',
-        'Admin': 'Администратор',
-        'Student': 'Ученик',
-        'Logout': 'Выйти',
-        'Student Records': 'Список учеников',
-        'Manage all student information, grades, and attendance.': 'Управление информацией об учениках, оценках и посещаемости.',
-        'Add Student': 'Добавить ученика',
-        'Export CSV': 'Экспорт CSV',
-        'Search students...': 'Поиск учеников...',
-        'All Status': 'Все статусы',
-        'Active': 'Активен',
-        'Warning': 'Предупреждение',
-        'Inactive': 'Неактивен',
-        'Name': 'Имя',
-        'Grade': 'Оценка',
-        'Attendance': 'Посещаемость',
-        'Status': 'Статус',
-        'Actions': 'Действия',
-        'Total Students': 'Всего учеников',
-        'Average Grade': 'Средняя оценка',
-        'Budget & Finance': 'Бюджет и финансы',
-        'Track income, expenses, and financial health of NOKJ Academy.': 'Отслеживание доходов, расходов и финансового состояния NOKJ Academy.',
-        'Add Entry': 'Добавить запись',
-        'Search entries...': 'Поиск записей...',
-        'All Types': 'Все типы',
-        'Income': 'Доход',
-        'Expense': 'Расход',
-        'Category': 'Категория',
-        'Type': 'Тип',
-        'Amount': 'Сумма',
-        'Date': 'Дата',
-        'Total Income': 'Общий доход',
-        'Total Expenses': 'Общие расходы',
-        'Net': 'Баланс',
-        'Add Student Record': 'Добавить ученика',
-        'Edit Student Record': 'Редактировать ученика',
-        'Enter student details': 'Введите данные ученика',
-        'Add Budget Entry': 'Добавить запись в бюджет',
-        'Edit Budget Entry': 'Редактировать запись в бюджете',
-        'Enter budget details': 'Введите данные бюджета',
-        'Cancel': 'Отмена',
-        'Save': 'Сохранить',
-        'Course Management': 'Управление курсами',
-        'Create and manage courses, and enroll students.': 'Создание и управление курсами, запись учеников.',
-        'Add Course': 'Добавить курс',
-        'Search courses...': 'Поиск курсов...',
-        'Course Name': 'Название курса',
-        'Teacher': 'Преподаватель',
-        'Students': 'Ученики',
-        'Total Courses': 'Всего курсов',
-        'Total Enrollments': 'Всего записей',
-        'Enroll': 'Записать',
-        'Enroll Student': 'Записать ученика',
-        'Select courses for this student.': 'Выберите курсы для этого ученика.',
-        'No courses available.': 'Нет доступных курсов.',
-        'No courses enrolled yet.': 'Вы еще не записаны на курсы.',
-        'Enrolled Students:': 'Записанные ученики:',
-        'Enrolled Courses:': 'Записанные курсы:',
-        'No students enrolled in this course.': 'На этот курс не записаны ученики.',
-        'Student not enrolled in any courses.': 'Ученик не записан ни на один курс.'
-      };
-
-      const originalText = new WeakMap();
-      const searchInput = document.querySelector('.search input');
-      let originalPlaceholder = '';
-
-      if (searchInput) {
-        originalPlaceholder = searchInput.placeholder;
+    // ----- DEMO ACCOUNTS -----
+    const DEMO_USERS = {
+      'student@nokj.com': {
+        password: 'password123',
+        name: 'Alex Student',
+        role: 'Student',
+        initials: 'AS',
+        email: 'alex.student@example.com',
+        avatarClass: ''
+      },
+      'admin@nokj.com': {
+        password: 'admin123',
+        name: 'Admin User',
+        role: 'Admin',
+        initials: 'AU',
+        email: 'admin@nokj.com',
+        avatarClass: 'admin-avatar'
       }
+    };
 
-      // ----- Data Management -----
-      function loadData() {
-        const savedStudents = localStorage.getItem('nokj-students');
-        const savedCourses = localStorage.getItem('nokj-courses');
-        const savedBudget = localStorage.getItem('nokj-budget');
-        const savedEnrollments = localStorage.getItem('nokj-enrollments');
-        const savedStudentId = localStorage.getItem('nokj-next-student-id');
-        const savedCourseId = localStorage.getItem('nokj-next-course-id');
-        const savedBudgetId = localStorage.getItem('nokj-next-budget-id');
+    // ----- DEFAULT DATA -----
+    const DEFAULT_STUDENTS = [
+      { id: 1, name: 'Alex Student', grade: 86, attendance: 92, status: 'Active' },
+      { id: 2, name: 'Sarah Chen', grade: 91, attendance: 95, status: 'Active' },
+      { id: 3, name: 'Marcus Webb', grade: 73, attendance: 78, status: 'Warning' },
+      { id: 4, name: 'Emma Johnson', grade: 94, attendance: 98, status: 'Active' },
+      { id: 5, name: 'James Kim', grade: 65, attendance: 70, status: 'Warning' },
+      { id: 6, name: 'Lisa Patel', grade: 82, attendance: 85, status: 'Active' }
+    ];
 
-        if (savedStudents) {
-          try {
-            students = JSON.parse(savedStudents);
-            nextStudentId = parseInt(savedStudentId) || Math.max(...students.map(s => s.id), 0) + 1;
-          } catch (e) {
-            students = DEFAULT_STUDENTS.slice();
-            nextStudentId = 7;
-          }
-        } else {
+    const DEFAULT_COURSES = [
+      { id: 1, name: 'Mathematics', teacher: 'Dr. Wilson', description: 'Year 10 Mathematics' },
+      { id: 2, name: 'Biology', teacher: 'Mr. Carter', description: 'Year 10 Biology' },
+      { id: 3, name: 'English Literature', teacher: 'Ms. Evans', description: 'Year 10 English Literature' },
+      { id: 4, name: 'Chemistry', teacher: 'Dr. Lee', description: 'Year 10 Chemistry' },
+      { id: 5, name: 'History', teacher: 'Mr. Thompson', description: 'Year 10 World History' }
+    ];
+
+    const DEFAULT_BUDGET = [
+      { id: 1, category: 'Student Fees', type: 'Income', amount: 12000, date: '2026-08-01', status: 'Paid' },
+      { id: 2, category: 'Staff Salaries', type: 'Expense', amount: -8500, date: '2026-08-05', status: 'Paid' },
+      { id: 3, category: 'Lab Equipment', type: 'Expense', amount: -2300, date: '2026-08-10', status: 'Paid' },
+      { id: 4, category: 'Government Grant', type: 'Income', amount: 5000, date: '2026-08-15', status: 'Pending' },
+      { id: 5, category: 'Utilities', type: 'Expense', amount: -1200, date: '2026-08-20', status: 'Unpaid' },
+      { id: 6, category: 'Online Learning Platform', type: 'Expense', amount: -800, date: '2026-08-22', status: 'Paid' }
+    ];
+
+    const DEFAULT_ENROLLMENTS = [
+      { studentId: 1, courseId: 1 },
+      { studentId: 1, courseId: 2 },
+      { studentId: 1, courseId: 3 },
+      { studentId: 2, courseId: 1 },
+      { studentId: 2, courseId: 3 },
+      { studentId: 2, courseId: 4 },
+      { studentId: 3, courseId: 2 },
+      { studentId: 3, courseId: 5 },
+      { studentId: 4, courseId: 1 },
+      { studentId: 4, courseId: 4 },
+      { studentId: 4, courseId: 5 },
+      { studentId: 5, courseId: 3 },
+      { studentId: 6, courseId: 1 },
+      { studentId: 6, courseId: 2 }
+    ];
+
+    const DEFAULT_GRADES = {
+      '1-1': 85, '1-2': 78, '1-3': 92,
+      '2-1': 88, '2-3': 95, '2-4': 72,
+      '3-2': 65, '3-5': 58,
+      '4-1': 91, '4-4': 84, '4-5': 77,
+      '5-3': 62,
+      '6-1': 79, '6-2': 83
+    };
+
+    // ----- Data Storage -----
+    let students = [];
+    let courses = [];
+    let budgetEntries = [];
+    let enrollments = [];
+    let gradeData = {};
+    let nextStudentId = 1;
+    let nextCourseId = 1;
+    let nextBudgetId = 1;
+
+    // ----- DOM refs -----
+    const loginScreen = document.getElementById('login-screen');
+    const app = document.getElementById('app');
+    const loginForm = document.getElementById('login-form');
+    const loginEmail = document.getElementById('login-email');
+    const loginPassword = document.getElementById('login-password');
+    const loginError = document.getElementById('login-error');
+
+    const userAvatar = document.getElementById('user-avatar');
+    const userDisplayName = document.getElementById('user-display-name');
+    const userRole = document.getElementById('user-role');
+    const profileAvatar = document.getElementById('profile-avatar');
+    const profileName = document.getElementById('profile-name');
+    const profileRoleText = document.getElementById('profile-role-text');
+    const profileEmail = document.getElementById('profile-email');
+    const greeting = document.getElementById('greeting');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    const pages = document.querySelectorAll('.page');
+    const navButtons = document.querySelectorAll('[data-page]');
+    const langToggle = document.getElementById('language-toggle');
+    const flagUK = document.getElementById('flag-uk');
+    const flagRU = document.getElementById('flag-ru');
+    const loginFlagUK = document.getElementById('login-flag-uk');
+    const loginFlagRU = document.getElementById('login-flag-ru');
+    const loginLangToggle = document.getElementById('login-lang-toggle');
+
+    // Admin elements
+    const adminNavLabel = document.getElementById('admin-nav-label');
+    const adminStudentsBtn = document.getElementById('admin-students-btn');
+    const adminBudgetBtn = document.getElementById('admin-budget-btn');
+    const adminCoursesBtn = document.getElementById('admin-courses-btn');
+    const adminGradesBtn = document.getElementById('admin-grades-btn');
+    const adminStatsContainer = document.getElementById('admin-stats-container');
+
+    // Student table elements
+    const studentTableBody = document.getElementById('student-table-body');
+    const studentSearch = document.getElementById('student-search');
+    const studentFilter = document.getElementById('student-filter');
+    const studentCount = document.getElementById('student-count');
+    const studentTotal = document.getElementById('student-total');
+    const studentAvgGrade = document.getElementById('student-avg-grade');
+    const studentAvgAttendance = document.getElementById('student-avg-attendance');
+    const addStudentBtn = document.getElementById('add-student-btn');
+    const exportStudentsBtn = document.getElementById('export-students-btn');
+
+    // Budget table elements
+    const budgetTableBody = document.getElementById('budget-table-body');
+    const budgetSearch = document.getElementById('budget-search');
+    const budgetFilter = document.getElementById('budget-filter');
+    const budgetCount = document.getElementById('budget-count');
+    const budgetTotalIncome = document.getElementById('budget-total-income');
+    const budgetTotalExpense = document.getElementById('budget-total-expense');
+    const budgetNet = document.getElementById('budget-net');
+    const addBudgetBtn = document.getElementById('add-budget-btn');
+    const exportBudgetBtn = document.getElementById('export-budget-btn');
+
+    // Course table elements
+    const courseTableBody = document.getElementById('course-table-body');
+    const courseSearch = document.getElementById('course-search');
+    const courseCount = document.getElementById('course-count');
+    const courseTotal = document.getElementById('course-total');
+    const courseEnrollmentsTotal = document.getElementById('course-enrollments-total');
+    const addCourseBtn = document.getElementById('add-course-btn');
+
+    // Student courses container
+    const studentCoursesContainer = document.getElementById('student-courses-container');
+
+    // Modal elements
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalTitle = document.getElementById('modal-title');
+    const modalSub = document.getElementById('modal-sub');
+    const modalForm = document.getElementById('modal-form');
+    const modalFields = document.getElementById('modal-fields');
+    const modalCancel = document.getElementById('modal-cancel');
+    const modalSave = document.getElementById('modal-save');
+
+    // Enrollment modal
+    const enrollModalOverlay = document.getElementById('enroll-modal-overlay');
+    const enrollModalTitle = document.getElementById('enroll-modal-title');
+    const enrollModalSub = document.getElementById('enroll-modal-sub');
+    const enrollmentList = document.getElementById('enrollment-list');
+    const enrollModalCancel = document.getElementById('enroll-modal-cancel');
+    const enrollModalSave = document.getElementById('enroll-modal-save');
+
+    // Admin stats
+    const totalStudentsEl = document.getElementById('total-students');
+    const totalCoursesEl = document.getElementById('total-courses');
+    const totalEnrollmentsEl = document.getElementById('total-enrollments');
+    const totalRevenueEl = document.getElementById('total-revenue');
+
+    // Current user
+    let currentUser = null;
+
+    // Modal state
+    let modalMode = 'add';
+    let modalType = 'student';
+    let editingId = null;
+    let enrollStudentId = null;
+    let expandedRows = {};
+
+    // ----- Language -----
+    let currentLang = localStorage.getItem('nokj-language') || 'en';
+
+    const translations = {
+      'Student Portal': 'Портал ученика',
+      'Menu': 'Меню',
+      'Dashboard': 'Главная',
+      'Timetable': 'Расписание',
+      'My courses': 'Мои курсы',
+      'Assignments': 'Задания',
+      'Announcements': 'Объявления',
+      'Account': 'Аккаунт',
+      'My profile': 'Мой профиль',
+      'Need help?': 'Нужна помощь?',
+      'Contact the NOKJ Academy support team for assistance.': 'Свяжитесь со службой поддержки NOKJ Academy.',
+      'Alex Student': 'Алекс Студент',
+      'Year 10': '10 класс',
+      'Good afternoon, Alex 👋': 'Добрый день, Алекс 👋',
+      'Here is everything you need to stay on track today.': 'Здесь всё, что нужно, чтобы быть в курсе дел сегодня.',
+      'Thursday, 27 August': 'Четверг, 27 августа',
+      'Your next class is Mathematics at 15:30.': 'Ваш следующий урок — математика в 15:30.',
+      'Topic: Quadratic equations and graphical interpretation. Room B-12.': 'Тема: квадратные уравнения и графическая интерпретация. Кабинет B-12.',
+      'View timetable': 'Посмотреть расписание',
+      'Lessons today': 'Уроков сегодня',
+      '1 lesson remaining': 'Остался 1 урок',
+      'Pending work': 'Незавершённые задания',
+      '2 due this week': '2 задания на этой неделе',
+      'Average grade': 'Средняя оценка',
+      'Up 4% this term': 'На 4% выше в этом семестре',
+      'Course progress': 'Прогресс по курсам',
+      'Across all courses': 'По всем курсам',
+      'Today’s timetable': 'Расписание на сегодня',
+      'Full timetable': 'Полное расписание',
+      'English Literature': 'Английская литература',
+      'Ms. Evans · Room A-04': 'Мисс Эванс · Кабинет A-04',
+      'Completed': 'Завершено',
+      'Biology': 'Биология',
+      'Mr. Carter · Science Lab 2': 'Мистер Картер · Лаборатория 2',
+      'Mathematics': 'Математика',
+      'Dr. Wilson · Room B-12': 'Доктор Уилсон · Кабинет B-12',
+      'Next': 'Далее',
+      'Upcoming assignments': 'Ближайшие задания',
+      'All assignments': 'Все задания',
+      'Essay: Themes in Macbeth': 'Эссе: темы в «Макбете»',
+      'English Literature · Due tomorrow at 23:59': 'Английская литература · Срок: завтра в 23:59',
+      'Due soon': 'Скоро срок',
+      'Algebra practice set': 'Практика по алгебре',
+      'Mathematics · Due 30 August': 'Математика · Срок: 30 августа',
+      'In progress': 'В процессе',
+      'Cell structure quiz': 'Тест: строение клетки',
+      'Biology · Due 2 September': 'Биология · Срок: 2 сентября',
+      'Not started': 'Не начато',
+      'Your progress': 'Ваш прогресс',
+      'Mathematics: Year 10': 'Математика: 10 класс',
+      'Current topic: Quadratic equations': 'Текущая тема: квадратные уравнения',
+      '82% complete': '82% выполнено',
+      'Open course': 'Открыть курс',
+      'Biology: Year 10': 'Биология: 10 класс',
+      'Current topic: Cells and organisms': 'Текущая тема: клетки и организмы',
+      '64% complete': '64% выполнено',
+      'Current topic: Shakespeare’s Macbeth': 'Текущая тема: «Макбет» Шекспира',
+      '71% complete': '71% выполнено',
+      'My timetable': 'Моё расписание',
+      'Your weekly lesson schedule will appear here.': 'Здесь появится ваше расписание уроков на неделю.',
+      'Today': 'Сегодня',
+      'Keep track of your work, deadlines, and teacher feedback.': 'Следите за заданиями, сроками и отзывами преподавателей.',
+      'English Literature · 800–1,000 words · Due 28 August at 23:59': 'Английская литература · 800–1 000 слов · Срок: 28 августа, 23:59',
+      'Open assignment': 'Открыть задание',
+      'Mathematics · Questions 1–25 · Due 30 August': 'Математика · Задания 1–25 · Срок: 30 августа',
+      'Biology · Online quiz · Due 2 September': 'Биология · Онлайн-тест · Срок: 2 сентября',
+      'Important news and updates from NOKJ Academy.': 'Важные новости и обновления от NOKJ Academy.',
+      'Mid-term assessment timetable published': 'Опубликовано расписание промежуточных оценок',
+      'The timetable for mid-term assessments is now available. Check your course pages and speak with your teacher if you have any questions.': 'Расписание промежуточных оценок уже доступно. Проверьте страницы курсов и обратитесь к преподавателю, если у вас есть вопросы.',
+      'Posted today': 'Опубликовано сегодня',
+      'Extended library opening hours': 'Продлённые часы работы библиотеки',
+      'The school library will remain open until 18:00 from Monday to Thursday during assessment week.': 'Школьная библиотека будет открыта до 18:00 с понедельника по четверг во время недели оценивания.',
+      'Posted yesterday': 'Опубликовано вчера',
+      'Student science fair registration': 'Регистрация на школьную научную ярмарку',
+      'Registration for the annual student science fair is open until 5 September. Speak with your science teacher to take part.': 'Регистрация на ежегодную школьную научную ярмарку открыта до 5 сентября. Обратитесь к учителю естественных наук, чтобы принять участие.',
+      'Posted 25 August': 'Опубликовано 25 августа',
+      'View your student account information.': 'Просмотр информации о вашей учётной записи.',
+      'Year 10 student · NOKJ Academy': 'Ученик 10 класса · NOKJ Academy',
+      'Student ID': 'Номер ученика',
+      'Email address': 'Адрес электронной почты',
+      'Year group': 'Класс',
+      'Academic year': 'Учебный год',
+      'Home': 'Главная',
+      'Schedule': 'Расписание',
+      'Courses': 'Курсы',
+      'Work': 'Задания',
+      'Profile': 'Профиль',
+      'Welcome back': 'С возвращением',
+      'Sign in to access your dashboard': 'Войдите, чтобы получить доступ к панели управления',
+      'Email address': 'Адрес электронной почты',
+      'Password': 'Пароль',
+      'Sign in': 'Войти',
+      'Demo accounts:': 'Демо-аккаунты:',
+      'Admin': 'Администратор',
+      'Student': 'Ученик',
+      'Logout': 'Выйти',
+      'Student Records': 'Список учеников',
+      'Manage all student information, grades, and attendance.': 'Управление информацией об учениках, оценках и посещаемости.',
+      'Add Student': 'Добавить ученика',
+      'Export CSV': 'Экспорт CSV',
+      'Search students...': 'Поиск учеников...',
+      'All Status': 'Все статусы',
+      'Active': 'Активен',
+      'Warning': 'Предупреждение',
+      'Inactive': 'Неактивен',
+      'Name': 'Имя',
+      'Grade': 'Оценка',
+      'Attendance': 'Посещаемость',
+      'Status': 'Статус',
+      'Actions': 'Действия',
+      'Total Students': 'Всего учеников',
+      'Average Grade': 'Средняя оценка',
+      'Budget & Finance': 'Бюджет и финансы',
+      'Track income, expenses, and financial health of NOKJ Academy.': 'Отслеживание доходов, расходов и финансового состояния NOKJ Academy.',
+      'Add Entry': 'Добавить запись',
+      'Search entries...': 'Поиск записей...',
+      'All Types': 'Все типы',
+      'Income': 'Доход',
+      'Expense': 'Расход',
+      'Category': 'Категория',
+      'Type': 'Тип',
+      'Amount': 'Сумма',
+      'Date': 'Дата',
+      'Total Income': 'Общий доход',
+      'Total Expenses': 'Общие расходы',
+      'Net': 'Баланс',
+      'Add Student Record': 'Добавить ученика',
+      'Edit Student Record': 'Редактировать ученика',
+      'Enter student details': 'Введите данные ученика',
+      'Add Budget Entry': 'Добавить запись в бюджет',
+      'Edit Budget Entry': 'Редактировать запись в бюджете',
+      'Enter budget details': 'Введите данные бюджета',
+      'Cancel': 'Отмена',
+      'Save': 'Сохранить',
+      'Course Management': 'Управление курсами',
+      'Create and manage courses, and enroll students.': 'Создание и управление курсами, запись учеников.',
+      'Add Course': 'Добавить курс',
+      'Search courses...': 'Поиск курсов...',
+      'Course Name': 'Название курса',
+      'Teacher': 'Преподаватель',
+      'Students': 'Ученики',
+      'Total Courses': 'Всего курсов',
+      'Total Enrollments': 'Всего записей',
+      'Enroll': 'Записать',
+      'Enroll Student': 'Записать ученика',
+      'Select courses for this student.': 'Выберите курсы для этого ученика.',
+      'No courses available.': 'Нет доступных курсов.',
+      'No courses enrolled yet.': 'Вы еще не записаны на курсы.',
+      'Enrolled Students:': 'Записанные ученики:',
+      'Enrolled Courses:': 'Записанные курсы:',
+      'No students enrolled in this course.': 'На этот курс не записаны ученики.',
+      'Student not enrolled in any courses.': 'Ученик не записан ни на один курс.',
+      'Grades': 'Оценки',
+      'View and manage student grades across all courses.': 'Просмотр и управление оценками учеников по всем курсам.',
+      'Average Grade (All Students)': 'Средняя оценка (все ученики)',
+      'Passing Students': 'Сдавшие ученики',
+      'Failing Students': 'Несдавшие ученики',
+      'All Courses': 'Все курсы',
+      'All Students': 'Все ученики',
+      'Student': 'Ученик',
+      'Course': 'Курс',
+      'Action': 'Действие',
+      'Total Grades': 'Всего оценок',
+      'Passing': 'Сдано',
+      'Failing': 'Не сдано',
+      'Your Average Grade': 'Ваша средняя оценка',
+      'Courses Passed': 'Сданные курсы',
+      'Courses Failed': 'Несданные курсы',
+      'Pass': 'Сдано',
+      'Fail': 'Не сдано',
+      'Not graded': 'Не оценено',
+      'Remove grade?': 'Удалить оценку?'
+    };
+
+    const originalText = new WeakMap();
+    const searchInput = document.querySelector('.search input');
+    let originalPlaceholder = '';
+
+    if (searchInput) {
+      originalPlaceholder = searchInput.placeholder;
+    }
+
+    // ----- Data Management -----
+    function loadData() {
+      const savedStudents = localStorage.getItem('nokj-students');
+      const savedCourses = localStorage.getItem('nokj-courses');
+      const savedBudget = localStorage.getItem('nokj-budget');
+      const savedEnrollments = localStorage.getItem('nokj-enrollments');
+      const savedGrades = localStorage.getItem('nokj-grades');
+      const savedStudentId = localStorage.getItem('nokj-next-student-id');
+      const savedCourseId = localStorage.getItem('nokj-next-course-id');
+      const savedBudgetId = localStorage.getItem('nokj-next-budget-id');
+
+      if (savedStudents) {
+        try {
+          students = JSON.parse(savedStudents);
+          nextStudentId = parseInt(savedStudentId) || Math.max(...students.map(s => s.id), 0) + 1;
+        } catch (e) {
           students = DEFAULT_STUDENTS.slice();
           nextStudentId = 7;
         }
+      } else {
+        students = DEFAULT_STUDENTS.slice();
+        nextStudentId = 7;
+      }
 
-        if (savedCourses) {
-          try {
-            courses = JSON.parse(savedCourses);
-            nextCourseId = parseInt(savedCourseId) || Math.max(...courses.map(c => c.id), 0) + 1;
-          } catch (e) {
-            courses = DEFAULT_COURSES.slice();
-            nextCourseId = 6;
-          }
-        } else {
+      if (savedCourses) {
+        try {
+          courses = JSON.parse(savedCourses);
+          nextCourseId = parseInt(savedCourseId) || Math.max(...courses.map(c => c.id), 0) + 1;
+        } catch (e) {
           courses = DEFAULT_COURSES.slice();
           nextCourseId = 6;
         }
+      } else {
+        courses = DEFAULT_COURSES.slice();
+        nextCourseId = 6;
+      }
 
-        if (savedBudget) {
-          try {
-            budgetEntries = JSON.parse(savedBudget);
-            nextBudgetId = parseInt(savedBudgetId) || Math.max(...budgetEntries.map(b => b.id), 0) + 1;
-          } catch (e) {
-            budgetEntries = DEFAULT_BUDGET.slice();
-            nextBudgetId = 7;
-          }
-        } else {
+      if (savedBudget) {
+        try {
+          budgetEntries = JSON.parse(savedBudget);
+          nextBudgetId = parseInt(savedBudgetId) || Math.max(...budgetEntries.map(b => b.id), 0) + 1;
+        } catch (e) {
           budgetEntries = DEFAULT_BUDGET.slice();
           nextBudgetId = 7;
         }
+      } else {
+        budgetEntries = DEFAULT_BUDGET.slice();
+        nextBudgetId = 7;
+      }
 
-        if (savedEnrollments) {
-          try {
-            enrollments = JSON.parse(savedEnrollments);
-          } catch (e) {
-            enrollments = DEFAULT_ENROLLMENTS.slice();
-          }
-        } else {
+      if (savedEnrollments) {
+        try {
+          enrollments = JSON.parse(savedEnrollments);
+        } catch (e) {
           enrollments = DEFAULT_ENROLLMENTS.slice();
         }
+      } else {
+        enrollments = DEFAULT_ENROLLMENTS.slice();
       }
 
-      function saveData() {
-        localStorage.setItem('nokj-students', JSON.stringify(students));
-        localStorage.setItem('nokj-courses', JSON.stringify(courses));
-        localStorage.setItem('nokj-budget', JSON.stringify(budgetEntries));
-        localStorage.setItem('nokj-enrollments', JSON.stringify(enrollments));
-        localStorage.setItem('nokj-next-student-id', String(nextStudentId));
-        localStorage.setItem('nokj-next-course-id', String(nextCourseId));
-        localStorage.setItem('nokj-next-budget-id', String(nextBudgetId));
-      }
-
-      // ----- Helper Functions -----
-      function getStudentName(id) {
-        const s = students.find(function(st) { return st.id === id; });
-        return s ? s.name : 'Unknown';
-      }
-
-      function getCourseName(id) {
-        const c = courses.find(function(co) { return co.id === id; });
-        return c ? c.name : 'Unknown';
-      }
-
-      function getEnrolledCourseIds(studentId) {
-        return enrollments
-          .filter(function(e) { return e.studentId === studentId; })
-          .map(function(e) { return e.courseId; });
-      }
-
-      function getEnrolledStudentIds(courseId) {
-        return enrollments
-          .filter(function(e) { return e.courseId === courseId; })
-          .map(function(e) { return e.studentId; });
-      }
-
-      function getStudentCourseCount(studentId) {
-        return enrollments.filter(function(e) { return e.studentId === studentId; }).length;
-      }
-
-      function getCourseStudentCount(courseId) {
-        return enrollments.filter(function(e) { return e.courseId === courseId; }).length;
-      }
-
-      // ----- Navigation -----
-      function openPage(pageName) {
-        pages.forEach(function(page) {
-          page.classList.toggle('active', page.id === pageName);
-        });
-        navButtons.forEach(function(btn) {
-          btn.classList.toggle('active', btn.dataset.page === pageName);
-        });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-
-      // ----- Translation -----
-      function applyTranslation(lang) {
-        const walker = document.createTreeWalker(
-          document.body,
-          NodeFilter.SHOW_TEXT,
-          {
-            acceptNode: function(node) {
-              const parent = node.parentElement;
-              if (!parent) return NodeFilter.FILTER_REJECT;
-              const tag = parent.tagName;
-              if (tag === 'SCRIPT' || tag === 'STYLE') return NodeFilter.FILTER_REJECT;
-              if (node.nodeValue.trim() === '') return NodeFilter.FILTER_REJECT;
-              return NodeFilter.FILTER_ACCEPT;
-            }
-          }
-        );
-
-        let node;
-        const nodesToTranslate = [];
-        while ((node = walker.nextNode())) {
-          nodesToTranslate.push(node);
+      if (savedGrades) {
+        try {
+          gradeData = JSON.parse(savedGrades);
+        } catch (e) {
+          gradeData = DEFAULT_GRADES;
         }
+      } else {
+        gradeData = DEFAULT_GRADES;
+      }
+    }
 
-        nodesToTranslate.forEach(function(textNode) {
-          if (!originalText.has(textNode)) {
-            originalText.set(textNode, textNode.nodeValue);
-          }
-          const original = originalText.get(textNode);
-          const trimmed = original.trim();
-          const leading = original.match(/^\s*/)[0];
-          const trailing = original.match(/\s*$/)[0];
+    function saveData() {
+      localStorage.setItem('nokj-students', JSON.stringify(students));
+      localStorage.setItem('nokj-courses', JSON.stringify(courses));
+      localStorage.setItem('nokj-budget', JSON.stringify(budgetEntries));
+      localStorage.setItem('nokj-enrollments', JSON.stringify(enrollments));
+      localStorage.setItem('nokj-grades', JSON.stringify(gradeData));
+      localStorage.setItem('nokj-next-student-id', String(nextStudentId));
+      localStorage.setItem('nokj-next-course-id', String(nextCourseId));
+      localStorage.setItem('nokj-next-budget-id', String(nextBudgetId));
+    }
 
-          if (lang === 'ru' && translations[trimmed] !== undefined) {
-            textNode.nodeValue = leading + translations[trimmed] + trailing;
-          } else {
-            textNode.nodeValue = original;
-          }
-        });
+    // ----- Helper Functions -----
+    function getStudentName(id) {
+      const s = students.find(function(st) { return st.id === id; });
+      return s ? s.name : 'Unknown';
+    }
 
-        if (searchInput) {
-          if (lang === 'ru') {
-            searchInput.placeholder = 'Поиск курсов, уроков или заданий';
-          } else {
-            searchInput.placeholder = originalPlaceholder;
+    function getCourseName(id) {
+      const c = courses.find(function(co) { return co.id === id; });
+      return c ? c.name : 'Unknown';
+    }
+
+    function getEnrolledCourseIds(studentId) {
+      return enrollments
+        .filter(function(e) { return e.studentId === studentId; })
+        .map(function(e) { return e.courseId; });
+    }
+
+    function getEnrolledStudentIds(courseId) {
+      return enrollments
+        .filter(function(e) { return e.courseId === courseId; })
+        .map(function(e) { return e.studentId; });
+    }
+
+    function getStudentCourseCount(studentId) {
+      return enrollments.filter(function(e) { return e.studentId === studentId; }).length;
+    }
+
+    function getCourseStudentCount(courseId) {
+      return enrollments.filter(function(e) { return e.courseId === courseId; }).length;
+    }
+
+    // ----- Grade Helper Functions -----
+    function getGradeKey(studentId, courseId) {
+      return studentId + '-' + courseId;
+    }
+
+    function getGrade(studentId, courseId) {
+      const key = getGradeKey(studentId, courseId);
+      return gradeData[key] || null;
+    }
+
+    function setGrade(studentId, courseId, grade) {
+      const key = getGradeKey(studentId, courseId);
+      if (grade === null || grade === undefined || grade === '') {
+        delete gradeData[key];
+      } else {
+        gradeData[key] = Math.min(100, Math.max(0, Math.round(parseFloat(grade))));
+      }
+      saveData();
+    }
+
+    function getStudentGrades(studentId) {
+      const result = {};
+      const enrolled = getEnrolledCourseIds(studentId);
+      enrolled.forEach(function(courseId) {
+        const grade = getGrade(studentId, courseId);
+        if (grade !== null) {
+          result[courseId] = grade;
+        }
+      });
+      return result;
+    }
+
+    function getCourseGrades(courseId) {
+      const result = {};
+      const enrolled = getEnrolledStudentIds(courseId);
+      enrolled.forEach(function(studentId) {
+        const grade = getGrade(studentId, courseId);
+        if (grade !== null) {
+          result[studentId] = grade;
+        }
+      });
+      return result;
+    }
+
+    function getStudentAverage(studentId) {
+      const grades = getStudentGrades(studentId);
+      const values = Object.values(grades);
+      if (values.length === 0) return null;
+      return Math.round(values.reduce(function(a, b) { return a + b; }, 0) / values.length);
+    }
+
+    function getCourseAverage(courseId) {
+      const grades = getCourseGrades(courseId);
+      const values = Object.values(grades);
+      if (values.length === 0) return null;
+      return Math.round(values.reduce(function(a, b) { return a + b; }, 0) / values.length);
+    }
+
+    function getPassingCount(studentId) {
+      const grades = getStudentGrades(studentId);
+      const values = Object.values(grades);
+      return values.filter(function(g) { return g >= 60; }).length;
+    }
+
+    function getFailingCount(studentId) {
+      const grades = getStudentGrades(studentId);
+      const values = Object.values(grades);
+      return values.filter(function(g) { return g < 60; }).length;
+    }
+
+    // ----- Navigation -----
+    function openPage(pageName) {
+      pages.forEach(function(page) {
+        page.classList.toggle('active', page.id === pageName);
+      });
+      navButtons.forEach(function(btn) {
+        btn.classList.toggle('active', btn.dataset.page === pageName);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ----- Translation -----
+    function applyTranslation(lang) {
+      const walker = document.createTreeWalker(
+        document.body,
+        NodeFilter.SHOW_TEXT,
+        {
+          acceptNode: function(node) {
+            const parent = node.parentElement;
+            if (!parent) return NodeFilter.FILTER_REJECT;
+            const tag = parent.tagName;
+            if (tag === 'SCRIPT' || tag === 'STYLE') return NodeFilter.FILTER_REJECT;
+            if (node.nodeValue.trim() === '') return NodeFilter.FILTER_REJECT;
+            return NodeFilter.FILTER_ACCEPT;
           }
         }
+      );
 
-        document.documentElement.lang = lang;
-        document.title = (lang === 'ru') ? 'NOKJ Academy — Портал ученика' : 'NOKJ Academy';
+      let node;
+      const nodesToTranslate = [];
+      while ((node = walker.nextNode())) {
+        nodesToTranslate.push(node);
+      }
 
-        if (lang === 'ru') {
-          flagUK.style.display = 'none';
-          flagRU.style.display = 'block';
-          loginFlagUK.style.display = 'none';
-          loginFlagRU.style.display = 'block';
+      nodesToTranslate.forEach(function(textNode) {
+        if (!originalText.has(textNode)) {
+          originalText.set(textNode, textNode.nodeValue);
+        }
+        const original = originalText.get(textNode);
+        const trimmed = original.trim();
+        const leading = original.match(/^\s*/)[0];
+        const trailing = original.match(/\s*$/)[0];
+
+        if (lang === 'ru' && translations[trimmed] !== undefined) {
+          textNode.nodeValue = leading + translations[trimmed] + trailing;
         } else {
-          flagUK.style.display = 'block';
-          flagRU.style.display = 'none';
-          loginFlagUK.style.display = 'block';
-          loginFlagRU.style.display = 'none';
-        }
-      }
-
-      function setLanguage(lang) {
-        currentLang = lang;
-        localStorage.setItem('nokj-language', lang);
-        applyTranslation(lang);
-      }
-
-      function toggleLanguage() {
-        const nextLang = (currentLang === 'en') ? 'ru' : 'en';
-        setLanguage(nextLang);
-      }
-
-      // ----- Render Functions -----
-      function renderStudents() {
-        const search = studentSearch.value.toLowerCase();
-        const filter = studentFilter.value;
-
-        let filtered = students.filter(function(s) {
-          const matchesSearch = s.name.toLowerCase().includes(search);
-          const matchesFilter = filter === 'all' || s.status === filter;
-          return matchesSearch && matchesFilter;
-        });
-
-        filtered.sort(function(a, b) {
-          return a.name.localeCompare(b.name);
-        });
-
-        studentTableBody.innerHTML = '';
-
-        filtered.forEach(function(s) {
-          const enrolledCount = getStudentCourseCount(s.id);
-          const isExpanded = expandedRows['student-' + s.id] || false;
-          const icon = isExpanded ? '▼' : '▶';
-
-          const tr = document.createElement('tr');
-          tr.className = 'expandable-row';
-          tr.dataset.expandId = 'student-' + s.id;
-          tr.innerHTML =
-            '<td style="cursor:pointer;">' +
-              '<span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon + '</span> ' +
-              '<strong>' + s.name + '</strong>' +
-            '</td>' +
-            '<td>' + s.grade + '%</td>' +
-            '<td>' + s.attendance + '%</td>' +
-            '<td><span class="status-badge ' + s.status.toLowerCase() + '">' + s.status + '</span></td>' +
-            '<td>' +
-              '<button class="action-btn edit" data-id="' + s.id + '" data-type="student">✏️</button>' +
-              '<button class="action-btn delete" data-id="' + s.id + '" data-type="student">🗑️</button>' +
-              '<button class="action-btn enroll" data-id="' + s.id + '" data-type="enroll">📚 Enroll</button>' +
-            '</td>';
-          studentTableBody.appendChild(tr);
-
-          // Detail row (expandable)
-          const detailTr = document.createElement('tr');
-          detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
-          detailTr.dataset.parentId = 'student-' + s.id;
-          const courseIds = getEnrolledCourseIds(s.id);
-          let detailHtml = '<div class="detail-content">';
-          detailHtml += '<strong>' + (currentLang === 'ru' ? 'Записанные курсы:' : 'Enrolled Courses:') + '</strong> ';
-
-          if (courseIds.length === 0) {
-            detailHtml += '<span class="empty-msg">' + (currentLang === 'ru' ? 'Ученик не записан ни на один курс.' : 'Student not enrolled in any courses.') + '</span>';
-          } else {
-            courseIds.forEach(function(cid) {
-              const c = courses.find(function(co) { return co.id === cid; });
-              if (c) {
-                detailHtml += '<span class="item-tag">📚 ' + c.name + ' <span style="color:var(--muted);font-size:11px;">(' + c.teacher + ')</span></span>';
-              }
-            });
-          }
-
-          detailHtml += '</div>';
-          detailTr.innerHTML = '<td colspan="5">' + detailHtml + '</td>';
-          studentTableBody.appendChild(detailTr);
-        });
-
-        const total = students.length;
-        studentCount.textContent = filtered.length + ' students';
-        studentTotal.textContent = total;
-
-        const avgGrade = total > 0 ? Math.round(students.reduce(function(sum, s) { return sum + s.grade; }, 0) / total) : 0;
-        const avgAttendance = total > 0 ? Math.round(students.reduce(function(sum, s) { return sum + s.attendance; }, 0) / total) : 0;
-        studentAvgGrade.textContent = avgGrade + '%';
-        studentAvgAttendance.textContent = avgAttendance + '%';
-
-        updateAdminStats();
-      }
-
-      function renderCourses() {
-        const search = courseSearch.value.toLowerCase();
-
-        let filtered = courses.filter(function(c) {
-          return c.name.toLowerCase().includes(search);
-        });
-
-        filtered.sort(function(a, b) {
-          return a.name.localeCompare(b.name);
-        });
-
-        courseTableBody.innerHTML = '';
-
-        filtered.forEach(function(c) {
-          const studentCount = getCourseStudentCount(c.id);
-          const isExpanded = expandedRows['course-' + c.id] || false;
-          const icon = isExpanded ? '▼' : '▶';
-
-          const tr = document.createElement('tr');
-          tr.className = 'expandable-row';
-          tr.dataset.expandId = 'course-' + c.id;
-          tr.innerHTML =
-            '<td style="cursor:pointer;">' +
-              '<span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon + '</span> ' +
-              '<strong>' + c.name + '</strong><br>' +
-              '<span style="font-size:12px;color:var(--muted);">' + c.description + '</span>' +
-            '</td>' +
-            '<td>' + c.teacher + '</td>' +
-            '<td>' + studentCount + ' students</td>' +
-            '<td>' +
-              '<button class="action-btn edit" data-id="' + c.id + '" data-type="course">✏️</button>' +
-              '<button class="action-btn delete" data-id="' + c.id + '" data-type="course">🗑️</button>' +
-            '</td>';
-          courseTableBody.appendChild(tr);
-
-          // Detail row (expandable)
-          const detailTr = document.createElement('tr');
-          detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
-          detailTr.dataset.parentId = 'course-' + c.id;
-          const studentIds = getEnrolledStudentIds(c.id);
-          let detailHtml = '<div class="detail-content">';
-          detailHtml += '<strong>' + (currentLang === 'ru' ? 'Записанные ученики:' : 'Enrolled Students:') + '</strong> ';
-
-          if (studentIds.length === 0) {
-            detailHtml += '<span class="empty-msg">' + (currentLang === 'ru' ? 'На этот курс не записаны ученики.' : 'No students enrolled in this course.') + '</span>';
-          } else {
-            studentIds.forEach(function(sid) {
-              const s = students.find(function(st) { return st.id === sid; });
-              if (s) {
-                detailHtml += '<span class="item-tag">👤 ' + s.name + ' <span class="status-badge ' + s.status.toLowerCase() + '">' + s.status + '</span></span>';
-              }
-            });
-          }
-
-          detailHtml += '</div>';
-          detailTr.innerHTML = '<td colspan="4">' + detailHtml + '</td>';
-          courseTableBody.appendChild(detailTr);
-        });
-
-        courseCount.textContent = filtered.length + ' courses';
-        courseTotal.textContent = courses.length;
-        courseEnrollmentsTotal.textContent = enrollments.length;
-
-        updateAdminStats();
-      }
-
-      // ----- Render Functions for Expand/Collapse -----
-      function toggleExpand(expandId) {
-        expandedRows[expandId] = !expandedRows[expandId];
-        // Re-render the current table
-        const activePage = document.querySelector('.page.active');
-        if (activePage) {
-          const pageId = activePage.id;
-          if (pageId === 'students') {
-            renderStudents();
-          } else if (pageId === 'courses-admin') {
-            renderCourses();
-          }
-        }
-      }
-
-      // ----- Event Delegation for Expand/Collapse -----
-      document.addEventListener('click', function(e) {
-        const target = e.target.closest('.expandable-row');
-        if (target) {
-          const expandId = target.dataset.expandId;
-          if (expandId) {
-            toggleExpand(expandId);
-          }
+          textNode.nodeValue = original;
         }
       });
 
-      // ----- Render Student Courses (Student View) -----
-      function renderStudentCourses() {
-        if (!currentUser) return;
-
-        const student = students.find(function(s) {
-          return s.name === currentUser.name;
-        });
-
-        if (!student) {
-          studentCoursesContainer.innerHTML = '<p>No student record found.</p>';
-          return;
-        }
-
-        const enrolledIds = getEnrolledCourseIds(student.id);
-        const enrolledCourses = courses.filter(function(c) {
-          return enrolledIds.includes(c.id);
-        });
-
-        if (enrolledCourses.length === 0) {
-          const msg = currentLang === 'ru' ? 'Вы еще не записаны на курсы.' : 'You are not enrolled in any courses yet.';
-          studentCoursesContainer.innerHTML = '<p style="color:var(--muted);">' + msg + '</p>';
-          return;
-        }
-
-        let html = '<div class="course-grid">';
-        enrolledCourses.forEach(function(c) {
-          const colors = ['', 'orange-cover', 'green-cover'];
-          const colorClass = colors[c.id % 3];
-          const progress = Math.floor(Math.random() * 30) + 60;
-          html +=
-            '<article class="course">' +
-              '<div class="course-cover ' + colorClass + '">' + c.name + '</div>' +
-              '<div class="course-body">' +
-                '<h3>' + c.name + '</h3>' +
-                '<p>Teacher: ' + c.teacher + '</p>' +
-                '<div class="track"><div class="fill" style="width: ' + progress + '%"></div></div>' +
-                '<div class="course-footer"><span>' + progress + '% complete</span><button class="link-button">Open course</button></div>' +
-              '</div>' +
-            '</article>';
-        });
-        html += '</div>';
-        studentCoursesContainer.innerHTML = html;
-      }
-
-      // ----- Render Budget -----
-      function renderBudget() {
-        const search = budgetSearch.value.toLowerCase();
-        const filter = budgetFilter.value;
-
-        let filtered = budgetEntries.filter(function(b) {
-          const matchesSearch = b.category.toLowerCase().includes(search);
-          const matchesFilter = filter === 'all' || b.type === filter;
-          return matchesSearch && matchesFilter;
-        });
-
-        filtered.sort(function(a, b) {
-          return b.date.localeCompare(a.date);
-        });
-
-        budgetTableBody.innerHTML = '';
-
-        filtered.forEach(function(b) {
-          const tr = document.createElement('tr');
-          const isIncome = b.type === 'Income';
-          const amountDisplay = isIncome ? '+' + b.amount : '-' + Math.abs(b.amount);
-          const amountClass = isIncome ? 'income' : 'expense';
-          tr.innerHTML =
-            '<td><strong>' + b.category + '</strong></td>' +
-            '<td>' + b.type + '</td>' +
-            '<td class="' + amountClass + '" style="font-weight:700;">$' + amountDisplay + '</td>' +
-            '<td>' + b.date + '</td>' +
-            '<td><span class="status-badge ' + b.status.toLowerCase() + '">' + b.status + '</span></td>' +
-            '<td>' +
-              '<button class="action-btn edit" data-id="' + b.id + '" data-type="budget">✏️</button>' +
-              '<button class="action-btn delete" data-id="' + b.id + '" data-type="budget">🗑️</button>' +
-            '</td>';
-          budgetTableBody.appendChild(tr);
-        });
-
-        const total = budgetEntries.length;
-        budgetCount.textContent = filtered.length + ' entries';
-
-        const totalIncome = budgetEntries
-          .filter(function(b) { return b.type === 'Income'; })
-          .reduce(function(sum, b) { return sum + b.amount; }, 0);
-
-        const totalExpense = budgetEntries
-          .filter(function(b) { return b.type === 'Expense'; })
-          .reduce(function(sum, b) { return sum + Math.abs(b.amount); }, 0);
-
-        budgetTotalIncome.textContent = '$' + totalIncome.toLocaleString();
-        budgetTotalExpense.textContent = '$' + totalExpense.toLocaleString();
-        budgetNet.textContent = '$' + (totalIncome - totalExpense).toLocaleString();
-        budgetNet.style.color = (totalIncome - totalExpense) >= 0 ? 'var(--success)' : 'var(--danger)';
-
-        updateAdminStats();
-      }
-
-      function updateAdminStats() {
-        if (!currentUser || currentUser.role !== 'Admin') return;
-
-        totalStudentsEl.textContent = students.length;
-        totalCoursesEl.textContent = courses.length;
-        totalEnrollmentsEl.textContent = enrollments.length;
-
-        const totalIncome = budgetEntries
-          .filter(function(b) { return b.type === 'Income'; })
-          .reduce(function(sum, b) { return sum + b.amount; }, 0);
-        totalRevenueEl.textContent = '$' + totalIncome.toLocaleString();
-      }
-
-      // ----- Modal Functions -----
-      function openModal(type, mode, data) {
-        modalType = type;
-        modalMode = mode;
-
-        if (mode === 'add') {
-          if (type === 'student') {
-            modalTitle.textContent = currentLang === 'ru' ? 'Добавить ученика' : 'Add Student';
-            modalSub.textContent = currentLang === 'ru' ? 'Введите данные ученика' : 'Enter student details';
-            modalFields.innerHTML =
-              '<label>Name</label><input type="text" id="modal-name" placeholder="Full name" />' +
-              '<label>Grade (%)</label><input type="number" id="modal-grade" placeholder="0-100" min="0" max="100" />' +
-              '<label>Attendance (%)</label><input type="number" id="modal-attendance" placeholder="0-100" min="0" max="100" />' +
-              '<label>Status</label><select id="modal-status"><option value="Active">Active</option><option value="Warning">Warning</option><option value="Inactive">Inactive</option></select>';
-            editingId = null;
-          } else if (type === 'course') {
-            modalTitle.textContent = currentLang === 'ru' ? 'Добавить курс' : 'Add Course';
-            modalSub.textContent = currentLang === 'ru' ? 'Введите данные курса' : 'Enter course details';
-            modalFields.innerHTML =
-              '<label>Course Name</label><input type="text" id="modal-course-name" placeholder="e.g. Physics" />' +
-              '<label>Teacher</label><input type="text" id="modal-course-teacher" placeholder="e.g. Dr. Smith" />' +
-              '<label>Description</label><input type="text" id="modal-course-description" placeholder="e.g. Year 10 Physics" />';
-            editingId = null;
-          } else {
-            modalTitle.textContent = currentLang === 'ru' ? 'Добавить запись в бюджет' : 'Add Budget Entry';
-            modalSub.textContent = currentLang === 'ru' ? 'Введите данные бюджета' : 'Enter budget details';
-            modalFields.innerHTML =
-              '<label>Category</label><input type="text" id="modal-category" placeholder="e.g. Student Fees" />' +
-              '<label>Type</label><select id="modal-type"><option value="Income">Income</option><option value="Expense">Expense</option></select>' +
-              '<label>Amount ($)</label><input type="number" id="modal-amount" placeholder="Enter amount" min="0" step="1" />' +
-              '<label>Date</label><input type="date" id="modal-date" />' +
-              '<label>Status</label><select id="modal-status"><option value="Paid">Paid</option><option value="Pending">Pending</option><option value="Unpaid">Unpaid</option></select>';
-            editingId = null;
-          }
+      if (searchInput) {
+        if (lang === 'ru') {
+          searchInput.placeholder = 'Поиск курсов, уроков или заданий';
         } else {
-          if (type === 'student') {
-            modalTitle.textContent = currentLang === 'ru' ? 'Редактировать ученика' : 'Edit Student Record';
-            modalSub.textContent = currentLang === 'ru' ? 'Введите данные ученика' : 'Enter student details';
-            const s = students.find(function(st) { return st.id === data.id; });
-            if (s) {
-              editingId = s.id;
-              modalFields.innerHTML =
-                '<label>Name</label><input type="text" id="modal-name" value="' + s.name + '" />' +
-                '<label>Grade (%)</label><input type="number" id="modal-grade" value="' + s.grade + '" min="0" max="100" />' +
-                '<label>Attendance (%)</label><input type="number" id="modal-attendance" value="' + s.attendance + '" min="0" max="100" />' +
-                '<label>Status</label><select id="modal-status"><option value="Active"' + (s.status === 'Active' ? ' selected' : '') + '>Active</option><option value="Warning"' + (s.status === 'Warning' ? ' selected' : '') + '>Warning</option><option value="Inactive"' + (s.status === 'Inactive' ? ' selected' : '') + '>Inactive</option></select>';
-            }
-          } else if (type === 'course') {
-            modalTitle.textContent = currentLang === 'ru' ? 'Редактировать курс' : 'Edit Course';
-            modalSub.textContent = currentLang === 'ru' ? 'Введите данные курса' : 'Enter course details';
-            const c = courses.find(function(co) { return co.id === data.id; });
+          searchInput.placeholder = originalPlaceholder;
+        }
+      }
+
+      document.documentElement.lang = lang;
+      document.title = (lang === 'ru') ? 'NOKJ Academy — Портал ученика' : 'NOKJ Academy';
+
+      if (lang === 'ru') {
+        flagUK.style.display = 'none';
+        flagRU.style.display = 'block';
+        loginFlagUK.style.display = 'none';
+        loginFlagRU.style.display = 'block';
+      } else {
+        flagUK.style.display = 'block';
+        flagRU.style.display = 'none';
+        loginFlagUK.style.display = 'block';
+        loginFlagRU.style.display = 'none';
+      }
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('nokj-language', lang);
+      applyTranslation(lang);
+    }
+
+    function toggleLanguage() {
+      const nextLang = (currentLang === 'en') ? 'ru' : 'en';
+      setLanguage(nextLang);
+    }
+
+    // ----- Render Functions -----
+    function renderStudents() {
+      const search = studentSearch.value.toLowerCase();
+      const filter = studentFilter.value;
+
+      let filtered = students.filter(function(s) {
+        const matchesSearch = s.name.toLowerCase().includes(search);
+        const matchesFilter = filter === 'all' || s.status === filter;
+        return matchesSearch && matchesFilter;
+      });
+
+      filtered.sort(function(a, b) {
+        return a.name.localeCompare(b.name);
+      });
+
+      studentTableBody.innerHTML = '';
+
+      filtered.forEach(function(s) {
+        const enrolledCount = getStudentCourseCount(s.id);
+        const isExpanded = expandedRows['student-' + s.id] || false;
+        const icon = isExpanded ? '▼' : '▶';
+
+        const tr = document.createElement('tr');
+        tr.className = 'expandable-row';
+        tr.dataset.expandId = 'student-' + s.id;
+        tr.innerHTML =
+          '<td style="cursor:pointer;">' +
+            '<span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon + '</span> ' +
+            '<strong>' + s.name + '</strong>' +
+          '</td>' +
+          '<td>' + s.grade + '%</td>' +
+          '<td>' + s.attendance + '%</td>' +
+          '<td><span class="status-badge ' + s.status.toLowerCase() + '">' + s.status + '</span></td>' +
+          '<td>' +
+            '<button class="action-btn edit" data-id="' + s.id + '" data-type="student">✏️</button>' +
+            '<button class="action-btn delete" data-id="' + s.id + '" data-type="student">🗑️</button>' +
+            '<button class="action-btn enroll" data-id="' + s.id + '" data-type="enroll">📚 Enroll</button>' +
+          '</td>';
+        studentTableBody.appendChild(tr);
+
+        const detailTr = document.createElement('tr');
+        detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
+        detailTr.dataset.parentId = 'student-' + s.id;
+        const courseIds = getEnrolledCourseIds(s.id);
+        let detailHtml = '<div class="detail-content">';
+        detailHtml += '<strong>' + (currentLang === 'ru' ? 'Записанные курсы:' : 'Enrolled Courses:') + '</strong> ';
+
+        if (courseIds.length === 0) {
+          detailHtml += '<span class="empty-msg">' + (currentLang === 'ru' ? 'Ученик не записан ни на один курс.' : 'Student not enrolled in any courses.') + '</span>';
+        } else {
+          courseIds.forEach(function(cid) {
+            const c = courses.find(function(co) { return co.id === cid; });
             if (c) {
-              editingId = c.id;
-              modalFields.innerHTML =
-                '<label>Course Name</label><input type="text" id="modal-course-name" value="' + c.name + '" />' +
-                '<label>Teacher</label><input type="text" id="modal-course-teacher" value="' + c.teacher + '" />' +
-                '<label>Description</label><input type="text" id="modal-course-description" value="' + c.description + '" />';
+              detailHtml += '<span class="item-tag">📚 ' + c.name + ' <span style="color:var(--muted);font-size:11px;">(' + c.teacher + ')</span></span>';
             }
-          } else {
-            modalTitle.textContent = currentLang === 'ru' ? 'Редактировать запись в бюджете' : 'Edit Budget Entry';
-            modalSub.textContent = currentLang === 'ru' ? 'Введите данные бюджета' : 'Enter budget details';
-            const b = budgetEntries.find(function(bg) { return bg.id === data.id; });
-            if (b) {
-              editingId = b.id;
-              const isIncome = b.type === 'Income';
-              modalFields.innerHTML =
-                '<label>Category</label><input type="text" id="modal-category" value="' + b.category + '" />' +
-                '<label>Type</label><select id="modal-type"><option value="Income"' + (isIncome ? ' selected' : '') + '>Income</option><option value="Expense"' + (!isIncome ? ' selected' : '') + '>Expense</option></select>' +
-                '<label>Amount ($)</label><input type="number" id="modal-amount" value="' + Math.abs(b.amount) + '" min="0" step="1" />' +
-                '<label>Date</label><input type="date" id="modal-date" value="' + b.date + '" />' +
-                '<label>Status</label><select id="modal-status"><option value="Paid"' + (b.status === 'Paid' ? ' selected' : '') + '>Paid</option><option value="Pending"' + (b.status === 'Pending' ? ' selected' : '') + '>Pending</option><option value="Unpaid"' + (b.status === 'Unpaid' ? ' selected' : '') + '>Unpaid</option></select>';
-            }
-          }
-        }
-
-        modalOverlay.classList.add('open');
-      }
-
-      function closeModal() {
-        modalOverlay.classList.remove('open');
-        modalForm.reset();
-      }
-
-      function handleModalSubmit(e) {
-        e.preventDefault();
-
-        if (modalType === 'student') {
-          const name = document.getElementById('modal-name').value.trim();
-          const grade = parseFloat(document.getElementById('modal-grade').value);
-          const attendance = parseFloat(document.getElementById('modal-attendance').value);
-          const status = document.getElementById('modal-status').value;
-
-          if (!name || isNaN(grade) || isNaN(attendance)) {
-            alert(currentLang === 'ru' ? 'Пожалуйста, заполните все поля' : 'Please fill in all fields');
-            return;
-          }
-
-          if (modalMode === 'add') {
-            students.push({ id: nextStudentId++, name: name, grade: grade, attendance: attendance, status: status });
-          } else {
-            const index = students.findIndex(function(s) { return s.id === editingId; });
-            if (index !== -1) {
-              students[index] = { id: editingId, name: name, grade: grade, attendance: attendance, status: status };
-            }
-          }
-
-          saveData();
-          renderStudents();
-          renderStudentCourses();
-          closeModal();
-        } else if (modalType === 'course') {
-          const name = document.getElementById('modal-course-name').value.trim();
-          const teacher = document.getElementById('modal-course-teacher').value.trim();
-          const description = document.getElementById('modal-course-description').value.trim();
-
-          if (!name || !teacher) {
-            alert(currentLang === 'ru' ? 'Пожалуйста, заполните все поля' : 'Please fill in all fields');
-            return;
-          }
-
-          if (modalMode === 'add') {
-            courses.push({ id: nextCourseId++, name: name, teacher: teacher, description: description });
-          } else {
-            const index = courses.findIndex(function(c) { return c.id === editingId; });
-            if (index !== -1) {
-              courses[index] = { id: editingId, name: name, teacher: teacher, description: description };
-            }
-          }
-
-          saveData();
-          renderCourses();
-          renderStudentCourses();
-          closeModal();
-        } else {
-          const category = document.getElementById('modal-category').value.trim();
-          const type = document.getElementById('modal-type').value;
-          const amount = parseFloat(document.getElementById('modal-amount').value);
-          const date = document.getElementById('modal-date').value;
-          const status = document.getElementById('modal-status').value;
-
-          if (!category || isNaN(amount) || !date) {
-            alert(currentLang === 'ru' ? 'Пожалуйста, заполните все поля' : 'Please fill in all fields');
-            return;
-          }
-
-          const finalAmount = type === 'Income' ? amount : -amount;
-
-          if (modalMode === 'add') {
-            budgetEntries.push({ id: nextBudgetId++, category: category, type: type, amount: finalAmount, date: date, status: status });
-          } else {
-            const index = budgetEntries.findIndex(function(b) { return b.id === editingId; });
-            if (index !== -1) {
-              budgetEntries[index] = { id: editingId, category: category, type: type, amount: finalAmount, date: date, status: status };
-            }
-          }
-
-          saveData();
-          renderBudget();
-          closeModal();
-        }
-      }
-
-      function deleteEntry(type, id) {
-        const confirmMsg = currentLang === 'ru' ? 'Вы уверены, что хотите удалить эту запись?' : 'Are you sure you want to delete this entry?';
-        if (!confirm(confirmMsg)) return;
-
-        if (type === 'student') {
-          enrollments = enrollments.filter(function(e) { return e.studentId !== id; });
-          students = students.filter(function(s) { return s.id !== id; });
-          renderStudents();
-          renderStudentCourses();
-        } else if (type === 'course') {
-          enrollments = enrollments.filter(function(e) { return e.courseId !== id; });
-          courses = courses.filter(function(c) { return c.id !== id; });
-          renderCourses();
-          renderStudentCourses();
-        } else {
-          budgetEntries = budgetEntries.filter(function(b) { return b.id !== id; });
-          renderBudget();
-        }
-        saveData();
-        updateAdminStats();
-      }
-
-      // ----- Enrollment Modal -----
-      function openEnrollModal(studentId) {
-        enrollStudentId = studentId;
-        const student = students.find(function(s) { return s.id === studentId; });
-        if (!student) return;
-
-        enrollModalTitle.textContent = currentLang === 'ru' ? 'Записать ученика' : 'Enroll Student';
-        enrollModalSub.textContent = (currentLang === 'ru' ? 'Выберите курсы для ' : 'Select courses for ') + student.name;
-
-        const enrolledIds = getEnrolledCourseIds(studentId);
-
-        let html = '';
-        if (courses.length === 0) {
-          html = '<p style="color:var(--muted);padding:20px;text-align:center;">' + (currentLang === 'ru' ? 'Нет доступных курсов.' : 'No courses available.') + '</p>';
-        } else {
-          courses.forEach(function(c) {
-            const checked = enrolledIds.includes(c.id) ? 'checked' : '';
-            html +=
-              '<div class="enrollment-item">' +
-                '<input type="checkbox" id="enroll-course-' + c.id + '" value="' + c.id + '" ' + checked + ' />' +
-                '<label for="enroll-course-' + c.id + '"><strong>' + c.name + '</strong></label>' +
-                '<span class="course-teacher">' + c.teacher + '</span>' +
-              '</div>';
           });
         }
-        enrollmentList.innerHTML = html;
 
-        enrollModalOverlay.classList.add('open');
+        detailHtml += '</div>';
+        detailTr.innerHTML = '<td colspan="5">' + detailHtml + '</td>';
+        studentTableBody.appendChild(detailTr);
+      });
+
+      const total = students.length;
+      studentCount.textContent = filtered.length + ' students';
+      studentTotal.textContent = total;
+
+      const avgGrade = total > 0 ? Math.round(students.reduce(function(sum, s) { return sum + s.grade; }, 0) / total) : 0;
+      const avgAttendance = total > 0 ? Math.round(students.reduce(function(sum, s) { return sum + s.attendance; }, 0) / total) : 0;
+      studentAvgGrade.textContent = avgGrade + '%';
+      studentAvgAttendance.textContent = avgAttendance + '%';
+
+      updateAdminStats();
+    }
+
+    function renderCourses() {
+      const search = courseSearch.value.toLowerCase();
+
+      let filtered = courses.filter(function(c) {
+        return c.name.toLowerCase().includes(search);
+      });
+
+      filtered.sort(function(a, b) {
+        return a.name.localeCompare(b.name);
+      });
+
+      courseTableBody.innerHTML = '';
+
+      filtered.forEach(function(c) {
+        const studentCount = getCourseStudentCount(c.id);
+        const isExpanded = expandedRows['course-' + c.id] || false;
+        const icon = isExpanded ? '▼' : '▶';
+
+        const tr = document.createElement('tr');
+        tr.className = 'expandable-row';
+        tr.dataset.expandId = 'course-' + c.id;
+        tr.innerHTML =
+          '<td style="cursor:pointer;">' +
+            '<span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon + '</span> ' +
+            '<strong>' + c.name + '</strong><br>' +
+            '<span style="font-size:12px;color:var(--muted);">' + c.description + '</span>' +
+          '</td>' +
+          '<td>' + c.teacher + '</td>' +
+          '<td>' + studentCount + ' students</td>' +
+          '<td>' +
+            '<button class="action-btn edit" data-id="' + c.id + '" data-type="course">✏️</button>' +
+            '<button class="action-btn delete" data-id="' + c.id + '" data-type="course">🗑️</button>' +
+          '</td>';
+        courseTableBody.appendChild(tr);
+
+        const detailTr = document.createElement('tr');
+        detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
+        detailTr.dataset.parentId = 'course-' + c.id;
+        const studentIds = getEnrolledStudentIds(c.id);
+        let detailHtml = '<div class="detail-content">';
+        detailHtml += '<strong>' + (currentLang === 'ru' ? 'Записанные ученики:' : 'Enrolled Students:') + '</strong> ';
+
+        if (studentIds.length === 0) {
+          detailHtml += '<span class="empty-msg">' + (currentLang === 'ru' ? 'На этот курс не записаны ученики.' : 'No students enrolled in this course.') + '</span>';
+        } else {
+          studentIds.forEach(function(sid) {
+            const s = students.find(function(st) { return st.id === sid; });
+            if (s) {
+              detailHtml += '<span class="item-tag">👤 ' + s.name + ' <span class="status-badge ' + s.status.toLowerCase() + '">' + s.status + '</span></span>';
+            }
+          });
+        }
+
+        detailHtml += '</div>';
+        detailTr.innerHTML = '<td colspan="4">' + detailHtml + '</td>';
+        courseTableBody.appendChild(detailTr);
+      });
+
+      courseCount.textContent = filtered.length + ' courses';
+      courseTotal.textContent = courses.length;
+      courseEnrollmentsTotal.textContent = enrollments.length;
+
+      updateAdminStats();
+    }
+
+    function renderBudget() {
+      const search = budgetSearch.value.toLowerCase();
+      const filter = budgetFilter.value;
+
+      let filtered = budgetEntries.filter(function(b) {
+        const matchesSearch = b.category.toLowerCase().includes(search);
+        const matchesFilter = filter === 'all' || b.type === filter;
+        return matchesSearch && matchesFilter;
+      });
+
+      filtered.sort(function(a, b) {
+        return b.date.localeCompare(a.date);
+      });
+
+      budgetTableBody.innerHTML = '';
+
+      filtered.forEach(function(b) {
+        const tr = document.createElement('tr');
+        const isIncome = b.type === 'Income';
+        const amountDisplay = isIncome ? '+' + b.amount : '-' + Math.abs(b.amount);
+        const amountClass = isIncome ? 'income' : 'expense';
+        tr.innerHTML =
+          '<td><strong>' + b.category + '</strong></td>' +
+          '<td>' + b.type + '</td>' +
+          '<td class="' + amountClass + '" style="font-weight:700;">$' + amountDisplay + '</td>' +
+          '<td>' + b.date + '</td>' +
+          '<td><span class="status-badge ' + b.status.toLowerCase() + '">' + b.status + '</span></td>' +
+          '<td>' +
+            '<button class="action-btn edit" data-id="' + b.id + '" data-type="budget">✏️</button>' +
+            '<button class="action-btn delete" data-id="' + b.id + '" data-type="budget">🗑️</button>' +
+          '</td>';
+        budgetTableBody.appendChild(tr);
+      });
+
+      const total = budgetEntries.length;
+      budgetCount.textContent = filtered.length + ' entries';
+
+      const totalIncome = budgetEntries
+        .filter(function(b) { return b.type === 'Income'; })
+        .reduce(function(sum, b) { return sum + b.amount; }, 0);
+
+      const totalExpense = budgetEntries
+        .filter(function(b) { return b.type === 'Expense'; })
+        .reduce(function(sum, b) { return sum + Math.abs(b.amount); }, 0);
+
+      budgetTotalIncome.textContent = '$' + totalIncome.toLocaleString();
+      budgetTotalExpense.textContent = '$' + totalExpense.toLocaleString();
+      budgetNet.textContent = '$' + (totalIncome - totalExpense).toLocaleString();
+      budgetNet.style.color = (totalIncome - totalExpense) >= 0 ? 'var(--success)' : 'var(--danger)';
+
+      updateAdminStats();
+    }
+
+    function renderStudentCourses() {
+      if (!currentUser) return;
+
+      const student = students.find(function(s) {
+        return s.name === currentUser.name;
+      });
+
+      if (!student) {
+        studentCoursesContainer.innerHTML = '<p>No student record found.</p>';
+        return;
       }
 
-      function closeEnrollModal() {
-        enrollModalOverlay.classList.remove('open');
-        enrollStudentId = null;
+      const enrolledIds = getEnrolledCourseIds(student.id);
+      const enrolledCourses = courses.filter(function(c) {
+        return enrolledIds.includes(c.id);
+      });
+
+      if (enrolledCourses.length === 0) {
+        const msg = currentLang === 'ru' ? 'Вы еще не записаны на курсы.' : 'You are not enrolled in any courses yet.';
+        studentCoursesContainer.innerHTML = '<p style="color:var(--muted);">' + msg + '</p>';
+        return;
       }
 
-      function saveEnrollments() {
-        if (enrollStudentId === null) return;
+      let html = '<div class="course-grid">';
+      enrolledCourses.forEach(function(c) {
+        const colors = ['', 'orange-cover', 'green-cover'];
+        const colorClass = colors[c.id % 3];
+        const progress = Math.floor(Math.random() * 30) + 60;
+        html +=
+          '<article class="course">' +
+            '<div class="course-cover ' + colorClass + '">' + c.name + '</div>' +
+            '<div class="course-body">' +
+              '<h3>' + c.name + '</h3>' +
+              '<p>Teacher: ' + c.teacher + '</p>' +
+              '<div class="track"><div class="fill" style="width: ' + progress + '%"></div></div>' +
+              '<div class="course-footer"><span>' + progress + '% complete</span><button class="link-button">Open course</button></div>' +
+            '</div>' +
+          '</article>';
+      });
+      html += '</div>';
+      studentCoursesContainer.innerHTML = html;
+    }
 
-        const checkboxes = enrollmentList.querySelectorAll('input[type="checkbox"]');
-        const selectedIds = [];
-        checkboxes.forEach(function(cb) {
-          if (cb.checked) {
-            selectedIds.push(parseInt(cb.value));
+    function renderGrades() {
+      if (!currentUser) return;
+
+      const isAdmin = currentUser.role === 'Admin';
+      const adminView = document.getElementById('admin-grades-view');
+      const studentView = document.getElementById('student-grades-view');
+
+      if (isAdmin) {
+        adminView.style.display = 'block';
+        studentView.style.display = 'none';
+
+        const courseFilter = document.getElementById('grade-course-filter');
+        const currentCourseFilter = courseFilter.value;
+        courseFilter.innerHTML = '<option value="all">All Courses</option>';
+        courses.forEach(function(c) {
+          const selected = (currentCourseFilter === String(c.id)) ? 'selected' : '';
+          courseFilter.innerHTML += '<option value="' + c.id + '" ' + selected + '>' + c.name + '</option>';
+        });
+
+        const studentFilter = document.getElementById('grade-student-filter');
+        const currentStudentFilter = studentFilter.value;
+        studentFilter.innerHTML = '<option value="all">All Students</option>';
+        students.forEach(function(s) {
+          const selected = (currentStudentFilter === String(s.id)) ? 'selected' : '';
+          studentFilter.innerHTML += '<option value="' + s.id + '" ' + selected + '>' + s.name + '</option>';
+        });
+
+        renderGradeTable();
+      } else {
+        adminView.style.display = 'none';
+        studentView.style.display = 'block';
+        renderStudentGrades();
+      }
+    }
+
+    function renderGradeTable() {
+      const courseFilter = document.getElementById('grade-course-filter').value;
+      const studentFilter = document.getElementById('grade-student-filter').value;
+
+      let filtered = [];
+
+      enrollments.forEach(function(e) {
+        const student = students.find(function(s) { return s.id === e.studentId; });
+        const course = courses.find(function(c) { return c.id === e.courseId; });
+        if (!student || !course) return;
+
+        const courseMatch = courseFilter === 'all' || e.courseId === parseInt(courseFilter);
+        const studentMatch = studentFilter === 'all' || e.studentId === parseInt(studentFilter);
+
+        if (courseMatch && studentMatch) {
+          filtered.push({ studentId: e.studentId, studentName: student.name, courseId: e.courseId, courseName: course.name });
+        }
+      });
+
+      filtered.sort(function(a, b) {
+        return a.studentName.localeCompare(b.studentName);
+      });
+
+      const tbody = document.getElementById('grade-table-body');
+      tbody.innerHTML = '';
+
+      let totalGrades = 0;
+      let passingCount = 0;
+      let failingCount = 0;
+
+      filtered.forEach(function(item) {
+        const grade = getGrade(item.studentId, item.courseId);
+        totalGrades++;
+
+        const tr = document.createElement('tr');
+        const gradeDisplay = grade !== null ? grade : '-';
+        const statusClass = grade !== null ? (grade >= 60 ? 'grade-pass' : 'grade-fail') : '';
+        const statusText = grade !== null ? (grade >= 60 ? '✅ Pass' : '❌ Fail') : 'Not graded';
+
+        if (grade !== null) {
+          if (grade >= 60) passingCount++;
+          else failingCount++;
+        }
+
+        tr.innerHTML =
+          '<td><strong>' + item.studentName + '</strong></td>' +
+          '<td>' + item.courseName + '</td>' +
+          '<td class="grade-cell">' +
+            '<input type="number" class="grade-input" id="grade-input-' + item.studentId + '-' + item.courseId + '" ' +
+              'value="' + (grade !== null ? grade : '') + '" min="0" max="100" placeholder="-" />' +
+            '<button class="save-grade-btn" data-student="' + item.studentId + '" data-course="' + item.courseId + '">Save</button>' +
+          '</td>' +
+          '<td class="' + statusClass + '">' + statusText + '</td>' +
+          '<td>' +
+            '<button class="action-btn delete" data-student="' + item.studentId + '" data-course="' + item.courseId + '" data-type="grade">🗑️</button>' +
+          '</td>';
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('grade-total').textContent = totalGrades;
+      document.getElementById('grade-passing-count').textContent = passingCount;
+      document.getElementById('grade-failing-count').textContent = failingCount;
+      document.getElementById('grade-count').textContent = filtered.length + ' entries';
+
+      const allGrades = [];
+      enrollments.forEach(function(e) {
+        const g = getGrade(e.studentId, e.courseId);
+        if (g !== null) allGrades.push(g);
+      });
+
+      const avgAll = allGrades.length > 0 ? Math.round(allGrades.reduce(function(a, b) { return a + b; }, 0) / allGrades.length) : 0;
+      document.getElementById('avg-grade-all').textContent = avgAll + '%';
+
+      const passing = allGrades.filter(function(g) { return g >= 60; }).length;
+      const failing = allGrades.filter(function(g) { return g < 60; }).length;
+      document.getElementById('passing-students').textContent = passing;
+      document.getElementById('failing-students').textContent = failing;
+    }
+
+    function renderStudentGrades() {
+      if (!currentUser) return;
+
+      const student = students.find(function(s) {
+        return s.name === currentUser.name;
+      });
+
+      if (!student) {
+        document.getElementById('student-grade-table-body').innerHTML = '<tr><td colspan="3">No student record found.</td></tr>';
+        return;
+      }
+
+      const enrolled = getEnrolledCourseIds(student.id);
+      const tbody = document.getElementById('student-grade-table-body');
+      tbody.innerHTML = '';
+
+      let gradesList = [];
+
+      enrolled.forEach(function(courseId) {
+        const course = courses.find(function(c) { return c.id === courseId; });
+        if (!course) return;
+
+        const grade = getGrade(student.id, courseId);
+
+        const tr = document.createElement('tr');
+        const gradeDisplay = grade !== null ? grade : '-';
+        const statusClass = grade !== null ? (grade >= 60 ? 'grade-pass' : 'grade-fail') : '';
+        const statusText = grade !== null ? (grade >= 60 ? '✅ Pass' : '❌ Fail') : 'Not graded';
+
+        if (grade !== null) gradesList.push(grade);
+
+        tr.innerHTML =
+          '<td><strong>' + course.name + '</strong><br><span style="font-size:12px;color:var(--muted);">' + course.teacher + '</span></td>' +
+          '<td class="' + statusClass + '" style="font-size:18px;font-weight:700;">' + gradeDisplay + '%</td>' +
+          '<td>' + statusText + '</td>';
+        tbody.appendChild(tr);
+      });
+
+      const avg = gradesList.length > 0 ? Math.round(gradesList.reduce(function(a, b) { return a + b; }, 0) / gradesList.length) : 0;
+      document.getElementById('student-avg-grade-display').textContent = avg + '%';
+
+      const passed = gradesList.filter(function(g) { return g >= 60; }).length;
+      const failed = gradesList.filter(function(g) { return g < 60; }).length;
+      document.getElementById('student-courses-passed').textContent = passed;
+      document.getElementById('student-courses-failed').textContent = failed;
+    }
+
+    function updateAdminStats() {
+      if (!currentUser || currentUser.role !== 'Admin') return;
+
+      totalStudentsEl.textContent = students.length;
+      totalCoursesEl.textContent = courses.length;
+      totalEnrollmentsEl.textContent = enrollments.length;
+
+      const totalIncome = budgetEntries
+        .filter(function(b) { return b.type === 'Income'; })
+        .reduce(function(sum, b) { return sum + b.amount; }, 0);
+      totalRevenueEl.textContent = '$' + totalIncome.toLocaleString();
+    }
+
+    // ----- Expand/Collapse -----
+    function toggleExpand(expandId) {
+      expandedRows[expandId] = !expandedRows[expandId];
+      const activePage = document.querySelector('.page.active');
+      if (activePage) {
+        const pageId = activePage.id;
+        if (pageId === 'students') {
+          renderStudents();
+        } else if (pageId === 'courses-admin') {
+          renderCourses();
+        }
+      }
+    }
+
+    // ----- Modal Functions -----
+    function openModal(type, mode, data) {
+      modalType = type;
+      modalMode = mode;
+
+      if (mode === 'add') {
+        if (type === 'student') {
+          modalTitle.textContent = currentLang === 'ru' ? 'Добавить ученика' : 'Add Student';
+          modalSub.textContent = currentLang === 'ru' ? 'Введите данные ученика' : 'Enter student details';
+          modalFields.innerHTML =
+            '<label>Name</label><input type="text" id="modal-name" placeholder="Full name" />' +
+            '<label>Grade (%)</label><input type="number" id="modal-grade" placeholder="0-100" min="0" max="100" />' +
+            '<label>Attendance (%)</label><input type="number" id="modal-attendance" placeholder="0-100" min="0" max="100" />' +
+            '<label>Status</label><select id="modal-status"><option value="Active">Active</option><option value="Warning">Warning</option><option value="Inactive">Inactive</option></select>';
+          editingId = null;
+        } else if (type === 'course') {
+          modalTitle.textContent = currentLang === 'ru' ? 'Добавить курс' : 'Add Course';
+          modalSub.textContent = currentLang === 'ru' ? 'Введите данные курса' : 'Enter course details';
+          modalFields.innerHTML =
+            '<label>Course Name</label><input type="text" id="modal-course-name" placeholder="e.g. Physics" />' +
+            '<label>Teacher</label><input type="text" id="modal-course-teacher" placeholder="e.g. Dr. Smith" />' +
+            '<label>Description</label><input type="text" id="modal-course-description" placeholder="e.g. Year 10 Physics" />';
+          editingId = null;
+        } else {
+          modalTitle.textContent = currentLang === 'ru' ? 'Добавить запись в бюджет' : 'Add Budget Entry';
+          modalSub.textContent = currentLang === 'ru' ? 'Введите данные бюджета' : 'Enter budget details';
+          modalFields.innerHTML =
+            '<label>Category</label><input type="text" id="modal-category" placeholder="e.g. Student Fees" />' +
+            '<label>Type</label><select id="modal-type"><option value="Income">Income</option><option value="Expense">Expense</option></select>' +
+            '<label>Amount ($)</label><input type="number" id="modal-amount" placeholder="Enter amount" min="0" step="1" />' +
+            '<label>Date</label><input type="date" id="modal-date" />' +
+            '<label>Status</label><select id="modal-status"><option value="Paid">Paid</option><option value="Pending">Pending</option><option value="Unpaid">Unpaid</option></select>';
+          editingId = null;
+        }
+      } else {
+        if (type === 'student') {
+          modalTitle.textContent = currentLang === 'ru' ? 'Редактировать ученика' : 'Edit Student Record';
+          modalSub.textContent = currentLang === 'ru' ? 'Введите данные ученика' : 'Enter student details';
+          const s = students.find(function(st) { return st.id === data.id; });
+          if (s) {
+            editingId = s.id;
+            modalFields.innerHTML =
+              '<label>Name</label><input type="text" id="modal-name" value="' + s.name + '" />' +
+              '<label>Grade (%)</label><input type="number" id="modal-grade" value="' + s.grade + '" min="0" max="100" />' +
+              '<label>Attendance (%)</label><input type="number" id="modal-attendance" value="' + s.attendance + '" min="0" max="100" />' +
+              '<label>Status</label><select id="modal-status"><option value="Active"' + (s.status === 'Active' ? ' selected' : '') + '>Active</option><option value="Warning"' + (s.status === 'Warning' ? ' selected' : '') + '>Warning</option><option value="Inactive"' + (s.status === 'Inactive' ? ' selected' : '') + '>Inactive</option></select>';
           }
-        });
+        } else if (type === 'course') {
+          modalTitle.textContent = currentLang === 'ru' ? 'Редактировать курс' : 'Edit Course';
+          modalSub.textContent = currentLang === 'ru' ? 'Введите данные курса' : 'Enter course details';
+          const c = courses.find(function(co) { return co.id === data.id; });
+          if (c) {
+            editingId = c.id;
+            modalFields.innerHTML =
+              '<label>Course Name</label><input type="text" id="modal-course-name" value="' + c.name + '" />' +
+              '<label>Teacher</label><input type="text" id="modal-course-teacher" value="' + c.teacher + '" />' +
+              '<label>Description</label><input type="text" id="modal-course-description" value="' + c.description + '" />';
+          }
+        } else {
+          modalTitle.textContent = currentLang === 'ru' ? 'Редактировать запись в бюджете' : 'Edit Budget Entry';
+          modalSub.textContent = currentLang === 'ru' ? 'Введите данные бюджета' : 'Enter budget details';
+          const b = budgetEntries.find(function(bg) { return bg.id === data.id; });
+          if (b) {
+            editingId = b.id;
+            const isIncome = b.type === 'Income';
+            modalFields.innerHTML =
+              '<label>Category</label><input type="text" id="modal-category" value="' + b.category + '" />' +
+              '<label>Type</label><select id="modal-type"><option value="Income"' + (isIncome ? ' selected' : '') + '>Income</option><option value="Expense"' + (!isIncome ? ' selected' : '') + '>Expense</option></select>' +
+              '<label>Amount ($)</label><input type="number" id="modal-amount" value="' + Math.abs(b.amount) + '" min="0" step="1" />' +
+              '<label>Date</label><input type="date" id="modal-date" value="' + b.date + '" />' +
+              '<label>Status</label><select id="modal-status"><option value="Paid"' + (b.status === 'Paid' ? ' selected' : '') + '>Paid</option><option value="Pending"' + (b.status === 'Pending' ? ' selected' : '') + '>Pending</option><option value="Unpaid"' + (b.status === 'Unpaid' ? ' selected' : '') + '>Unpaid</option></select>';
+          }
+        }
+      }
 
-        enrollments = enrollments.filter(function(e) {
-          return e.studentId !== enrollStudentId;
-        });
+      modalOverlay.classList.add('open');
+    }
 
-        selectedIds.forEach(function(courseId) {
-          enrollments.push({ studentId: enrollStudentId, courseId: courseId });
-        });
+    function closeModal() {
+      modalOverlay.classList.remove('open');
+      modalForm.reset();
+    }
+
+    function handleModalSubmit(e) {
+      e.preventDefault();
+
+      if (modalType === 'student') {
+        const name = document.getElementById('modal-name').value.trim();
+        const grade = parseFloat(document.getElementById('modal-grade').value);
+        const attendance = parseFloat(document.getElementById('modal-attendance').value);
+        const status = document.getElementById('modal-status').value;
+
+        if (!name || isNaN(grade) || isNaN(attendance)) {
+          alert(currentLang === 'ru' ? 'Пожалуйста, заполните все поля' : 'Please fill in all fields');
+          return;
+        }
+
+        if (modalMode === 'add') {
+          students.push({ id: nextStudentId++, name: name, grade: grade, attendance: attendance, status: status });
+        } else {
+          const index = students.findIndex(function(s) { return s.id === editingId; });
+          if (index !== -1) {
+            students[index] = { id: editingId, name: name, grade: grade, attendance: attendance, status: status };
+          }
+        }
 
         saveData();
         renderStudents();
+        renderStudentCourses();
+        renderGrades();
+        closeModal();
+      } else if (modalType === 'course') {
+        const name = document.getElementById('modal-course-name').value.trim();
+        const teacher = document.getElementById('modal-course-teacher').value.trim();
+        const description = document.getElementById('modal-course-description').value.trim();
+
+        if (!name || !teacher) {
+          alert(currentLang === 'ru' ? 'Пожалуйста, заполните все поля' : 'Please fill in all fields');
+          return;
+        }
+
+        if (modalMode === 'add') {
+          courses.push({ id: nextCourseId++, name: name, teacher: teacher, description: description });
+        } else {
+          const index = courses.findIndex(function(c) { return c.id === editingId; });
+          if (index !== -1) {
+            courses[index] = { id: editingId, name: name, teacher: teacher, description: description };
+          }
+        }
+
+        saveData();
         renderCourses();
         renderStudentCourses();
-        closeEnrollModal();
-      }
+        renderGrades();
+        closeModal();
+      } else {
+        const category = document.getElementById('modal-category').value.trim();
+        const type = document.getElementById('modal-type').value;
+        const amount = parseFloat(document.getElementById('modal-amount').value);
+        const date = document.getElementById('modal-date').value;
+        const status = document.getElementById('modal-status').value;
 
-      // ----- Export CSV -----
-      function exportCSV(data, headers, filename) {
-        let csv = headers.join(',') + '\n';
-        data.forEach(function(row) {
-          csv += row.join(',') + '\n';
-        });
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
-        URL.revokeObjectURL(url);
-      }
-
-      function exportStudentsCSV() {
-        const headers = ['Name', 'Grade', 'Attendance', 'Status', 'Enrolled Courses'];
-        const data = students.map(function(s) {
-          const enrolledIds = getEnrolledCourseIds(s.id);
-          const courseNames = enrolledIds.map(function(id) { return getCourseName(id); }).join('; ');
-          return [s.name, s.grade + '%', s.attendance + '%', s.status, courseNames];
-        });
-        exportCSV(data, headers, 'students.csv');
-      }
-
-      function exportBudgetCSV() {
-        const headers = ['Category', 'Type', 'Amount', 'Date', 'Status'];
-        const data = budgetEntries.map(function(b) {
-          const amountDisplay = b.type === 'Income' ? '+' + b.amount : '-' + Math.abs(b.amount);
-          return [b.category, b.type, '$' + amountDisplay, b.date, b.status];
-        });
-        exportCSV(data, headers, 'budget.csv');
-      }
-
-      // ----- Login -----
-      function login(email, password) {
-        const user = DEMO_USERS[email];
-        if (user && user.password === password) {
-          currentUser = user;
-          localStorage.setItem('nokj-user', JSON.stringify({
-            email: email,
-            name: user.name,
-            role: user.role,
-            initials: user.initials,
-            displayEmail: user.email,
-            avatarClass: user.avatarClass
-          }));
-          showApp(user);
-          loginError.textContent = '';
-          return true;
-        } else {
-          loginError.textContent = 'Invalid email or password. Please try again.';
-          return false;
-        }
-      }
-
-      function showApp(user) {
-        loginScreen.classList.add('hidden');
-        app.classList.add('logged-in');
-
-        const initials = user.initials;
-        userAvatar.textContent = initials;
-        userAvatar.className = 'avatar' + (user.avatarClass ? ' ' + user.avatarClass : '');
-        userDisplayName.textContent = user.name;
-        userRole.textContent = user.role;
-
-        profileAvatar.textContent = initials;
-        profileAvatar.className = 'avatar' + (user.avatarClass ? ' ' + user.avatarClass : '');
-        profileName.textContent = user.name;
-        profileRoleText.textContent = (user.role === 'Admin') ? 'Administrator · NOKJ Academy' : 'Year 10 student · NOKJ Academy';
-        profileEmail.textContent = user.displayEmail;
-
-        const time = new Date().getHours();
-        let greetingText = (time < 12) ? 'Good morning' : (time < 17) ? 'Good afternoon' : 'Good evening';
-        greeting.textContent = greetingText + ', ' + user.name + ' 👋';
-
-        if (user.role === 'Admin') {
-          adminNavLabel.style.display = 'block';
-          adminStudentsBtn.style.display = 'flex';
-          adminBudgetBtn.style.display = 'flex';
-          adminCoursesBtn.style.display = 'flex';
-          adminStatsContainer.style.display = 'block';
-          renderStudents();
-          renderBudget();
-          renderCourses();
-          updateAdminStats();
-        } else {
-          adminNavLabel.style.display = 'none';
-          adminStudentsBtn.style.display = 'none';
-          adminBudgetBtn.style.display = 'none';
-          adminCoursesBtn.style.display = 'none';
-          adminStatsContainer.style.display = 'none';
+        if (!category || isNaN(amount) || !date) {
+          alert(currentLang === 'ru' ? 'Пожалуйста, заполните все поля' : 'Please fill in all fields');
+          return;
         }
 
+        const finalAmount = type === 'Income' ? amount : -amount;
+
+        if (modalMode === 'add') {
+          budgetEntries.push({ id: nextBudgetId++, category: category, type: type, amount: finalAmount, date: date, status: status });
+        } else {
+          const index = budgetEntries.findIndex(function(b) { return b.id === editingId; });
+          if (index !== -1) {
+            budgetEntries[index] = { id: editingId, category: category, type: type, amount: finalAmount, date: date, status: status };
+          }
+        }
+
+        saveData();
+        renderBudget();
+        closeModal();
+      }
+    }
+
+    function deleteEntry(type, id) {
+      const confirmMsg = currentLang === 'ru' ? 'Вы уверены, что хотите удалить эту запись?' : 'Are you sure you want to delete this entry?';
+      if (!confirm(confirmMsg)) return;
+
+      if (type === 'student') {
+        enrollments = enrollments.filter(function(e) { return e.studentId !== id; });
+        students = students.filter(function(s) { return s.id !== id; });
+        renderStudents();
         renderStudentCourses();
-        applyTranslation(currentLang);
+        renderGrades();
+      } else if (type === 'course') {
+        enrollments = enrollments.filter(function(e) { return e.courseId !== id; });
+        courses = courses.filter(function(c) { return c.id !== id; });
+        renderCourses();
+        renderStudentCourses();
+        renderGrades();
+      } else {
+        budgetEntries = budgetEntries.filter(function(b) { return b.id !== id; });
+        renderBudget();
       }
+      saveData();
+      updateAdminStats();
+    }
 
-      function logout() {
-        localStorage.removeItem('nokj-user');
-        currentUser = null;
-        loginScreen.classList.remove('hidden');
-        app.classList.remove('logged-in');
-        loginPassword.value = '';
+    // ----- Enrollment Modal -----
+    function openEnrollModal(studentId) {
+      enrollStudentId = studentId;
+      const student = students.find(function(s) { return s.id === studentId; });
+      if (!student) return;
+
+      enrollModalTitle.textContent = currentLang === 'ru' ? 'Записать ученика' : 'Enroll Student';
+      enrollModalSub.textContent = (currentLang === 'ru' ? 'Выберите курсы для ' : 'Select courses for ') + student.name;
+
+      const enrolledIds = getEnrolledCourseIds(studentId);
+
+      let html = '';
+      if (courses.length === 0) {
+        html = '<p style="color:var(--muted);padding:20px;text-align:center;">' + (currentLang === 'ru' ? 'Нет доступных курсов.' : 'No courses available.') + '</p>';
+      } else {
+        courses.forEach(function(c) {
+          const checked = enrolledIds.includes(c.id) ? 'checked' : '';
+          html +=
+            '<div class="enrollment-item">' +
+              '<input type="checkbox" id="enroll-course-' + c.id + '" value="' + c.id + '" ' + checked + ' />' +
+              '<label for="enroll-course-' + c.id + '"><strong>' + c.name + '</strong></label>' +
+              '<span class="course-teacher">' + c.teacher + '</span>' +
+            '</div>';
+        });
+      }
+      enrollmentList.innerHTML = html;
+
+      enrollModalOverlay.classList.add('open');
+    }
+
+    function closeEnrollModal() {
+      enrollModalOverlay.classList.remove('open');
+      enrollStudentId = null;
+    }
+
+    function saveEnrollments() {
+      if (enrollStudentId === null) return;
+
+      const checkboxes = enrollmentList.querySelectorAll('input[type="checkbox"]');
+      const selectedIds = [];
+      checkboxes.forEach(function(cb) {
+        if (cb.checked) {
+          selectedIds.push(parseInt(cb.value));
+        }
+      });
+
+      enrollments = enrollments.filter(function(e) {
+        return e.studentId !== enrollStudentId;
+      });
+
+      selectedIds.forEach(function(courseId) {
+        enrollments.push({ studentId: enrollStudentId, courseId: courseId });
+      });
+
+      saveData();
+      renderStudents();
+      renderCourses();
+      renderStudentCourses();
+      renderGrades();
+      closeEnrollModal();
+    }
+
+    // ----- Export CSV -----
+    function exportCSV(data, headers, filename) {
+      let csv = headers.join(',') + '\n';
+      data.forEach(function(row) {
+        csv += row.join(',') + '\n';
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportStudentsCSV() {
+      const headers = ['Name', 'Grade', 'Attendance', 'Status', 'Enrolled Courses'];
+      const data = students.map(function(s) {
+        const enrolledIds = getEnrolledCourseIds(s.id);
+        const courseNames = enrolledIds.map(function(id) { return getCourseName(id); }).join('; ');
+        return [s.name, s.grade + '%', s.attendance + '%', s.status, courseNames];
+      });
+      exportCSV(data, headers, 'students.csv');
+    }
+
+    function exportBudgetCSV() {
+      const headers = ['Category', 'Type', 'Amount', 'Date', 'Status'];
+      const data = budgetEntries.map(function(b) {
+        const amountDisplay = b.type === 'Income' ? '+' + b.amount : '-' + Math.abs(b.amount);
+        return [b.category, b.type, '$' + amountDisplay, b.date, b.status];
+      });
+      exportCSV(data, headers, 'budget.csv');
+    }
+
+    // ----- Login -----
+    function login(email, password) {
+      const user = DEMO_USERS[email];
+      if (user && user.password === password) {
+        currentUser = user;
+        localStorage.setItem('nokj-user', JSON.stringify({
+          email: email,
+          name: user.name,
+          role: user.role,
+          initials: user.initials,
+          displayEmail: user.email,
+          avatarClass: user.avatarClass
+        }));
+        showApp(user);
         loginError.textContent = '';
-        expandedRows = {};
+        return true;
+      } else {
+        loginError.textContent = 'Invalid email or password. Please try again.';
+        return false;
+      }
+    }
+
+    function showApp(user) {
+      loginScreen.classList.add('hidden');
+      app.classList.add('logged-in');
+
+      const initials = user.initials;
+      userAvatar.textContent = initials;
+      userAvatar.className = 'avatar' + (user.avatarClass ? ' ' + user.avatarClass : '');
+      userDisplayName.textContent = user.name;
+      userRole.textContent = user.role;
+
+      profileAvatar.textContent = initials;
+      profileAvatar.className = 'avatar' + (user.avatarClass ? ' ' + user.avatarClass : '');
+      profileName.textContent = user.name;
+      profileRoleText.textContent = (user.role === 'Admin') ? 'Administrator · NOKJ Academy' : 'Year 10 student · NOKJ Academy';
+      profileEmail.textContent = user.displayEmail;
+
+      const time = new Date().getHours();
+      let greetingText = (time < 12) ? 'Good morning' : (time < 17) ? 'Good afternoon' : 'Good evening';
+      greeting.textContent = greetingText + ', ' + user.name + ' 👋';
+
+      if (user.role === 'Admin') {
+        adminNavLabel.style.display = 'block';
+        adminStudentsBtn.style.display = 'flex';
+        adminBudgetBtn.style.display = 'flex';
+        adminCoursesBtn.style.display = 'flex';
+        adminGradesBtn.style.display = 'flex';
+        adminStatsContainer.style.display = 'block';
+        renderStudents();
+        renderBudget();
+        renderCourses();
+        renderGrades();
+        updateAdminStats();
+      } else {
+        adminNavLabel.style.display = 'none';
+        adminStudentsBtn.style.display = 'none';
+        adminBudgetBtn.style.display = 'none';
+        adminCoursesBtn.style.display = 'none';
+        adminGradesBtn.style.display = 'none';
+        adminStatsContainer.style.display = 'none';
       }
 
-      function checkSession() {
-        const saved = localStorage.getItem('nokj-user');
-        if (saved) {
-          try {
-            const user = JSON.parse(saved);
-            if (user && user.email && DEMO_USERS[user.email]) {
-              currentUser = user;
-              showApp(user);
+      renderStudentCourses();
+      applyTranslation(currentLang);
+    }
+
+    function logout() {
+      localStorage.removeItem('nokj-user');
+      currentUser = null;
+      loginScreen.classList.remove('hidden');
+      app.classList.remove('logged-in');
+      loginPassword.value = '';
+      loginError.textContent = '';
+      expandedRows = {};
+    }
+
+    function checkSession() {
+      const saved = localStorage.getItem('nokj-user');
+      if (saved) {
+        try {
+          const user = JSON.parse(saved);
+          if (user && user.email && DEMO_USERS[user.email]) {
+            currentUser = user;
+            showApp(user);
+            return;
+          }
+        } catch (e) {}
+      }
+      loginScreen.classList.remove('hidden');
+      app.classList.remove('logged-in');
+    }
+
+    // ----- Event Listeners -----
+
+    // Login form
+    loginForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = loginEmail.value.trim();
+      const password = loginPassword.value.trim();
+      login(email, password);
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', logout);
+
+    // Navigation
+    navButtons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        openPage(btn.dataset.page);
+      });
+    });
+
+    // Language toggle (main app)
+    if (langToggle) {
+      langToggle.addEventListener('click', toggleLanguage);
+    }
+
+    // Language toggle (login screen)
+    if (loginLangToggle) {
+      loginLangToggle.addEventListener('click', toggleLanguage);
+    }
+
+    // Expand/Collapse
+    document.addEventListener('click', function(e) {
+      const target = e.target.closest('.expandable-row');
+      if (target) {
+        const expandId = target.dataset.expandId;
+        if (expandId) {
+          toggleExpand(expandId);
+        }
+      }
+    });
+
+    // Notification bell
+    const notifBtn = document.getElementById('notification-button');
+    if (notifBtn) {
+      notifBtn.addEventListener('click', function() {
+        const msg = (currentLang === 'ru')
+          ? 'У вас 2 новых объявления и 1 задание со сроком сдачи завтра.'
+          : 'You have 2 new announcements and 1 assignment due tomorrow.';
+        alert(msg);
+      });
+    }
+
+    // Assignment buttons
+    document.querySelectorAll('.assignment-button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const msg = (currentLang === 'ru')
+          ? 'Подробности задания и отправка файлов будут добавлены на следующем этапе.'
+          : 'Assignment details and submissions will be added in the next development step.';
+        alert(msg);
+      });
+    });
+
+    // Student table events (delegation)
+    studentTableBody.addEventListener('click', function(e) {
+      const target = e.target.closest('button');
+      if (!target) return;
+      const id = parseInt(target.dataset.id);
+      const type = target.dataset.type;
+
+      if (target.classList.contains('delete')) {
+        deleteEntry(type, id);
+      } else if (target.classList.contains('edit')) {
+        const s = students.find(function(st) { return st.id === id; });
+        if (s) openModal('student', 'edit', s);
+      } else if (target.classList.contains('enroll')) {
+        openEnrollModal(id);
+      }
+    });
+
+    // Budget table events (delegation)
+    budgetTableBody.addEventListener('click', function(e) {
+      const target = e.target.closest('button');
+      if (!target) return;
+      const id = parseInt(target.dataset.id);
+      const type = target.dataset.type;
+
+      if (target.classList.contains('delete')) {
+        deleteEntry(type, id);
+      } else if (target.classList.contains('edit')) {
+        const b = budgetEntries.find(function(bg) { return bg.id === id; });
+        if (b) openModal('budget', 'edit', b);
+      }
+    });
+
+    // Course table events (delegation)
+    courseTableBody.addEventListener('click', function(e) {
+      const target = e.target.closest('button');
+      if (!target) return;
+      const id = parseInt(target.dataset.id);
+      const type = target.dataset.type;
+
+      if (target.classList.contains('delete')) {
+        deleteEntry(type, id);
+      } else if (target.classList.contains('edit')) {
+        const c = courses.find(function(co) { return co.id === id; });
+        if (c) openModal('course', 'edit', c);
+      }
+    });
+
+    // Grade table events (delegation)
+    document.getElementById('grade-table-body').addEventListener('click', function(e) {
+      const target = e.target.closest('button');
+      if (!target) return;
+
+      if (target.classList.contains('save-grade-btn')) {
+        const studentId = parseInt(target.dataset.student);
+        const courseId = parseInt(target.dataset.course);
+        const input = document.getElementById('grade-input-' + studentId + '-' + courseId);
+        if (input) {
+          const value = input.value.trim();
+          if (value === '') {
+            setGrade(studentId, courseId, null);
+          } else {
+            const grade = parseFloat(value);
+            if (!isNaN(grade) && grade >= 0 && grade <= 100) {
+              setGrade(studentId, courseId, grade);
+            } else {
+              alert('Please enter a grade between 0 and 100.');
               return;
             }
-          } catch (e) {}
+          }
+          renderGrades();
+          renderStudentCourses();
         }
-        loginScreen.classList.remove('hidden');
-        app.classList.remove('logged-in');
       }
 
-      // ----- Event Listeners -----
-
-      // Login form
-      loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const email = loginEmail.value.trim();
-        const password = loginPassword.value.trim();
-        login(email, password);
-      });
-
-      // Logout
-      logoutBtn.addEventListener('click', logout);
-
-      // Navigation
-      navButtons.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          openPage(btn.dataset.page);
-        });
-      });
-
-      // Language toggle (main app)
-      if (langToggle) {
-        langToggle.addEventListener('click', toggleLanguage);
+      if (target.classList.contains('delete') && target.dataset.type === 'grade') {
+        const studentId = parseInt(target.dataset.student);
+        const courseId = parseInt(target.dataset.course);
+        const confirmMsg = currentLang === 'ru' ? 'Удалить эту оценку?' : 'Remove this grade?';
+        if (confirm(confirmMsg)) {
+          setGrade(studentId, courseId, null);
+          renderGrades();
+          renderStudentCourses();
+        }
       }
+    });
 
-      // Language toggle (login screen)
-      if (loginLangToggle) {
-        loginLangToggle.addEventListener('click', toggleLanguage);
+    // Grade filter events
+    document.getElementById('grade-course-filter').addEventListener('change', renderGrades);
+    document.getElementById('grade-student-filter').addEventListener('change', renderGrades);
+
+    // Add buttons
+    addStudentBtn.addEventListener('click', function() {
+      openModal('student', 'add');
+    });
+
+    addBudgetBtn.addEventListener('click', function() {
+      openModal('budget', 'add');
+    });
+
+    addCourseBtn.addEventListener('click', function() {
+      openModal('course', 'add');
+    });
+
+    // Export buttons
+    exportStudentsBtn.addEventListener('click', exportStudentsCSV);
+    exportBudgetBtn.addEventListener('click', exportBudgetCSV);
+
+    // Search/filter
+    studentSearch.addEventListener('input', renderStudents);
+    studentFilter.addEventListener('change', renderStudents);
+    budgetSearch.addEventListener('input', renderBudget);
+    budgetFilter.addEventListener('change', renderBudget);
+    courseSearch.addEventListener('input', renderCourses);
+
+    // Modal events
+    modalCancel.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', function(e) {
+      if (e.target === modalOverlay) closeModal();
+    });
+    modalForm.addEventListener('submit', handleModalSubmit);
+
+    // Enrollment modal events
+    enrollModalCancel.addEventListener('click', closeEnrollModal);
+    enrollModalOverlay.addEventListener('click', function(e) {
+      if (e.target === enrollModalOverlay) closeEnrollModal();
+    });
+    enrollModalSave.addEventListener('click', saveEnrollments);
+
+    // Enter key on password field submits login
+    loginPassword.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        loginForm.dispatchEvent(new Event('submit'));
       }
+    });
 
-      // Notification bell
-      const notifBtn = document.getElementById('notification-button');
-      if (notifBtn) {
-        notifBtn.addEventListener('click', function() {
-          const msg = (currentLang === 'ru')
-            ? 'У вас 2 новых объявления и 1 задание со сроком сдачи завтра.'
-            : 'You have 2 new announcements and 1 assignment due tomorrow.';
-          alert(msg);
-        });
-      }
+    // ----- Init -----
+    loadData();
+    setLanguage(currentLang);
+    checkSession();
 
-      // Assignment buttons
-      document.querySelectorAll('.assignment-button').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          const msg = (currentLang === 'ru')
-            ? 'Подробности задания и отправка файлов будут добавлены на следующем этапе.'
-            : 'Assignment details and submissions will be added in the next development step.';
-          alert(msg);
-        });
-      });
-
-      // Student table events (delegation)
-      studentTableBody.addEventListener('click', function(e) {
-        const target = e.target.closest('button');
-        if (!target) return;
-        const id = parseInt(target.dataset.id);
-        const type = target.dataset.type;
-
-        if (target.classList.contains('delete')) {
-          deleteEntry(type, id);
-        } else if (target.classList.contains('edit')) {
-          const s = students.find(function(st) { return st.id === id; });
-          if (s) openModal('student', 'edit', s);
-        } else if (target.classList.contains('enroll')) {
-          openEnrollModal(id);
-        }
-      });
-
-      // Budget table events (delegation)
-      budgetTableBody.addEventListener('click', function(e) {
-        const target = e.target.closest('button');
-        if (!target) return;
-        const id = parseInt(target.dataset.id);
-        const type = target.dataset.type;
-
-        if (target.classList.contains('delete')) {
-          deleteEntry(type, id);
-        } else if (target.classList.contains('edit')) {
-          const b = budgetEntries.find(function(bg) { return bg.id === id; });
-          if (b) openModal('budget', 'edit', b);
-        }
-      });
-
-      // Course table events (delegation)
-      courseTableBody.addEventListener('click', function(e) {
-        const target = e.target.closest('button');
-        if (!target) return;
-        const id = parseInt(target.dataset.id);
-        const type = target.dataset.type;
-
-        if (target.classList.contains('delete')) {
-          deleteEntry(type, id);
-        } else if (target.classList.contains('edit')) {
-          const c = courses.find(function(co) { return co.id === id; });
-          if (c) openModal('course', 'edit', c);
-        }
-      });
-
-      // Add buttons
-      addStudentBtn.addEventListener('click', function() {
-        openModal('student', 'add');
-      });
-
-      addBudgetBtn.addEventListener('click', function() {
-        openModal('budget', 'add');
-      });
-
-      addCourseBtn.addEventListener('click', function() {
-        openModal('course', 'add');
-      });
-
-      // Export buttons
-      exportStudentsBtn.addEventListener('click', exportStudentsCSV);
-      exportBudgetBtn.addEventListener('click', exportBudgetCSV);
-
-      // Search/filter
-      studentSearch.addEventListener('input', renderStudents);
-      studentFilter.addEventListener('change', renderStudents);
-      budgetSearch.addEventListener('input', renderBudget);
-      budgetFilter.addEventListener('change', renderBudget);
-      courseSearch.addEventListener('input', renderCourses);
-
-      // Modal events
-      modalCancel.addEventListener('click', closeModal);
-      modalOverlay.addEventListener('click', function(e) {
-        if (e.target === modalOverlay) closeModal();
-      });
-      modalForm.addEventListener('submit', handleModalSubmit);
-
-      // Enrollment modal events
-      enrollModalCancel.addEventListener('click', closeEnrollModal);
-      enrollModalOverlay.addEventListener('click', function(e) {
-        if (e.target === enrollModalOverlay) closeEnrollModal();
-      });
-      enrollModalSave.addEventListener('click', saveEnrollments);
-
-      // Enter key on password field submits login
-      loginPassword.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-          loginForm.dispatchEvent(new Event('submit'));
-        }
-      });
-
-      // ----- Init -----
-      loadData();
-      setLanguage(currentLang);
-      checkSession();
-
-    })();
-  </script>
-
+  })();
+</script>
 </body>
 </html>

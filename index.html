@@ -326,28 +326,93 @@
     .presentation-overlay .presentation-slide .slide-content h2 { font-size: 42px; margin-bottom: 20px; }
     .presentation-overlay .presentation-slide .slide-content p { font-size: 20px; color: #aaa; white-space: pre-wrap; }
 
-    /* --- TASKS --- */
+    /* --- TASKS (Enhanced) --- */
     .task-grid { display: grid; gap: 17px; margin-top: 20px; }
-    .task-card { border: 1px solid var(--line); border-radius: var(--radius); background: white; padding: 20px; }
-    .task-card .task-header { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+    .task-card {
+      border: 1px solid var(--line); border-radius: var(--radius);
+      background: white; padding: 20px;
+      transition: box-shadow 0.2s;
+    }
+    .task-card:hover { box-shadow: var(--shadow); }
+    .task-card .task-header {
+      display: flex; justify-content: space-between; align-items: start; gap: 12px;
+      flex-wrap: wrap;
+    }
     .task-card .task-header h3 { margin: 0; font-size: 16px; }
-    .task-card .task-header .task-type { padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .task-card .task-header .task-type {
+      padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 700;
+      white-space: nowrap;
+    }
     .task-card .task-header .task-type.homework { background: #dbeafe; color: #1e40af; }
     .task-card .task-header .task-type.test { background: #fee2e2; color: #b91c1c; }
     .task-card .task-header .task-type.assignment { background: #d1fae5; color: #047857; }
+
     .task-card .task-body { margin-top: 12px; }
     .task-card .task-body .task-description { color: var(--muted); font-size: 14px; }
-    .task-card .task-body .task-deadline { margin-top: 8px; font-size: 12px; color: var(--danger); }
-    .task-card .task-footer { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-    .task-card .task-footer .answer-input { flex: 1; min-width: 150px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; }
-    .task-card .task-footer .submit-btn { padding: 8px 20px; border: 0; border-radius: 8px; background: var(--primary); color: white; font-weight: 700; }
-    .task-card .task-footer .submit-btn:hover { background: var(--primary-dark); }
-    .task-card .task-footer .submitted-status { padding: 8px 16px; border-radius: 8px; background: #d1fae5; color: #047857; font-weight: 700; }
-    .task-card .task-footer .graded-status { padding: 8px 16px; border-radius: 8px; background: #fef3c7; color: #92400e; font-weight: 700; }
+    .task-card .task-body .task-deadline { margin-top: 8px; font-size: 12px; }
+    .task-card .task-body .task-deadline.overdue { color: var(--danger); }
+    .task-card .task-body .task-deadline.upcoming { color: var(--warning); }
+    .task-card .task-body .task-deadline.on-time { color: var(--success); }
 
-    .task-admin-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
-    .task-admin-actions select, .task-admin-actions input { padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 13px; background: white; }
-    .task-admin-actions select:focus, .task-admin-actions input:focus { outline: none; border-color: var(--primary); }
+    .task-card .task-footer {
+      margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    }
+    .task-card .task-footer .answer-input {
+      flex: 1; min-width: 150px; padding: 8px 12px;
+      border: 1px solid var(--line); border-radius: 8px; font-size: 14px;
+    }
+    .task-card .task-footer .submit-btn {
+      padding: 8px 20px; border: 0; border-radius: 8px;
+      background: var(--primary); color: white; font-weight: 700;
+    }
+    .task-card .task-footer .submit-btn:hover { background: var(--primary-dark); }
+    .task-card .task-footer .submitted-status {
+      padding: 8px 16px; border-radius: 8px;
+      background: #d1fae5; color: #047857; font-weight: 700;
+    }
+    .task-card .task-footer .graded-status {
+      padding: 8px 16px; border-radius: 8px;
+      background: #fef3c7; color: #92400e; font-weight: 700;
+    }
+    .task-card .task-footer .file-upload-btn {
+      padding: 6px 12px; border: 1px solid var(--line); border-radius: 6px;
+      background: white; cursor: pointer; font-size: 12px;
+    }
+    .task-card .task-footer .file-upload-btn:hover { background: #f3f4f6; }
+    .task-card .task-footer .file-name {
+      font-size: 12px; color: var(--muted); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    .task-card .task-priority {
+      padding: 2px 10px; border-radius: 4px; font-size: 10px; font-weight: 700;
+    }
+    .task-card .task-priority.high { background: #fee2e2; color: #b91c1c; }
+    .task-card .task-priority.medium { background: #fef3c7; color: #92400e; }
+    .task-card .task-priority.low { background: #d1fae5; color: #047857; }
+
+    /* Task admin */
+    .task-admin-actions {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;
+      align-items: center;
+    }
+    .task-admin-actions select, .task-admin-actions input {
+      padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px;
+      font-size: 13px; background: white;
+    }
+    .task-admin-actions select:focus, .task-admin-actions input:focus {
+      outline: none; border-color: var(--primary);
+    }
+
+    /* Task stats */
+    .task-stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px;
+    }
+    .task-stat-card {
+      padding: 16px; border: 1px solid var(--line); border-radius: var(--radius);
+      background: white; text-align: center;
+    }
+    .task-stat-card .number { font-size: 28px; font-weight: 850; }
+    .task-stat-card .label { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
     /* --- MODAL --- */
     .modal-overlay {
@@ -359,8 +424,14 @@
     .modal h2 { margin: 0 0 8px 0; font-size: 20px; }
     .modal p.sub { margin: 0 0 20px 0; color: var(--muted); font-size: 13px; }
     .modal label { display: block; margin-bottom: 4px; font-size: 13px; font-weight: 700; }
-    .modal input, .modal select { width: 100%; padding: 10px 12px; margin-bottom: 16px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; background: #fafafa; }
-    .modal input:focus, .modal select:focus { outline: none; border-color: var(--primary); background: white; }
+    .modal input, .modal select, .modal textarea {
+      width: 100%; padding: 10px 12px; margin-bottom: 16px;
+      border: 1px solid var(--line); border-radius: 8px; font-size: 14px; background: #fafafa;
+    }
+    .modal input:focus, .modal select:focus, .modal textarea:focus {
+      outline: none; border-color: var(--primary); background: white;
+    }
+    .modal textarea { min-height: 80px; resize: vertical; }
     .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
     .modal-actions button { padding: 10px 20px; font-weight: 700; border: 0; border-radius: 8px; }
     .modal-actions .cancel-btn { color: var(--muted); background: #f3f4f6; }
@@ -436,7 +507,7 @@
 
     /* --- RESPONSIVE --- */
     @media (max-width: 1030px) {
-      .stats, .admin-stats, .grade-summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats, .admin-stats, .grade-summary-grid, .task-stats-grid { grid-template-columns: repeat(2, 1fr); }
       .course-grid, .meeting-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 790px) {
@@ -462,12 +533,12 @@
       .table-toolbar { flex-direction: column; align-items: stretch; }
       .table-toolbar .left, .table-toolbar .right { flex-wrap: wrap; }
       .admin-stats { grid-template-columns: repeat(2, 1fr); }
-      .grade-summary-grid { grid-template-columns: 1fr 1fr; }
+      .grade-summary-grid, .task-stats-grid { grid-template-columns: 1fr 1fr; }
       .meeting-grid { grid-template-columns: 1fr; }
       .expandable-detail .detail-content { padding: 12px 16px 12px 32px; font-size: 12px; }
     }
     @media (max-width: 480px) {
-      .stats, .admin-stats, .grade-summary-grid { gap: 10px; grid-template-columns: 1fr; }
+      .stats, .admin-stats, .grade-summary-grid, .task-stats-grid { gap: 10px; grid-template-columns: 1fr; }
       .stat-card { padding: 14px; }
       .stat-number { font-size: 22px; }
       .panel { padding: 17px; }
@@ -665,18 +736,39 @@
         <div class="meeting-grid" id="meeting-grid"></div>
       </section>
 
-      <!-- ===== TASKS ===== -->
+      <!-- ===== TASKS (Enhanced) ===== -->
       <section class="page" id="tasks">
         <div class="heading"><h1>Tasks</h1><p id="tasks-subheading">View and complete your assignments.</p></div>
+
+        <!-- Admin View -->
         <div id="admin-tasks-view" style="display:none;">
+          <!-- Task Stats -->
+          <div class="task-stats-grid">
+            <div class="task-stat-card"><div class="number" id="task-total">0</div><div class="label">Total Tasks</div></div>
+            <div class="task-stat-card"><div class="number" id="task-pending">0</div><div class="label">Pending</div></div>
+            <div class="task-stat-card"><div class="number" id="task-submitted">0</div><div class="label">Submitted</div></div>
+            <div class="task-stat-card"><div class="number" id="task-graded">0</div><div class="label">Graded</div></div>
+          </div>
+
           <div class="task-admin-actions">
             <input type="text" id="task-search" placeholder="Search tasks..." />
             <select id="task-type-filter"><option value="all">All Types</option><option value="homework">Homework</option><option value="test">Test</option><option value="assignment">Assignment</option></select>
+            <select id="task-status-filter"><option value="all">All Status</option><option value="pending">Pending</option><option value="submitted">Submitted</option><option value="graded">Graded</option></select>
             <button class="primary-button" id="add-task-btn">+ Add Task</button>
           </div>
           <div class="task-grid" id="admin-task-list"></div>
         </div>
+
+        <!-- Student View -->
         <div id="student-tasks-view" style="display:none;">
+          <!-- Task Stats -->
+          <div class="task-stats-grid">
+            <div class="task-stat-card"><div class="number" id="student-task-total">0</div><div class="label">Total Tasks</div></div>
+            <div class="task-stat-card"><div class="number" id="student-task-pending" style="color:var(--danger);">0</div><div class="label">Pending</div></div>
+            <div class="task-stat-card"><div class="number" id="student-task-submitted" style="color:var(--warning);">0</div><div class="label">Submitted</div></div>
+            <div class="task-stat-card"><div class="number" id="student-task-graded" style="color:var(--success);">0</div><div class="label">Graded</div></div>
+          </div>
+
           <div class="task-grid" id="student-task-list"></div>
         </div>
       </section>
@@ -839,6 +931,83 @@
     </div>
   </div>
 
+  <!-- ===== TASK MODAL ===== -->
+  <div class="modal-overlay" id="task-modal-overlay">
+    <div class="modal">
+      <h2 id="task-modal-title">Create Task</h2>
+      <p class="sub" id="task-modal-sub">Fill in the task details below.</p>
+      <form id="task-modal-form">
+        <label>Task Title</label>
+        <input type="text" id="task-modal-title-input" placeholder="Enter task title" />
+
+        <label>Task Type</label>
+        <select id="task-modal-type">
+          <option value="homework">Homework</option>
+          <option value="test">Test</option>
+          <option value="assignment">Assignment</option>
+        </select>
+
+        <label>Priority</label>
+        <select id="task-modal-priority">
+          <option value="low">Low</option>
+          <option value="medium" selected>Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <label>Description</label>
+        <textarea id="task-modal-description" placeholder="Describe the task..."></textarea>
+
+        <label>Deadline</label>
+        <input type="date" id="task-modal-deadline" />
+
+        <label>Assign to</label>
+        <select id="task-modal-assign">
+          <option value="all">All Students</option>
+          <option value="course">Specific Course</option>
+          <option value="student">Specific Student</option>
+        </select>
+
+        <div id="task-modal-assign-options" style="display:none;">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="task-modal-cancel">Cancel</button>
+          <button type="submit" class="save-btn" id="task-modal-save">Create Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== GRADE TASK MODAL ===== -->
+  <div class="modal-overlay" id="grade-task-modal-overlay">
+    <div class="modal">
+      <h2 id="grade-task-modal-title">Grade Submission</h2>
+      <p class="sub" id="grade-task-modal-sub">Enter grade and feedback for this submission.</p>
+      <form id="grade-task-modal-form">
+        <label>Student</label>
+        <input type="text" id="grade-task-student-name" disabled />
+
+        <label>Task</label>
+        <input type="text" id="grade-task-task-title" disabled />
+
+        <label>Submission</label>
+        <textarea id="grade-task-submission-text" disabled style="background:#f3f4f6;"></textarea>
+
+        <label>Grade (%)</label>
+        <input type="number" id="grade-task-grade" placeholder="0-100" min="0" max="100" />
+
+        <label>Feedback</label>
+        <textarea id="grade-task-feedback" placeholder="Enter feedback for the student..."></textarea>
+
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="grade-task-modal-cancel">Cancel</button>
+          <button type="submit" class="save-btn" id="grade-task-modal-save">Save Grade</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- ===== JAVASCRIPT ===== -->
   <script>
     (function() {
@@ -914,11 +1083,48 @@
         { id: 3, title: 'English Literature: Macbeth Analysis', teacher: 'Ms. Evans', time: '09:00 - 10:00', date: '2026-08-30', link: '#' }
       ];
 
+      // ----- Enhanced Task Data -----
       const DEFAULT_TASKS = [
-        { id: 1, title: 'Quadratic Equations Practice', type: 'homework', description: 'Solve problems 1-20 from the textbook. Show all working steps.', deadline: '2026-09-05', assignedTo: 'all', createdAt: '2026-08-28' },
-        { id: 2, title: 'Macbeth Essay', type: 'assignment', description: 'Write a 500-word essay on the theme of ambition in Macbeth.', deadline: '2026-09-10', assignedTo: 'all', createdAt: '2026-08-28' },
-        { id: 3, title: 'Cell Biology Quiz', type: 'test', description: 'Multiple choice quiz covering cell structure and function.', deadline: '2026-09-03', assignedTo: 'all', createdAt: '2026-08-28' }
+        {
+          id: 1,
+          title: 'Quadratic Equations Practice',
+          type: 'homework',
+          description: 'Solve problems 1-20 from the textbook. Show all working steps.',
+          deadline: '2026-09-05',
+          priority: 'high',
+          assignedTo: 'all',
+          assignedIds: [],
+          createdAt: '2026-08-28'
+        },
+        {
+          id: 2,
+          title: 'Macbeth Essay',
+          type: 'assignment',
+          description: 'Write a 500-word essay on the theme of ambition in Macbeth.',
+          deadline: '2026-09-10',
+          priority: 'medium',
+          assignedTo: 'all',
+          assignedIds: [],
+          createdAt: '2026-08-28'
+        },
+        {
+          id: 3,
+          title: 'Cell Biology Quiz',
+          type: 'test',
+          description: 'Multiple choice quiz covering cell structure and function. 20 questions.',
+          deadline: '2026-09-03',
+          priority: 'medium',
+          assignedTo: 'all',
+          assignedIds: [],
+          createdAt: '2026-08-28'
+        }
       ];
+
+      const DEFAULT_TASK_SUBMISSIONS = {
+        '1-1': { answer: 'x = -2, x = -3', submittedAt: '2026-08-29T10:00:00', grade: null, feedback: null, file: null },
+        '2-1': { answer: 'Ambition is the driving force in Macbeth...', submittedAt: '2026-08-30T14:00:00', grade: 85, feedback: 'Good analysis, could use more quotes.' },
+        '3-1': { answer: '1. B, 2. A, 3. C, 4. D, 5. B', submittedAt: '2026-08-31T16:00:00', grade: null, feedback: null }
+      };
 
       const DEFAULT_PRESENTATION = [
         { title: 'Quadratic Equations', content: 'Introduction to solving quadratic equations using the quadratic formula.' },
@@ -930,13 +1136,14 @@
 
       // ----- Data Storage -----
       let students = [], courses = [], budgetEntries = [], enrollments = [];
-      let gradeData = {}, tasks = [], taskSubmissions = {};
-      let nextStudentId = 1, nextCourseId = 1, nextBudgetId = 1, nextTaskId = 1;
+      let gradeData = {}, tasks = [], taskSubmissions = {}, meetings = [];
+      let nextStudentId = 1, nextCourseId = 1, nextBudgetId = 1, nextTaskId = 4, nextMeetingId = 4;
       let currentUser = null, expandedRows = {};
       let currentSlide = 0, presentationSlides = [];
 
       // Modal state
       let modalMode = 'add', modalType = 'student', editingId = null, enrollStudentId = null;
+      let gradingTaskId = null, gradingStudentId = null;
 
       // ----- DOM refs -----
       const loginScreen = document.getElementById('login-screen');
@@ -1017,6 +1224,32 @@
       const enrollModalCancel = document.getElementById('enroll-modal-cancel');
       const enrollModalSave = document.getElementById('enroll-modal-save');
 
+      // Task modal
+      const taskModalOverlay = document.getElementById('task-modal-overlay');
+      const taskModalTitle = document.getElementById('task-modal-title');
+      const taskModalSub = document.getElementById('task-modal-sub');
+      const taskModalForm = document.getElementById('task-modal-form');
+      const taskModalCancel = document.getElementById('task-modal-cancel');
+      const taskModalSave = document.getElementById('task-modal-save');
+      const taskModalTitleInput = document.getElementById('task-modal-title-input');
+      const taskModalType = document.getElementById('task-modal-type');
+      const taskModalPriority = document.getElementById('task-modal-priority');
+      const taskModalDescription = document.getElementById('task-modal-description');
+      const taskModalDeadline = document.getElementById('task-modal-deadline');
+      const taskModalAssign = document.getElementById('task-modal-assign');
+      const taskModalAssignOptions = document.getElementById('task-modal-assign-options');
+
+      // Grade task modal
+      const gradeTaskModalOverlay = document.getElementById('grade-task-modal-overlay');
+      const gradeTaskModalForm = document.getElementById('grade-task-modal-form');
+      const gradeTaskModalCancel = document.getElementById('grade-task-modal-cancel');
+      const gradeTaskModalSave = document.getElementById('grade-task-modal-save');
+      const gradeTaskStudentName = document.getElementById('grade-task-student-name');
+      const gradeTaskTaskTitle = document.getElementById('grade-task-task-title');
+      const gradeTaskSubmissionText = document.getElementById('grade-task-submission-text');
+      const gradeTaskGrade = document.getElementById('grade-task-grade');
+      const gradeTaskFeedback = document.getElementById('grade-task-feedback');
+
       const totalStudentsEl = document.getElementById('total-students');
       const totalCoursesEl = document.getElementById('total-courses');
       const totalEnrollmentsEl = document.getElementById('total-enrollments');
@@ -1029,7 +1262,8 @@
         'Student Portal': 'Портал ученика', 'Menu': 'Меню', 'Dashboard': 'Главная',
         'Timetable': 'Расписание', 'My courses': 'Мои курсы', 'Assignments': 'Задания',
         'Announcements': 'Объявления', 'Account': 'Аккаунт', 'My profile': 'Мой профиль',
-        'Need help?': 'Нужна помощь?', 'Contact the NOKJ Academy support team for assistance.': 'Свяжитесь со службой поддержки NOKJ Academy.',
+        'Need help?': 'Нужна помощь?',
+        'Contact the NOKJ Academy support team for assistance.': 'Свяжитесь со службой поддержки NOKJ Academy.',
         'Alex Student': 'Алекс Студент', 'Year 10': '10 класс',
         'Good afternoon, Alex 👋': 'Добрый день, Алекс 👋',
         'Here is everything you need to stay on track today.': 'Здесь всё, что нужно, чтобы быть в курсе дел сегодня.',
@@ -1132,7 +1366,13 @@
         'Homework': 'Домашнее задание', 'Test': 'Тест', 'Assignment': 'Задание',
         'Add Task': 'Добавить задание', 'Search tasks...': 'Поиск заданий...',
         'All Types': 'Все типы', 'Submit': 'Отправить', 'Submitted': 'Отправлено',
-        'Waiting for grading...': 'Ожидает проверки...', 'Graded': 'Проверено'
+        'Waiting for grading...': 'Ожидает проверки...', 'Graded': 'Проверено',
+        'Total Tasks': 'Всего заданий', 'Pending': 'Ожидает', 'Graded': 'Проверено',
+        'Choose File': 'Выбрать файл', 'No file chosen': 'Файл не выбран',
+        'Upload File': 'Загрузить файл', 'Task created successfully!': 'Задание успешно создано!',
+        'Grade saved successfully!': 'Оценка успешно сохранена!',
+        'High': 'Высокий', 'Medium': 'Средний', 'Low': 'Низкий',
+        'Overdue': 'Просрочено', 'Due': 'Срок', 'All Status': 'Все статусы'
       };
 
       const originalText = new WeakMap();
@@ -1152,9 +1392,12 @@
         const savedGrades = localStorage.getItem('nokj-grades');
         const savedTasks = localStorage.getItem('nokj-tasks');
         const savedSubmissions = localStorage.getItem('nokj-submissions');
+        const savedMeetings = localStorage.getItem('nokj-meetings');
         const savedStudentId = localStorage.getItem('nokj-next-student-id');
         const savedCourseId = localStorage.getItem('nokj-next-course-id');
         const savedBudgetId = localStorage.getItem('nokj-next-budget-id');
+        const savedTaskId = localStorage.getItem('nokj-next-task-id');
+        const savedMeetingId = localStorage.getItem('nokj-next-meeting-id');
 
         if (savedStudents) {
           try { students = JSON.parse(savedStudents); nextStudentId = parseInt(savedStudentId) || Math.max(...students.map(s => s.id), 0) + 1; }
@@ -1182,14 +1425,19 @@
         } else { gradeData = DEFAULT_GRADES; }
 
         if (savedTasks) {
-          try { tasks = JSON.parse(savedTasks); nextTaskId = Math.max(...tasks.map(t => t.id), 0) + 1; }
+          try { tasks = JSON.parse(savedTasks); nextTaskId = parseInt(savedTaskId) || Math.max(...tasks.map(t => t.id), 0) + 1; }
           catch (e) { tasks = DEFAULT_TASKS.slice(); nextTaskId = 4; }
         } else { tasks = DEFAULT_TASKS.slice(); nextTaskId = 4; }
 
         if (savedSubmissions) {
           try { taskSubmissions = JSON.parse(savedSubmissions); }
-          catch (e) { taskSubmissions = {}; }
-        } else { taskSubmissions = {}; }
+          catch (e) { taskSubmissions = DEFAULT_TASK_SUBMISSIONS; }
+        } else { taskSubmissions = DEFAULT_TASK_SUBMISSIONS; }
+
+        if (savedMeetings) {
+          try { meetings = JSON.parse(savedMeetings); nextMeetingId = parseInt(savedMeetingId) || Math.max(...meetings.map(m => m.id), 0) + 1; }
+          catch (e) { meetings = DEFAULT_MEETINGS.slice(); nextMeetingId = 4; }
+        } else { meetings = DEFAULT_MEETINGS.slice(); nextMeetingId = 4; }
       }
 
       function saveData() {
@@ -1200,9 +1448,12 @@
         localStorage.setItem('nokj-grades', JSON.stringify(gradeData));
         localStorage.setItem('nokj-tasks', JSON.stringify(tasks));
         localStorage.setItem('nokj-submissions', JSON.stringify(taskSubmissions));
+        localStorage.setItem('nokj-meetings', JSON.stringify(meetings));
         localStorage.setItem('nokj-next-student-id', String(nextStudentId));
         localStorage.setItem('nokj-next-course-id', String(nextCourseId));
         localStorage.setItem('nokj-next-budget-id', String(nextBudgetId));
+        localStorage.setItem('nokj-next-task-id', String(nextTaskId));
+        localStorage.setItem('nokj-next-meeting-id', String(nextMeetingId));
       }
 
       // ----- Helper Functions -----
@@ -1233,6 +1484,49 @@
         const values = Object.values(getStudentGrades(studentId));
         if (values.length === 0) return null;
         return Math.round(values.reduce(function(a, b) { return a + b; }, 0) / values.length);
+      }
+
+      // ----- Task Helper Functions -----
+      function getTaskStatus(task, studentId) {
+        const key = task.id + '-' + studentId;
+        const submission = taskSubmissions[key];
+        if (!submission) return 'pending';
+        if (submission.grade !== null && submission.grade !== undefined) return 'graded';
+        return 'submitted';
+      }
+
+      function getTaskPriorityLabel(priority) {
+        const labels = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' };
+        return labels[priority] || priority;
+      }
+
+      function getTaskPriorityClass(priority) {
+        return priority || 'medium';
+      }
+
+      function isTaskOverdue(task) {
+        const today = new Date().toISOString().split('T')[0];
+        return task.deadline < today;
+      }
+
+      function getTaskDeadlineClass(task) {
+        if (isTaskOverdue(task)) return 'overdue';
+        const today = new Date().toISOString().split('T')[0];
+        const diff = (new Date(task.deadline) - new Date(today)) / (1000 * 60 * 60 * 24);
+        if (diff <= 3) return 'upcoming';
+        return 'on-time';
+      }
+
+      function isTaskAssignedToStudent(task, studentId) {
+        if (task.assignedTo === 'all') return true;
+        if (task.assignedTo === 'student') {
+          return task.assignedIds && task.assignedIds.includes(studentId);
+        }
+        if (task.assignedTo === 'course') {
+          const studentCourses = getEnrolledCourseIds(studentId);
+          return task.assignedIds && task.assignedIds.some(function(cid) { return studentCourses.includes(cid); });
+        }
+        return false;
       }
 
       // ----- Navigation -----
@@ -1285,7 +1579,7 @@
       function setLanguage(lang) { currentLang = lang; localStorage.setItem('nokj-language', lang); applyTranslation(lang); }
       function toggleLanguage() { setLanguage((currentLang === 'en') ? 'ru' : 'en'); }
 
-      // ----- Render Functions -----
+      // ----- Render Functions (Existing) -----
       function renderStudents() {
         const search = studentSearch.value.toLowerCase();
         const filter = studentFilter.value;
@@ -1497,7 +1791,7 @@
       // ----- Virtual Classroom -----
       function renderMeetings() {
         meetingGrid.innerHTML = '';
-        DEFAULT_MEETINGS.forEach(function(meeting) {
+        meetings.forEach(function(meeting) {
           const card = document.createElement('div');
           card.className = 'meeting-card';
           card.innerHTML = '<div class="meeting-header"><h3>' + meeting.title + '</h3><div class="teacher">👨‍🏫 ' + meeting.teacher + '</div></div><div class="meeting-body"><div class="time">📅 ' + meeting.date + ' • 🕐 ' + meeting.time + '</div><button class="join-btn" data-meeting="' + meeting.id + '">Join Meeting</button></div>';
@@ -1517,7 +1811,7 @@
       }
 
       function openPresentation(meetingId) {
-        const meeting = DEFAULT_MEETINGS.find(function(m) { return m.id === meetingId; });
+        const meeting = meetings.find(function(m) { return m.id === meetingId; });
         if (!meeting) return;
         presentationSlides = DEFAULT_PRESENTATION;
         currentSlide = 0;
@@ -1537,74 +1831,308 @@
       function nextSlide() { if (currentSlide < presentationSlides.length - 1) { currentSlide++; updateSlide(); } }
       function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlide(); } }
 
-      // ----- Tasks -----
+      // ----- Enhanced Tasks Rendering -----
       function renderTasks() {
         if (!currentUser) return;
         const isAdmin = currentUser.role === 'Admin';
         const adminView = document.getElementById('admin-tasks-view');
         const studentView = document.getElementById('student-tasks-view');
-        if (isAdmin) { adminView.style.display = 'block'; studentView.style.display = 'none'; renderAdminTasks(); }
-        else { adminView.style.display = 'none'; studentView.style.display = 'block'; renderStudentTasks(); }
+        if (isAdmin) {
+          adminView.style.display = 'block';
+          studentView.style.display = 'none';
+          renderAdminTasks();
+        } else {
+          adminView.style.display = 'none';
+          studentView.style.display = 'block';
+          renderStudentTasks();
+        }
       }
 
       function renderAdminTasks() {
         const search = document.getElementById('task-search').value.toLowerCase();
-        const filter = document.getElementById('task-type-filter').value;
+        const typeFilter = document.getElementById('task-type-filter').value;
+        const statusFilter = document.getElementById('task-status-filter').value;
+
         let filtered = tasks.filter(function(t) {
-          return (t.title.toLowerCase().includes(search) || t.description.toLowerCase().includes(search)) &&
-            (filter === 'all' || t.type === filter);
+          const matchesSearch = t.title.toLowerCase().includes(search) || t.description.toLowerCase().includes(search);
+          const matchesType = typeFilter === 'all' || t.type === typeFilter;
+          return matchesSearch && matchesType;
         });
+
+        // Update stats
+        const totalTasks = tasks.length;
+        let pendingCount = 0, submittedCount = 0, gradedCount = 0;
+
+        tasks.forEach(function(task) {
+          const submissions = Object.keys(taskSubmissions).filter(function(key) {
+            return key.startsWith(task.id + '-');
+          });
+          const graded = submissions.filter(function(key) {
+            return taskSubmissions[key] && taskSubmissions[key].grade !== null && taskSubmissions[key].grade !== undefined;
+          });
+          if (graded.length === submissions.length && submissions.length > 0) {
+            gradedCount++;
+          } else if (submissions.length > 0) {
+            submittedCount++;
+          } else {
+            pendingCount++;
+          }
+        });
+
+        document.getElementById('task-total').textContent = totalTasks;
+        document.getElementById('task-pending').textContent = pendingCount;
+        document.getElementById('task-submitted').textContent = submittedCount;
+        document.getElementById('task-graded').textContent = gradedCount;
+
         const container = document.getElementById('admin-task-list');
         container.innerHTML = '';
-        if (filtered.length === 0) { container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">No tasks found.</p>'; return; }
+
+        if (filtered.length === 0) {
+          container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">No tasks found.</p>';
+          return;
+        }
+
         filtered.forEach(function(task) {
-          const submissionKeys = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id + '-'); });
+          const submissionKeys = Object.keys(taskSubmissions).filter(function(key) {
+            return key.startsWith(task.id + '-');
+          });
+          const totalStudents = students.length;
+          const submittedCount = submissionKeys.length;
+
+          // Filter by status if needed
+          if (statusFilter !== 'all') {
+            const status = statusFilter === 'graded' ? gradedCount > 0 : statusFilter === 'submitted' ? submittedCount > 0 : pendingCount > 0;
+            if (!status) return;
+          }
+
           const card = document.createElement('div');
           card.className = 'task-card';
-          card.innerHTML = '<div class="task-header"><h3>' + task.title + '</h3><span class="task-type ' + task.type + '">' + task.type.charAt(0).toUpperCase() + task.type.slice(1) + '</span></div><div class="task-body"><div class="task-description">' + task.description + '</div><div class="task-deadline">⏰ Due: ' + task.deadline + '</div><div style="margin-top:8px;font-size:12px;color:var(--muted);">📊 ' + submissionKeys.length + ' / ' + students.length + ' students submitted</div></div><div class="task-footer"><button class="secondary-button view-submissions-btn" data-task="' + task.id + '">View Submissions</button><button class="action-btn delete" data-id="' + task.id + '" data-type="task">🗑️ Delete</button></div>';
+          const deadlineClass = getTaskDeadlineClass(task);
+          const priorityLabel = getTaskPriorityLabel(task.priority);
+          const priorityClass = getTaskPriorityClass(task.priority);
+          const assignedToText = task.assignedTo === 'all' ? 'All Students' :
+            task.assignedTo === 'course' ? task.assignedIds.map(function(id) { return getCourseName(id); }).join(', ') :
+            task.assignedTo === 'student' ? task.assignedIds.map(function(id) { return getStudentName(id); }).join(', ') :
+            'All Students';
+
+          card.innerHTML =
+            '<div class="task-header">' +
+              '<div><h3>' + task.title + '</h3>' +
+                '<div style="margin-top:4px;font-size:12px;color:var(--muted);">Assigned to: ' + assignedToText + '</div>' +
+              '</div>' +
+              '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">' +
+                '<span class="task-priority ' + priorityClass + '">' + priorityLabel + '</span>' +
+                '<span class="task-type ' + task.type + '">' + task.type.charAt(0).toUpperCase() + task.type.slice(1) + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="task-body">' +
+              '<div class="task-description">' + task.description + '</div>' +
+              '<div class="task-deadline ' + deadlineClass + '">⏰ Due: ' + task.deadline + (isTaskOverdue(task) ? ' (Overdue!)' : '') + '</div>' +
+              '<div style="margin-top:8px;font-size:12px;color:var(--muted);">📊 ' + submittedCount + ' / ' + totalStudents + ' students submitted</div>' +
+            '</div>' +
+            '<div class="task-footer">' +
+              '<button class="secondary-button view-submissions-btn" data-task="' + task.id + '">📋 View Submissions (' + submittedCount + ')</button>' +
+              '<button class="action-btn delete" data-id="' + task.id + '" data-type="task">🗑️ Delete</button>' +
+            '</div>';
           container.appendChild(card);
         });
       }
 
       function renderStudentTasks() {
         const student = students.find(function(s) { return s.name === currentUser.name; });
-        if (!student) { document.getElementById('student-task-list').innerHTML = '<p>No student record found.</p>'; return; }
+        if (!student) {
+          document.getElementById('student-task-list').innerHTML = '<p>No student record found.</p>';
+          return;
+        }
+
+        // Get tasks assigned to this student
+        const assignedTasks = tasks.filter(function(task) {
+          return isTaskAssignedToStudent(task, student.id);
+        });
+
+        // Update stats
+        let pendingCount = 0, submittedCount = 0, gradedCount = 0;
+
+        assignedTasks.forEach(function(task) {
+          const status = getTaskStatus(task, student.id);
+          if (status === 'pending') pendingCount++;
+          else if (status === 'submitted') submittedCount++;
+          else if (status === 'graded') gradedCount++;
+        });
+
+        document.getElementById('student-task-total').textContent = assignedTasks.length;
+        document.getElementById('student-task-pending').textContent = pendingCount;
+        document.getElementById('student-task-submitted').textContent = submittedCount;
+        document.getElementById('student-task-graded').textContent = gradedCount;
+
         const container = document.getElementById('student-task-list');
         container.innerHTML = '';
-        if (tasks.length === 0) { container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">No tasks available.</p>'; return; }
-        tasks.forEach(function(task) {
-          const submissionKey = task.id + '-' + student.id;
-          const submitted = taskSubmissions[submissionKey];
-          const graded = submitted && submitted.grade !== undefined;
+
+        if (assignedTasks.length === 0) {
+          container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">No tasks assigned to you yet.</p>';
+          return;
+        }
+
+        // Sort: overdue first, then by deadline
+        assignedTasks.sort(function(a, b) {
+          const aOverdue = isTaskOverdue(a);
+          const bOverdue = isTaskOverdue(b);
+          if (aOverdue && !bOverdue) return -1;
+          if (!aOverdue && bOverdue) return 1;
+          return a.deadline.localeCompare(b.deadline);
+        });
+
+        assignedTasks.forEach(function(task) {
+          const status = getTaskStatus(task, student.id);
+          const submission = taskSubmissions[task.id + '-' + student.id];
+          const deadlineClass = getTaskDeadlineClass(task);
+          const priorityLabel = getTaskPriorityLabel(task.priority);
+          const priorityClass = getTaskPriorityClass(task.priority);
+
           const card = document.createElement('div');
           card.className = 'task-card';
+
+          let statusDisplay = '';
           let footerHtml = '';
-          if (submitted && graded) {
-            footerHtml = '<div class="graded-status">✅ Graded: ' + submitted.grade + '%</div><div style="font-size:12px;color:var(--muted);">' + (submitted.feedback || '') + '</div>';
-          } else if (submitted) {
-            footerHtml = '<div class="submitted-status">✅ Submitted</div><div style="font-size:12px;color:var(--muted);">Waiting for grading...</div>';
+
+          if (status === 'graded') {
+            statusDisplay = '<span class="graded-status">✅ Graded: ' + submission.grade + '%</span>';
+            footerHtml =
+              '<div class="graded-status">✅ Graded: ' + submission.grade + '%</div>' +
+              (submission.feedback ? '<div style="font-size:12px;color:var(--muted);">📝 ' + submission.feedback + '</div>' : '');
+          } else if (status === 'submitted') {
+            statusDisplay = '<span class="submitted-status">⏳ Submitted</span>';
+            footerHtml =
+              '<div class="submitted-status">⏳ Submitted</div>' +
+              '<div style="font-size:12px;color:var(--muted);">Waiting for grading...</div>' +
+              (submission.file ? '<div style="font-size:12px;color:var(--muted);">📎 ' + submission.file.name + '</div>' : '');
           } else {
-            footerHtml = '<input type="text" class="answer-input" id="answer-' + task.id + '" placeholder="Enter your answer..." /><button class="submit-btn" data-task="' + task.id + '">Submit</button>';
+            statusDisplay = '<span class="pill danger">⚠️ Pending</span>';
+            footerHtml =
+              '<input type="text" class="answer-input" id="answer-' + task.id + '" placeholder="Enter your answer..." />' +
+              '<input type="file" id="file-' + task.id + '" style="display:none;" />' +
+              '<button class="file-upload-btn" onclick="document.getElementById(\'file-' + task.id + '\').click()">📎 Upload File</button>' +
+              '<span id="file-name-' + task.id + '" class="file-name">No file chosen</span>' +
+              '<button class="submit-btn" data-task="' + task.id + '">Submit</button>';
           }
-          card.innerHTML = '<div class="task-header"><h3>' + task.title + '</h3><span class="task-type ' + task.type + '">' + task.type.charAt(0).toUpperCase() + task.type.slice(1) + '</span></div><div class="task-body"><div class="task-description">' + task.description + '</div><div class="task-deadline">⏰ Due: ' + task.deadline + '</div></div><div class="task-footer">' + footerHtml + '</div>';
+
+          card.innerHTML =
+            '<div class="task-header">' +
+              '<div><h3>' + task.title + '</h3>' +
+                '<div style="margin-top:4px;font-size:12px;color:var(--muted);">' + task.type.charAt(0).toUpperCase() + task.type.slice(1) + '</div>' +
+              '</div>' +
+              '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">' +
+                '<span class="task-priority ' + priorityClass + '">' + priorityLabel + '</span>' +
+                statusDisplay +
+              '</div>' +
+            '</div>' +
+            '<div class="task-body">' +
+              '<div class="task-description">' + task.description + '</div>' +
+              '<div class="task-deadline ' + deadlineClass + '">⏰ Due: ' + task.deadline + (isTaskOverdue(task) ? ' ⚠️ Overdue!' : '') + '</div>' +
+            '</div>' +
+            '<div class="task-footer">' + footerHtml + '</div>';
           container.appendChild(card);
+        });
+
+        // Add file upload listeners
+        assignedTasks.forEach(function(task) {
+          const fileInput = document.getElementById('file-' + task.id);
+          if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+              const fileNameSpan = document.getElementById('file-name-' + task.id);
+              if (e.target.files && e.target.files.length > 0) {
+                fileNameSpan.textContent = e.target.files[0].name;
+                // Store file in submission data
+                const studentId = students.find(function(s) { return s.name === currentUser.name; }).id;
+                const key = task.id + '-' + studentId;
+                if (!taskSubmissions[key]) {
+                  taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null, file: null };
+                }
+                taskSubmissions[key].file = {
+                  name: e.target.files[0].name,
+                  size: e.target.files[0].size,
+                  type: e.target.files[0].type
+                };
+                saveData();
+              } else {
+                fileNameSpan.textContent = 'No file chosen';
+              }
+            });
+          }
         });
       }
 
-      function createTask(title, type, description, deadline) {
-        tasks.push({ id: nextTaskId++, title: title, type: type, description: description, deadline: deadline, assignedTo: 'all', createdAt: new Date().toISOString().split('T')[0] });
-        saveData(); renderTasks();
+      // ----- Task Management Functions -----
+      function createTask(title, type, description, deadline, priority, assignedTo, assignedIds) {
+        tasks.push({
+          id: nextTaskId++,
+          title: title,
+          type: type,
+          description: description,
+          deadline: deadline,
+          priority: priority || 'medium',
+          assignedTo: assignedTo || 'all',
+          assignedIds: assignedIds || [],
+          createdAt: new Date().toISOString().split('T')[0]
+        });
+        saveData();
+        renderTasks();
+        alert(currentLang === 'ru' ? 'Задание успешно создано!' : 'Task created successfully!');
       }
 
       function deleteTask(taskId) {
         tasks = tasks.filter(function(t) { return t.id !== taskId; });
-        Object.keys(taskSubmissions).forEach(function(key) { if (key.startsWith(taskId + '-')) delete taskSubmissions[key]; });
-        saveData(); renderTasks();
+        Object.keys(taskSubmissions).forEach(function(key) {
+          if (key.startsWith(taskId + '-')) delete taskSubmissions[key];
+        });
+        saveData();
+        renderTasks();
       }
 
-      function submitTaskAnswer(taskId, studentId, answer) {
-        taskSubmissions[taskId + '-' + studentId] = { answer: answer, submittedAt: new Date().toISOString(), grade: undefined, feedback: undefined };
-        saveData(); renderTasks();
+      function submitTaskAnswer(taskId, studentId, answer, fileData) {
+        const key = taskId + '-' + studentId;
+        if (!taskSubmissions[key]) {
+          taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null, file: null };
+        }
+        taskSubmissions[key].answer = answer;
+        taskSubmissions[key].submittedAt = new Date().toISOString();
+        if (fileData) {
+          taskSubmissions[key].file = fileData;
+        }
+        saveData();
+        renderTasks();
+        alert(currentLang === 'ru' ? 'Задание отправлено!' : 'Task submitted!');
+      }
+
+      function gradeSubmission(taskId, studentId, grade, feedback) {
+        const key = taskId + '-' + studentId;
+        if (taskSubmissions[key]) {
+          taskSubmissions[key].grade = Math.min(100, Math.max(0, Math.round(parseFloat(grade))));
+          taskSubmissions[key].feedback = feedback || '';
+          saveData();
+          renderTasks();
+          alert(currentLang === 'ru' ? 'Оценка успешно сохранена!' : 'Grade saved successfully!');
+        }
+      }
+
+      function openGradeModal(taskId, studentId) {
+        gradingTaskId = taskId;
+        gradingStudentId = studentId;
+        const key = taskId + '-' + studentId;
+        const submission = taskSubmissions[key];
+        if (!submission) return;
+
+        const task = tasks.find(function(t) { return t.id === taskId; });
+        const student = students.find(function(s) { return s.id === studentId; });
+        if (!task || !student) return;
+
+        gradeTaskStudentName.value = student.name;
+        gradeTaskTaskTitle.value = task.title;
+        gradeTaskSubmissionText.value = submission.answer || 'No answer provided.';
+        gradeTaskGrade.value = submission.grade || '';
+        gradeTaskFeedback.value = submission.feedback || '';
+
+        gradeTaskModalOverlay.classList.add('open');
       }
 
       function toggleExpand(expandId) {
@@ -1616,45 +2144,76 @@
         }
       }
 
-      // ----- Modal Functions -----
+      // ----- Modal Functions (Existing) -----
       function openModal(type, mode, data) {
-        modalType = type; modalMode = mode;
+        modalType = type;
+        modalMode = mode;
         if (mode === 'add') {
           if (type === 'student') {
-            modalTitle.textContent = 'Add Student'; modalSub.textContent = 'Enter student details';
-            modalFields.innerHTML = '<label>Name</label><input type="text" id="modal-name" placeholder="Full name" /><label>Grade (%)</label><input type="number" id="modal-grade" placeholder="0-100" min="0" max="100" /><label>Attendance (%)</label><input type="number" id="modal-attendance" placeholder="0-100" min="0" max="100" /><label>Status</label><select id="modal-status"><option value="Active">Active</option><option value="Warning">Warning</option><option value="Inactive">Inactive</option></select>';
+            modalTitle.textContent = 'Add Student';
+            modalSub.textContent = 'Enter student details';
+            modalFields.innerHTML =
+              '<label>Name</label><input type="text" id="modal-name" placeholder="Full name" />' +
+              '<label>Grade (%)</label><input type="number" id="modal-grade" placeholder="0-100" min="0" max="100" />' +
+              '<label>Attendance (%)</label><input type="number" id="modal-attendance" placeholder="0-100" min="0" max="100" />' +
+              '<label>Status</label><select id="modal-status"><option value="Active">Active</option><option value="Warning">Warning</option><option value="Inactive">Inactive</option></select>';
             editingId = null;
           } else if (type === 'course') {
-            modalTitle.textContent = 'Add Course'; modalSub.textContent = 'Enter course details';
-            modalFields.innerHTML = '<label>Course Name</label><input type="text" id="modal-course-name" placeholder="e.g. Physics" /><label>Teacher</label><input type="text" id="modal-course-teacher" placeholder="e.g. Dr. Smith" /><label>Description</label><input type="text" id="modal-course-description" placeholder="e.g. Year 10 Physics" />';
+            modalTitle.textContent = 'Add Course';
+            modalSub.textContent = 'Enter course details';
+            modalFields.innerHTML =
+              '<label>Course Name</label><input type="text" id="modal-course-name" placeholder="e.g. Physics" />' +
+              '<label>Teacher</label><input type="text" id="modal-course-teacher" placeholder="e.g. Dr. Smith" />' +
+              '<label>Description</label><input type="text" id="modal-course-description" placeholder="e.g. Year 10 Physics" />';
             editingId = null;
           } else {
-            modalTitle.textContent = 'Add Budget Entry'; modalSub.textContent = 'Enter budget details';
-            modalFields.innerHTML = '<label>Category</label><input type="text" id="modal-category" placeholder="e.g. Student Fees" /><label>Type</label><select id="modal-type"><option value="Income">Income</option><option value="Expense">Expense</option></select><label>Amount ($)</label><input type="number" id="modal-amount" placeholder="Enter amount" min="0" step="1" /><label>Date</label><input type="date" id="modal-date" /><label>Status</label><select id="modal-status"><option value="Paid">Paid</option><option value="Pending">Pending</option><option value="Unpaid">Unpaid</option></select>';
+            modalTitle.textContent = 'Add Budget Entry';
+            modalSub.textContent = 'Enter budget details';
+            modalFields.innerHTML =
+              '<label>Category</label><input type="text" id="modal-category" placeholder="e.g. Student Fees" />' +
+              '<label>Type</label><select id="modal-type"><option value="Income">Income</option><option value="Expense">Expense</option></select>' +
+              '<label>Amount ($)</label><input type="number" id="modal-amount" placeholder="Enter amount" min="0" step="1" />' +
+              '<label>Date</label><input type="date" id="modal-date" />' +
+              '<label>Status</label><select id="modal-status"><option value="Paid">Paid</option><option value="Pending">Pending</option><option value="Unpaid">Unpaid</option></select>';
             editingId = null;
           }
         } else {
           if (type === 'student') {
-            modalTitle.textContent = 'Edit Student Record'; modalSub.textContent = 'Enter student details';
+            modalTitle.textContent = 'Edit Student Record';
+            modalSub.textContent = 'Enter student details';
             const s = students.find(function(st) { return st.id === data.id; });
             if (s) {
               editingId = s.id;
-              modalFields.innerHTML = '<label>Name</label><input type="text" id="modal-name" value="' + s.name + '" /><label>Grade (%)</label><input type="number" id="modal-grade" value="' + s.grade + '" min="0" max="100" /><label>Attendance (%)</label><input type="number" id="modal-attendance" value="' + s.attendance + '" min="0" max="100" /><label>Status</label><select id="modal-status"><option value="Active"' + (s.status === 'Active' ? ' selected' : '') + '>Active</option><option value="Warning"' + (s.status === 'Warning' ? ' selected' : '') + '>Warning</option><option value="Inactive"' + (s.status === 'Inactive' ? ' selected' : '') + '>Inactive</option></select>';
+              modalFields.innerHTML =
+                '<label>Name</label><input type="text" id="modal-name" value="' + s.name + '" />' +
+                '<label>Grade (%)</label><input type="number" id="modal-grade" value="' + s.grade + '" min="0" max="100" />' +
+                '<label>Attendance (%)</label><input type="number" id="modal-attendance" value="' + s.attendance + '" min="0" max="100" />' +
+                '<label>Status</label><select id="modal-status"><option value="Active"' + (s.status === 'Active' ? ' selected' : '') + '>Active</option><option value="Warning"' + (s.status === 'Warning' ? ' selected' : '') + '>Warning</option><option value="Inactive"' + (s.status === 'Inactive' ? ' selected' : '') + '>Inactive</option></select>';
             }
           } else if (type === 'course') {
-            modalTitle.textContent = 'Edit Course'; modalSub.textContent = 'Enter course details';
+            modalTitle.textContent = 'Edit Course';
+            modalSub.textContent = 'Enter course details';
             const c = courses.find(function(co) { return co.id === data.id; });
             if (c) {
               editingId = c.id;
-              modalFields.innerHTML = '<label>Course Name</label><input type="text" id="modal-course-name" value="' + c.name + '" /><label>Teacher</label><input type="text" id="modal-course-teacher" value="' + c.teacher + '" /><label>Description</label><input type="text" id="modal-course-description" value="' + c.description + '" />';
+              modalFields.innerHTML =
+                '<label>Course Name</label><input type="text" id="modal-course-name" value="' + c.name + '" />' +
+                '<label>Teacher</label><input type="text" id="modal-course-teacher" value="' + c.teacher + '" />' +
+                '<label>Description</label><input type="text" id="modal-course-description" value="' + c.description + '" />';
             }
           } else {
-            modalTitle.textContent = 'Edit Budget Entry'; modalSub.textContent = 'Enter budget details';
+            modalTitle.textContent = 'Edit Budget Entry';
+            modalSub.textContent = 'Enter budget details';
             const b = budgetEntries.find(function(bg) { return bg.id === data.id; });
             if (b) {
               editingId = b.id;
               const isIncome = b.type === 'Income';
-              modalFields.innerHTML = '<label>Category</label><input type="text" id="modal-category" value="' + b.category + '" /><label>Type</label><select id="modal-type"><option value="Income"' + (isIncome ? ' selected' : '') + '>Income</option><option value="Expense"' + (!isIncome ? ' selected' : '') + '>Expense</option></select><label>Amount ($)</label><input type="number" id="modal-amount" value="' + Math.abs(b.amount) + '" min="0" step="1" /><label>Date</label><input type="date" id="modal-date" value="' + b.date + '" /><label>Status</label><select id="modal-status"><option value="Paid"' + (b.status === 'Paid' ? ' selected' : '') + '>Paid</option><option value="Pending"' + (b.status === 'Pending' ? ' selected' : '') + '>Pending</option><option value="Unpaid"' + (b.status === 'Unpaid' ? ' selected' : '') + '>Unpaid</option></select>';
+              modalFields.innerHTML =
+                '<label>Category</label><input type="text" id="modal-category" value="' + b.category + '" />' +
+                '<label>Type</label><select id="modal-type"><option value="Income"' + (isIncome ? ' selected' : '') + '>Income</option><option value="Expense"' + (!isIncome ? ' selected' : '') + '>Expense</option></select>' +
+                '<label>Amount ($)</label><input type="number" id="modal-amount" value="' + Math.abs(b.amount) + '" min="0" step="1" />' +
+                '<label>Date</label><input type="date" id="modal-date" value="' + b.date + '" />' +
+                '<label>Status</label><select id="modal-status"><option value="Paid"' + (b.status === 'Paid' ? ' selected' : '') + '>Paid</option><option value="Pending"' + (b.status === 'Pending' ? ' selected' : '') + '>Pending</option><option value="Unpaid"' + (b.status === 'Unpaid' ? ' selected' : '') + '>Unpaid</option></select>';
             }
           }
         }
@@ -1673,7 +2232,11 @@
           if (!name || isNaN(grade) || isNaN(attendance)) { alert('Please fill in all fields'); return; }
           if (modalMode === 'add') students.push({ id: nextStudentId++, name: name, grade: grade, attendance: attendance, status: status });
           else { const index = students.findIndex(function(s) { return s.id === editingId; }); if (index !== -1) students[index] = { id: editingId, name: name, grade: grade, attendance: attendance, status: status }; }
-          saveData(); renderStudents(); renderStudentCourses(); renderGrades(); closeModal();
+          saveData();
+          renderStudents();
+          renderStudentCourses();
+          renderGrades();
+          closeModal();
         } else if (modalType === 'course') {
           const name = document.getElementById('modal-course-name').value.trim();
           const teacher = document.getElementById('modal-course-teacher').value.trim();
@@ -1681,7 +2244,11 @@
           if (!name || !teacher) { alert('Please fill in all fields'); return; }
           if (modalMode === 'add') courses.push({ id: nextCourseId++, name: name, teacher: teacher, description: description });
           else { const index = courses.findIndex(function(c) { return c.id === editingId; }); if (index !== -1) courses[index] = { id: editingId, name: name, teacher: teacher, description: description }; }
-          saveData(); renderCourses(); renderStudentCourses(); renderGrades(); closeModal();
+          saveData();
+          renderCourses();
+          renderStudentCourses();
+          renderGrades();
+          closeModal();
         } else {
           const category = document.getElementById('modal-category').value.trim();
           const type = document.getElementById('modal-type').value;
@@ -1692,16 +2259,32 @@
           const finalAmount = type === 'Income' ? amount : -amount;
           if (modalMode === 'add') budgetEntries.push({ id: nextBudgetId++, category: category, type: type, amount: finalAmount, date: date, status: status });
           else { const index = budgetEntries.findIndex(function(b) { return b.id === editingId; }); if (index !== -1) budgetEntries[index] = { id: editingId, category: category, type: type, amount: finalAmount, date: date, status: status }; }
-          saveData(); renderBudget(); closeModal();
+          saveData();
+          renderBudget();
+          closeModal();
         }
       }
 
       function deleteEntry(type, id) {
         if (!confirm('Are you sure you want to delete this entry?')) return;
-        if (type === 'student') { enrollments = enrollments.filter(function(e) { return e.studentId !== id; }); students = students.filter(function(s) { return s.id !== id; }); renderStudents(); renderStudentCourses(); renderGrades(); }
-        else if (type === 'course') { enrollments = enrollments.filter(function(e) { return e.courseId !== id; }); courses = courses.filter(function(c) { return c.id !== id; }); renderCourses(); renderStudentCourses(); renderGrades(); }
-        else { budgetEntries = budgetEntries.filter(function(b) { return b.id !== id; }); renderBudget(); }
-        saveData(); updateAdminStats();
+        if (type === 'student') {
+          enrollments = enrollments.filter(function(e) { return e.studentId !== id; });
+          students = students.filter(function(s) { return s.id !== id; });
+          renderStudents();
+          renderStudentCourses();
+          renderGrades();
+        } else if (type === 'course') {
+          enrollments = enrollments.filter(function(e) { return e.courseId !== id; });
+          courses = courses.filter(function(c) { return c.id !== id; });
+          renderCourses();
+          renderStudentCourses();
+          renderGrades();
+        } else {
+          budgetEntries = budgetEntries.filter(function(b) { return b.id !== id; });
+          renderBudget();
+        }
+        saveData();
+        updateAdminStats();
       }
 
       // ----- Enrollment Modal -----
@@ -1728,7 +2311,12 @@
         checkboxes.forEach(function(cb) { if (cb.checked) selectedIds.push(parseInt(cb.value)); });
         enrollments = enrollments.filter(function(e) { return e.studentId !== enrollStudentId; });
         selectedIds.forEach(function(courseId) { enrollments.push({ studentId: enrollStudentId, courseId: courseId }); });
-        saveData(); renderStudents(); renderCourses(); renderStudentCourses(); renderGrades(); closeEnrollModal();
+        saveData();
+        renderStudents();
+        renderCourses();
+        renderStudentCourses();
+        renderGrades();
+        closeEnrollModal();
       }
 
       // ----- Export CSV -----
@@ -1738,7 +2326,9 @@
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url; a.download = filename; a.click();
+        a.href = url;
+        a.download = filename;
+        a.click();
         URL.revokeObjectURL(url);
       }
 
@@ -1775,11 +2365,21 @@
         const user = DEMO_USERS[email];
         if (user && user.password === password) {
           currentUser = user;
-          localStorage.setItem('nokj-user', JSON.stringify({ email: email, name: user.name, role: user.role, initials: user.initials, displayEmail: user.email, avatarClass: user.avatarClass }));
+          localStorage.setItem('nokj-user', JSON.stringify({
+            email: email,
+            name: user.name,
+            role: user.role,
+            initials: user.initials,
+            displayEmail: user.email,
+            avatarClass: user.avatarClass
+          }));
           showApp(user);
           loginError.textContent = '';
           return true;
-        } else { loginError.textContent = 'Invalid email or password. Please try again.'; return false; }
+        } else {
+          loginError.textContent = 'Invalid email or password. Please try again.';
+          return false;
+        }
       }
 
       function showApp(user) {
@@ -1805,7 +2405,10 @@
           adminCoursesBtn.style.display = 'flex';
           adminGradesBtn.style.display = 'flex';
           adminStatsContainer.style.display = 'block';
-          renderStudents(); renderBudget(); renderCourses(); renderGrades();
+          renderStudents();
+          renderBudget();
+          renderCourses();
+          renderGrades();
           updateAdminStats();
         } else {
           adminNavLabel.style.display = 'none';
@@ -1869,6 +2472,7 @@
         });
       });
 
+      // Student table events
       studentTableBody.addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -1878,6 +2482,7 @@
         else if (target.classList.contains('enroll')) openEnrollModal(id);
       });
 
+      // Budget table events
       budgetTableBody.addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -1886,6 +2491,7 @@
         else if (target.classList.contains('edit')) { const b = budgetEntries.find(function(bg) { return bg.id === id; }); if (b) openModal('budget', 'edit', b); }
       });
 
+      // Course table events
       courseTableBody.addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -1894,6 +2500,7 @@
         else if (target.classList.contains('edit')) { const c = courses.find(function(co) { return co.id === id; }); if (c) openModal('course', 'edit', c); }
       });
 
+      // Grade table events
       document.getElementById('grade-table-body').addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -1909,7 +2516,8 @@
               if (!isNaN(grade) && grade >= 0 && grade <= 100) setGrade(studentId, courseId, grade);
               else { alert('Please enter a grade between 0 and 100.'); return; }
             }
-            renderGrades(); renderStudentCourses();
+            renderGrades();
+            renderStudentCourses();
           }
         }
         if (target.classList.contains('delete') && target.dataset.type === 'grade') {
@@ -1929,10 +2537,22 @@
       });
       document.addEventListener('click', function(e) {
         if (e.target.id === 'create-meeting-btn') {
-          alert('Schedule meeting form would open here.\n\nFor now, edit DEFAULT_MEETINGS in the code to add new meetings.');
+          const title = prompt('Enter meeting title:');
+          if (!title) return;
+          const teacher = prompt('Enter teacher name:');
+          if (!teacher) return;
+          const date = prompt('Enter date (YYYY-MM-DD):', new Date().toISOString().split('T')[0]);
+          if (!date) return;
+          const time = prompt('Enter time (e.g. 14:00 - 15:00):');
+          if (!time) return;
+          meetings.push({ id: nextMeetingId++, title: title, teacher: teacher, date: date, time: time, link: '#' });
+          saveData();
+          renderMeetings();
+          alert('Meeting created successfully!');
         }
       });
 
+      // Presentation controls
       document.getElementById('presentation-close').addEventListener('click', closePresentation);
       document.getElementById('presentation-next').addEventListener('click', nextSlide);
       document.getElementById('presentation-prev').addEventListener('click', prevSlide);
@@ -1948,32 +2568,186 @@
         }
       });
 
-      // Tasks events
+      // ----- Enhanced Task Events -----
+      // Task modal
+      taskModalCancel.addEventListener('click', function() { taskModalOverlay.classList.remove('open'); });
+      taskModalOverlay.addEventListener('click', function(e) { if (e.target === taskModalOverlay) taskModalOverlay.classList.remove('open'); });
+
       document.getElementById('add-task-btn').addEventListener('click', function() {
-        const title = prompt('Enter task title:'); if (!title) return;
-        const type = prompt('Enter task type (homework, test, assignment):', 'homework'); if (!type) return;
-        const description = prompt('Enter task description:'); if (!description) return;
-        const deadline = prompt('Enter deadline (YYYY-MM-DD):', '2026-09-01'); if (!deadline) return;
-        createTask(title, type, description, deadline);
+        taskModalTitle.textContent = 'Create Task';
+        taskModalSub.textContent = 'Fill in the task details below.';
+        taskModalTitleInput.value = '';
+        taskModalType.value = 'homework';
+        taskModalPriority.value = 'medium';
+        taskModalDescription.value = '';
+        taskModalDeadline.value = '';
+        taskModalAssign.value = 'all';
+        taskModalAssignOptions.style.display = 'none';
+        taskModalSave.textContent = 'Create Task';
+        taskModalOverlay.classList.add('open');
       });
 
+      taskModalAssign.addEventListener('change', function() {
+        const val = this.value;
+        const optionsContainer = taskModalAssignOptions;
+        if (val === 'all') {
+          optionsContainer.style.display = 'none';
+          return;
+        }
+        optionsContainer.style.display = 'block';
+        let html = '<label>Select ' + (val === 'course' ? 'Courses' : 'Students') + '</label>';
+        if (val === 'course') {
+          courses.forEach(function(c) {
+            html += '<div class="enrollment-item"><input type="checkbox" class="task-assign-checkbox" value="' + c.id + '" /><label>' + c.name + '</label></div>';
+          });
+        } else {
+          students.forEach(function(s) {
+            html += '<div class="enrollment-item"><input type="checkbox" class="task-assign-checkbox" value="' + s.id + '" /><label>' + s.name + '</label></div>';
+          });
+        }
+        optionsContainer.innerHTML = html;
+      });
+
+      taskModalForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const title = taskModalTitleInput.value.trim();
+        const type = taskModalType.value;
+        const priority = taskModalPriority.value;
+        const description = taskModalDescription.value.trim();
+        const deadline = taskModalDeadline.value;
+        const assignTo = taskModalAssign.value;
+
+        if (!title || !description || !deadline) {
+          alert('Please fill in all required fields.');
+          return;
+        }
+
+        let assignedIds = [];
+        if (assignTo !== 'all') {
+          const checkboxes = taskModalAssignOptions.querySelectorAll('.task-assign-checkbox:checked');
+          checkboxes.forEach(function(cb) { assignedIds.push(parseInt(cb.value)); });
+          if (assignedIds.length === 0) {
+            alert('Please select at least one ' + (assignTo === 'course' ? 'course' : 'student') + '.');
+            return;
+          }
+        }
+
+        createTask(title, type, description, deadline, priority, assignTo, assignedIds);
+        taskModalOverlay.classList.remove('open');
+      });
+
+      // Task search/filter
       document.getElementById('task-search').addEventListener('input', renderTasks);
       document.getElementById('task-type-filter').addEventListener('change', renderTasks);
+      document.getElementById('task-status-filter').addEventListener('change', renderTasks);
 
+      // Student task submit
       document.getElementById('student-task-list').addEventListener('click', function(e) {
         const target = e.target.closest('.submit-btn');
         if (target) {
           const taskId = parseInt(target.dataset.task);
           const input = document.getElementById('answer-' + taskId);
-          if (input) {
-            const answer = input.value.trim();
-            if (!answer) { alert('Please enter your answer.'); return; }
-            const student = students.find(function(s) { return s.name === currentUser.name; });
-            if (student) submitTaskAnswer(taskId, student.id, answer);
+          const fileInput = document.getElementById('file-' + taskId);
+          const student = students.find(function(s) { return s.name === currentUser.name; });
+          if (!student) return;
+
+          let fileData = null;
+          if (fileInput && fileInput.files && fileInput.files.length > 0) {
+            fileData = {
+              name: fileInput.files[0].name,
+              size: fileInput.files[0].size,
+              type: fileInput.files[0].type
+            };
+          }
+
+          const answer = input ? input.value.trim() : '';
+          if (!answer && !fileData) {
+            alert('Please enter your answer or upload a file.');
+            return;
+          }
+
+          submitTaskAnswer(taskId, student.id, answer, fileData);
+        }
+      });
+
+      // View submissions and grade
+      document.getElementById('admin-task-list').addEventListener('click', function(e) {
+        const target = e.target.closest('.view-submissions-btn');
+        if (target) {
+          const taskId = parseInt(target.dataset.task);
+          const task = tasks.find(function(t) { return t.id === taskId; });
+          if (!task) return;
+
+          const submissionKeys = Object.keys(taskSubmissions).filter(function(key) {
+            return key.startsWith(taskId + '-');
+          });
+
+          if (submissionKeys.length === 0) {
+            alert('No submissions yet for this task.');
+            return;
+          }
+
+          // Show a list of submissions with grade buttons
+          let message = '📋 Submissions for: ' + task.title + '\n\n';
+          let studentList = [];
+
+          submissionKeys.forEach(function(key) {
+            const studentId = parseInt(key.split('-')[1]);
+            const student = students.find(function(s) { return s.id === studentId; });
+            const submission = taskSubmissions[key];
+            if (student) {
+              const status = submission.grade !== null && submission.grade !== undefined ? '✅ Graded: ' + submission.grade + '%' : '⏳ Pending';
+              studentList.push({
+                id: studentId,
+                name: student.name,
+                status: status,
+                submission: submission
+              });
+            }
+          });
+
+          // Sort: ungraded first
+          studentList.sort(function(a, b) {
+            const aGraded = a.submission.grade !== null && a.submission.grade !== undefined;
+            const bGraded = b.submission.grade !== null && b.submission.grade !== undefined;
+            if (!aGraded && bGraded) return -1;
+            if (aGraded && !bGraded) return 1;
+            return a.name.localeCompare(b.name);
+          });
+
+          let listHtml = '<div style="max-height:400px;overflow-y:auto;">';
+          studentList.forEach(function(item) {
+            listHtml +=
+              '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);">' +
+                '<span><strong>' + item.name + '</strong> - ' + item.status + '</span>' +
+                '<button class="primary-button grade-submission-btn" data-task="' + taskId + '" data-student="' + item.id + '" style="padding:4px 12px;font-size:12px;">Grade</button>' +
+              '</div>';
+          });
+          listHtml += '</div>';
+
+          // Show in a modal-like prompt (we'll use a simple alert with list)
+          // Since we can't do custom modals easily here, we'll use the grade modal
+          // Let's just open the grade modal for the first ungraded student
+          const ungraded = studentList.find(function(item) {
+            return item.submission.grade === null || item.submission.grade === undefined;
+          });
+
+          if (ungraded) {
+            openGradeModal(taskId, ungraded.id);
+          } else {
+            // All graded, show summary
+            let summary = '📊 All submissions graded!\n\n';
+            studentList.forEach(function(item) {
+              summary += item.name + ': ' + item.submission.grade + '%';
+              if (item.submission.feedback) summary += ' - ' + item.submission.feedback;
+              summary += '\n';
+            });
+            alert(summary);
           }
         }
       });
 
+      // Delete task
       document.getElementById('admin-task-list').addEventListener('click', function(e) {
         const target = e.target.closest('.delete');
         if (target && target.dataset.type === 'task') {
@@ -1982,47 +2756,29 @@
         }
       });
 
-      document.getElementById('admin-task-list').addEventListener('click', function(e) {
-        const target = e.target.closest('.view-submissions-btn');
-        if (target) {
-          const taskId = parseInt(target.dataset.task);
-          const task = tasks.find(function(t) { return t.id === taskId; });
-          if (!task) return;
-          const submissionKeys = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(taskId + '-'); });
-          if (submissionKeys.length === 0) { alert('No submissions yet for this task.'); return; }
-          let message = 'Submissions for: ' + task.title + '\n\n';
-          submissionKeys.forEach(function(key) {
-            const studentId = parseInt(key.split('-')[1]);
-            const student = students.find(function(s) { return s.id === studentId; });
-            const submission = taskSubmissions[key];
-            if (student) {
-              message += student.name + ': ' + submission.answer + '\n';
-              if (submission.grade !== undefined) message += '  Grade: ' + submission.grade + '%' + (submission.feedback ? ' | Feedback: ' + submission.feedback : '') + '\n';
-            }
-          });
-          const grade = prompt(message + '\n\nEnter grade for a student (format: StudentName:Grade:Feedback)\nExample: Alex Student:85:Good work!');
-          if (grade) {
-            const parts = grade.split(':');
-            if (parts.length >= 2) {
-              const studentName = parts[0].trim();
-              const gradeValue = parseInt(parts[1].trim());
-              const feedback = parts.length >= 3 ? parts[2].trim() : '';
-              const student = students.find(function(s) { return s.name === studentName; });
-              if (student) {
-                const key = taskId + '-' + student.id;
-                if (taskSubmissions[key]) {
-                  taskSubmissions[key].grade = gradeValue;
-                  taskSubmissions[key].feedback = feedback;
-                  saveData(); renderTasks();
-                  alert('Grade saved for ' + student.name);
-                } else alert('No submission found for ' + studentName);
-              } else alert('Student not found: ' + studentName);
-            } else alert('Invalid format. Use: StudentName:Grade:Feedback');
-          }
+      // Grade task modal
+      gradeTaskModalCancel.addEventListener('click', function() { gradeTaskModalOverlay.classList.remove('open'); });
+      gradeTaskModalOverlay.addEventListener('click', function(e) { if (e.target === gradeTaskModalOverlay) gradeTaskModalOverlay.classList.remove('open'); });
+
+      gradeTaskModalForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (gradingTaskId === null || gradingStudentId === null) return;
+
+        const grade = parseFloat(gradeTaskGrade.value);
+        if (isNaN(grade) || grade < 0 || grade > 100) {
+          alert('Please enter a valid grade between 0 and 100.');
+          return;
         }
+
+        const feedback = gradeTaskFeedback.value.trim();
+        gradeSubmission(gradingTaskId, gradingStudentId, grade, feedback);
+        gradeTaskModalOverlay.classList.remove('open');
       });
 
-      // Add buttons
+      // Re-open grade modal from student list (for when all graded)
+      // We'll handle this via the view submissions button logic above
+
+      // ----- Add/Edit Buttons -----
       addStudentBtn.addEventListener('click', function() { openModal('student', 'add'); });
       addBudgetBtn.addEventListener('click', function() { openModal('budget', 'add'); });
       addCourseBtn.addEventListener('click', function() { openModal('course', 'add'); });

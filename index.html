@@ -2890,38 +2890,176 @@
         }
       });
 
-      // ----- Admin task events -----
-      document.getElementById('admin-task-list').addEventListener('click', function(e) {
-        const target = e.target.closest('.view-submissions-btn');
-        if (target) {
-          const taskId = parseInt(target.dataset.task);
-          const task = tasks.find(function(t) { return t.id === taskId; });
-          if (!task) return;
+     // ----- Admin task events -----
+document.getElementById('admin-task-list').addEventListener('click', function(e) {
+  const target = e.target.closest('.view-submissions-btn');
+  if (target) {
+    const taskId = parseInt(target.dataset.task);
+    const task = tasks.find(function(t) { return t.id === taskId; });
+    if (!task) return;
 
-          const submissionKeys = Object.keys(taskSubmissions).filter(function(key) {
-            return key.startsWith(taskId + '-');
+    const submissionKeys = Object.keys(taskSubmissions).filter(function(key) {
+      return key.startsWith(taskId + '-');
+    });
+
+    if (submissionKeys.length === 0) {
+      alert('No submissions yet for this task.');
+      return;
+    }
+
+    let studentList = [];
+    submissionKeys.forEach(function(key) {
+      const studentId = parseInt(key.split('-')[1]);
+      const student = students.find(function(s) { return s.id === studentId; });
+      const submission = taskSubmissions[key];
+      if (student) {
+        const status = submission.grade !== null && submission.grade !== undefined ? '✅ Graded: ' + submission.grade + '%' : '⏳ Pending';
+        studentList.push({
+          id: studentId,
+          name: student.name,
+          status: status,
+          submission: submission
+        });
+      }
+    });
+
+    studentList.sort(function(a, b) {
+      const aGraded = a.submission.grade !== null && a.submission.grade !== undefined;
+      const bGraded = b.submission.grade !== null && b.submission.grade !== undefined;
+      if (!aGraded && bGraded) return -1;
+      if (aGraded && !bGraded) return 1;
+      return a.name.localeCompare(b.name);
+    });
+
+    // Build a nice modal-like display with file links
+    let message = '📋 Submissions for: ' + task.title + '\n\n';
+    let hasFiles = false;
+
+    studentList.forEach(function(item) {
+      message += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+      message += '👤 ' + item.name + '\n';
+      message += '📝 Answer: ' + (item.submission.answer || '(No answer provided)') + '\n';
+      message += '📊 Status: ' + item.status + '\n';
+
+      if (item.submission.files && item.submission.files.length > 0) {
+        hasFiles = true;
+        message += '📎 Files:\n';
+        item.submission.files.forEach(function(file, index) {
+          message += '   ' + (index + 1) + '. ' + file.name + '\n';
+        });
+      }
+
+      if (item.submission.feedback) {
+        message += '💬 Feedback: ' + item.submission.feedback + '\n';
+      }
+      message += '\n';
+    });
+
+    // Show the submission details in a textarea for better viewing
+    const textarea = document.createElement('textarea');
+    textarea.style.width = '100%';
+    textarea.style.height = '400px';
+    textarea.style.padding = '12px';
+    textarea.style.fontSize = '13px';
+    textarea.style.fontFamily = 'monospace';
+    textarea.style.border = '1px solid var(--line)';
+    textarea.style.borderRadius = '8px';
+    textarea.style.background = '#fafafa';
+    textarea.value = message;
+    textarea.readOnly = true;
+
+    // Create a modal dialog for viewing submissions
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:20px;';
+
+    const modal = document.createElement('div');
+    modal.style.cssText = 'max-width:700px;width:100%;max-height:90vh;background:white;border-radius:18px;padding:24px;overflow:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);';
+
+    const title = document.createElement('h2');
+    title.textContent = '📋 Submissions: ' + task.title;
+    title.style.marginTop = '0';
+    title.style.marginBottom = '8px';
+
+    const sub = document.createElement('p');
+    sub.textContent = 'Total: ' + studentList.length + ' submissions';
+    sub.style.color = '#6b7280';
+    sub.style.marginBottom = '16px';
+
+    const textareaWrapper = document.createElement('div');
+    textareaWrapper.style.marginBottom = '16px';
+    textareaWrapper.appendChild(textarea);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = 'Close';
+    closeBtn.style.cssText = 'padding:10px 24px;background:#4f46e5;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer;';
+    closeBtn.addEventListener('click', function() {
+      document.body.removeChild(overlay);
+    });
+
+    const btnWrapper = document.createElement('div');
+    btnWrapper.style.display = 'flex';
+    btnWrapper.style.justifyContent = 'flex-end';
+    btnWrapper.appendChild(closeBtn);
+
+    modal.appendChild(title);
+    modal.appendChild(sub);
+    modal.appendChild(textareaWrapper);
+
+    // Add file download buttons if files exist
+    if (hasFiles) {
+      const downloadSection = document.createElement('div');
+      downloadSection.style.marginBottom = '16px';
+      downloadSection.style.padding = '12px';
+      downloadSection.style.background = '#f0fdf4';
+      downloadSection.style.borderRadius = '8px';
+      downloadSection.style.border = '1px solid #bbf7d0';
+
+      const downloadTitle = document.createElement('p');
+      downloadTitle.textContent = '📎 Click a file name to download:';
+      downloadTitle.style.margin = '0 0 8px 0';
+      downloadTitle.style.fontWeight = '700';
+      downloadTitle.style.fontSize = '13px';
+      downloadSection.appendChild(downloadTitle);
+
+      studentList.forEach(function(item) {
+        if (item.submission.files && item.submission.files.length > 0) {
+          const studentName = document.createElement('div');
+          studentName.textContent = '👤 ' + item.name;
+          studentName.style.fontWeight = '600';
+          studentName.style.fontSize = '13px';
+          studentName.style.marginTop = '6px';
+          downloadSection.appendChild(studentName);
+
+          item.submission.files.forEach(function(file) {
+            const fileLink = document.createElement('a');
+            fileLink.textContent = '📄 ' + file.name;
+            fileLink.style.cssText = 'display:inline-block;padding:2px 12px;margin:2px 6px 2px 0;background:white;border-radius:4px;border:1px solid #e5e7eb;font-size:12px;color:#4f46e5;text-decoration:none;cursor:pointer;';
+            fileLink.href = '#';
+            fileLink.addEventListener('click', function(e) {
+              e.preventDefault();
+              // For demo, show file info since we can't store actual file data
+              alert('📄 ' + file.name + '\n📊 Size: ' + (file.size || 'Unknown') + ' bytes\n📁 Type: ' + (file.type || 'Unknown') + '\n\n(File download would work in production with actual file data)');
+            });
+            downloadSection.appendChild(fileLink);
           });
+        }
+      });
 
-          if (submissionKeys.length === 0) {
-            alert('No submissions yet for this task.');
-            return;
-          }
+      modal.appendChild(downloadSection);
+    }
 
-          let studentList = [];
-          submissionKeys.forEach(function(key) {
-            const studentId = parseInt(key.split('-')[1]);
-            const student = students.find(function(s) { return s.id === studentId; });
-            const submission = taskSubmissions[key];
-            if (student) {
-              const status = submission.grade !== null && submission.grade !== undefined ? '✅ Graded: ' + submission.grade + '%' : '⏳ Pending';
-              studentList.push({
-                id: studentId,
-                name: student.name,
-                status: status,
-                submission: submission
-              });
-            }
-          });
+    modal.appendChild(btnWrapper);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    // Close on overlay click
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) {
+        document.body.removeChild(overlay);
+      }
+    });
+  }
+});
 
           studentList.sort(function(a, b) {
             const aGraded = a.submission.grade !== null && a.submission.grade !== undefined;

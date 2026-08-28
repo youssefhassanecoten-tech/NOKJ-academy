@@ -3236,6 +3236,34 @@
       window.closeFilePreview = closeFilePreview;
 
       // ----- Init -----
+           // ----- Make functions globally accessible -----
+      window.showLoginScreen = function() {
+        landingPage.classList.add('hidden');
+        loginScreen.classList.remove('hidden');
+        loginScreen.classList.add('open');
+        registerScreen.classList.remove('open');
+        registerScreen.classList.add('hidden');
+        app.classList.remove('logged-in');
+        loginError.textContent = '';
+        loginEmail.value = '';
+        loginPassword.value = '';
+      };
+
+      window.showRegisterScreen = function() {
+        landingPage.classList.add('hidden');
+        registerScreen.classList.remove('hidden');
+        registerScreen.classList.add('open');
+        loginScreen.classList.remove('open');
+        loginScreen.classList.add('hidden');
+        app.classList.remove('logged-in');
+        registerError.textContent = '';
+        registerName.value = '';
+        registerEmail.value = '';
+        registerPassword.value = '';
+        registerRole.value = 'Student';
+      };
+
+      // ----- Init -----
       loadData();
       setLanguage(currentLang);
       checkSession();

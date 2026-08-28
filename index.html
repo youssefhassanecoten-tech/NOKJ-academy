@@ -1236,7 +1236,7 @@
         </div>
       </section>
 
-      <!-- ===== CALENDAR (Teacher/Admin) ===== -->
+      <!-- ===== CALENDAR ===== -->
       <section class="page" id="calendar">
         <div class="heading"><h1>Class Calendar</h1><p>Schedule and manage your classes.</p></div>
 
@@ -2131,10 +2131,10 @@
           div.addEventListener('click', function() {
             const date = this.dataset.date;
             if (currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Teacher')) {
-              // Pre-fill schedule modal with selected date
               scheduleDate.value = date;
               openScheduleModal();
             } else {
+              const dayMeetings = meetings.filter(function(m) { return m.date === date; });
               alert('Classes on ' + date + ': ' + (dayMeetings.length > 0 ? dayMeetings.map(function(m) { return m.title; }).join(', ') : 'No classes scheduled.'));
             }
           });
@@ -2164,7 +2164,6 @@
         });
         upcomingClassesList.innerHTML = html;
 
-        // Add join handlers
         upcomingClassesList.querySelectorAll('.join-btn').forEach(function(btn) {
           btn.addEventListener('click', function() {
             const meetingId = parseInt(this.dataset.meeting);
@@ -2179,7 +2178,6 @@
           return;
         }
 
-        // Populate teacher dropdown
         scheduleTeacher.innerHTML = '';
         if (currentUser.role === 'Admin') {
           teachers.forEach(function(t) {
@@ -2267,7 +2265,6 @@
           return;
         }
 
-        // Update stats
         const totalTasks = tasks.length;
         let pendingCount = 0, submittedCount = 0, gradedCount = 0;
         tasks.forEach(function(task) {
@@ -2400,7 +2397,6 @@
             '<div class="task-footer">' + footerHtml + '</div>';
           container.appendChild(card);
 
-          // File upload listener
           const fileInput = document.getElementById('file-' + task.id);
           if (fileInput) {
             fileInput.addEventListener('change', function(e) {
@@ -2785,58 +2781,48 @@
       }
 
       // ----- Event Listeners -----
-      // Login
       loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         login(loginEmail.value.trim(), loginPassword.value.trim());
       });
 
-      // Register
       registerForm.addEventListener('submit', function(e) {
         e.preventDefault();
         register(registerName.value.trim(), registerEmail.value.trim(), registerPassword.value.trim(), registerRole.value);
       });
 
-      // Logout
       logoutBtn.addEventListener('click', logout);
 
-      // Navigation
       navButtons.forEach(function(btn) {
         btn.addEventListener('click', function() {
           openPage(btn.dataset.page);
         });
       });
 
-      // Language toggles
       if (langToggle) langToggle.addEventListener('click', toggleLanguage);
       if (loginLangToggle) loginLangToggle.addEventListener('click', toggleLanguage);
       if (registerLangToggle) registerLangToggle.addEventListener('click', toggleLanguage);
 
-      // Expandable rows
       document.addEventListener('click', function(e) {
         const target = e.target.closest('.expandable-row');
         if (target && target.dataset.expandId) toggleExpand(target.dataset.expandId);
       });
 
-      // Notification bell
       document.getElementById('notification-button').addEventListener('click', function() {
         alert('You have 2 new announcements and 1 assignment due tomorrow.');
       });
 
-      // Assignment buttons
       document.querySelectorAll('.assignment-button').forEach(function(btn) {
         btn.addEventListener('click', function() {
           alert('Assignment details and submissions will be added in the next development step.');
         });
       });
 
-      // File preview close
       document.getElementById('file-preview-close').addEventListener('click', closeFilePreview);
       document.getElementById('file-preview-overlay').addEventListener('click', function(e) {
         if (e.target === this) closeFilePreview();
       });
 
-      // Student table events
       studentTableBody.addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -2848,7 +2834,6 @@
         } else if (target.classList.contains('enroll')) openEnrollModal(id);
       });
 
-      // Budget table events
       document.getElementById('budget-table-body').addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -2860,7 +2845,6 @@
         }
       });
 
-      // Course table events
       courseTableBody.addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -2872,7 +2856,6 @@
         }
       });
 
-      // Grade table events
       document.getElementById('grade-table-body').addEventListener('click', function(e) {
         const target = e.target.closest('button');
         if (!target) return;
@@ -2908,7 +2891,6 @@
       document.getElementById('grade-course-filter').addEventListener('change', renderGrades);
       document.getElementById('grade-student-filter').addEventListener('change', renderGrades);
 
-      // Classroom events
       meetingGrid.addEventListener('click', function(e) {
         const target = e.target.closest('.join-btn');
         if (target) {
@@ -2920,7 +2902,6 @@
         }
       });
 
-      // Presentation controls
       document.getElementById('presentation-close').addEventListener('click', closePresentation);
       document.getElementById('presentation-next').addEventListener('click', nextSlide);
       document.getElementById('presentation-prev').addEventListener('click', prevSlide);
@@ -2936,7 +2917,6 @@
         }
       });
 
-      // Calendar navigation
       document.getElementById('calendar-prev').addEventListener('click', function() {
         if (currentMonth === 0) { currentMonth = 11; currentYear--; }
         else { currentMonth--; }
@@ -2948,7 +2928,6 @@
         renderCalendar();
       });
 
-      // Schedule class modal
       addClassBtn.addEventListener('click', openScheduleModal);
       scheduleModalCancel.addEventListener('click', function() { scheduleModalOverlay.classList.remove('open'); });
       scheduleModalOverlay.addEventListener('click', function(e) {
@@ -2973,7 +2952,6 @@
         scheduleModalOverlay.classList.remove('open');
       });
 
-      // Upcoming classes join buttons (delegated)
       upcomingClassesList.addEventListener('click', function(e) {
         const target = e.target.closest('.join-btn');
         if (target) {
@@ -2982,7 +2960,6 @@
         }
       });
 
-      // Task modal
       document.getElementById('add-task-btn').addEventListener('click', function() {
         document.getElementById('task-modal-title').textContent = 'Create Task';
         document.getElementById('task-modal-sub').textContent = 'Fill in the task details below.';
@@ -3078,12 +3055,10 @@
         document.getElementById('task-modal-overlay').classList.remove('open');
       });
 
-      // Task search/filter
       document.getElementById('task-search').addEventListener('input', renderTasks);
       document.getElementById('task-type-filter').addEventListener('change', renderTasks);
       document.getElementById('task-status-filter').addEventListener('change', renderTasks);
 
-      // Student task submit
       document.getElementById('student-task-list').addEventListener('click', function(e) {
         const target = e.target.closest('.submit-btn');
         if (target) {
@@ -3106,7 +3081,6 @@
         }
       });
 
-      // View submissions
       document.getElementById('admin-task-list').addEventListener('click', function(e) {
         const target = e.target.closest('.view-submissions-btn');
         if (target) {
@@ -3164,7 +3138,6 @@
         }
       });
 
-      // Delete task
       document.getElementById('admin-task-list').addEventListener('click', function(e) {
         const target = e.target.closest('.delete');
         if (target && target.dataset.type === 'task') {
@@ -3173,7 +3146,6 @@
         }
       });
 
-      // Grade task modal
       document.getElementById('grade-task-modal-cancel').addEventListener('click', function() {
         document.getElementById('grade-task-modal-overlay').classList.remove('open');
       });
@@ -3197,12 +3169,10 @@
         renderTasks();
       });
 
-      // Add buttons
       addStudentBtn.addEventListener('click', function() { openModal('student', 'add'); });
       document.getElementById('add-budget-btn').addEventListener('click', function() { openModal('budget', 'add'); });
       document.getElementById('add-course-btn').addEventListener('click', function() { openModal('course', 'add'); });
 
-      // Export buttons
       exportStudentsBtn.addEventListener('click', function() {
         const headers = ['Name', 'Email', 'Status', 'Enrolled Courses'];
         const data = students.map(function(s) {
@@ -3234,34 +3204,36 @@
         URL.revokeObjectURL(url);
       });
 
-      // Search/filter
       studentSearch.addEventListener('input', renderStudents);
       studentFilter.addEventListener('change', renderStudents);
       document.getElementById('budget-search').addEventListener('input', renderBudget);
       document.getElementById('budget-filter').addEventListener('change', renderBudget);
       document.getElementById('course-search').addEventListener('input', renderCourses);
 
-      // Modal events
       document.getElementById('modal-cancel').addEventListener('click', closeModal);
       document.getElementById('modal-overlay').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
       });
       document.getElementById('modal-form').addEventListener('submit', handleModalSubmit);
 
-      // Enrollment modal events
       document.getElementById('enroll-modal-cancel').addEventListener('click', closeEnrollModal);
       document.getElementById('enroll-modal-overlay').addEventListener('click', function(e) {
         if (e.target === this) closeEnrollModal();
       });
       document.getElementById('enroll-modal-save').addEventListener('click', saveEnrollments);
 
-      // Enter key on login/register
       loginPassword.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') loginForm.dispatchEvent(new Event('submit'));
       });
       registerPassword.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') registerForm.dispatchEvent(new Event('submit'));
       });
+
+      // ----- Make functions globally accessible for inline onclick -----
+      window.showLoginScreen = showLoginScreen;
+      window.showRegisterScreen = showRegisterScreen;
+      window.openFilePreview = openFilePreview;
+      window.closeFilePreview = closeFilePreview;
 
       // ----- Init -----
       loadData();

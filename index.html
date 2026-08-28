@@ -167,7 +167,6 @@
       background: linear-gradient(135deg, #f97316, #db2777);
     }
     .avatar.admin-avatar { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
-    .avatar.teacher-avatar { background: linear-gradient(135deg, #059669, #34d399); }
     .user-name strong, .user-name span { display: block; }
     .user-name strong { font-size: 12px; }
     .user-name span { margin-top: 2px; color: var(--muted); font-size: 10px; }
@@ -431,17 +430,19 @@
     /* --- FILE PREVIEW --- */
     .file-preview-overlay {
       display: none; position: fixed; inset: 0; z-index: 1000;
-      background: rgba(0,0,0,0.8); align-items: center; justify-content: center;
-      padding: 40px;
+      background: rgba(0,0,0,0.85); align-items: center; justify-content: center;
+      padding: 20px;
     }
     .file-preview-overlay.open { display: flex; }
     .file-preview-content {
-      max-width: 90%; max-height: 90%; background: white; border-radius: var(--radius);
+      max-width: 95%; max-height: 95%; background: white; border-radius: var(--radius);
       padding: 20px; overflow: auto; position: relative;
+      min-width: 300px; min-height: 200px;
     }
     .file-preview-content .preview-close {
       position: absolute; top: 10px; right: 20px;
       font-size: 30px; cursor: pointer; color: var(--muted);
+      z-index: 10;
     }
     .file-preview-content .preview-close:hover { color: var(--danger); }
     .file-preview-content .file-preview-iframe {
@@ -452,10 +453,15 @@
       max-height: 600px; overflow: auto;
     }
     .file-preview-content .file-preview-image {
-      max-width: 100%; max-height: 600px; border-radius: 8px;
+      max-width: 100%; max-height: 80vh; border-radius: 8px;
+      display: block; margin: 0 auto;
     }
     .file-preview-content .file-preview-fallback {
       padding: 40px; text-align: center; color: var(--muted);
+    }
+    .file-preview-content .file-preview-fallback a {
+      color: var(--primary);
+      text-decoration: underline;
     }
 
     /* --- MODALS --- */
@@ -1203,7 +1209,7 @@
       ];
 
       const DEFAULT_TASK_SUBMISSIONS = {
-        '1-1': { answer: 'x = -2, x = -3', submittedAt: '2026-08-29T10:00:00', grade: null, feedback: null, files: [{ name: 'my_work.pdf', size: 24567, type: 'application/pdf' }] },
+        '1-1': { answer: 'x = -2, x = -3', submittedAt: '2026-08-29T10:00:00', grade: null, feedback: null, files: [{ name: 'solution.jpg', size: 24567, type: 'image/jpeg' }] },
         '2-1': { answer: 'Ambition is the driving force in Macbeth...', submittedAt: '2026-08-30T14:00:00', grade: 85, feedback: 'Good analysis, could use more quotes.', files: [] },
         '3-1': { answer: '1. B, 2. A, 3. C, 4. D, 5. B', submittedAt: '2026-08-31T16:00:00', grade: null, feedback: null, files: [{ name: 'quiz_answers.docx', size: 12345, type: 'application/msword' }] }
       };
@@ -1219,7 +1225,6 @@
       // ----- Data Storage -----
       let students = [], courses = [], budgetEntries = [], enrollments = [];
       let gradeData = {}, tasks = [], taskSubmissions = {}, meetings = [];
-      let nextStudentId = 1, nextCourseId = 1, nextBudgetId = 1, nextTaskId = 4, nextMeetingId = 4;
       let currentUser = null, expandedRows = {};
       let currentSlide = 0, presentationSlides = [];
       let tempTaskFiles = [];
@@ -1304,7 +1309,6 @@
       const enrollModalCancel = document.getElementById('enroll-modal-cancel');
       const enrollModalSave = document.getElementById('enroll-modal-save');
 
-      // Task modal
       const taskModalOverlay = document.getElementById('task-modal-overlay');
       const taskModalTitle = document.getElementById('task-modal-title');
       const taskModalSub = document.getElementById('task-modal-sub');
@@ -1322,7 +1326,6 @@
       const taskFileList = document.getElementById('task-file-list');
       const addTaskBtn = document.getElementById('add-task-btn');
 
-      // Grade task modal
       const gradeTaskModalOverlay = document.getElementById('grade-task-modal-overlay');
       const gradeTaskModalForm = document.getElementById('grade-task-modal-form');
       const gradeTaskModalCancel = document.getElementById('grade-task-modal-cancel');
@@ -1342,9 +1345,6 @@
       const totalCoursesEl = document.getElementById('total-courses');
       const totalEnrollmentsEl = document.getElementById('total-enrollments');
       const totalRevenueEl = document.getElementById('total-revenue');
-
-      // ----- Language -----
-      let currentLang = localStorage.getItem('nokj-language') || 'en';
 
       // ----- Data Management -----
       function loadData() {
@@ -1449,23 +1449,37 @@
         return false;
       }
 
-      // ----- File Preview -----
+      // ----- File Preview with full support -----
       function openFilePreview(fileName, fileData) {
         const body = filePreviewBody;
         body.innerHTML = '';
 
         const ext = fileName.split('.').pop().toLowerCase();
-        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(ext);
+        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp', 'ico'].includes(ext);
         const isPDF = ext === 'pdf';
+        const isText = ['txt', 'md', 'csv', 'json', 'xml', 'html', 'css', 'js', 'log'].includes(ext);
+        const isDoc = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'].includes(ext);
 
         let content = '';
 
         if (isImage) {
-          content = '<img src="' + fileData + '" class="file-preview-image" />';
+          content = '<img src="' + fileData + '" class="file-preview-image" alt="' + fileName + '" />';
         } else if (isPDF) {
-          content = '<iframe src="' + fileData + '" class="file-preview-iframe" />';
+          content = '<iframe src="' + fileData + '" class="file-preview-iframe" title="' + fileName + '"></iframe>';
+        } else if (isText) {
+          try {
+            // Try to decode base64 data
+            const base64Data = fileData.split(',')[1] || fileData;
+            const decoded = atob(base64Data);
+            content = '<pre class="file-preview-text">' + decoded + '</pre>';
+          } catch (e) {
+            content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>Text preview not available.<br><a href="' + fileData + '" download="' + fileName + '">Download file</a></div>';
+          }
+        } else if (isDoc) {
+          // For Word/Excel/PowerPoint - show fallback with download
+          content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>This is a ' + ext.toUpperCase() + ' file.<br><a href="' + fileData + '" download="' + fileName + '">⬇️ Download file</a><br><br>💡 Tip: Save and open in the appropriate application (Word, Excel, or PowerPoint).</div>';
         } else {
-          content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>File preview not available. <a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">Download file</a></div>';
+          content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>File preview not available for this file type.<br><a href="' + fileData + '" download="' + fileName + '">⬇️ Download file</a></div>';
         }
 
         body.innerHTML = content;
@@ -1803,7 +1817,7 @@
           if (task.files && task.files.length > 0) {
             filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
             task.files.forEach(function(file) {
-              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="window.openFilePreview(\'' + file.name + '\', \'' + (file.data || '') + '\')">' + file.name + '</span></div>';
+              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="openFilePreview(\'' + file.name + '\', \'' + (file.data || '') + '\')">' + file.name + '</span></div>';
             });
             filesHtml += '</div>';
           }
@@ -1884,7 +1898,7 @@
           if (task.files && task.files.length > 0) {
             filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
             task.files.forEach(function(file) {
-              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="window.openFilePreview(\'' + file.name + '\', \'' + (file.data || '') + '\')">' + file.name + '</span></div>';
+              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="openFilePreview(\'' + file.name + '\', \'' + (file.data || '') + '\')">' + file.name + '</span></div>';
             });
             filesHtml += '</div>';
           }
@@ -2051,7 +2065,7 @@
         if (submission.files && submission.files.length > 0) {
           let html = '<strong>📎 Submission Files:</strong><div style="margin-top:4px;">';
           submission.files.forEach(function(file) {
-            html += '<span class="item-tag">📄 ' + file.name + '</span> ';
+            html += '<span class="item-tag file-preview-link" style="cursor:pointer;color:var(--primary);text-decoration:underline;" onclick="openFilePreview(\'' + file.name + '\', \'' + (file.data || '') + '\')">📄 ' + file.name + '</span> ';
           });
           html += '</div>';
           fileContainer.innerHTML = html;
@@ -2379,7 +2393,7 @@
         app.classList.remove('logged-in');
       }
 
-      // ----- Make functions globally accessible -----
+      // ----- Make functions globally accessible for inline onclick -----
       window.openFilePreview = openFilePreview;
 
       // ----- Event Listeners -----
@@ -2478,6 +2492,23 @@
       meetingGrid.addEventListener('click', function(e) {
         const target = e.target.closest('.join-btn');
         if (target) openPresentation(parseInt(target.dataset.meeting));
+      });
+
+      document.addEventListener('click', function(e) {
+        if (e.target.id === 'create-meeting-btn') {
+          const title = prompt('Enter meeting title:');
+          if (!title) return;
+          const teacher = prompt('Enter teacher name:');
+          if (!teacher) return;
+          const date = prompt('Enter date (YYYY-MM-DD):', new Date().toISOString().split('T')[0]);
+          if (!date) return;
+          const time = prompt('Enter time (e.g. 14:00 - 15:00):');
+          if (!time) return;
+          meetings.push({ id: meetings.length + 1, title: title, teacher: teacher, date: date, time: time, link: '#' });
+          saveData();
+          renderMeetings();
+          alert('Meeting created successfully!');
+        }
       });
 
       // ----- Presentation controls -----
@@ -2641,7 +2672,7 @@
         }
       });
 
-      // ----- Admin task events - View Submissions -----
+      // ----- Admin task events - View Submissions with Grade Button -----
       document.getElementById('admin-task-list').addEventListener('click', function(e) {
         const target = e.target.closest('.view-submissions-btn');
         if (target) {
@@ -2682,36 +2713,12 @@
             return a.name.localeCompare(b.name);
           });
 
-          // Build a nice modal with submissions
-          let message = '📋 Submissions for: ' + task.title + '\n\n';
-          let hasFiles = false;
-
-          studentList.forEach(function(item) {
-            message += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
-            message += '👤 ' + item.name + '\n';
-            message += '📝 Answer: ' + (item.submission.answer || '(No answer provided)') + '\n';
-            message += '📊 Status: ' + item.status + '\n';
-
-            if (item.submission.files && item.submission.files.length > 0) {
-              hasFiles = true;
-              message += '📎 Files:\n';
-              item.submission.files.forEach(function(file, index) {
-                message += '   ' + (index + 1) + '. ' + file.name + '\n';
-              });
-            }
-
-            if (item.submission.feedback) {
-              message += '💬 Feedback: ' + item.submission.feedback + '\n';
-            }
-            message += '\n';
-          });
-
-          // Show in a modal overlay
+          // Build a modal with submissions AND grade buttons
           const overlay = document.createElement('div');
           overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:20px;';
 
           const modal = document.createElement('div');
-          modal.style.cssText = 'max-width:700px;width:100%;max-height:90vh;background:white;border-radius:18px;padding:24px;overflow:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);';
+          modal.style.cssText = 'max-width:750px;width:100%;max-height:90vh;background:white;border-radius:18px;padding:24px;overflow:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);';
 
           const title = document.createElement('h2');
           title.textContent = '📋 Submissions: ' + task.title;
@@ -2723,14 +2730,62 @@
           sub.style.color = '#6b7280';
           sub.style.marginBottom = '16px';
 
-          const textarea = document.createElement('textarea');
-          textarea.style.cssText = 'width:100%;height:300px;padding:12px;font-size:13px;font-family:monospace;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;';
-          textarea.value = message;
-          textarea.readOnly = true;
+          modal.appendChild(title);
+          modal.appendChild(sub);
+
+          // Show each student's submission with grade button
+          studentList.forEach(function(item) {
+            const section = document.createElement('div');
+            section.style.cssText = 'padding:12px;margin-bottom:12px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;';
+
+            const nameRow = document.createElement('div');
+            nameRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;';
+            nameRow.innerHTML = '<strong>' + item.name + '</strong> <span>' + item.status + '</span>';
+            section.appendChild(nameRow);
+
+            const answerRow = document.createElement('div');
+            answerRow.style.cssText = 'margin-top:6px;font-size:13px;color:#4b5563;';
+            answerRow.textContent = '📝 ' + (item.submission.answer || 'No answer provided.');
+            section.appendChild(answerRow);
+
+            // Show files
+            if (item.submission.files && item.submission.files.length > 0) {
+              const filesRow = document.createElement('div');
+              filesRow.style.cssText = 'margin-top:4px;font-size:12px;';
+              filesRow.innerHTML = '<strong>📎 Files:</strong> ';
+              item.submission.files.forEach(function(file) {
+                const link = document.createElement('span');
+                link.style.cssText = 'color:#4f46e5;text-decoration:underline;cursor:pointer;margin-right:8px;';
+                link.textContent = file.name;
+                link.onclick = function() { openFilePreview(file.name, ''); };
+                filesRow.appendChild(link);
+              });
+              section.appendChild(filesRow);
+            }
+
+            // Grade button (only if not graded yet)
+            if (item.submission.grade === null || item.submission.grade === undefined) {
+              const gradeBtn = document.createElement('button');
+              gradeBtn.textContent = '⭐ Grade';
+              gradeBtn.style.cssText = 'margin-top:8px;padding:4px 16px;background:#4f46e5;color:white;border:0;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px;';
+              gradeBtn.onclick = function() {
+                openGradeModal(taskId, item.id);
+                document.body.removeChild(overlay);
+              };
+              section.appendChild(gradeBtn);
+            } else if (item.submission.feedback) {
+              const feedbackRow = document.createElement('div');
+              feedbackRow.style.cssText = 'margin-top:4px;font-size:12px;color:#6b7280;';
+              feedbackRow.textContent = '💬 Feedback: ' + item.submission.feedback;
+              section.appendChild(feedbackRow);
+            }
+
+            modal.appendChild(section);
+          });
 
           const closeBtn = document.createElement('button');
           closeBtn.textContent = 'Close';
-          closeBtn.style.cssText = 'padding:10px 24px;background:#4f46e5;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer;margin-top:16px;';
+          closeBtn.style.cssText = 'padding:10px 24px;background:#4f46e5;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer;margin-top:8px;';
           closeBtn.addEventListener('click', function() {
             document.body.removeChild(overlay);
           });
@@ -2739,44 +2794,8 @@
           btnWrapper.style.display = 'flex';
           btnWrapper.style.justifyContent = 'flex-end';
           btnWrapper.appendChild(closeBtn);
-
-          modal.appendChild(title);
-          modal.appendChild(sub);
-          modal.appendChild(textarea);
-
-          // Show files section if any
-          if (hasFiles) {
-            const filesSection = document.createElement('div');
-            filesSection.style.cssText = 'margin-top:12px;padding:12px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;';
-            const filesTitle = document.createElement('p');
-            filesTitle.textContent = '📎 Submitted Files:';
-            filesTitle.style.margin = '0 0 8px 0';
-            filesTitle.style.fontWeight = '700';
-            filesTitle.style.fontSize = '13px';
-            filesSection.appendChild(filesTitle);
-
-            studentList.forEach(function(item) {
-              if (item.submission.files && item.submission.files.length > 0) {
-                const nameDiv = document.createElement('div');
-                nameDiv.textContent = '👤 ' + item.name;
-                nameDiv.style.fontWeight = '600';
-                nameDiv.style.fontSize = '13px';
-                nameDiv.style.marginTop = '6px';
-                filesSection.appendChild(nameDiv);
-
-                item.submission.files.forEach(function(file) {
-                  const fileSpan = document.createElement('span');
-                  fileSpan.textContent = '📄 ' + file.name;
-                  fileSpan.style.cssText = 'display:inline-block;padding:2px 12px;margin:2px 6px 2px 0;background:white;border-radius:4px;border:1px solid #e5e7eb;font-size:12px;';
-                  filesSection.appendChild(fileSpan);
-                });
-              }
-            });
-
-            modal.appendChild(filesSection);
-          }
-
           modal.appendChild(btnWrapper);
+
           overlay.appendChild(modal);
           document.body.appendChild(overlay);
 
@@ -2814,6 +2833,8 @@
         const feedback = gradeTaskFeedback.value.trim();
         gradeSubmission(gradingTaskId, gradingStudentId, grade, feedback);
         gradeTaskModalOverlay.classList.remove('open');
+        // Re-render to update the view
+        renderTasks();
       });
 
       // ----- Add buttons -----

@@ -1209,9 +1209,9 @@
       ];
 
       const DEFAULT_TASK_SUBMISSIONS = {
-        '1-1': { answer: 'x = -2, x = -3', submittedAt: '2026-08-29T10:00:00', grade: null, feedback: null, files: [{ name: 'solution.jpg', size: 24567, type: 'image/jpeg' }] },
+        '1-1': { answer: 'x = -2, x = -3', submittedAt: '2026-08-29T10:00:00', grade: null, feedback: null, files: [{ name: 'solution.jpg', size: 24567, type: 'image/jpeg', data: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAg...' }] },
         '2-1': { answer: 'Ambition is the driving force in Macbeth...', submittedAt: '2026-08-30T14:00:00', grade: 85, feedback: 'Good analysis, could use more quotes.', files: [] },
-        '3-1': { answer: '1. B, 2. A, 3. C, 4. D, 5. B', submittedAt: '2026-08-31T16:00:00', grade: null, feedback: null, files: [{ name: 'quiz_answers.docx', size: 12345, type: 'application/msword' }] }
+        '3-1': { answer: '1. B, 2. A, 3. C, 4. D, 5. B', submittedAt: '2026-08-31T16:00:00', grade: null, feedback: null, files: [{ name: 'quiz_answers.docx', size: 12345, type: 'application/msword', data: 'data:application/msword;base64,/9j/4AAQSkZJRgABAQEAYABgAAD...' }] }
       };
 
       const DEFAULT_PRESENTATION = [
@@ -1450,47 +1450,51 @@
       }
 
       // ----- File Preview with full support -----
-function openFilePreview(fileName, fileData) {
-  const body = filePreviewBody;
-  body.innerHTML = '';
+      function openFilePreview(fileName, fileData) {
+        const body = filePreviewBody;
+        body.innerHTML = '';
 
-  // If fileData is empty or just a placeholder, show a message
-  if (!fileData || fileData === '' || fileData === 'dummy-pdf-data' || fileData === 'dummy-doc-data') {
-    body.innerHTML = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>This file was uploaded but the content is not available in demo mode.<br><br>💡 <strong>Real file content would appear here.</strong></div>';
-    filePreviewOverlay.classList.add('open');
-    return;
-  }
+        // If fileData is empty or just a placeholder, show a message
+        if (!fileData || fileData === '' || fileData === 'dummy-pdf-data' || fileData === 'dummy-doc-data') {
+          body.innerHTML = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>This file was uploaded but the content is not available in demo mode.<br><br>💡 <strong>Real file content would appear here.</strong></div>';
+          filePreviewOverlay.classList.add('open');
+          return;
+        }
 
-  const ext = fileName.split('.').pop().toLowerCase();
-  const isImage = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp', 'ico'].includes(ext);
-  const isPDF = ext === 'pdf';
-  const isText = ['txt', 'md', 'csv', 'json', 'xml', 'html', 'css', 'js', 'log'].includes(ext);
-  const isDoc = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'].includes(ext);
+        const ext = fileName.split('.').pop().toLowerCase();
+        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp', 'ico'].includes(ext);
+        const isPDF = ext === 'pdf';
+        const isText = ['txt', 'md', 'csv', 'json', 'xml', 'html', 'css', 'js', 'log'].includes(ext);
+        const isDoc = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'].includes(ext);
 
-  let content = '';
+        let content = '';
 
-  if (isImage) {
-    content = '<img src="' + fileData + '" class="file-preview-image" alt="' + fileName + '" />';
-  } else if (isPDF) {
-    content = '<iframe src="' + fileData + '" class="file-preview-iframe" title="' + fileName + '"></iframe>';
-  } else if (isText) {
-    try {
-      // Try to decode base64 data
-      const base64Data = fileData.split(',')[1] || fileData;
-      const decoded = atob(base64Data);
-      content = '<pre class="file-preview-text">' + decoded + '</pre>';
-    } catch (e) {
-      content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>Text preview not available.<br><a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">⬇️ Download file</a></div>';
-    }
-  } else if (isDoc) {
-    content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>This is a ' + ext.toUpperCase() + ' file.<br><br><a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">⬇️ Download file</a><br><br>💡 Tip: Save and open in the appropriate application (Word, Excel, or PowerPoint).</div>';
-  } else {
-    content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>File preview not available for this file type.<br><br><a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">⬇️ Download file</a></div>';
-  }
+        if (isImage) {
+          content = '<img src="' + fileData + '" class="file-preview-image" alt="' + fileName + '" />';
+        } else if (isPDF) {
+          content = '<iframe src="' + fileData + '" class="file-preview-iframe" title="' + fileName + '"></iframe>';
+        } else if (isText) {
+          try {
+            const base64Data = fileData.split(',')[1] || fileData;
+            const decoded = atob(base64Data);
+            content = '<pre class="file-preview-text">' + decoded + '</pre>';
+          } catch (e) {
+            content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>Text preview not available.<br><a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">⬇️ Download file</a></div>';
+          }
+        } else if (isDoc) {
+          content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>This is a ' + ext.toUpperCase() + ' file.<br><br><a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">⬇️ Download file</a><br><br>💡 Tip: Save and open in the appropriate application (Word, Excel, or PowerPoint).</div>';
+        } else {
+          content = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>File preview not available for this file type.<br><br><a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">⬇️ Download file</a></div>';
+        }
 
-  body.innerHTML = content;
-  filePreviewOverlay.classList.add('open');
-}
+        body.innerHTML = content;
+        filePreviewOverlay.classList.add('open');
+      }
+
+      function closeFilePreview() {
+        filePreviewOverlay.classList.remove('open');
+        filePreviewBody.innerHTML = '';
+      }
 
       // ----- Navigation -----
       function openPage(pageName) {
@@ -1952,49 +1956,48 @@ function openFilePreview(fileName, fileData) {
           container.appendChild(card);
         });
 
-       assignedTasks.forEach(function(task) {
-  const fileInput = document.getElementById('file-' + task.id);
-  if (fileInput) {
-    fileInput.addEventListener('change', function(e) {
-      const fileNameSpan = document.getElementById('file-name-' + task.id);
-      if (e.target.files && e.target.files.length > 0) {
-        const names = Array.from(e.target.files).map(function(f) { return f.name; }).join(', ');
-        fileNameSpan.textContent = names;
-        const studentId = students.find(function(s) { return s.name === currentUser.name; }).id;
-        const key = task.id + '-' + studentId;
-        if (!taskSubmissions[key]) {
-          taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null, files: [] };
-        }
-        
-        // Read file data as base64 for preview
-        const fileReaders = [];
-        const filesData = [];
-        let completed = 0;
-        
-        Array.from(e.target.files).forEach(function(file, index) {
-          const reader = new FileReader();
-          reader.onload = function(event) {
-            filesData[index] = {
-              name: file.name,
-              size: file.size,
-              type: file.type,
-              data: event.target.result // This contains the file content
-            };
-            completed++;
-            if (completed === e.target.files.length) {
-              taskSubmissions[key].files = filesData;
-              saveData();
-            }
-          };
-          reader.readAsDataURL(file);
+        assignedTasks.forEach(function(task) {
+          const fileInput = document.getElementById('file-' + task.id);
+          if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+              const fileNameSpan = document.getElementById('file-name-' + task.id);
+              if (e.target.files && e.target.files.length > 0) {
+                const names = Array.from(e.target.files).map(function(f) { return f.name; }).join(', ');
+                fileNameSpan.textContent = names;
+                const studentId = students.find(function(s) { return s.name === currentUser.name; }).id;
+                const key = task.id + '-' + studentId;
+                if (!taskSubmissions[key]) {
+                  taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null, files: [] };
+                }
+                
+                // Read file data as base64 for preview
+                const filesData = [];
+                let completed = 0;
+                
+                Array.from(e.target.files).forEach(function(file, index) {
+                  const reader = new FileReader();
+                  reader.onload = function(event) {
+                    filesData[index] = {
+                      name: file.name,
+                      size: file.size,
+                      type: file.type,
+                      data: event.target.result
+                    };
+                    completed++;
+                    if (completed === e.target.files.length) {
+                      taskSubmissions[key].files = filesData;
+                      saveData();
+                    }
+                  };
+                  reader.readAsDataURL(file);
+                });
+                
+              } else {
+                fileNameSpan.textContent = 'No files chosen';
+              }
+            });
+          }
         });
-        
-      } else {
-        fileNameSpan.textContent = 'No files chosen';
-      }
-    });
-  }
-});
       }
 
       function renderTasks() {
@@ -2083,15 +2086,15 @@ function openFilePreview(fileName, fileData) {
         gradeTaskSubmissionText.value = submission.answer || 'No answer provided.';
 
         const fileContainer = document.getElementById('grade-task-submission-file');
-       if (submission.files && submission.files.length > 0) {
-  let html = '<strong>📎 Submission Files:</strong><div style="margin-top:4px;">';
-  submission.files.forEach(function(file) {
-    const fileData = file.data || '';
-    html += '<span class="item-tag file-preview-link" style="cursor:pointer;color:var(--primary);text-decoration:underline;display:inline-block;margin:2px 4px;" onclick="openFilePreview(\'' + file.name + '\', \'' + fileData + '\')">📄 ' + file.name + '</span> ';
-  });
-  html += '</div>';
-  fileContainer.innerHTML = html;
-} else {
+        if (submission.files && submission.files.length > 0) {
+          let html = '<strong>📎 Submission Files:</strong><div style="margin-top:4px;">';
+          submission.files.forEach(function(file) {
+            const fileData = file.data || '';
+            html += '<span class="item-tag file-preview-link" style="cursor:pointer;color:var(--primary);text-decoration:underline;display:inline-block;margin:2px 4px;" onclick="openFilePreview(\'' + file.name + '\', \'' + fileData + '\')">📄 ' + file.name + '</span> ';
+          });
+          html += '</div>';
+          fileContainer.innerHTML = html;
+        } else {
           fileContainer.innerHTML = '<span style="color:var(--muted);font-size:12px;">No files uploaded.</span>';
         }
 
@@ -2770,21 +2773,21 @@ function openFilePreview(fileName, fileData) {
             answerRow.textContent = '📝 ' + (item.submission.answer || 'No answer provided.');
             section.appendChild(answerRow);
 
-            // Show files
-           if (item.submission.files && item.submission.files.length > 0) {
-  const filesRow = document.createElement('div');
-  filesRow.style.cssText = 'margin-top:4px;font-size:12px;';
-  filesRow.innerHTML = '<strong>📎 Files:</strong> ';
-  item.submission.files.forEach(function(file) {
-    const link = document.createElement('span');
-    link.style.cssText = 'color:#4f46e5;text-decoration:underline;cursor:pointer;margin-right:8px;';
-    link.textContent = file.name;
-    const fileData = file.data || '';
-    link.onclick = function() { openFilePreview(file.name, fileData); };
-    filesRow.appendChild(link);
-  });
-  section.appendChild(filesRow);
-}
+            // Show files with preview
+            if (item.submission.files && item.submission.files.length > 0) {
+              const filesRow = document.createElement('div');
+              filesRow.style.cssText = 'margin-top:4px;font-size:12px;';
+              filesRow.innerHTML = '<strong>📎 Files:</strong> ';
+              item.submission.files.forEach(function(file) {
+                const link = document.createElement('span');
+                link.style.cssText = 'color:#4f46e5;text-decoration:underline;cursor:pointer;margin-right:8px;';
+                link.textContent = file.name;
+                const fileData = file.data || '';
+                link.onclick = function() { openFilePreview(file.name, fileData); };
+                filesRow.appendChild(link);
+              });
+              section.appendChild(filesRow);
+            }
 
             // Grade button (only if not graded yet)
             if (item.submission.grade === null || item.submission.grade === undefined) {

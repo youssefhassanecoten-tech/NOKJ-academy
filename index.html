@@ -556,6 +556,66 @@
       background: #fafafa;
     }
 
+    /* Expandable rows */
+    .expandable-row {
+      cursor: pointer;
+    }
+
+    .expandable-row .expand-icon {
+      display: inline-block;
+      transition: transform 0.2s;
+      font-size: 12px;
+      margin-right: 6px;
+    }
+
+    .expandable-row .expand-icon.open {
+      transform: rotate(90deg);
+    }
+
+    .expandable-row td:first-child {
+      font-weight: 700;
+    }
+
+    .expandable-detail {
+      display: none;
+      background: #f8fafc;
+    }
+
+    .expandable-detail.open {
+      display: table-row;
+    }
+
+    .expandable-detail td {
+      padding: 0;
+      border-bottom: none;
+    }
+
+    .expandable-detail .detail-content {
+      padding: 16px 20px 16px 48px;
+      font-size: 13px;
+    }
+
+    .expandable-detail .detail-content .empty-msg {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .expandable-detail .detail-content .item-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      margin: 3px 6px 3px 0;
+      border-radius: 6px;
+      background: white;
+      border: 1px solid var(--line);
+      font-size: 12px;
+    }
+
+    .expandable-detail .detail-content .item-tag .status-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      margin-left: 6px;
+    }
+
     .status-badge {
       padding: 4px 10px;
       font-size: 11px;
@@ -1296,6 +1356,10 @@
       }
       .admin-stats {
         grid-template-columns: repeat(2, 1fr);
+      }
+      .expandable-detail .detail-content {
+        padding: 12px 16px 12px 32px;
+        font-size: 12px;
       }
     }
 
@@ -2184,6 +2248,9 @@
       let editingId = null;
       let enrollStudentId = null;
 
+      // Expand/collapse state
+      let expandedRows = {};
+
       // ----- Language -----
       let currentLang = localStorage.getItem('nokj-language') || 'en';
 
@@ -2335,7 +2402,11 @@
         'Enroll Student': 'Записать ученика',
         'Select courses for this student.': 'Выберите курсы для этого ученика.',
         'No courses available.': 'Нет доступных курсов.',
-        'No courses enrolled yet.': 'Вы еще не записаны на курсы.'
+        'No courses enrolled yet.': 'Вы еще не записаны на курсы.',
+        'Enrolled Students:': 'Записанные ученики:',
+        'Enrolled Courses:': 'Записанные курсы:',
+        'No students enrolled in this course.': 'На этот курс не записаны ученики.',
+        'Student not enrolled in any courses.': 'Ученик не записан ни на один курс.'
       };
 
       const originalText = new WeakMap();
@@ -2431,6 +2502,12 @@
         return enrollments
           .filter(function(e) { return e.studentId === studentId; })
           .map(function(e) { return e.courseId; });
+      }
+
+      function getEnrolledStudentIds(courseId) {
+        return enrollments
+          .filter(function(e) { return e.courseId === courseId; })
+          .map(function(e) { return e.studentId; });
       }
 
       function getStudentCourseCount(studentId) {
@@ -2544,10 +2621,18 @@
         studentTableBody.innerHTML = '';
 
         filtered.forEach(function(s) {
-          const tr = document.createElement('tr');
           const enrolledCount = getStudentCourseCount(s.id);
+          const isExpanded = expandedRows['student-' + s.id] || false;
+          const icon = isExpanded ? '▼' : '▶';
+
+          const tr = document.createElement('tr');
+          tr.className = 'expandable-row';
+          tr.dataset.expandId = 'student-' + s.id;
           tr.innerHTML =
-            '<td><strong>' + s.name + '</strong></td>' +
+            '<td style="cursor:pointer;">' +
+              '<span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon + '</span> ' +
+              '<strong>' + s.name + '</strong>' +
+            '</td>' +
             '<td>' + s.grade + '%</td>' +
             '<td>' + s.attendance + '%</td>' +
             '<td><span class="status-badge ' + s.status.toLowerCase() + '">' + s.status + '</span></td>' +
@@ -2557,6 +2642,29 @@
               '<button class="action-btn enroll" data-id="' + s.id + '" data-type="enroll">📚 Enroll</button>' +
             '</td>';
           studentTableBody.appendChild(tr);
+
+          // Detail row (expandable)
+          const detailTr = document.createElement('tr');
+          detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
+          detailTr.dataset.parentId = 'student-' + s.id;
+          const courseIds = getEnrolledCourseIds(s.id);
+          let detailHtml = '<div class="detail-content">';
+          detailHtml += '<strong>' + (currentLang === 'ru' ? 'Записанные курсы:' : 'Enrolled Courses:') + '</strong> ';
+
+          if (courseIds.length === 0) {
+            detailHtml += '<span class="empty-msg">' + (currentLang === 'ru' ? 'Ученик не записан ни на один курс.' : 'Student not enrolled in any courses.') + '</span>';
+          } else {
+            courseIds.forEach(function(cid) {
+              const c = courses.find(function(co) { return co.id === cid; });
+              if (c) {
+                detailHtml += '<span class="item-tag">📚 ' + c.name + ' <span style="color:var(--muted);font-size:11px;">(' + c.teacher + ')</span></span>';
+              }
+            });
+          }
+
+          detailHtml += '</div>';
+          detailTr.innerHTML = '<td colspan="5">' + detailHtml + '</td>';
+          studentTableBody.appendChild(detailTr);
         });
 
         const total = students.length;
@@ -2571,6 +2679,143 @@
         updateAdminStats();
       }
 
+      function renderCourses() {
+        const search = courseSearch.value.toLowerCase();
+
+        let filtered = courses.filter(function(c) {
+          return c.name.toLowerCase().includes(search);
+        });
+
+        filtered.sort(function(a, b) {
+          return a.name.localeCompare(b.name);
+        });
+
+        courseTableBody.innerHTML = '';
+
+        filtered.forEach(function(c) {
+          const studentCount = getCourseStudentCount(c.id);
+          const isExpanded = expandedRows['course-' + c.id] || false;
+          const icon = isExpanded ? '▼' : '▶';
+
+          const tr = document.createElement('tr');
+          tr.className = 'expandable-row';
+          tr.dataset.expandId = 'course-' + c.id;
+          tr.innerHTML =
+            '<td style="cursor:pointer;">' +
+              '<span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon + '</span> ' +
+              '<strong>' + c.name + '</strong><br>' +
+              '<span style="font-size:12px;color:var(--muted);">' + c.description + '</span>' +
+            '</td>' +
+            '<td>' + c.teacher + '</td>' +
+            '<td>' + studentCount + ' students</td>' +
+            '<td>' +
+              '<button class="action-btn edit" data-id="' + c.id + '" data-type="course">✏️</button>' +
+              '<button class="action-btn delete" data-id="' + c.id + '" data-type="course">🗑️</button>' +
+            '</td>';
+          courseTableBody.appendChild(tr);
+
+          // Detail row (expandable)
+          const detailTr = document.createElement('tr');
+          detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
+          detailTr.dataset.parentId = 'course-' + c.id;
+          const studentIds = getEnrolledStudentIds(c.id);
+          let detailHtml = '<div class="detail-content">';
+          detailHtml += '<strong>' + (currentLang === 'ru' ? 'Записанные ученики:' : 'Enrolled Students:') + '</strong> ';
+
+          if (studentIds.length === 0) {
+            detailHtml += '<span class="empty-msg">' + (currentLang === 'ru' ? 'На этот курс не записаны ученики.' : 'No students enrolled in this course.') + '</span>';
+          } else {
+            studentIds.forEach(function(sid) {
+              const s = students.find(function(st) { return st.id === sid; });
+              if (s) {
+                detailHtml += '<span class="item-tag">👤 ' + s.name + ' <span class="status-badge ' + s.status.toLowerCase() + '">' + s.status + '</span></span>';
+              }
+            });
+          }
+
+          detailHtml += '</div>';
+          detailTr.innerHTML = '<td colspan="4">' + detailHtml + '</td>';
+          courseTableBody.appendChild(detailTr);
+        });
+
+        courseCount.textContent = filtered.length + ' courses';
+        courseTotal.textContent = courses.length;
+        courseEnrollmentsTotal.textContent = enrollments.length;
+
+        updateAdminStats();
+      }
+
+      // ----- Render Functions for Expand/Collapse -----
+      function toggleExpand(expandId) {
+        expandedRows[expandId] = !expandedRows[expandId];
+        // Re-render the current table
+        const activePage = document.querySelector('.page.active');
+        if (activePage) {
+          const pageId = activePage.id;
+          if (pageId === 'students') {
+            renderStudents();
+          } else if (pageId === 'courses-admin') {
+            renderCourses();
+          }
+        }
+      }
+
+      // ----- Event Delegation for Expand/Collapse -----
+      document.addEventListener('click', function(e) {
+        const target = e.target.closest('.expandable-row');
+        if (target) {
+          const expandId = target.dataset.expandId;
+          if (expandId) {
+            toggleExpand(expandId);
+          }
+        }
+      });
+
+      // ----- Render Student Courses (Student View) -----
+      function renderStudentCourses() {
+        if (!currentUser) return;
+
+        const student = students.find(function(s) {
+          return s.name === currentUser.name;
+        });
+
+        if (!student) {
+          studentCoursesContainer.innerHTML = '<p>No student record found.</p>';
+          return;
+        }
+
+        const enrolledIds = getEnrolledCourseIds(student.id);
+        const enrolledCourses = courses.filter(function(c) {
+          return enrolledIds.includes(c.id);
+        });
+
+        if (enrolledCourses.length === 0) {
+          const msg = currentLang === 'ru' ? 'Вы еще не записаны на курсы.' : 'You are not enrolled in any courses yet.';
+          studentCoursesContainer.innerHTML = '<p style="color:var(--muted);">' + msg + '</p>';
+          return;
+        }
+
+        let html = '<div class="course-grid">';
+        enrolledCourses.forEach(function(c) {
+          const colors = ['', 'orange-cover', 'green-cover'];
+          const colorClass = colors[c.id % 3];
+          const progress = Math.floor(Math.random() * 30) + 60;
+          html +=
+            '<article class="course">' +
+              '<div class="course-cover ' + colorClass + '">' + c.name + '</div>' +
+              '<div class="course-body">' +
+                '<h3>' + c.name + '</h3>' +
+                '<p>Teacher: ' + c.teacher + '</p>' +
+                '<div class="track"><div class="fill" style="width: ' + progress + '%"></div></div>' +
+                '<div class="course-footer"><span>' + progress + '% complete</span><button class="link-button">Open course</button></div>' +
+              '</div>' +
+            '</article>';
+        });
+        html += '</div>';
+        studentCoursesContainer.innerHTML = html;
+      }
+
+      // ----- Render Budget -----
       function renderBudget() {
         const search = budgetSearch.value.toLowerCase();
         const filter = budgetFilter.value;
@@ -2622,84 +2867,6 @@
         budgetNet.style.color = (totalIncome - totalExpense) >= 0 ? 'var(--success)' : 'var(--danger)';
 
         updateAdminStats();
-      }
-
-      function renderCourses() {
-        const search = courseSearch.value.toLowerCase();
-
-        let filtered = courses.filter(function(c) {
-          return c.name.toLowerCase().includes(search);
-        });
-
-        filtered.sort(function(a, b) {
-          return a.name.localeCompare(b.name);
-        });
-
-        courseTableBody.innerHTML = '';
-
-        filtered.forEach(function(c) {
-          const tr = document.createElement('tr');
-          const studentCount = getCourseStudentCount(c.id);
-          tr.innerHTML =
-            '<td><strong>' + c.name + '</strong><br><span style="font-size:12px;color:var(--muted);">' + c.description + '</span></td>' +
-            '<td>' + c.teacher + '</td>' +
-            '<td>' + studentCount + ' students</td>' +
-            '<td>' +
-              '<button class="action-btn edit" data-id="' + c.id + '" data-type="course">✏️</button>' +
-              '<button class="action-btn delete" data-id="' + c.id + '" data-type="course">🗑️</button>' +
-            '</td>';
-          courseTableBody.appendChild(tr);
-        });
-
-        courseCount.textContent = filtered.length + ' courses';
-        courseTotal.textContent = courses.length;
-        courseEnrollmentsTotal.textContent = enrollments.length;
-
-        updateAdminStats();
-      }
-
-      function renderStudentCourses() {
-        if (!currentUser) return;
-
-        // Get the logged-in student's ID (find by name)
-        const student = students.find(function(s) {
-          return s.name === currentUser.name;
-        });
-
-        if (!student) {
-          studentCoursesContainer.innerHTML = '<p>No student record found.</p>';
-          return;
-        }
-
-        const enrolledIds = getEnrolledCourseIds(student.id);
-        const enrolledCourses = courses.filter(function(c) {
-          return enrolledIds.includes(c.id);
-        });
-
-        if (enrolledCourses.length === 0) {
-          const msg = currentLang === 'ru' ? 'Вы еще не записаны на курсы.' : 'You are not enrolled in any courses yet.';
-          studentCoursesContainer.innerHTML = '<p style="color:var(--muted);">' + msg + '</p>';
-          return;
-        }
-
-        let html = '<div class="course-grid">';
-        enrolledCourses.forEach(function(c) {
-          const colors = ['', 'orange-cover', 'green-cover'];
-          const colorClass = colors[c.id % 3];
-          const progress = Math.floor(Math.random() * 30) + 60; // Random progress 60-90%
-          html +=
-            '<article class="course">' +
-              '<div class="course-cover ' + colorClass + '">' + c.name + '</div>' +
-              '<div class="course-body">' +
-                '<h3>' + c.name + '</h3>' +
-                '<p>Teacher: ' + c.teacher + '</p>' +
-                '<div class="track"><div class="fill" style="width: ' + progress + '%"></div></div>' +
-                '<div class="course-footer"><span>' + progress + '% complete</span><button class="link-button">Open course</button></div>' +
-              '</div>' +
-            '</article>';
-        });
-        html += '</div>';
-        studentCoursesContainer.innerHTML = html;
       }
 
       function updateAdminStats() {
@@ -2882,13 +3049,11 @@
         if (!confirm(confirmMsg)) return;
 
         if (type === 'student') {
-          // Also remove enrollments for this student
           enrollments = enrollments.filter(function(e) { return e.studentId !== id; });
           students = students.filter(function(s) { return s.id !== id; });
           renderStudents();
           renderStudentCourses();
         } else if (type === 'course') {
-          // Also remove enrollments for this course
           enrollments = enrollments.filter(function(e) { return e.courseId !== id; });
           courses = courses.filter(function(c) { return c.id !== id; });
           renderCourses();
@@ -2947,12 +3112,10 @@
           }
         });
 
-        // Remove existing enrollments for this student
         enrollments = enrollments.filter(function(e) {
           return e.studentId !== enrollStudentId;
         });
 
-        // Add new enrollments
         selectedIds.forEach(function(courseId) {
           enrollments.push({ studentId: enrollStudentId, courseId: courseId });
         });
@@ -3069,6 +3232,7 @@
         app.classList.remove('logged-in');
         loginPassword.value = '';
         loginError.textContent = '';
+        expandedRows = {};
       }
 
       function checkSession() {

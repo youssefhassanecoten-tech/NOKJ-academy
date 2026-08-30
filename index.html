@@ -23,78 +23,200 @@
       --shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
     }
 
-    * { box-sizing: border-box; }
-    body { margin: 0; min-width: 320px; color: var(--ink); background: var(--bg); font-family: Inter, Arial, Helvetica, sans-serif; }
-    button { font: inherit; cursor: pointer; }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: Inter, Arial, Helvetica, sans-serif;
+    }
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
 
     /* --- LANDING PAGE --- */
     #landing-page {
-      display: flex; flex-direction: column; min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
       background: linear-gradient(135deg, #f0f4ff 0%, #e8edff 100%);
     }
-    #landing-page.hidden { display: none; }
+    #landing-page.hidden {
+      display: none;
+    }
 
     .landing-header {
-      padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;
-      background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-      position: sticky; top: 0; z-index: 10;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
-    .landing-header .brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; color: var(--primary); }
+    .landing-header .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+    }
     .landing-header .brand .brand-mark {
-      width: 40px; height: 40px; display: grid; place-items: center;
-      background: var(--primary); color: white; border-radius: 12px; font-size: 18px;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      background: var(--primary);
+      color: white;
+      border-radius: 12px;
+      font-size: 18px;
     }
-    .landing-header .auth-buttons { display: flex; gap: 12px; }
+    .landing-header .auth-buttons {
+      display: flex;
+      gap: 12px;
+    }
     .landing-header .auth-buttons .btn-outline {
-      padding: 10px 24px; border: 2px solid var(--primary); border-radius: 10px;
-      background: transparent; color: var(--primary); font-weight: 700;
+      padding: 10px 24px;
+      border: 2px solid var(--primary);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
     }
     .landing-header .auth-buttons .btn-primary {
-      padding: 10px 24px; border: 0; border-radius: 10px;
-      background: var(--primary); color: white; font-weight: 700;
+      padding: 10px 24px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
     }
-    .landing-header .auth-buttons .btn-outline:hover { background: var(--primary-light); }
-    .landing-header .auth-buttons .btn-primary:hover { background: var(--primary-dark); }
+    .landing-header .auth-buttons .btn-outline:hover {
+      background: var(--primary-light);
+    }
+    .landing-header .auth-buttons .btn-primary:hover {
+      background: var(--primary-dark);
+    }
 
     .landing-hero {
-      flex: 1; display: flex; align-items: center; justify-content: center;
-      padding: 60px 40px; gap: 60px; max-width: 1200px; margin: 0 auto;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+      gap: 60px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
-    .landing-hero .hero-content { flex: 1; }
-    .landing-hero .hero-content h1 { font-size: 48px; font-weight: 900; line-height: 1.1; margin: 0 0 16px 0; }
-    .landing-hero .hero-content h1 span { color: var(--primary); }
-    .landing-hero .hero-content p { font-size: 18px; color: var(--muted); line-height: 1.6; max-width: 480px; margin: 0 0 30px 0; }
-    .landing-hero .hero-content .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
+    .landing-hero .hero-content {
+      flex: 1;
+    }
+    .landing-hero .hero-content h1 {
+      font-size: 48px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin: 0 0 16px 0;
+    }
+    .landing-hero .hero-content h1 span {
+      color: var(--primary);
+    }
+    .landing-hero .hero-content p {
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 0 30px 0;
+    }
+    .landing-hero .hero-content .hero-buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
     .landing-hero .hero-content .hero-buttons .btn-large {
-      padding: 14px 36px; border: 0; border-radius: 12px; font-size: 16px; font-weight: 700;
+      padding: 14px 36px;
+      border: 0;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
     }
-    .landing-hero .hero-content .hero-buttons .btn-large.primary { background: var(--primary); color: white; }
-    .landing-hero .hero-content .hero-buttons .btn-large.primary:hover { background: var(--primary-dark); }
-    .landing-hero .hero-content .hero-buttons .btn-large.outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
-    .landing-hero .hero-content .hero-buttons .btn-large.outline:hover { background: var(--primary-light); }
-    .landing-hero .hero-image { flex: 1; text-align: center; }
+    .landing-hero .hero-content .hero-buttons .btn-large.primary {
+      background: var(--primary);
+      color: white;
+    }
+    .landing-hero .hero-content .hero-buttons .btn-large.primary:hover {
+      background: var(--primary-dark);
+    }
+    .landing-hero .hero-content .hero-buttons .btn-large.outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+    .landing-hero .hero-content .hero-buttons .btn-large.outline:hover {
+      background: var(--primary-light);
+    }
+    .landing-hero .hero-image {
+      flex: 1;
+      text-align: center;
+    }
     .landing-hero .hero-image .image-placeholder {
-      width: 100%; max-width: 500px; aspect-ratio: 1.2; border-radius: var(--radius);
+      width: 100%;
+      max-width: 500px;
+      aspect-ratio: 1.2;
+      border-radius: var(--radius);
       background: linear-gradient(135deg, var(--primary-light), #dbeafe);
-      display: flex; align-items: center; justify-content: center; font-size: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
     }
 
     .landing-features {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;
-      max-width: 1200px; margin: 0 auto; padding: 40px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px;
     }
     .landing-features .feature-card {
-      padding: 30px; border-radius: var(--radius); background: white;
-      box-shadow: var(--shadow); text-align: center;
+      padding: 30px;
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: var(--shadow);
+      text-align: center;
     }
-    .landing-features .feature-card .icon { font-size: 40px; margin-bottom: 12px; }
-    .landing-features .feature-card h3 { margin: 0 0 8px 0; font-size: 18px; }
-    .landing-features .feature-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .landing-features .feature-card .icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+    .landing-features .feature-card h3 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+    }
+    .landing-features .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
 
     .landing-footer {
-      padding: 30px 40px; text-align: center; color: var(--muted); font-size: 13px;
-      border-top: 1px solid rgba(0,0,0,0.05);
+      padding: 30px 40px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     /* --- LOGIN SCREEN --- */
@@ -107,55 +229,129 @@
       background: linear-gradient(135deg, #312e81, #4f46e5, #7c3aed);
       position: relative;
     }
-    #login-screen.open { display: flex; }
-    #login-screen.hidden { display: none; }
+    #login-screen.open {
+      display: flex;
+    }
+    #login-screen.hidden {
+      display: none;
+    }
 
     .login-lang-toggle {
-      position: absolute; top: 24px; right: 24px;
-      width: 44px; height: 44px;
-      display: grid; place-items: center;
-      border: 2px solid rgba(255,255,255,0.3);
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(255, 255, 255, 0.3);
       border-radius: 12px;
-      background: rgba(255,255,255,0.15);
-      cursor: pointer; padding: 0;
+      background: rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      padding: 0;
     }
-    .login-lang-toggle:hover { background: rgba(255,255,255,0.25); }
-    .login-lang-toggle svg { width: 28px; height: 19px; }
+    .login-lang-toggle:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    .login-lang-toggle svg {
+      width: 28px;
+      height: 19px;
+    }
 
     .login-box {
-      width: 100%; max-width: 420px;
+      width: 100%;
+      max-width: 420px;
       padding: 40px 32px;
       border-radius: var(--radius);
       background: white;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
       position: relative;
     }
-    .login-box .brand { justify-content: center; padding: 0 0 24px 0; display: flex; align-items: center; gap: 11px; }
-    .login-box .brand strong { font-size: 20px; color: var(--ink); }
-    .login-box .brand small { color: var(--muted); font-size: 13px; }
-    .login-box .login-header { text-align: center; margin-bottom: 24px; }
-    .login-box .login-header h2 { margin: 0; font-size: 22px; }
-    .login-box .login-header p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
-    .login-box label { display: block; margin-bottom: 4px; font-size: 13px; font-weight: 700; }
+    .login-box .brand {
+      justify-content: center;
+      padding: 0 0 24px 0;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+    .login-box .brand strong {
+      font-size: 20px;
+      color: var(--ink);
+    }
+    .login-box .brand small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .login-box .login-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .login-box .login-header h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .login-box .login-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .login-box label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
     .login-box input {
-      width: 100%; padding: 12px 14px; margin-bottom: 16px;
-      border: 1px solid var(--line); border-radius: 10px;
-      font-size: 14px; background: #fafafa;
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 14px;
+      background: #fafafa;
       transition: border-color 0.2s;
     }
-    .login-box input:focus { outline: none; border-color: var(--primary); background: white; }
+    .login-box input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: white;
+    }
     .login-box .login-btn {
-      width: 100%; padding: 14px; color: white;
-      font-size: 15px; font-weight: 800;
-      border: 0; border-radius: 10px;
+      width: 100%;
+      padding: 14px;
+      color: white;
+      font-size: 15px;
+      font-weight: 800;
+      border: 0;
+      border-radius: 10px;
       background: var(--primary);
       transition: background 0.2s;
     }
-    .login-box .login-btn:hover { background: var(--primary-dark); }
-    .login-error { margin: 12px 0 0 0; color: var(--danger); font-size: 13px; text-align: center; min-height: 20px; }
-    .login-box .login-footer { text-align: center; margin-top: 16px; font-size: 14px; color: var(--muted); }
-    .login-box .login-footer a { color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: none; }
-    .login-box .login-footer a:hover { text-decoration: underline; }
+    .login-box .login-btn:hover {
+      background: var(--primary-dark);
+    }
+    .login-error {
+      margin: 12px 0 0 0;
+      color: var(--danger);
+      font-size: 13px;
+      text-align: center;
+      min-height: 20px;
+    }
+    .login-box .login-footer {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .login-box .login-footer a {
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .login-box .login-footer a:hover {
+      text-decoration: underline;
+    }
 
     /* --- REGISTER SCREEN --- */
     #register-screen {
@@ -167,657 +363,1844 @@
       background: linear-gradient(135deg, #312e81, #4f46e5, #7c3aed);
       position: relative;
     }
-    #register-screen.open { display: flex; }
-    #register-screen.hidden { display: none; }
+    #register-screen.open {
+      display: flex;
+    }
+    #register-screen.hidden {
+      display: none;
+    }
 
     .register-box {
-      width: 100%; max-width: 420px;
+      width: 100%;
+      max-width: 420px;
       padding: 40px 32px;
       border-radius: var(--radius);
       background: white;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
     }
-    .register-box .brand { justify-content: center; padding: 0 0 16px 0; display: flex; align-items: center; gap: 11px; }
-    .register-box .brand strong { font-size: 20px; color: var(--ink); }
-    .register-box .brand small { color: var(--muted); font-size: 13px; }
-    .register-box .register-header { text-align: center; margin-bottom: 20px; }
-    .register-box .register-header h2 { margin: 0; font-size: 22px; }
-    .register-box .register-header p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
-    .register-box label { display: block; margin-bottom: 4px; font-size: 13px; font-weight: 700; }
-    .register-box input, .register-box select {
-      width: 100%; padding: 12px 14px; margin-bottom: 14px;
-      border: 1px solid var(--line); border-radius: 10px;
-      font-size: 14px; background: #fafafa;
+    .register-box .brand {
+      justify-content: center;
+      padding: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 11px;
     }
-    .register-box input:focus, .register-box select:focus { outline: none; border-color: var(--primary); background: white; }
+    .register-box .brand strong {
+      font-size: 20px;
+      color: var(--ink);
+    }
+    .register-box .brand small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .register-box .register-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .register-box .register-header h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .register-box .register-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .register-box label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .register-box input,
+    .register-box select {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 14px;
+      background: #fafafa;
+    }
+    .register-box input:focus,
+    .register-box select:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: white;
+    }
     .register-box .register-btn {
-      width: 100%; padding: 14px; color: white;
-      font-size: 15px; font-weight: 800;
-      border: 0; border-radius: 10px;
+      width: 100%;
+      padding: 14px;
+      color: white;
+      font-size: 15px;
+      font-weight: 800;
+      border: 0;
+      border-radius: 10px;
       background: var(--primary);
     }
-    .register-box .register-btn:hover { background: var(--primary-dark); }
-    .register-error { margin: 12px 0 0 0; color: var(--danger); font-size: 13px; text-align: center; min-height: 20px; }
-    .register-box .register-footer { text-align: center; margin-top: 16px; font-size: 14px; color: var(--muted); }
-    .register-box .register-footer a { color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: none; }
+    .register-box .register-btn:hover {
+      background: var(--primary-dark);
+    }
+    .register-error {
+      margin: 12px 0 0 0;
+      color: var(--danger);
+      font-size: 13px;
+      text-align: center;
+      min-height: 20px;
+    }
+    .register-box .register-footer {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .register-box .register-footer a {
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
 
     /* --- MAIN APP --- */
-    #app { display: none; }
-    #app.logged-in { display: block; }
+    #app {
+      display: none;
+    }
+    #app.logged-in {
+      display: block;
+    }
 
     /* --- SIDEBAR --- */
     .sidebar {
-      width: 245px; min-height: 100vh; padding: 26px 15px;
-      display: flex; flex-direction: column;
-      position: fixed; inset: 0 auto 0 0;
+      width: 245px;
+      min-height: 100vh;
+      padding: 26px 15px;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      inset: 0 auto 0 0;
       color: white;
       background: linear-gradient(180deg, #312e81, #4f46e5 60%, #3730a3);
     }
-    .brand { padding: 0 12px 30px; display: flex; align-items: center; gap: 11px; }
-    .brand-mark {
-      width: 40px; height: 40px;
-      display: grid; place-items: center;
-      color: var(--primary-dark); font-size: 18px; font-weight: 900;
-      border-radius: 13px; background: white;
+    .brand {
+      padding: 0 12px 30px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
     }
-    .brand strong, .brand small { display: block; }
-    .brand strong { font-size: 16px; }
-    .brand small { margin-top: 2px; color: #c7d2fe; font-size: 11px; }
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      color: var(--primary-dark);
+      font-size: 18px;
+      font-weight: 900;
+      border-radius: 13px;
+      background: white;
+    }
+    .brand strong,
+    .brand small {
+      display: block;
+    }
+    .brand strong {
+      font-size: 16px;
+    }
+    .brand small {
+      margin-top: 2px;
+      color: #c7d2fe;
+      font-size: 11px;
+    }
     .nav-label {
-      padding: 0 12px; margin: 8px 0 9px;
-      color: #c7d2fe; font-size: 10px; font-weight: 800;
-      letter-spacing: 1px; text-transform: uppercase;
+      padding: 0 12px;
+      margin: 8px 0 9px;
+      color: #c7d2fe;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
     .nav-button {
-      width: 100%; padding: 12px;
-      display: flex; align-items: center; gap: 12px;
-      color: #e0e7ff; font-size: 14px; font-weight: 700;
-      text-align: left; border: 0; border-radius: 12px;
+      width: 100%;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #e0e7ff;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: left;
+      border: 0;
+      border-radius: 12px;
       background: transparent;
     }
-    .nav-button:hover, .nav-button.active {
-      color: white; background: rgba(255,255,255,0.16);
+    .nav-button:hover,
+    .nav-button.active {
+      color: white;
+      background: rgba(255, 255, 255, 0.16);
     }
-    .nav-icon { width: 20px; font-size: 17px; text-align: center; }
+    .nav-icon {
+      width: 20px;
+      font-size: 17px;
+      text-align: center;
+    }
     .help-card {
-      padding: 15px; margin: auto 8px 0;
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 15px; background: rgba(255,255,255,0.1);
+      padding: 15px;
+      margin: auto 8px 0;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.1);
     }
-    .help-card strong, .help-card span { display: block; }
-    .help-card strong { margin-bottom: 5px; font-size: 13px; }
-    .help-card span { color: #e0e7ff; font-size: 11px; line-height: 1.45; }
+    .help-card strong,
+    .help-card span {
+      display: block;
+    }
+    .help-card strong {
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+    .help-card span {
+      color: #e0e7ff;
+      font-size: 11px;
+      line-height: 1.45;
+    }
 
     /* --- TOPBAR --- */
-    main { min-height: 100vh; margin-left: 245px; }
+    main {
+      min-height: 100vh;
+      margin-left: 245px;
+    }
     .topbar {
-      min-height: 76px; padding: 15px 36px;
-      display: flex; align-items: center; justify-content: space-between; gap: 16px;
-      position: sticky; top: 0; z-index: 5;
+      min-height: 76px;
+      padding: 15px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
       border-bottom: 1px solid var(--line);
-      background: rgba(255,255,255,0.92);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(10px);
     }
     .search {
-      width: min(410px, 100%); padding: 10px 13px;
-      display: flex; gap: 9px; align-items: center;
-      border: 1px solid var(--line); border-radius: 12px;
+      width: min(410px, 100%);
+      padding: 10px 13px;
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 12px;
       background: #fafafa;
     }
-    .search input { width: 100%; border: 0; outline: 0; background: transparent; }
-    .user-area { display: flex; align-items: center; gap: 12px; }
+    .search input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+    }
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
     .notification {
-      width: 40px; height: 40px;
+      width: 40px;
+      height: 40px;
       font-size: 17px;
       border: 1px solid var(--line);
-      border-radius: 12px; background: white;
+      border-radius: 12px;
+      background: white;
     }
     .avatar {
-      width: 39px; height: 39px;
-      display: grid; place-items: center;
-      color: white; font-size: 12px; font-weight: 850;
+      width: 39px;
+      height: 39px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 850;
       border-radius: 50%;
       background: linear-gradient(135deg, #f97316, #db2777);
     }
-    .avatar.admin-avatar { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
-    .avatar.teacher-avatar { background: linear-gradient(135deg, #059669, #34d399); }
-    .user-name strong, .user-name span { display: block; }
-    .user-name strong { font-size: 12px; }
-    .user-name span { margin-top: 2px; color: var(--muted); font-size: 10px; }
+    .avatar.admin-avatar {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    }
+    .avatar.teacher-avatar {
+      background: linear-gradient(135deg, #059669, #34d399);
+    }
+    .user-name strong,
+    .user-name span {
+      display: block;
+    }
+    .user-name strong {
+      font-size: 12px;
+    }
+    .user-name span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 10px;
+    }
     .logout-btn {
-      padding: 6px 14px; font-size: 11px; font-weight: 700;
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 700;
       color: var(--danger);
-      border: 1px solid #fecaca; border-radius: 8px;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
       background: #fef2f2;
     }
-    .logout-btn:hover { background: #fee2e2; }
+    .logout-btn:hover {
+      background: #fee2e2;
+    }
 
     /* --- PAGES --- */
     .page {
-      display: none; max-width: 1380px;
-      padding: 35px 36px 100px; margin: 0 auto;
+      display: none;
+      max-width: 1380px;
+      padding: 35px 36px 100px;
+      margin: 0 auto;
     }
-    .page.active { display: block; animation: appear 0.2s ease; }
-    @keyframes appear { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    .heading { margin-bottom: 25px; }
-    .heading h1 { margin: 0; font-size: clamp(25px, 4vw, 31px); letter-spacing: -1px; }
-    .heading p { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+    .page.active {
+      display: block;
+      animation: appear 0.2s ease;
+    }
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .heading {
+      margin-bottom: 25px;
+    }
+    .heading h1 {
+      margin: 0;
+      font-size: clamp(25px, 4vw, 31px);
+      letter-spacing: -1px;
+    }
+    .heading p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
 
     /* --- HERO --- */
     .hero {
-      min-height: 190px; padding: 28px;
-      display: flex; align-items: flex-end; justify-content: space-between; gap: 18px;
-      overflow: hidden; position: relative;
-      color: white; border-radius: var(--radius);
+      min-height: 190px;
+      padding: 28px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      overflow: hidden;
+      position: relative;
+      color: white;
+      border-radius: var(--radius);
       background: linear-gradient(120deg, #3730a3, #4f46e5, #7c3aed);
       box-shadow: var(--shadow);
     }
     .hero::after {
-      width: 260px; height: 260px; content: "";
-      position: absolute; right: -95px; top: -145px;
-      border: 30px solid rgba(255,255,255,0.1); border-radius: 50%;
+      width: 260px;
+      height: 260px;
+      content: "";
+      position: absolute;
+      right: -95px;
+      top: -145px;
+      border: 30px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
     }
-    .eyebrow { margin: 0 0 10px; color: #c7d2fe; font-size: 11px; font-weight: 850; letter-spacing: 1px; text-transform: uppercase; }
-    .hero h2 { max-width: 610px; margin: 0; font-size: clamp(22px, 3vw, 30px); letter-spacing: -0.7px; }
-    .hero p:not(.eyebrow) { margin: 10px 0 0; color: #e0e7ff; font-size: 13px; }
-    .primary-button, .secondary-button { padding: 10px 14px; font-size: 12px; font-weight: 800; border-radius: 10px; }
-    .primary-button { color: white; border: 0; background: var(--primary); }
-    .hero .primary-button { min-width: 125px; color: var(--primary-dark); background: white; z-index: 1; }
-    .secondary-button { color: var(--primary); border: 1px solid #c7d2fe; background: white; }
+    .eyebrow {
+      margin: 0 0 10px;
+      color: #c7d2fe;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .hero h2 {
+      max-width: 610px;
+      margin: 0;
+      font-size: clamp(22px, 3vw, 30px);
+      letter-spacing: -0.7px;
+    }
+    .hero p:not(.eyebrow) {
+      margin: 10px 0 0;
+      color: #e0e7ff;
+      font-size: 13px;
+    }
+    .primary-button,
+    .secondary-button {
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 10px;
+    }
+    .primary-button {
+      color: white;
+      border: 0;
+      background: var(--primary);
+    }
+    .hero .primary-button {
+      min-width: 125px;
+      color: var(--primary-dark);
+      background: white;
+      z-index: 1;
+    }
+    .secondary-button {
+      color: var(--primary);
+      border: 1px solid #c7d2fe;
+      background: white;
+    }
 
     /* --- STATS --- */
-    .stats { margin: 23px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-    .stat-card, .panel, .course, .assignment-card, .announcement-card, .profile-card {
-      border: 1px solid var(--line); border-radius: var(--radius);
-      background: white; box-shadow: 0 3px 12px rgba(15,23,42,0.025);
+    .stats {
+      margin: 23px 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
     }
-    .stat-card { padding: 17px; }
-    .stat-head { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .stat-card,
+    .panel,
+    .course,
+    .assignment-card,
+    .announcement-card,
+    .profile-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.025);
+    }
+    .stat-card {
+      padding: 17px;
+    }
+    .stat-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
     .stat-head span:last-child {
-      width: 33px; height: 33px; display: grid; place-items: center;
-      font-size: 16px; border-radius: 10px; background: var(--primary-light);
+      width: 33px;
+      height: 33px;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      border-radius: 10px;
+      background: var(--primary-light);
     }
-    .stat-number { margin: 15px 0 4px; font-size: 26px; font-weight: 850; letter-spacing: -1px; }
-    .stat-note { color: var(--muted); font-size: 11px; }
+    .stat-number {
+      margin: 15px 0 4px;
+      font-size: 26px;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
+    .stat-note {
+      color: var(--muted);
+      font-size: 11px;
+    }
 
-    .admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
-    .admin-stat-card { padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: white; }
-    .admin-stat-card .label { color: var(--muted); font-size: 12px; font-weight: 700; }
-    .admin-stat-card .number { margin-top: 8px; font-size: 28px; font-weight: 850; }
-    .admin-stat-card .change { margin-top: 4px; font-size: 12px; color: var(--success); }
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .admin-stat-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+    .admin-stat-card .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .admin-stat-card .number {
+      margin-top: 8px;
+      font-size: 28px;
+      font-weight: 850;
+    }
+    .admin-stat-card .change {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--success);
+    }
 
     /* --- TABLES --- */
-    .table-container { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: white; }
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
     .table-toolbar {
-      padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
       border-bottom: 1px solid var(--line);
     }
-    .table-toolbar .left { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-    .table-toolbar .right { display: flex; gap: 10px; align-items: center; }
-    .table-toolbar input[type="text"], .table-toolbar select {
-      padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 13px; background: white;
+    .table-toolbar .left {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
     }
-    .table-toolbar input[type="text"]:focus, .table-toolbar select:focus { outline: none; border-color: var(--primary); }
-    .add-btn { padding: 8px 16px; color: white; font-size: 13px; font-weight: 700; border: 0; border-radius: 8px; background: var(--primary); }
-    .add-btn:hover { background: var(--primary-dark); }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    table th { padding: 14px 16px; text-align: left; font-weight: 700; border-bottom: 2px solid var(--line); background: #fafafa; }
-    table td { padding: 12px 16px; border-bottom: 1px solid #f0f1f4; }
-    table tr:hover td { background: #fafafa; }
+    .table-toolbar .right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .table-toolbar input[type="text"],
+    .table-toolbar select {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 13px;
+      background: white;
+    }
+    .table-toolbar input[type="text"]:focus,
+    .table-toolbar select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .add-btn {
+      padding: 8px 16px;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      border: 0;
+      border-radius: 8px;
+      background: var(--primary);
+    }
+    .add-btn:hover {
+      background: var(--primary-dark);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    table th {
+      padding: 14px 16px;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 2px solid var(--line);
+      background: #fafafa;
+    }
+    table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0f1f4;
+    }
+    table tr:hover td {
+      background: #fafafa;
+    }
 
-    .expandable-row { cursor: pointer; }
-    .expandable-row .expand-icon { display: inline-block; transition: transform 0.2s; font-size: 12px; margin-right: 6px; }
-    .expandable-row .expand-icon.open { transform: rotate(90deg); }
-    .expandable-detail { display: none; background: #f8fafc; }
-    .expandable-detail.open { display: table-row; }
-    .expandable-detail td { padding: 0; border-bottom: none; }
-    .expandable-detail .detail-content { padding: 16px 20px 16px 48px; font-size: 13px; }
-    .expandable-detail .detail-content .empty-msg { color: var(--muted); font-style: italic; }
+    .expandable-row {
+      cursor: pointer;
+    }
+    .expandable-row .expand-icon {
+      display: inline-block;
+      transition: transform 0.2s;
+      font-size: 12px;
+      margin-right: 6px;
+    }
+    .expandable-row .expand-icon.open {
+      transform: rotate(90deg);
+    }
+    .expandable-detail {
+      display: none;
+      background: #f8fafc;
+    }
+    .expandable-detail.open {
+      display: table-row;
+    }
+    .expandable-detail td {
+      padding: 0;
+      border-bottom: none;
+    }
+    .expandable-detail .detail-content {
+      padding: 16px 20px 16px 48px;
+      font-size: 13px;
+    }
+    .expandable-detail .detail-content .empty-msg {
+      color: var(--muted);
+      font-style: italic;
+    }
     .expandable-detail .detail-content .item-tag {
-      display: inline-block; padding: 4px 12px; margin: 3px 6px 3px 0;
-      border-radius: 6px; background: white; border: 1px solid var(--line); font-size: 12px;
+      display: inline-block;
+      padding: 4px 12px;
+      margin: 3px 6px 3px 0;
+      border-radius: 6px;
+      background: white;
+      border: 1px solid var(--line);
+      font-size: 12px;
     }
 
-    .status-badge { padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 6px; }
-    .status-badge.active { color: #047857; background: #d1fae5; }
-    .status-badge.warning { color: #92400e; background: #fef3c7; }
-    .status-badge.inactive { color: #b91c1c; background: #fee2e2; }
-    .status-badge.paid { color: #047857; background: #d1fae5; }
-    .status-badge.unpaid { color: #b91c1c; background: #fee2e2; }
-    .status-badge.pending { color: #92400e; background: #fef3c7; }
+    .status-badge {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 6px;
+    }
+    .status-badge.active {
+      color: #047857;
+      background: #d1fae5;
+    }
+    .status-badge.warning {
+      color: #92400e;
+      background: #fef3c7;
+    }
+    .status-badge.inactive {
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+    .status-badge.paid {
+      color: #047857;
+      background: #d1fae5;
+    }
+    .status-badge.unpaid {
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+    .status-badge.pending {
+      color: #92400e;
+      background: #fef3c7;
+    }
 
-    .action-btn { padding: 4px 10px; font-size: 12px; border: 1px solid var(--line); border-radius: 6px; background: white; margin-right: 4px; }
-    .action-btn.edit { color: var(--primary); border-color: #c7d2fe; }
-    .action-btn.edit:hover { background: var(--primary-light); }
-    .action-btn.delete { color: var(--danger); border-color: #fecaca; }
-    .action-btn.delete:hover { background: #fee2e2; }
-    .action-btn.enroll { color: var(--success); border-color: #a7f3d0; }
-    .action-btn.enroll:hover { background: #d1fae5; }
+    .action-btn {
+      padding: 4px 10px;
+      font-size: 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      margin-right: 4px;
+    }
+    .action-btn.edit {
+      color: var(--primary);
+      border-color: #c7d2fe;
+    }
+    .action-btn.edit:hover {
+      background: var(--primary-light);
+    }
+    .action-btn.delete {
+      color: var(--danger);
+      border-color: #fecaca;
+    }
+    .action-btn.delete:hover {
+      background: #fee2e2;
+    }
+    .action-btn.enroll {
+      color: var(--success);
+      border-color: #a7f3d0;
+    }
+    .action-btn.enroll:hover {
+      background: #d1fae5;
+    }
 
-    .table-summary { padding: 14px 20px; display: flex; gap: 24px; flex-wrap: wrap; border-top: 1px solid var(--line); font-size: 13px; background: #fafafa; }
-    .table-summary strong { color: var(--primary); }
-    .table-summary .total { font-weight: 700; }
-    .table-summary .total.income { color: var(--success); }
-    .table-summary .total.expense { color: var(--danger); }
+    .table-summary {
+      padding: 14px 20px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+      background: #fafafa;
+    }
+    .table-summary strong {
+      color: var(--primary);
+    }
+    .table-summary .total {
+      font-weight: 700;
+    }
+    .table-summary .total.income {
+      color: var(--success);
+    }
+    .table-summary .total.expense {
+      color: var(--danger);
+    }
 
     /* --- GRADES --- */
-    .grade-pass { color: var(--success); font-weight: 700; }
-    .grade-fail { color: var(--danger); font-weight: 700; }
-    .grade-input { width: 60px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 13px; text-align: center; }
-    .grade-input:focus { outline: none; border-color: var(--primary); }
-    .grade-cell { display: flex; align-items: center; gap: 8px; }
-    .grade-cell .save-grade-btn { padding: 2px 10px; font-size: 11px; border: 1px solid var(--primary); border-radius: 4px; background: var(--primary-light); color: var(--primary); cursor: pointer; }
-    .grade-cell .save-grade-btn:hover { background: var(--primary); color: white; }
-    .grade-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-    .grade-summary-card { padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: white; }
-    .grade-summary-card .label { color: var(--muted); font-size: 12px; font-weight: 700; }
-    .grade-summary-card .value { margin-top: 6px; font-size: 24px; font-weight: 850; }
-    .grade-summary-card .sub { margin-top: 4px; color: var(--muted); font-size: 12px; }
+    .grade-pass {
+      color: var(--success);
+      font-weight: 700;
+    }
+    .grade-fail {
+      color: var(--danger);
+      font-weight: 700;
+    }
+    .grade-input {
+      width: 60px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 13px;
+      text-align: center;
+    }
+    .grade-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .grade-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .grade-cell .save-grade-btn {
+      padding: 2px 10px;
+      font-size: 11px;
+      border: 1px solid var(--primary);
+      border-radius: 4px;
+      background: var(--primary-light);
+      color: var(--primary);
+      cursor: pointer;
+    }
+    .grade-cell .save-grade-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .grade-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .grade-summary-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+    .grade-summary-card .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .grade-summary-card .value {
+      margin-top: 6px;
+      font-size: 24px;
+      font-weight: 850;
+    }
+    .grade-summary-card .sub {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
 
     /* --- CLASSROOM --- */
-    .meeting-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; margin-top: 20px; }
-    .meeting-card {
-      border: 1px solid var(--line); border-radius: var(--radius);
-      background: white; overflow: hidden; transition: transform 0.2s;
+    .meeting-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 17px;
+      margin-top: 20px;
     }
-    .meeting-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .meeting-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .meeting-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
     .meeting-card .meeting-header {
       padding: 16px 20px;
       background: linear-gradient(135deg, #4f46e5, #7c3aed);
       color: white;
     }
-    .meeting-card .meeting-header h3 { margin: 0; font-size: 16px; }
-    .meeting-card .meeting-header .teacher { font-size: 12px; opacity: 0.8; margin-top: 4px; }
-    .meeting-card .meeting-body { padding: 16px 20px; }
-    .meeting-card .meeting-body .time { color: var(--muted); font-size: 13px; }
-    .meeting-card .meeting-body .join-btn {
-      margin-top: 12px; width: 100%; padding: 10px;
-      border: 0; border-radius: 8px;
-      background: var(--primary); color: white; font-weight: 700;
+    .meeting-card .meeting-header h3 {
+      margin: 0;
+      font-size: 16px;
     }
-    .meeting-card .meeting-body .join-btn:hover { background: var(--primary-dark); }
+    .meeting-card .meeting-header .teacher {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+    .meeting-card .meeting-body {
+      padding: 16px 20px;
+    }
+    .meeting-card .meeting-body .time {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .meeting-card .meeting-body .join-btn {
+      margin-top: 12px;
+      width: 100%;
+      padding: 10px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+    }
+    .meeting-card .meeting-body .join-btn:hover {
+      background: var(--primary-dark);
+    }
     .meeting-card .meeting-body .meeting-code {
-      display: inline-block; padding: 2px 10px; margin-top: 6px;
-      background: #f3f4f6; border-radius: 4px; font-size: 12px; font-family: monospace;
+      display: inline-block;
+      padding: 2px 10px;
+      margin-top: 6px;
+      background: #f3f4f6;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: monospace;
     }
 
     /* --- CALENDAR --- */
     .calendar-container {
-      background: white; border: 1px solid var(--line); border-radius: var(--radius);
-      overflow: hidden; margin-top: 20px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 20px;
     }
     .calendar-header {
-      padding: 20px 24px; display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       border-bottom: 1px solid var(--line);
     }
-    .calendar-header .month-label { font-size: 18px; font-weight: 700; }
-    .calendar-header .nav-btn {
-      padding: 6px 14px; border: 1px solid var(--line); border-radius: 6px;
-      background: white; font-size: 14px;
+    .calendar-header .month-label {
+      font-size: 18px;
+      font-weight: 700;
     }
-    .calendar-header .nav-btn:hover { background: var(--primary-light); }
+    .calendar-header .nav-btn {
+      padding: 6px 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      font-size: 14px;
+    }
+    .calendar-header .nav-btn:hover {
+      background: var(--primary-light);
+    }
     .calendar-grid {
-      display: grid; grid-template-columns: repeat(7, 1fr);
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
       border-collapse: collapse;
     }
     .calendar-grid .day-label {
-      padding: 12px; text-align: center; font-weight: 700; font-size: 12px;
-      color: var(--muted); border-bottom: 1px solid var(--line);
+      padding: 12px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
     }
     .calendar-grid .day-cell {
-      padding: 8px; min-height: 80px; border-right: 1px solid var(--line);
-      border-bottom: 1px solid var(--line); cursor: pointer;
+      padding: 8px;
+      min-height: 80px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
       transition: background 0.2s;
       position: relative;
     }
-    .calendar-grid .day-cell:nth-child(7n) { border-right: none; }
-    .calendar-grid .day-cell:hover { background: var(--primary-light); }
+    .calendar-grid .day-cell:nth-child(7n) {
+      border-right: none;
+    }
+    .calendar-grid .day-cell:hover {
+      background: var(--primary-light);
+    }
     .calendar-grid .day-cell .day-number {
-      font-weight: 700; font-size: 14px; color: var(--ink);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--ink);
     }
     .calendar-grid .day-cell .day-events {
-      margin-top: 4px; display: flex; flex-direction: column; gap: 2px;
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
     .calendar-grid .day-cell .day-events .event-dot {
-      padding: 2px 6px; border-radius: 4px; font-size: 9px;
-      background: var(--primary-light); color: var(--primary);
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      background: var(--primary-light);
+      color: var(--primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .calendar-grid .day-cell .day-events .event-dot.teacher {
-      background: #d1fae5; color: #047857;
+      background: #d1fae5;
+      color: #047857;
     }
-    .calendar-grid .day-cell.empty { cursor: default; background: #fafafa; }
-    .calendar-grid .day-cell.today { background: var(--primary-light); border-color: var(--primary); }
-    .calendar-grid .day-cell.today .day-number { color: var(--primary); }
+    .calendar-grid .day-cell.empty {
+      cursor: default;
+      background: #fafafa;
+    }
+    .calendar-grid .day-cell.today {
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+    .calendar-grid .day-cell.today .day-number {
+      color: var(--primary);
+    }
 
     /* --- PRESENTATION --- */
     .presentation-overlay {
-      display: none; position: fixed; inset: 0; z-index: 1000;
-      background: #1a1a2e; color: white; flex-direction: column;
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: #1a1a2e;
+      color: white;
+      flex-direction: column;
     }
-    .presentation-overlay.open { display: flex; }
+    .presentation-overlay.open {
+      display: flex;
+    }
     .presentation-overlay .presentation-toolbar {
-      padding: 12px 24px; display: flex; justify-content: space-between; align-items: center;
-      background: rgba(0,0,0,0.5);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.5);
     }
     .presentation-overlay .presentation-toolbar button {
-      padding: 6px 16px; border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 6px; background: transparent; color: white; cursor: pointer;
+      padding: 6px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      background: transparent;
+      color: white;
+      cursor: pointer;
     }
-    .presentation-overlay .presentation-toolbar button:hover { background: rgba(255,255,255,0.1); }
+    .presentation-overlay .presentation-toolbar button:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
     .presentation-overlay .presentation-slide {
-      flex: 1; display: flex; align-items: center; justify-content: center;
-      font-size: 48px; padding: 40px; text-align: center;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      padding: 40px;
+      text-align: center;
     }
-    .presentation-overlay .presentation-slide .slide-content { max-width: 800px; }
-    .presentation-overlay .presentation-slide .slide-content h2 { font-size: 42px; margin-bottom: 20px; }
-    .presentation-overlay .presentation-slide .slide-content p { font-size: 20px; color: #aaa; white-space: pre-wrap; }
+    .presentation-overlay .presentation-slide .slide-content {
+      max-width: 800px;
+    }
+    .presentation-overlay .presentation-slide .slide-content h2 {
+      font-size: 42px;
+      margin-bottom: 20px;
+    }
+    .presentation-overlay .presentation-slide .slide-content p {
+      font-size: 20px;
+      color: #aaa;
+      white-space: pre-wrap;
+    }
 
     /* --- TASKS --- */
-    .task-grid { display: grid; gap: 17px; margin-top: 20px; }
+    .task-grid {
+      display: grid;
+      gap: 17px;
+      margin-top: 20px;
+    }
     .task-card {
-      border: 1px solid var(--line); border-radius: var(--radius);
-      background: white; padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      padding: 20px;
       transition: box-shadow 0.2s;
     }
-    .task-card:hover { box-shadow: var(--shadow); }
+    .task-card:hover {
+      box-shadow: var(--shadow);
+    }
     .task-card .task-header {
-      display: flex; justify-content: space-between; align-items: start; gap: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 12px;
       flex-wrap: wrap;
     }
-    .task-card .task-header h3 { margin: 0; font-size: 16px; }
+    .task-card .task-header h3 {
+      margin: 0;
+      font-size: 16px;
+    }
     .task-card .task-header .task-type {
-      padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
       white-space: nowrap;
     }
-    .task-card .task-header .task-type.homework { background: #dbeafe; color: #1e40af; }
-    .task-card .task-header .task-type.test { background: #fee2e2; color: #b91c1c; }
-    .task-card .task-header .task-type.assignment { background: #d1fae5; color: #047857; }
+    .task-card .task-header .task-type.homework {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+    .task-card .task-header .task-type.test {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .task-card .task-header .task-type.assignment {
+      background: #d1fae5;
+      color: #047857;
+    }
 
-    .task-card .task-body { margin-top: 12px; }
-    .task-card .task-body .task-description { color: var(--muted); font-size: 14px; }
-    .task-card .task-body .task-deadline { margin-top: 8px; font-size: 12px; }
-    .task-card .task-body .task-deadline.overdue { color: var(--danger); }
-    .task-card .task-body .task-deadline.upcoming { color: var(--warning); }
-    .task-card .task-body .task-deadline.on-time { color: var(--success); }
+    .task-card .task-body {
+      margin-top: 12px;
+    }
+    .task-card .task-body .task-description {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .task-card .task-body .task-deadline {
+      margin-top: 8px;
+      font-size: 12px;
+    }
+    .task-card .task-body .task-deadline.overdue {
+      color: var(--danger);
+    }
+    .task-card .task-body .task-deadline.upcoming {
+      color: var(--warning);
+    }
+    .task-card .task-body .task-deadline.on-time {
+      color: var(--success);
+    }
 
     .task-card .task-body .task-files {
-      margin-top: 10px; padding: 10px; background: #f8fafc; border-radius: 8px;
+      margin-top: 10px;
+      padding: 10px;
+      background: #f8fafc;
+      border-radius: 8px;
     }
     .task-card .task-body .task-files .file-item {
-      display: flex; align-items: center; gap: 8px; padding: 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
     }
-    .task-card .task-body .task-files .file-item .file-icon { font-size: 18px; }
+    .task-card .task-body .task-files .file-item .file-icon {
+      font-size: 18px;
+    }
     .task-card .task-body .task-files .file-item .file-link {
-      color: var(--primary); text-decoration: underline; cursor: pointer; font-size: 13px;
+      color: var(--primary);
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 13px;
     }
 
     .task-card .task-footer {
-      margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
     }
     .task-card .task-footer .answer-input {
-      flex: 1; min-width: 150px; padding: 8px 12px;
-      border: 1px solid var(--line); border-radius: 8px; font-size: 14px;
+      flex: 1;
+      min-width: 150px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 14px;
     }
     .task-card .task-footer .submit-btn {
-      padding: 8px 20px; border: 0; border-radius: 8px;
-      background: var(--primary); color: white; font-weight: 700;
+      padding: 8px 20px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
     }
-    .task-card .task-footer .submit-btn:hover { background: var(--primary-dark); }
+    .task-card .task-footer .submit-btn:hover {
+      background: var(--primary-dark);
+    }
     .task-card .task-footer .submitted-status {
-      padding: 8px 16px; border-radius: 8px;
-      background: #d1fae5; color: #047857; font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #d1fae5;
+      color: #047857;
+      font-weight: 700;
     }
     .task-card .task-footer .graded-status {
-      padding: 8px 16px; border-radius: 8px;
-      background: #fef3c7; color: #92400e; font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #fef3c7;
+      color: #92400e;
+      font-weight: 700;
     }
     .task-card .task-footer .file-upload-btn {
-      padding: 6px 12px; border: 1px solid var(--line); border-radius: 6px;
-      background: white; cursor: pointer; font-size: 12px;
+      padding: 6px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      cursor: pointer;
+      font-size: 12px;
     }
-    .task-card .task-footer .file-upload-btn:hover { background: #f3f4f6; }
+    .task-card .task-footer .file-upload-btn:hover {
+      background: #f3f4f6;
+    }
     .task-card .task-footer .file-name {
-      font-size: 12px; color: var(--muted); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      font-size: 12px;
+      color: var(--muted);
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .task-card .task-priority {
-      padding: 2px 10px; border-radius: 4px; font-size: 10px; font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
     }
-    .task-card .task-priority.high { background: #fee2e2; color: #b91c1c; }
-    .task-card .task-priority.medium { background: #fef3c7; color: #92400e; }
-    .task-card .task-priority.low { background: #d1fae5; color: #047857; }
+    .task-card .task-priority.high {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .task-card .task-priority.medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .task-card .task-priority.low {
+      background: #d1fae5;
+      color: #047857;
+    }
 
     .task-admin-actions {
-      display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
       align-items: center;
     }
-    .task-admin-actions select, .task-admin-actions input {
-      padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px;
-      font-size: 13px; background: white;
+    .task-admin-actions select,
+    .task-admin-actions input {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 13px;
+      background: white;
     }
-    .task-admin-actions select:focus, .task-admin-actions input:focus {
-      outline: none; border-color: var(--primary);
+    .task-admin-actions select:focus,
+    .task-admin-actions input:focus {
+      outline: none;
+      border-color: var(--primary);
     }
 
     .task-stats-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
     }
     .task-stat-card {
-      padding: 16px; border: 1px solid var(--line); border-radius: var(--radius);
-      background: white; text-align: center;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      text-align: center;
     }
-    .task-stat-card .number { font-size: 28px; font-weight: 850; }
-    .task-stat-card .label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .task-stat-card .number {
+      font-size: 28px;
+      font-weight: 850;
+    }
+    .task-stat-card .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
 
     /* --- FILE PREVIEW --- */
     .file-preview-overlay {
-      display: none; position: fixed; inset: 0; z-index: 1000;
-      background: rgba(0,0,0,0.85); align-items: center; justify-content: center;
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.85);
+      align-items: center;
+      justify-content: center;
       padding: 20px;
     }
-    .file-preview-overlay.open { display: flex; }
+    .file-preview-overlay.open {
+      display: flex;
+    }
     .file-preview-content {
-      max-width: 95%; max-height: 95%; background: white; border-radius: var(--radius);
-      padding: 20px; overflow: auto; position: relative;
-      min-width: 300px; min-height: 200px;
+      max-width: 95%;
+      max-height: 95%;
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      overflow: auto;
+      position: relative;
+      min-width: 300px;
+      min-height: 200px;
     }
     .file-preview-content .preview-close {
-      position: absolute; top: 10px; right: 20px;
-      font-size: 30px; cursor: pointer; color: var(--muted);
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 30px;
+      cursor: pointer;
+      color: var(--muted);
       z-index: 10;
     }
-    .file-preview-content .preview-close:hover { color: var(--danger); }
+    .file-preview-content .preview-close:hover {
+      color: var(--danger);
+    }
     .file-preview-content .file-preview-iframe {
-      width: 100%; height: 600px; border: none; border-radius: 8px;
+      width: 100%;
+      height: 600px;
+      border: none;
+      border-radius: 8px;
     }
     .file-preview-content .file-preview-text {
-      white-space: pre-wrap; font-family: monospace; padding: 20px;
-      max-height: 600px; overflow: auto;
+      white-space: pre-wrap;
+      font-family: monospace;
+      padding: 20px;
+      max-height: 600px;
+      overflow: auto;
     }
     .file-preview-content .file-preview-image {
-      max-width: 100%; max-height: 80vh; border-radius: 8px;
-      display: block; margin: 0 auto;
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 8px;
+      display: block;
+      margin: 0 auto;
     }
     .file-preview-content .file-preview-fallback {
-      padding: 40px; text-align: center; color: var(--muted);
+      padding: 40px;
+      text-align: center;
+      color: var(--muted);
     }
 
     /* --- MODALS --- */
     .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 100;
-      background: rgba(0,0,0,0.5); align-items: center; justify-content: center; padding: 20px;
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
-    .modal-overlay.open { display: flex; }
+    .modal-overlay.open {
+      display: flex;
+    }
     .modal {
-      max-width: 600px; width: 100%; padding: 30px; border-radius: var(--radius);
-      background: white; box-shadow: 0 25px 60px rgba(0,0,0,0.3);
-      max-height: 90vh; overflow-y: auto;
+      max-width: 600px;
+      width: 100%;
+      padding: 30px;
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+      max-height: 90vh;
+      overflow-y: auto;
     }
-    .modal h2 { margin: 0 0 8px 0; font-size: 20px; }
-    .modal p.sub { margin: 0 0 20px 0; color: var(--muted); font-size: 13px; }
-    .modal label { display: block; margin-bottom: 4px; font-size: 13px; font-weight: 700; }
-    .modal input, .modal select, .modal textarea {
-      width: 100%; padding: 10px 12px; margin-bottom: 16px;
-      border: 1px solid var(--line); border-radius: 8px; font-size: 14px; background: #fafafa;
+    .modal h2 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
     }
-    .modal input:focus, .modal select:focus, .modal textarea:focus {
-      outline: none; border-color: var(--primary); background: white;
+    .modal p.sub {
+      margin: 0 0 20px 0;
+      color: var(--muted);
+      font-size: 13px;
     }
-    .modal textarea { min-height: 80px; resize: vertical; }
+    .modal label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .modal input,
+    .modal select,
+    .modal textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fafafa;
+    }
+    .modal input:focus,
+    .modal select:focus,
+    .modal textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: white;
+    }
+    .modal textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
     .modal .file-input-wrapper {
       margin-bottom: 16px;
     }
     .modal .file-input-wrapper label {
-      display: inline-block; padding: 8px 16px;
-      background: var(--primary-light); color: var(--primary);
-      border-radius: 8px; cursor: pointer; font-weight: 600;
+      display: inline-block;
+      padding: 8px 16px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
     }
-    .modal .file-input-wrapper label:hover { background: var(--primary); color: white; }
-    .modal .file-input-wrapper input[type="file"] { display: none; }
+    .modal .file-input-wrapper label:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .modal .file-input-wrapper input[type="file"] {
+      display: none;
+    }
     .modal .file-list {
-      margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px;
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
     }
     .modal .file-list .file-tag {
-      padding: 4px 10px; background: #f3f4f6; border-radius: 4px;
-      font-size: 12px; display: flex; align-items: center; gap: 6px;
+      padding: 4px 10px;
+      background: #f3f4f6;
+      border-radius: 4px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .modal .file-list .file-tag .remove-file { cursor: pointer; color: var(--danger); }
-    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
-    .modal-actions button { padding: 10px 20px; font-weight: 700; border: 0; border-radius: 8px; }
-    .modal-actions .cancel-btn { color: var(--muted); background: #f3f4f6; }
-    .modal-actions .cancel-btn:hover { background: #e5e7eb; }
-    .modal-actions .save-btn { color: white; background: var(--primary); }
-    .modal-actions .save-btn:hover { background: var(--primary-dark); }
+    .modal .file-list .file-tag .remove-file {
+      cursor: pointer;
+      color: var(--danger);
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+    .modal-actions button {
+      padding: 10px 20px;
+      font-weight: 700;
+      border: 0;
+      border-radius: 8px;
+    }
+    .modal-actions .cancel-btn {
+      color: var(--muted);
+      background: #f3f4f6;
+    }
+    .modal-actions .cancel-btn:hover {
+      background: #e5e7eb;
+    }
+    .modal-actions .save-btn {
+      color: white;
+      background: var(--primary);
+    }
+    .modal-actions .save-btn:hover {
+      background: var(--primary-dark);
+    }
 
-    .enrollment-list { max-height: 300px; overflow-y: auto; margin-bottom: 16px; }
-    .enrollment-item { padding: 10px 12px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #f0f1f4; }
-    .enrollment-item input[type="checkbox"] { width: 18px; height: 18px; margin: 0; cursor: pointer; }
-    .enrollment-item label { margin: 0; cursor: pointer; font-weight: 400; }
-    .enrollment-item .course-teacher { color: var(--muted); font-size: 12px; margin-left: auto; }
+    .enrollment-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+    .enrollment-item {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #f0f1f4;
+    }
+    .enrollment-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      cursor: pointer;
+    }
+    .enrollment-item label {
+      margin: 0;
+      cursor: pointer;
+      font-weight: 400;
+    }
+    .enrollment-item .course-teacher {
+      color: var(--muted);
+      font-size: 12px;
+      margin-left: auto;
+    }
 
-    .dashboard-grid { display: grid; grid-template-columns: 1.45fr 0.85fr; gap: 21px; }
-    .stack { display: grid; gap: 21px; }
-    .panel { padding: 20px; }
-    .panel-title { margin-bottom: 18px; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
-    .panel-title h3 { margin: 0; font-size: 16px; }
-    .link-button { padding: 0; color: var(--primary); font-size: 12px; font-weight: 800; border: 0; background: transparent; }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.45fr 0.85fr;
+      gap: 21px;
+    }
+    .stack {
+      display: grid;
+      gap: 21px;
+    }
+    .panel {
+      padding: 20px;
+    }
+    .panel-title {
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+    .panel-title h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+    .link-button {
+      padding: 0;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
+      border: 0;
+      background: transparent;
+    }
 
-    .lesson-row, .simple-row { padding: 13px 0; display: flex; gap: 12px; align-items: center; border-top: 1px solid #f0f1f4; }
-    .lesson-row:first-of-type, .simple-row:first-of-type { padding-top: 0; border-top: 0; }
-    .time { width: 44px; color: var(--primary); font-size: 11px; font-weight: 850; }
-    .color-bar { width: 4px; height: 38px; border-radius: 5px; background: #6366f1; }
-    .orange { background: #f97316; }
-    .green { background: #10b981; }
-    .row-main { min-width: 0; flex: 1; }
-    .row-main strong, .row-main span { display: block; }
-    .row-main strong { overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
-    .row-main span { margin-top: 3px; color: var(--muted); font-size: 11px; }
-    .pill { padding: 5px 8px; color: var(--muted); font-size: 10px; font-weight: 800; white-space: nowrap; border-radius: 8px; background: #f3f4f6; }
-    .pill.danger { color: #b91c1c; background: #fee2e2; }
-    .pill.warning { color: #92400e; background: #fef3c7; }
-    .pill.success { color: #047857; background: #d1fae5; }
+    .lesson-row,
+    .simple-row {
+      padding: 13px 0;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      border-top: 1px solid #f0f1f4;
+    }
+    .lesson-row:first-of-type,
+    .simple-row:first-of-type {
+      padding-top: 0;
+      border-top: 0;
+    }
+    .time {
+      width: 44px;
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 850;
+    }
+    .color-bar {
+      width: 4px;
+      height: 38px;
+      border-radius: 5px;
+      background: #6366f1;
+    }
+    .orange {
+      background: #f97316;
+    }
+    .green {
+      background: #10b981;
+    }
+    .row-main {
+      min-width: 0;
+      flex: 1;
+    }
+    .row-main strong,
+    .row-main span {
+      display: block;
+    }
+    .row-main strong {
+      overflow: hidden;
+      font-size: 13px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .row-main span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .pill {
+      padding: 5px 8px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+      border-radius: 8px;
+      background: #f3f4f6;
+    }
+    .pill.danger {
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+    .pill.warning {
+      color: #92400e;
+      background: #fef3c7;
+    }
+    .pill.success {
+      color: #047857;
+      background: #d1fae5;
+    }
 
-    .round-icon { width: 39px; height: 39px; flex: 0 0 auto; display: grid; place-items: center; font-size: 17px; border-radius: 12px; background: #ede9fe; }
-    .round-icon.yellow { background: #fef3c7; }
-    .round-icon.blue { background: #dbeafe; }
-    .progress-item + .progress-item { margin-top: 17px; }
-    .progress-top { margin-bottom: 7px; display: flex; justify-content: space-between; font-size: 12px; font-weight: 750; }
-    .progress-top span:last-child { color: var(--muted); }
-    .track { height: 8px; overflow: hidden; border-radius: 20px; background: #eef0f4; }
-    .fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #4f46e5, #818cf8); }
+    .round-icon {
+      width: 39px;
+      height: 39px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      font-size: 17px;
+      border-radius: 12px;
+      background: #ede9fe;
+    }
+    .round-icon.yellow {
+      background: #fef3c7;
+    }
+    .round-icon.blue {
+      background: #dbeafe;
+    }
+    .progress-item+.progress-item {
+      margin-top: 17px;
+    }
+    .progress-top {
+      margin-bottom: 7px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .progress-top span:last-child {
+      color: var(--muted);
+    }
+    .track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #eef0f4;
+    }
+    .fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #4f46e5, #818cf8);
+    }
 
-    .course-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
-    .course { overflow: hidden; }
-    .course-cover { height: 110px; padding: 18px; display: flex; align-items: flex-end; color: white; font-size: 20px; font-weight: 850; background: linear-gradient(135deg, #4f46e5, #818cf8); }
-    .course-cover.orange-cover { background: linear-gradient(135deg, #ea580c, #fb923c); }
-    .course-cover.green-cover { background: linear-gradient(135deg, #047857, #34d399); }
-    .course-body { padding: 17px; }
-    .course-body h3 { margin: 0; font-size: 15px; }
-    .course-body p { margin: 6px 0 15px; color: var(--muted); font-size: 12px; }
-    .course-footer { margin-top: 10px; display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 17px;
+    }
+    .course {
+      overflow: hidden;
+    }
+    .course-cover {
+      height: 110px;
+      padding: 18px;
+      display: flex;
+      align-items: flex-end;
+      color: white;
+      font-size: 20px;
+      font-weight: 850;
+      background: linear-gradient(135deg, #4f46e5, #818cf8);
+    }
+    .course-cover.orange-cover {
+      background: linear-gradient(135deg, #ea580c, #fb923c);
+    }
+    .course-cover.green-cover {
+      background: linear-gradient(135deg, #047857, #34d399);
+    }
+    .course-body {
+      padding: 17px;
+    }
+    .course-body h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+    .course-body p {
+      margin: 6px 0 15px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .course-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 11px;
+    }
 
-    .assignment-list, .announcement-list { display: grid; gap: 13px; }
-    .assignment-card, .announcement-card { padding: 18px; display: flex; align-items: center; gap: 15px; }
-    .assignment-card h3, .announcement-card h3 { margin: 0; font-size: 14px; }
-    .assignment-card p, .announcement-card p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
-    .assignment-card .secondary-button { margin-left: auto; }
-    .announcement-card { align-items: flex-start; }
+    .assignment-list,
+    .announcement-list {
+      display: grid;
+      gap: 13px;
+    }
+    .assignment-card,
+    .announcement-card {
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .assignment-card h3,
+    .announcement-card h3 {
+      margin: 0;
+      font-size: 14px;
+    }
+    .assignment-card p,
+    .announcement-card p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .assignment-card .secondary-button {
+      margin-left: auto;
+    }
+    .announcement-card {
+      align-items: flex-start;
+    }
 
-    .profile-card { max-width: 760px; padding: 25px; }
-    .profile-top { display: flex; gap: 16px; align-items: center; }
-    .profile-top .avatar { width: 64px; height: 64px; font-size: 19px; }
-    .profile-top h2 { margin: 0; font-size: 19px; }
-    .profile-top p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
-    .details { margin-top: 24px; padding-top: 22px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 19px; border-top: 1px solid var(--line); }
-    .details small, .details strong { display: block; }
-    .details small { margin-bottom: 5px; color: var(--muted); font-size: 11px; font-weight: 750; }
-    .details strong { font-size: 13px; }
+    .profile-card {
+      max-width: 760px;
+      padding: 25px;
+    }
+    .profile-top {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .profile-top .avatar {
+      width: 64px;
+      height: 64px;
+      font-size: 19px;
+    }
+    .profile-top h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+    .profile-top p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .details {
+      margin-top: 24px;
+      padding-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 19px;
+      border-top: 1px solid var(--line);
+    }
+    .details small,
+    .details strong {
+      display: block;
+    }
+    .details small {
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+    }
+    .details strong {
+      font-size: 13px;
+    }
 
-    .mobile-nav { display: none; }
+    .mobile-nav {
+      display: none;
+    }
 
     /* --- RESPONSIVE --- */
     @media (max-width: 1030px) {
-      .stats, .admin-stats, .grade-summary-grid, .task-stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .course-grid, .meeting-grid { grid-template-columns: repeat(2, 1fr); }
-      .landing-hero { flex-direction: column; text-align: center; padding: 40px 20px; }
-      .landing-hero .hero-content p { max-width: 100%; }
-      .landing-hero .hero-content .hero-buttons { justify-content: center; }
-      .landing-features { grid-template-columns: repeat(2, 1fr); }
+      .stats,
+      .admin-stats,
+      .grade-summary-grid,
+      .task-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .course-grid,
+      .meeting-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .landing-hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 20px;
+      }
+      .landing-hero .hero-content p {
+        max-width: 100%;
+      }
+      .landing-hero .hero-content .hero-buttons {
+        justify-content: center;
+      }
+      .landing-features {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
     @media (max-width: 790px) {
-      .sidebar { display: none; }
-      main { margin-left: 0; }
-      .topbar { min-height: 64px; padding: 12px 16px; }
-      .search, .user-name { display: none; }
-      .page { padding: 25px 16px 90px; }
-      .hero { min-height: 210px; align-items: flex-start; flex-direction: column; }
-      .dashboard-grid { grid-template-columns: 1fr; }
+      .sidebar {
+        display: none;
+      }
+      main {
+        margin-left: 0;
+      }
+      .topbar {
+        min-height: 64px;
+        padding: 12px 16px;
+      }
+      .search,
+      .user-name {
+        display: none;
+      }
+      .page {
+        padding: 25px 16px 90px;
+      }
+      .hero {
+        min-height: 210px;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
       .mobile-nav {
         padding: 7px 7px calc(7px + env(safe-area-inset-bottom));
-        display: grid; grid-template-columns: repeat(5, 1fr);
-        position: fixed; right: 0; bottom: 0; left: 0; z-index: 20;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 20;
         border-top: 1px solid var(--line);
-        background: rgba(255,255,255,0.96);
+        background: rgba(255, 255, 255, 0.96);
         backdrop-filter: blur(10px);
       }
-      .mobile-nav .nav-button { padding: 5px 1px; display: grid; justify-items: center; gap: 3px; color: var(--muted); font-size: 9px; text-align: center; border-radius: 9px; }
-      .mobile-nav .nav-button.active { color: var(--primary); background: var(--primary-light); }
-      .mobile-nav .nav-icon { font-size: 16px; }
-      .mobile-nav .nav-button span:last-child { display: block; }
-      .table-toolbar { flex-direction: column; align-items: stretch; }
-      .table-toolbar .left, .table-toolbar .right { flex-wrap: wrap; }
-      .admin-stats { grid-template-columns: repeat(2, 1fr); }
-      .grade-summary-grid, .task-stats-grid { grid-template-columns: 1fr 1fr; }
-      .meeting-grid { grid-template-columns: 1fr; }
-      .expandable-detail .detail-content { padding: 12px 16px 12px 32px; font-size: 12px; }
-      .landing-header { padding: 16px 20px; flex-wrap: wrap; gap: 12px; }
-      .landing-header .auth-buttons .btn-outline, .landing-header .auth-buttons .btn-primary { padding: 8px 16px; font-size: 13px; }
-      .landing-hero .hero-content h1 { font-size: 32px; }
-      .landing-features { grid-template-columns: 1fr; }
-      .calendar-grid .day-cell { min-height: 50px; padding: 4px; }
-      .calendar-grid .day-cell .day-number { font-size: 12px; }
-      .file-preview-content .file-preview-iframe { height: 300px; }
-      .modal { max-width: 100%; }
+      .mobile-nav .nav-button {
+        padding: 5px 1px;
+        display: grid;
+        justify-items: center;
+        gap: 3px;
+        color: var(--muted);
+        font-size: 9px;
+        text-align: center;
+        border-radius: 9px;
+      }
+      .mobile-nav .nav-button.active {
+        color: var(--primary);
+        background: var(--primary-light);
+      }
+      .mobile-nav .nav-icon {
+        font-size: 16px;
+      }
+      .mobile-nav .nav-button span:last-child {
+        display: block;
+      }
+      .table-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .table-toolbar .left,
+      .table-toolbar .right {
+        flex-wrap: wrap;
+      }
+      .admin-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .grade-summary-grid,
+      .task-stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .meeting-grid {
+        grid-template-columns: 1fr;
+      }
+      .expandable-detail .detail-content {
+        padding: 12px 16px 12px 32px;
+        font-size: 12px;
+      }
+      .landing-header {
+        padding: 16px 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .landing-header .auth-buttons .btn-outline,
+      .landing-header .auth-buttons .btn-primary {
+        padding: 8px 16px;
+        font-size: 13px;
+      }
+      .landing-hero .hero-content h1 {
+        font-size: 32px;
+      }
+      .landing-features {
+        grid-template-columns: 1fr;
+      }
+      .calendar-grid .day-cell {
+        min-height: 50px;
+        padding: 4px;
+      }
+      .calendar-grid .day-cell .day-number {
+        font-size: 12px;
+      }
+      .file-preview-content .file-preview-iframe {
+        height: 300px;
+      }
+      .modal {
+        max-width: 100%;
+      }
     }
     @media (max-width: 480px) {
-      .stats, .admin-stats, .grade-summary-grid, .task-stats-grid { gap: 10px; grid-template-columns: 1fr; }
-      .stat-card { padding: 14px; }
-      .stat-number { font-size: 22px; }
-      .panel { padding: 17px; }
-      .course-grid, .details, .meeting-grid { grid-template-columns: 1fr; }
-      .assignment-card { align-items: flex-start; flex-wrap: wrap; }
-      .assignment-card .secondary-button { width: 100%; margin-left: 0; }
-      .login-box, .register-box { padding: 28px 20px; }
-      .modal { padding: 20px; }
-      table { font-size: 12px; }
-      table th, table td { padding: 8px 10px; }
-      .grade-cell { flex-wrap: wrap; }
-      .landing-hero .hero-content h1 { font-size: 26px; }
-      .file-preview-content .file-preview-iframe { height: 200px; }
+      .stats,
+      .admin-stats,
+      .grade-summary-grid,
+      .task-stats-grid {
+        gap: 10px;
+        grid-template-columns: 1fr;
+      }
+      .stat-card {
+        padding: 14px;
+      }
+      .stat-number {
+        font-size: 22px;
+      }
+      .panel {
+        padding: 17px;
+      }
+      .course-grid,
+      .details,
+      .meeting-grid {
+        grid-template-columns: 1fr;
+      }
+      .assignment-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+      .assignment-card .secondary-button {
+        width: 100%;
+        margin-left: 0;
+      }
+      .login-box,
+      .register-box {
+        padding: 28px 20px;
+      }
+      .modal {
+        padding: 20px;
+      }
+      table {
+        font-size: 12px;
+      }
+      table th,
+      table td {
+        padding: 8px 10px;
+      }
+      .grade-cell {
+        flex-wrap: wrap;
+      }
+      .landing-hero .hero-content h1 {
+        font-size: 26px;
+      }
+      .file-preview-content .file-preview-iframe {
+        height: 200px;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- ===== LANDING PAGE ===== -->
@@ -969,22 +2352,22 @@
     <aside class="sidebar">
       <div class="brand"><div class="brand-mark">N</div><div><strong>NOKJ Academy</strong><small id="sidebar-role">Student Portal</small></div></div>
       <p class="nav-label">Menu</p>
-      <button class="nav-button active" data-page="dashboard"><span class="nav-icon">⌂</span> Dashboard</button>
-      <button class="nav-button" data-page="timetable"><span class="nav-icon">▦</span> Timetable</button>
-      <button class="nav-button" data-page="courses"><span class="nav-icon">▣</span> My courses</button>
-      <button class="nav-button" data-page="assignments"><span class="nav-icon">✓</span> Assignments</button>
-      <button class="nav-button" data-page="announcements"><span class="nav-icon">◉</span> Announcements</button>
-      <button class="nav-button" data-page="classroom"><span class="nav-icon">🎥</span> Classroom</button>
-      <button class="nav-button" data-page="tasks"><span class="nav-icon">📝</span> Tasks</button>
+      <button class="nav-button active" data-page="dashboard"><span class="nav-icon">⌂</span> <span class="nav-text">Dashboard</span></button>
+      <button class="nav-button" data-page="timetable"><span class="nav-icon">▦</span> <span class="nav-text">Timetable</span></button>
+      <button class="nav-button" data-page="courses"><span class="nav-icon">▣</span> <span class="nav-text">My courses</span></button>
+      <button class="nav-button" data-page="assignments"><span class="nav-icon">✓</span> <span class="nav-text">Assignments</span></button>
+      <button class="nav-button" data-page="announcements"><span class="nav-icon">◉</span> <span class="nav-text">Announcements</span></button>
+      <button class="nav-button" data-page="classroom"><span class="nav-icon">🎥</span> <span class="nav-text">Classroom</span></button>
+      <button class="nav-button" data-page="tasks"><span class="nav-icon">📝</span> <span class="nav-text">Tasks</span></button>
       <p class="nav-label">Account</p>
-      <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span> My profile</button>
+      <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span> <span class="nav-text">My profile</span></button>
 
       <p class="nav-label" id="admin-nav-label" style="display:none;">Management</p>
-      <button class="nav-button" data-page="students" id="admin-students-btn" style="display:none;"><span class="nav-icon">👥</span> Students</button>
-      <button class="nav-button" data-page="budget" id="admin-budget-btn" style="display:none;"><span class="nav-icon">💰</span> Budget</button>
-      <button class="nav-button" data-page="courses-admin" id="admin-courses-btn" style="display:none;"><span class="nav-icon">📚</span> Courses</button>
-      <button class="nav-button" data-page="grades" id="admin-grades-btn" style="display:none;"><span class="nav-icon">📊</span> Grades</button>
-      <button class="nav-button" data-page="calendar" id="admin-calendar-btn" style="display:none;"><span class="nav-icon">📅</span> Calendar</button>
+      <button class="nav-button" data-page="students" id="admin-students-btn" style="display:none;"><span class="nav-icon">👥</span> <span class="nav-text">Students</span></button>
+      <button class="nav-button" data-page="budget" id="admin-budget-btn" style="display:none;"><span class="nav-icon">💰</span> <span class="nav-text">Budget</span></button>
+      <button class="nav-button" data-page="courses-admin" id="admin-courses-btn" style="display:none;"><span class="nav-icon">📚</span> <span class="nav-text">Courses</span></button>
+      <button class="nav-button" data-page="grades" id="admin-grades-btn" style="display:none;"><span class="nav-icon">📊</span> <span class="nav-text">Grades</span></button>
+      <button class="nav-button" data-page="calendar" id="admin-calendar-btn" style="display:none;"><span class="nav-icon">📅</span> <span class="nav-text">Calendar</span></button>
 
       <div class="help-card"><strong>Need help?</strong><span>Contact the NOKJ Academy support team for assistance.</span></div>
     </aside>
@@ -1434,16 +2817,29 @@
   <script>
     (function() {
 
+      // ----- DEMO ACCOUNTS -----
+      const DEMO_USERS = {
+        'admin@nokj.com': { password: 'admin123', role: 'Admin' },
+        'student@nokj.com': { password: 'password123', role: 'Student' },
+        'wilson@nokj.com': { password: 'password123', role: 'Teacher' },
+        'evans@nokj.com': { password: 'password123', role: 'Teacher' }
+      };
+
       // ----- DEFAULT DATA -----
       const DEFAULT_STUDENTS = [
-        { id: 1, name: 'Alex Student', email: 'student@nokj.com', password: 'password123', role: 'Student', status: 'Active', createdAt: '2026-08-01' },
-        { id: 2, name: 'Sarah Chen', email: 'sarah@example.com', password: 'password123', role: 'Student', status: 'Active', createdAt: '2026-08-15' },
-        { id: 3, name: 'Marcus Webb', email: 'marcus@example.com', password: 'password123', role: 'Student', status: 'Warning', createdAt: '2026-08-20' }
+        { id: 1, name: 'Alex Student', email: 'student@nokj.com', password: 'password123', role: 'Student', status: 'Active',
+          createdAt: '2026-08-01' },
+        { id: 2, name: 'Sarah Chen', email: 'sarah@example.com', password: 'password123', role: 'Student', status: 'Active',
+          createdAt: '2026-08-15' },
+        { id: 3, name: 'Marcus Webb', email: 'marcus@example.com', password: 'password123', role: 'Student', status: 'Warning',
+          createdAt: '2026-08-20' }
       ];
 
       const DEFAULT_TEACHERS = [
-        { id: 1, name: 'Dr. Wilson', email: 'wilson@nokj.com', password: 'password123', role: 'Teacher', createdAt: '2026-08-01' },
-        { id: 2, name: 'Ms. Evans', email: 'evans@nokj.com', password: 'password123', role: 'Teacher', createdAt: '2026-08-10' }
+        { id: 1, name: 'Dr. Wilson', email: 'wilson@nokj.com', password: 'password123', role: 'Teacher',
+          createdAt: '2026-08-01' },
+        { id: 2, name: 'Ms. Evans', email: 'evans@nokj.com', password: 'password123', role: 'Teacher',
+          createdAt: '2026-08-10' }
       ];
 
       const DEFAULT_ADMINS = [
@@ -1463,15 +2859,23 @@
       ];
 
       const DEFAULT_MEETINGS = [
-        { id: 1, title: 'Mathematics: Quadratic Equations', teacherId: 1, date: '2026-08-28', time: '15:30', duration: 60, link: '#' },
+        { id: 1, title: 'Mathematics: Quadratic Equations', teacherId: 1, date: '2026-08-28', time: '15:30', duration: 60,
+          link: '#' },
         { id: 2, title: 'Biology: Cell Structure', teacherId: 1, date: '2026-08-29', time: '12:00', duration: 60, link: '#' },
-        { id: 3, title: 'English Literature: Macbeth Analysis', teacherId: 2, date: '2026-08-30', time: '09:00', duration: 60, link: '#' }
+        { id: 3, title: 'English Literature: Macbeth Analysis', teacherId: 2, date: '2026-08-30', time: '09:00', duration: 60,
+          link: '#' }
       ];
 
       const DEFAULT_TASKS = [
-        { id: 1, title: 'Quadratic Equations Practice', type: 'homework', description: 'Solve problems 1-20 from the textbook.', deadline: '2026-09-05', priority: 'high', assignedTo: 'all', assignedIds: [], files: [], createdAt: '2026-08-28' },
-        { id: 2, title: 'Macbeth Essay', type: 'assignment', description: 'Write a 500-word essay on ambition.', deadline: '2026-09-10', priority: 'medium', assignedTo: 'all', assignedIds: [], files: [], createdAt: '2026-08-28' },
-        { id: 3, title: 'Cell Biology Quiz', type: 'test', description: 'Multiple choice quiz on cell structure.', deadline: '2026-09-03', priority: 'medium', assignedTo: 'all', assignedIds: [], files: [], createdAt: '2026-08-28' }
+        { id: 1, title: 'Quadratic Equations Practice', type: 'homework', description: 'Solve problems 1-20 from the textbook.',
+          deadline: '2026-09-05', priority: 'high', assignedTo: 'all', assignedIds: [], files: [],
+          createdAt: '2026-08-28' },
+        { id: 2, title: 'Macbeth Essay', type: 'assignment', description: 'Write a 500-word essay on ambition.',
+          deadline: '2026-09-10', priority: 'medium', assignedTo: 'all', assignedIds: [], files: [],
+          createdAt: '2026-08-28' },
+        { id: 3, title: 'Cell Biology Quiz', type: 'test', description: 'Multiple choice quiz on cell structure.',
+          deadline: '2026-09-03', priority: 'medium', assignedTo: 'all', assignedIds: [], files: [],
+          createdAt: '2026-08-28' }
       ];
 
       const DEFAULT_TASK_SUBMISSIONS = {
@@ -1493,11 +2897,25 @@
       ];
 
       // ----- Data Storage -----
-      let students = [], teachers = [], admins = [], courses = [], enrollments = [], meetings = [];
-      let gradeData = {}, tasks = [], taskSubmissions = {}, budgetEntries = [];
-      let currentUser = null, expandedRows = {}, currentSlide = 0, presentationSlides = [];
-      let tempTaskFiles = [], gradingTaskId = null, gradingStudentId = null;
-      let currentMonth = new Date().getMonth(), currentYear = new Date().getFullYear();
+      let students = [],
+        teachers = [],
+        admins = [],
+        courses = [],
+        enrollments = [],
+        meetings = [];
+      let gradeData = {},
+        tasks = [],
+        taskSubmissions = {},
+        budgetEntries = [];
+      let currentUser = null,
+        expandedRows = {},
+        currentSlide = 0,
+        presentationSlides = [];
+      let tempTaskFiles = [],
+        gradingTaskId = null,
+        gradingStudentId = null;
+      let currentMonth = new Date().getMonth(),
+        currentYear = new Date().getFullYear();
 
       // ----- DOM refs -----
       const landingPage = document.getElementById('landing-page');
@@ -1578,6 +2996,172 @@
       const totalEnrollmentsEl = document.getElementById('total-enrollments');
       const totalRevenueEl = document.getElementById('total-revenue');
 
+      // ----- Translation -----
+      const translations = {
+        'Dashboard': 'Главная',
+        'Timetable': 'Расписание',
+        'My courses': 'Мои курсы',
+        'Assignments': 'Задания',
+        'Announcements': 'Объявления',
+        'Account': 'Аккаунт',
+        'My profile': 'Мой профиль',
+        'Need help?': 'Нужна помощь?',
+        'Contact the NOKJ Academy support team for assistance.': 'Свяжитесь со службой поддержки NOKJ Academy.',
+        'Student Portal': 'Портал ученика',
+        'Management': 'Управление',
+        'Students': 'Ученики',
+        'Budget': 'Бюджет',
+        'Courses': 'Курсы',
+        'Grades': 'Оценки',
+        'Calendar': 'Календарь',
+        'Good afternoon, Alex 👋': 'Добрый день, Алекс 👋',
+        'Here is everything you need to stay on track today.': 'Здесь всё, что нужно, чтобы быть в курсе дел сегодня.',
+        'Classroom': 'Виртуальный класс',
+        'Tasks': 'Задания',
+        'View and complete your assignments.': 'Просмотр и выполнение заданий.',
+        'Logout': 'Выйти',
+        'Sign In': 'Войти',
+        'Join Academy': 'Присоединиться',
+        'Welcome back': 'С возвращением',
+        'Sign in to your account': 'Войдите в свой аккаунт',
+        'Create Account': 'Создать аккаунт',
+        'Start your learning journey today': 'Начните свой путь обучения сегодня',
+        'Full Name': 'Полное имя',
+        'Email address': 'Адрес электронной почты',
+        'I am a...': 'Я...',
+        'Password': 'Пароль',
+        'Already have an account?': 'Уже есть аккаунт?',
+        'Don\'t have an account?': 'Нет аккаунта?',
+        'Class Calendar': 'Календарь занятий',
+        'Schedule and manage your classes.': 'Планирование и управление занятиями.',
+        '+ Schedule Class': '+ Запланировать занятие',
+        'Upcoming Classes': 'Предстоящие занятия',
+        'No upcoming classes scheduled.': 'Нет запланированных занятий.',
+        'Join': 'Присоединиться',
+        'Schedule Class': 'Запланировать занятие',
+        'Set up your live class session.': 'Настройте ваше живое занятие.',
+        'Class Title': 'Название занятия',
+        'Teacher': 'Преподаватель',
+        'Date': 'Дата',
+        'Time': 'Время',
+        'Duration (minutes)': 'Продолжительность (минуты)',
+        'Meeting Link': 'Ссылка на встречу',
+        'Save': 'Сохранить',
+        'Cancel': 'Отмена',
+        'Create Task': 'Создать задание',
+        'Fill in the task details below.': 'Заполните детали задания ниже.',
+        'Task Title': 'Название задания',
+        'Task Type': 'Тип задания',
+        'Priority': 'Приоритет',
+        'Description': 'Описание',
+        'Deadline': 'Срок',
+        'Attach Files': 'Прикрепить файлы',
+        'Choose Files': 'Выбрать файлы',
+        'Assign to': 'Назначить',
+        'All Students': 'Всем ученикам',
+        'Specific Course': 'Конкретному курсу',
+        'Specific Student': 'Конкретному ученику',
+        'Select Courses': 'Выберите курсы',
+        'Select Students': 'Выберите учеников',
+        'Total Tasks': 'Всего заданий',
+        'Pending': 'Ожидает',
+        'Submitted': 'Отправлено',
+        'Graded': 'Проверено',
+        'Search tasks...': 'Поиск заданий...',
+        'All Types': 'Все типы',
+        'Homework': 'Домашнее задание',
+        'Test': 'Тест',
+        'Assignment': 'Задание',
+        'All Status': 'Все статусы',
+        '+ Add Task': '+ Добавить задание',
+        'No tasks found.': 'Заданий не найдено.',
+        'View Submissions': 'Просмотр ответов',
+        'Delete': 'Удалить',
+        'No tasks assigned to you yet.': 'У вас пока нет заданий.',
+        'Enter your answer...': 'Введите ваш ответ...',
+        'Upload Files': 'Загрузить файлы',
+        'Submit': 'Отправить',
+        'Waiting for grading...': 'Ожидает проверки...',
+        'No files chosen': 'Файлы не выбраны',
+        'Grade Submission': 'Оценить ответ',
+        'Enter grade and feedback for this submission.': 'Введите оценку и отзыв для этого ответа.',
+        'Student': 'Ученик',
+        'Submission': 'Ответ',
+        'Grade (%)': 'Оценка (%)',
+        'Feedback': 'Отзыв',
+        'Save Grade': 'Сохранить оценку',
+        'Grade saved successfully!': 'Оценка успешно сохранена!',
+        'Task created successfully!': 'Задание успешно создано!',
+        'Task submitted!': 'Задание отправлено!',
+        'Class scheduled successfully!': 'Занятие успешно запланировано!'
+      };
+
+      let currentLang = localStorage.getItem('nokj-language') || 'en';
+
+      function applyTranslation(lang) {
+        const walker = document.createTreeWalker(
+          document.body,
+          NodeFilter.SHOW_TEXT, {
+            acceptNode: function(node) {
+              const parent = node.parentElement;
+              if (!parent) return NodeFilter.FILTER_REJECT;
+              const tag = parent.tagName;
+              if (tag === 'SCRIPT' || tag === 'STYLE') return NodeFilter.FILTER_REJECT;
+              if (node.nodeValue.trim() === '') return NodeFilter.FILTER_REJECT;
+              return NodeFilter.FILTER_ACCEPT;
+            }
+          }
+        );
+
+        let nodes = [];
+        let node;
+        while (node = walker.nextNode()) {
+          nodes.push(node);
+        }
+
+        nodes.forEach(function(textNode) {
+          const original = textNode.nodeValue;
+          const trimmed = original.trim();
+          if (lang === 'ru' && translations[trimmed]) {
+            textNode.nodeValue = original.replace(trimmed, translations[trimmed]);
+          }
+        });
+
+        // Update placeholders
+        document.querySelectorAll('[placeholder]').forEach(function(el) {
+          const placeholder = el.placeholder;
+          if (lang === 'ru' && translations[placeholder]) {
+            el.placeholder = translations[placeholder];
+          }
+        });
+      }
+
+      function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('nokj-language', lang);
+        if (lang === 'en') {
+          flagUK.style.display = 'block';
+          flagRU.style.display = 'none';
+          loginFlagUK.style.display = 'block';
+          loginFlagRU.style.display = 'none';
+          registerFlagUK.style.display = 'block';
+          registerFlagRU.style.display = 'none';
+        } else {
+          flagUK.style.display = 'none';
+          flagRU.style.display = 'block';
+          loginFlagUK.style.display = 'none';
+          loginFlagRU.style.display = 'block';
+          registerFlagUK.style.display = 'none';
+          registerFlagRU.style.display = 'block';
+        }
+        applyTranslation(lang);
+        document.documentElement.lang = lang;
+      }
+
+      function toggleLanguage() {
+        setLanguage(currentLang === 'en' ? 'ru' : 'en');
+      }
+
       // ----- Data Management -----
       function loadData() {
         const savedStudents = localStorage.getItem('nokj-students');
@@ -1591,16 +3175,26 @@
         const savedSubmissions = localStorage.getItem('nokj-submissions');
         const savedBudget = localStorage.getItem('nokj-budget');
 
-        if (savedStudents) { try { students = JSON.parse(savedStudents); } catch (e) { students = DEFAULT_STUDENTS.slice(); } } else { students = DEFAULT_STUDENTS.slice(); }
-        if (savedTeachers) { try { teachers = JSON.parse(savedTeachers); } catch (e) { teachers = DEFAULT_TEACHERS.slice(); } } else { teachers = DEFAULT_TEACHERS.slice(); }
-        if (savedAdmins) { try { admins = JSON.parse(savedAdmins); } catch (e) { admins = DEFAULT_ADMINS.slice(); } } else { admins = DEFAULT_ADMINS.slice(); }
-        if (savedCourses) { try { courses = JSON.parse(savedCourses); } catch (e) { courses = DEFAULT_COURSES.slice(); } } else { courses = DEFAULT_COURSES.slice(); }
-        if (savedEnrollments) { try { enrollments = JSON.parse(savedEnrollments); } catch (e) { enrollments = DEFAULT_ENROLLMENTS.slice(); } } else { enrollments = DEFAULT_ENROLLMENTS.slice(); }
-        if (savedMeetings) { try { meetings = JSON.parse(savedMeetings); } catch (e) { meetings = DEFAULT_MEETINGS.slice(); } } else { meetings = DEFAULT_MEETINGS.slice(); }
-        if (savedGrades) { try { gradeData = JSON.parse(savedGrades); } catch (e) { gradeData = DEFAULT_GRADES; } } else { gradeData = DEFAULT_GRADES; }
-        if (savedTasks) { try { tasks = JSON.parse(savedTasks); } catch (e) { tasks = DEFAULT_TASKS.slice(); } } else { tasks = DEFAULT_TASKS.slice(); }
-        if (savedSubmissions) { try { taskSubmissions = JSON.parse(savedSubmissions); } catch (e) { taskSubmissions = DEFAULT_TASK_SUBMISSIONS; } } else { taskSubmissions = DEFAULT_TASK_SUBMISSIONS; }
-        if (savedBudget) { try { budgetEntries = JSON.parse(savedBudget); } catch (e) { budgetEntries = DEFAULT_BUDGET.slice(); } } else { budgetEntries = DEFAULT_BUDGET.slice(); }
+        if (savedStudents) { try { students = JSON.parse(savedStudents); } catch (e) { students = DEFAULT_STUDENTS.slice(); } } else { students =
+            DEFAULT_STUDENTS.slice(); }
+        if (savedTeachers) { try { teachers = JSON.parse(savedTeachers); } catch (e) { teachers = DEFAULT_TEACHERS.slice(); } } else { teachers =
+            DEFAULT_TEACHERS.slice(); }
+        if (savedAdmins) { try { admins = JSON.parse(savedAdmins); } catch (e) { admins = DEFAULT_ADMINS.slice(); } } else { admins =
+            DEFAULT_ADMINS.slice(); }
+        if (savedCourses) { try { courses = JSON.parse(savedCourses); } catch (e) { courses = DEFAULT_COURSES.slice(); } } else { courses =
+            DEFAULT_COURSES.slice(); }
+        if (savedEnrollments) { try { enrollments = JSON.parse(savedEnrollments); } catch (e) { enrollments = DEFAULT_ENROLLMENTS.slice(); } } else { enrollments =
+            DEFAULT_ENROLLMENTS.slice(); }
+        if (savedMeetings) { try { meetings = JSON.parse(savedMeetings); } catch (e) { meetings = DEFAULT_MEETINGS.slice(); } } else { meetings =
+            DEFAULT_MEETINGS.slice(); }
+        if (savedGrades) { try { gradeData = JSON.parse(savedGrades); } catch (e) { gradeData = DEFAULT_GRADES; } } else { gradeData =
+            DEFAULT_GRADES; }
+        if (savedTasks) { try { tasks = JSON.parse(savedTasks); } catch (e) { tasks = DEFAULT_TASKS.slice(); } } else { tasks =
+            DEFAULT_TASKS.slice(); }
+        if (savedSubmissions) { try { taskSubmissions = JSON.parse(savedSubmissions); } catch (e) { taskSubmissions =
+              DEFAULT_TASK_SUBMISSIONS; } } else { taskSubmissions = DEFAULT_TASK_SUBMISSIONS; }
+        if (savedBudget) { try { budgetEntries = JSON.parse(savedBudget); } catch (e) { budgetEntries = DEFAULT_BUDGET.slice(); } } else { budgetEntries =
+            DEFAULT_BUDGET.slice(); }
       }
 
       function saveData() {
@@ -1617,13 +3211,36 @@
       }
 
       // ----- Helper Functions -----
-      function getTeacherName(id) { const t = teachers.find(function(tc) { return tc.id === id; }); return t ? t.name : 'Unknown'; }
-      function getStudentName(id) { const s = students.find(function(st) { return st.id === id; }); return s ? s.name : 'Unknown'; }
-      function getCourseName(id) { const c = courses.find(function(co) { return co.id === id; }); return c ? c.name : 'Unknown'; }
-      function getEnrolledCourseIds(studentId) { return enrollments.filter(function(e) { return e.studentId === studentId; }).map(function(e) { return e.courseId; }); }
-      function getEnrolledStudentIds(courseId) { return enrollments.filter(function(e) { return e.courseId === courseId; }).map(function(e) { return e.studentId; }); }
-      function getCourseStudentCount(courseId) { return enrollments.filter(function(e) { return e.courseId === courseId; }).length; }
-      function getStudentCourseCount(studentId) { return enrollments.filter(function(e) { return e.studentId === studentId; }).length; }
+      function getTeacherName(id) {
+        const t = teachers.find(function(tc) { return tc.id === id; });
+        return t ? t.name : 'Unknown';
+      }
+
+      function getStudentName(id) {
+        const s = students.find(function(st) { return st.id === id; });
+        return s ? s.name : 'Unknown';
+      }
+
+      function getCourseName(id) {
+        const c = courses.find(function(co) { return co.id === id; });
+        return c ? c.name : 'Unknown';
+      }
+
+      function getEnrolledCourseIds(studentId) {
+        return enrollments.filter(function(e) { return e.studentId === studentId; }).map(function(e) { return e.courseId; });
+      }
+
+      function getEnrolledStudentIds(courseId) {
+        return enrollments.filter(function(e) { return e.courseId === courseId; }).map(function(e) { return e.studentId; });
+      }
+
+      function getCourseStudentCount(courseId) {
+        return enrollments.filter(function(e) { return e.courseId === courseId; }).length;
+      }
+
+      function getStudentCourseCount(studentId) {
+        return enrollments.filter(function(e) { return e.studentId === studentId; }).length;
+      }
 
       function getUserByEmail(email) {
         let user = students.find(function(s) { return s.email === email; });
@@ -1642,7 +3259,7 @@
         return Math.max(1, ...getAllUsers().map(function(u) { return u.id; }), 0) + 1;
       }
 
-      // ----- Navigation (Landing/Login/Register/App) -----
+      // ----- Navigation -----
       function showLanding() {
         landingPage.classList.remove('hidden');
         loginScreen.classList.remove('open');
@@ -1650,6 +3267,7 @@
         registerScreen.classList.remove('open');
         registerScreen.classList.add('hidden');
         app.classList.remove('logged-in');
+        setLanguage(currentLang);
       }
 
       function showLoginScreen() {
@@ -1662,6 +3280,7 @@
         loginError.textContent = '';
         loginEmail.value = '';
         loginPassword.value = '';
+        setLanguage(currentLang);
       }
 
       function showRegisterScreen() {
@@ -1676,6 +3295,7 @@
         registerEmail.value = '';
         registerPassword.value = '';
         registerRole.value = 'Student';
+        setLanguage(currentLang);
       }
 
       function openPage(pageName) {
@@ -1684,6 +3304,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
         if (pageName === 'calendar') renderCalendar();
         if (pageName === 'classroom') renderMeetings();
+        setLanguage(currentLang);
       }
 
       // ----- Login / Register -----
@@ -1743,12 +3364,14 @@
 
         const initials = user.name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
         userAvatar.textContent = initials;
-        userAvatar.className = 'avatar' + (user.role === 'Admin' ? ' admin-avatar' : user.role === 'Teacher' ? ' teacher-avatar' : '');
+        userAvatar.className = 'avatar' + (user.role === 'Admin' ? ' admin-avatar' : user.role === 'Teacher' ?
+          ' teacher-avatar' : '');
         userDisplayName.textContent = user.name;
         userRole.textContent = user.role;
         sidebarRole.textContent = user.role + ' Portal';
         profileAvatar.textContent = initials;
-        profileAvatar.className = 'avatar' + (user.role === 'Admin' ? ' admin-avatar' : user.role === 'Teacher' ? ' teacher-avatar' : '');
+        profileAvatar.className = 'avatar' + (user.role === 'Admin' ? ' admin-avatar' : user.role === 'Teacher' ?
+          ' teacher-avatar' : '');
         profileName.textContent = user.name;
         profileRoleText.textContent = user.role + ' · NOKJ Academy';
         profileEmail.textContent = user.email;
@@ -1792,6 +3415,7 @@
         renderTasks();
         renderCalendar();
         renderUpcomingClasses();
+        setLanguage(currentLang);
       }
 
       function logout() {
@@ -1802,6 +3426,7 @@
         loginPassword.value = '';
         loginError.textContent = '';
         expandedRows = {};
+        setLanguage(currentLang);
       }
 
       function checkSession() {
@@ -1832,11 +3457,15 @@
         filtered.forEach(function(s) {
           const isExpanded = expandedRows['student-' + s.id] || false;
           const icon = isExpanded ? '▼' : '▶';
-          const enrolledCount = getStudentCourseCount(s.id);
           const tr = document.createElement('tr');
           tr.className = 'expandable-row';
           tr.dataset.expandId = 'student-' + s.id;
-          tr.innerHTML = '<td style="cursor:pointer;"><span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon + '</span> <strong>' + s.name + '</strong></td><td>' + s.email + '</td><td><span class="status-badge ' + s.status.toLowerCase() + '">' + s.status + '</span></td><td><button class="action-btn edit" data-id="' + s.id + '" data-type="student">✏️</button><button class="action-btn delete" data-id="' + s.id + '" data-type="student">🗑️</button><button class="action-btn enroll" data-id="' + s.id + '" data-type="enroll">📚 Enroll</button></td>';
+          tr.innerHTML = '<td style="cursor:pointer;"><span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon +
+            '</span> <strong>' + s.name + '</strong></td><td>' + s.email + '</td><td><span class="status-badge ' + s.status
+            .toLowerCase() + '">' + s.status + '</span></td><td><button class="action-btn edit" data-id="' + s.id +
+            '" data-type="student">✏️</button><button class="action-btn delete" data-id="' + s.id +
+            '" data-type="student">🗑️</button><button class="action-btn enroll" data-id="' + s.id +
+            '" data-type="enroll">📚 Enroll</button></td>';
           studentTableBody.appendChild(tr);
           const detailTr = document.createElement('tr');
           detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
@@ -1844,7 +3473,13 @@
           const courseIds = getEnrolledCourseIds(s.id);
           let detailHtml = '<div class="detail-content"><strong>Enrolled Courses:</strong> ';
           if (courseIds.length === 0) detailHtml += '<span class="empty-msg">Not enrolled in any courses.</span>';
-          else { courseIds.forEach(function(cid) { const c = courses.find(function(co) { return co.id === cid; }); if (c) detailHtml += '<span class="item-tag">📚 ' + c.name + ' <span style="color:var(--muted);font-size:11px;">(' + c.teacherId + ')</span></span>'; }); }
+          else {
+            courseIds.forEach(function(cid) {
+              const c = courses.find(function(co) { return co.id === cid; });
+              if (c) detailHtml += '<span class="item-tag">📚 ' + c.name + ' <span style="color:var(--muted);font-size:11px;">(' +
+                c.teacherId + ')</span></span>';
+            });
+          }
           detailHtml += '</div>';
           detailTr.innerHTML = '<td colspan="4">' + detailHtml + '</td>';
           studentTableBody.appendChild(detailTr);
@@ -1852,6 +3487,7 @@
         studentCount.textContent = filtered.length + ' students';
         studentTotal.textContent = students.length;
         updateAdminStats();
+        setLanguage(currentLang);
       }
 
       function renderCourses() {
@@ -1866,7 +3502,12 @@
           const tr = document.createElement('tr');
           tr.className = 'expandable-row';
           tr.dataset.expandId = 'course-' + c.id;
-          tr.innerHTML = '<td style="cursor:pointer;"><span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon + '</span> <strong>' + c.name + '</strong><br><span style="font-size:12px;color:var(--muted);">' + c.description + '</span></td><td>' + getTeacherName(c.teacherId) + '</td><td>' + studentCount + ' students</td><td><button class="action-btn edit" data-id="' + c.id + '" data-type="course">✏️</button><button class="action-btn delete" data-id="' + c.id + '" data-type="course">🗑️</button></td>';
+          tr.innerHTML = '<td style="cursor:pointer;"><span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon +
+            '</span> <strong>' + c.name + '</strong><br><span style="font-size:12px;color:var(--muted);">' + c.description +
+            '</span></td><td>' + getTeacherName(c.teacherId) + '</td><td>' + studentCount +
+            ' students</td><td><button class="action-btn edit" data-id="' + c.id +
+            '" data-type="course">✏️</button><button class="action-btn delete" data-id="' + c.id +
+            '" data-type="course">🗑️</button></td>';
           document.getElementById('course-table-body').appendChild(tr);
           const detailTr = document.createElement('tr');
           detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
@@ -1874,7 +3515,13 @@
           const studentIds = getEnrolledStudentIds(c.id);
           let detailHtml = '<div class="detail-content"><strong>Enrolled Students:</strong> ';
           if (studentIds.length === 0) detailHtml += '<span class="empty-msg">No students enrolled.</span>';
-          else { studentIds.forEach(function(sid) { const s = students.find(function(st) { return st.id === sid; }); if (s) detailHtml += '<span class="item-tag">👤 ' + s.name + ' <span class="status-badge ' + s.status.toLowerCase() + '">' + s.status + '</span></span>'; }); }
+          else {
+            studentIds.forEach(function(sid) {
+              const s = students.find(function(st) { return st.id === sid; });
+              if (s) detailHtml += '<span class="item-tag">👤 ' + s.name + ' <span class="status-badge ' + s.status
+                .toLowerCase() + '">' + s.status + '</span></span>';
+            });
+          }
           detailHtml += '</div>';
           detailTr.innerHTML = '<td colspan="4">' + detailHtml + '</td>';
           document.getElementById('course-table-body').appendChild(detailTr);
@@ -1883,6 +3530,7 @@
         document.getElementById('course-total').textContent = courses.length;
         document.getElementById('course-enrollments-total').textContent = enrollments.length;
         updateAdminStats();
+        setLanguage(currentLang);
       }
 
       function renderBudget() {
@@ -1898,18 +3546,26 @@
           const amountDisplay = isIncome ? '+' + b.amount : '-' + Math.abs(b.amount);
           const amountClass = isIncome ? 'income' : 'expense';
           const tr = document.createElement('tr');
-          tr.innerHTML = '<td><strong>' + b.category + '</strong></td><td>' + b.type + '</td><td class="' + amountClass + '" style="font-weight:700;">$' + amountDisplay + '</td><td>' + b.date + '</td><td><span class="status-badge ' + b.status.toLowerCase() + '">' + b.status + '</span></td><td><button class="action-btn edit" data-id="' + b.id + '" data-type="budget">✏️</button><button class="action-btn delete" data-id="' + b.id + '" data-type="budget">🗑️</button></td>';
+          tr.innerHTML = '<td><strong>' + b.category + '</strong></td><td>' + b.type + '</td><td class="' + amountClass +
+            '" style="font-weight:700;">$' + amountDisplay + '</td><td>' + b.date + '</td><td><span class="status-badge ' +
+            b.status.toLowerCase() + '">' + b.status + '</span></td><td><button class="action-btn edit" data-id="' + b.id +
+            '" data-type="budget">✏️</button><button class="action-btn delete" data-id="' + b.id +
+            '" data-type="budget">🗑️</button></td>';
           document.getElementById('budget-table-body').appendChild(tr);
         });
         const total = budgetEntries.length;
         document.getElementById('budget-count').textContent = filtered.length + ' entries';
-        const totalIncome = budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(sum, b) { return sum + b.amount; }, 0);
-        const totalExpense = budgetEntries.filter(function(b) { return b.type === 'Expense'; }).reduce(function(sum, b) { return sum + Math.abs(b.amount); }, 0);
+        const totalIncome = budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(sum, b) { return sum +
+            b.amount; }, 0);
+        const totalExpense = budgetEntries.filter(function(b) { return b.type === 'Expense'; }).reduce(function(sum, b) { return sum +
+            Math.abs(b.amount); }, 0);
         document.getElementById('budget-total-income').textContent = '$' + totalIncome.toLocaleString();
         document.getElementById('budget-total-expense').textContent = '$' + totalExpense.toLocaleString();
         document.getElementById('budget-net').textContent = '$' + (totalIncome - totalExpense).toLocaleString();
-        document.getElementById('budget-net').style.color = (totalIncome - totalExpense) >= 0 ? 'var(--success)' : 'var(--danger)';
+        document.getElementById('budget-net').style.color = (totalIncome - totalExpense) >= 0 ? 'var(--success)' :
+          'var(--danger)';
         updateAdminStats();
+        setLanguage(currentLang);
       }
 
       function renderStudentCourses() {
@@ -1918,7 +3574,8 @@
         const enrolledIds = getEnrolledCourseIds(studentId);
         const enrolledCourses = courses.filter(function(c) { return enrolledIds.includes(c.id); });
         if (enrolledCourses.length === 0) {
-          document.getElementById('student-courses-container').innerHTML = '<p style="color:var(--muted);">You are not enrolled in any courses yet.</p>';
+          document.getElementById('student-courses-container').innerHTML =
+            '<p style="color:var(--muted);">You are not enrolled in any courses yet.</p>';
           return;
         }
         let html = '<div class="course-grid">';
@@ -1926,10 +3583,15 @@
           const colors = ['', 'orange-cover', 'green-cover'];
           const colorClass = colors[c.id % 3];
           const progress = Math.floor(Math.random() * 30) + 60;
-          html += '<article class="course"><div class="course-cover ' + colorClass + '">' + c.name + '</div><div class="course-body"><h3>' + c.name + '</h3><p>Teacher: ' + getTeacherName(c.teacherId) + '</p><div class="track"><div class="fill" style="width:' + progress + '%"></div></div><div class="course-footer"><span>' + progress + '% complete</span><button class="link-button">Open course</button></div></div></article>';
+          html += '<article class="course"><div class="course-cover ' + colorClass + '">' + c.name +
+            '</div><div class="course-body"><h3>' + c.name + '</h3><p>Teacher: ' + getTeacherName(c.teacherId) +
+            '</p><div class="track"><div class="fill" style="width:' + progress +
+            '%"></div></div><div class="course-footer"><span>' + progress +
+            '% complete</span><button class="link-button">Open course</button></div></div></article>';
         });
         html += '</div>';
         document.getElementById('student-courses-container').innerHTML = html;
+        setLanguage(currentLang);
       }
 
       // ----- Grades -----
@@ -1944,17 +3606,24 @@
           const courseFilter = document.getElementById('grade-course-filter');
           const currentCourseFilter = courseFilter.value;
           courseFilter.innerHTML = '<option value="all">All Courses</option>';
-          courses.forEach(function(c) { courseFilter.innerHTML += '<option value="' + c.id + '" ' + (currentCourseFilter === String(c.id) ? 'selected' : '') + '>' + c.name + '</option>'; });
+          courses.forEach(function(c) {
+            courseFilter.innerHTML += '<option value="' + c.id + '" ' + (currentCourseFilter === String(c.id) ?
+              'selected' : '') + '>' + c.name + '</option>';
+          });
           const studentFilter = document.getElementById('grade-student-filter');
           const currentStudentFilter = studentFilter.value;
           studentFilter.innerHTML = '<option value="all">All Students</option>';
-          students.forEach(function(s) { studentFilter.innerHTML += '<option value="' + s.id + '" ' + (currentStudentFilter === String(s.id) ? 'selected' : '') + '>' + s.name + '</option>'; });
+          students.forEach(function(s) {
+            studentFilter.innerHTML += '<option value="' + s.id + '" ' + (currentStudentFilter === String(s.id) ?
+              'selected' : '') + '>' + s.name + '</option>';
+          });
           renderGradeTable();
         } else {
           adminView.style.display = 'none';
           studentView.style.display = 'block';
           renderStudentGrades();
         }
+        setLanguage(currentLang);
       }
 
       function renderGradeTable() {
@@ -1967,12 +3636,15 @@
           if (!student || !course) return;
           const courseMatch = courseFilter === 'all' || e.courseId === parseInt(courseFilter);
           const studentMatch = studentFilter === 'all' || e.studentId === parseInt(studentFilter);
-          if (courseMatch && studentMatch) filtered.push({ studentId: e.studentId, studentName: student.name, courseId: e.courseId, courseName: course.name });
+          if (courseMatch && studentMatch) filtered.push({ studentId: e.studentId, studentName: student.name,
+            courseId: e.courseId, courseName: course.name });
         });
         filtered.sort(function(a, b) { return a.studentName.localeCompare(b.studentName); });
         const tbody = document.getElementById('grade-table-body');
         tbody.innerHTML = '';
-        let totalGrades = 0, passingCount = 0, failingCount = 0;
+        let totalGrades = 0,
+          passingCount = 0,
+          failingCount = 0;
         filtered.forEach(function(item) {
           const grade = gradeData[item.studentId + '-' + item.courseId] || null;
           totalGrades++;
@@ -1980,8 +3652,15 @@
           const gradeDisplay = grade !== null ? grade : '-';
           const statusClass = grade !== null ? (grade >= 60 ? 'grade-pass' : 'grade-fail') : '';
           const statusText = grade !== null ? (grade >= 60 ? '✅ Pass' : '❌ Fail') : 'Not graded';
-          if (grade !== null) { if (grade >= 60) passingCount++; else failingCount++; }
-          tr.innerHTML = '<td><strong>' + item.studentName + '</strong></td><td>' + item.courseName + '</td><td class="grade-cell"><input type="number" class="grade-input" id="grade-input-' + item.studentId + '-' + item.courseId + '" value="' + (grade !== null ? grade : '') + '" min="0" max="100" placeholder="-" /><button class="save-grade-btn" data-student="' + item.studentId + '" data-course="' + item.courseId + '">Save</button></td><td class="' + statusClass + '">' + statusText + '</td><td><button class="action-btn delete" data-student="' + item.studentId + '" data-course="' + item.courseId + '" data-type="grade">🗑️</button></td>';
+          if (grade !== null) { if (grade >= 60) passingCount++;
+            else failingCount++; }
+          tr.innerHTML = '<td><strong>' + item.studentName + '</strong></td><td>' + item.courseName +
+            '</td><td class="grade-cell"><input type="number" class="grade-input" id="grade-input-' + item.studentId +
+            '-' + item.courseId + '" value="' + (grade !== null ? grade : '') +
+            '" min="0" max="100" placeholder="-" /><button class="save-grade-btn" data-student="' + item.studentId +
+            '" data-course="' + item.courseId + '">Save</button></td><td class="' + statusClass + '">' + statusText +
+            '</td><td><button class="action-btn delete" data-student="' + item.studentId + '" data-course="' + item
+            .courseId + '" data-type="grade">🗑️</button></td>';
           tbody.appendChild(tr);
         });
         document.getElementById('grade-total').textContent = totalGrades;
@@ -1989,13 +3668,18 @@
         document.getElementById('grade-failing-count').textContent = failingCount;
         document.getElementById('grade-count').textContent = filtered.length + ' entries';
         const allGrades = [];
-        enrollments.forEach(function(e) { const g = gradeData[e.studentId + '-' + e.courseId] || null; if (g !== null) allGrades.push(g); });
-        const avgAll = allGrades.length > 0 ? Math.round(allGrades.reduce(function(a, b) { return a + b; }, 0) / allGrades.length) : 0;
+        enrollments.forEach(function(e) {
+          const g = gradeData[e.studentId + '-' + e.courseId] || null;
+          if (g !== null) allGrades.push(g);
+        });
+        const avgAll = allGrades.length > 0 ? Math.round(allGrades.reduce(function(a, b) { return a + b; }, 0) / allGrades
+          .length) : 0;
         document.getElementById('avg-grade-all').textContent = avgAll + '%';
         const passing = allGrades.filter(function(g) { return g >= 60; }).length;
         const failing = allGrades.filter(function(g) { return g < 60; }).length;
         document.getElementById('passing-students').textContent = passing;
         document.getElementById('failing-students').textContent = failing;
+        setLanguage(currentLang);
       }
 
       function renderStudentGrades() {
@@ -2014,15 +3698,19 @@
           const statusClass = grade !== null ? (grade >= 60 ? 'grade-pass' : 'grade-fail') : '';
           const statusText = grade !== null ? (grade >= 60 ? '✅ Pass' : '❌ Fail') : 'Not graded';
           if (grade !== null) gradesList.push(grade);
-          tr.innerHTML = '<td><strong>' + course.name + '</strong><br><span style="font-size:12px;color:var(--muted);">' + getTeacherName(course.teacherId) + '</span></td><td class="' + statusClass + '" style="font-size:18px;font-weight:700;">' + gradeDisplay + '%</td><td>' + statusText + '</td>';
+          tr.innerHTML = '<td><strong>' + course.name + '</strong><br><span style="font-size:12px;color:var(--muted);">' +
+            getTeacherName(course.teacherId) + '</span></td><td class="' + statusClass +
+            '" style="font-size:18px;font-weight:700;">' + gradeDisplay + '%</td><td>' + statusText + '</td>';
           tbody.appendChild(tr);
         });
-        const avg = gradesList.length > 0 ? Math.round(gradesList.reduce(function(a, b) { return a + b; }, 0) / gradesList.length) : 0;
+        const avg = gradesList.length > 0 ? Math.round(gradesList.reduce(function(a, b) { return a + b; }, 0) / gradesList
+          .length) : 0;
         document.getElementById('student-avg-grade-display').textContent = avg + '%';
         const passed = gradesList.filter(function(g) { return g >= 60; }).length;
         const failed = gradesList.filter(function(g) { return g < 60; }).length;
         document.getElementById('student-courses-passed').textContent = passed;
         document.getElementById('student-courses-failed').textContent = failed;
+        setLanguage(currentLang);
       }
 
       // ----- Classroom / Meetings -----
@@ -2036,14 +3724,19 @@
           return false;
         });
         if (userMeetings.length === 0) {
-          meetingGrid.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">No upcoming classes. Check back later!</p>';
+          meetingGrid.innerHTML =
+            '<p style="color:var(--muted);text-align:center;padding:40px;">No upcoming classes. Check back later!</p>';
           return;
         }
         userMeetings.forEach(function(meeting) {
           const card = document.createElement('div');
           card.className = 'meeting-card';
           const isTeacher = currentUser && currentUser.role === 'Teacher' && meeting.teacherId === currentUser.id;
-          card.innerHTML = '<div class="meeting-header"><h3>' + meeting.title + '</h3><div class="teacher">👨‍🏫 ' + getTeacherName(meeting.teacherId) + '</div></div><div class="meeting-body"><div class="time">📅 ' + meeting.date + ' • 🕐 ' + meeting.time + ' (' + meeting.duration + ' min)</div>' + (isTeacher ? '<div style="font-size:11px;color:var(--muted);margin-top:4px;">📋 You are teaching this class</div>' : '') + '<button class="join-btn" data-meeting="' + meeting.id + '">Join Meeting</button></div>';
+          card.innerHTML = '<div class="meeting-header"><h3>' + meeting.title + '</h3><div class="teacher">👨‍🏫 ' +
+            getTeacherName(meeting.teacherId) + '</div></div><div class="meeting-body"><div class="time">📅 ' + meeting
+            .date + ' • 🕐 ' + meeting.time + ' (' + meeting.duration + ' min)</div>' + (isTeacher ?
+            '<div style="font-size:11px;color:var(--muted);margin-top:4px;">📋 You are teaching this class</div>' :
+            '') + '<button class="join-btn" data-meeting="' + meeting.id + '">Join Meeting</button></div>';
           meetingGrid.appendChild(card);
         });
         if (currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Teacher')) {
@@ -2054,9 +3747,11 @@
           addCard.style.alignItems = 'center';
           addCard.style.justifyContent = 'center';
           addCard.style.minHeight = '180px';
-          addCard.innerHTML = '<div style="text-align:center;padding:20px;"><div style="font-size:40px;margin-bottom:10px;">➕</div><button class="primary-button" id="open-schedule-modal-btn">Schedule New Class</button></div>';
+          addCard.innerHTML =
+            '<div style="text-align:center;padding:20px;"><div style="font-size:40px;margin-bottom:10px;">➕</div><button class="primary-button" id="open-schedule-modal-btn">Schedule New Class</button></div>';
           meetingGrid.appendChild(addCard);
         }
+        setLanguage(currentLang);
       }
 
       function openPresentation(meetingId) {
@@ -2073,12 +3768,23 @@
         const slide = presentationSlides[currentSlide];
         document.getElementById('presentation-slide-title').textContent = slide.title;
         document.getElementById('presentation-slide-text').textContent = slide.content;
-        document.getElementById('presentation-slide-counter').textContent = 'Slide ' + (currentSlide + 1) + ' of ' + presentationSlides.length;
+        document.getElementById('presentation-slide-counter').textContent = 'Slide ' + (currentSlide + 1) + ' of ' +
+          presentationSlides.length;
       }
 
-      function closePresentation() { document.getElementById('presentation-overlay').classList.remove('open'); }
-      function nextSlide() { if (currentSlide < presentationSlides.length - 1) { currentSlide++; updateSlide(); } }
-      function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlide(); } }
+      function closePresentation() {
+        document.getElementById('presentation-overlay').classList.remove('open');
+      }
+
+      function nextSlide() {
+        if (currentSlide < presentationSlides.length - 1) { currentSlide++;
+          updateSlide(); }
+      }
+
+      function prevSlide() {
+        if (currentSlide > 0) { currentSlide--;
+          updateSlide(); }
+      }
 
       // ----- Calendar -----
       function renderCalendar() {
@@ -2087,7 +3793,8 @@
         const today = new Date();
         const todayStr = today.toISOString().split('T')[0];
 
-        calendarMonthLabel.textContent = new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long', year: 'numeric' });
+        calendarMonthLabel.textContent = new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long',
+          year: 'numeric' });
         calendarGrid.innerHTML = '';
 
         const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -2121,7 +3828,8 @@
             eventsDiv.className = 'day-events';
             dayMeetings.forEach(function(m) {
               const dot = document.createElement('div');
-              dot.className = 'event-dot' + (m.teacherId === (currentUser ? currentUser.id : null) ? ' teacher' : '');
+              dot.className = 'event-dot' + (m.teacherId === (currentUser ? currentUser.id : null) ? ' teacher' :
+                '');
               dot.textContent = '• ' + m.title + ' (' + m.time + ')';
               eventsDiv.appendChild(dot);
             });
@@ -2135,7 +3843,8 @@
               openScheduleModal();
             } else {
               const dayMeetings = meetings.filter(function(m) { return m.date === date; });
-              alert('Classes on ' + date + ': ' + (dayMeetings.length > 0 ? dayMeetings.map(function(m) { return m.title; }).join(', ') : 'No classes scheduled.'));
+              alert('Classes on ' + date + ': ' + (dayMeetings.length > 0 ? dayMeetings.map(function(m) { return m
+                  .title; }).join(', ') : 'No classes scheduled.'));
             }
           });
 
@@ -2143,11 +3852,13 @@
         }
 
         renderUpcomingClasses();
+        setLanguage(currentLang);
       }
 
       function renderUpcomingClasses() {
         const today = new Date().toISOString().split('T')[0];
-        const upcoming = meetings.filter(function(m) { return m.date >= today; }).sort(function(a, b) { return a.date.localeCompare(b.date) || a.time.localeCompare(b.time); });
+        const upcoming = meetings.filter(function(m) { return m.date >= today; }).sort(function(a, b) { return a.date
+            .localeCompare(b.date) || a.time.localeCompare(b.time); });
 
         if (upcoming.length === 0) {
           upcomingClassesList.innerHTML = '<p style="color:var(--muted);">No upcoming classes scheduled.</p>';
@@ -2157,9 +3868,12 @@
         let html = '';
         upcoming.slice(0, 10).forEach(function(m) {
           const isTeacher = currentUser && currentUser.role === 'Teacher' && m.teacherId === currentUser.id;
-          html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border:1px solid var(--line);border-radius:8px;background:white;">' +
-            '<div><strong>' + m.title + '</strong><br><span style="font-size:12px;color:var(--muted);">📅 ' + m.date + ' at ' + m.time + ' · ' + getTeacherName(m.teacherId) + (isTeacher ? ' (You)' : '') + '</span></div>' +
-            '<button class="join-btn" data-meeting="' + m.id + '" style="padding:6px 16px;border:0;border-radius:6px;background:var(--primary);color:white;font-weight:600;">Join</button>' +
+          html +=
+            '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border:1px solid var(--line);border-radius:8px;background:white;">' +
+            '<div><strong>' + m.title + '</strong><br><span style="font-size:12px;color:var(--muted);">📅 ' + m.date +
+            ' at ' + m.time + ' · ' + getTeacherName(m.teacherId) + (isTeacher ? ' (You)' : '') + '</span></div>' +
+            '<button class="join-btn" data-meeting="' + m.id +
+            '" style="padding:6px 16px;border:0;border-radius:6px;background:var(--primary);color:white;font-weight:600;">Join</button>' +
             '</div>';
         });
         upcomingClassesList.innerHTML = html;
@@ -2170,6 +3884,7 @@
             openPresentation(meetingId);
           });
         });
+        setLanguage(currentLang);
       }
 
       function openScheduleModal() {
@@ -2209,6 +3924,7 @@
         scheduleLink.value = '';
 
         scheduleModalOverlay.classList.add('open');
+        setLanguage(currentLang);
       }
 
       function scheduleClass(title, teacherId, date, time, duration, link) {
@@ -2226,6 +3942,7 @@
         renderCalendar();
         renderUpcomingClasses();
         alert('Class scheduled successfully!');
+        setLanguage(currentLang);
       }
 
       // ----- Tasks -----
@@ -2245,6 +3962,7 @@
           studentView.style.display = 'block';
           renderStudentTasks();
         }
+        setLanguage(currentLang);
       }
 
       function renderAdminTasks() {
@@ -2266,13 +3984,18 @@
         }
 
         const totalTasks = tasks.length;
-        let pendingCount = 0, submittedCount = 0, gradedCount = 0;
+        let pendingCount = 0,
+          submittedCount = 0,
+          gradedCount = 0;
         tasks.forEach(function(task) {
-          const submissions = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id + '-'); });
-          const graded = submissions.filter(function(key) { return taskSubmissions[key] && taskSubmissions[key].grade !== null && taskSubmissions[key].grade !== undefined; });
-          if (graded.length === submissions.length && submissions.length > 0) { gradedCount++; }
-          else if (submissions.length > 0) { submittedCount++; }
-          else { pendingCount++; }
+          const submissions = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id +
+            '-'); });
+          const graded = submissions.filter(function(key) {
+            return taskSubmissions[key] && taskSubmissions[key].grade !== null && taskSubmissions[key].grade !==
+            undefined;
+          });
+          if (graded.length === submissions.length && submissions.length > 0) { gradedCount++; } else if (submissions
+            .length > 0) { submittedCount++; } else { pendingCount++; }
         });
         document.getElementById('task-total').textContent = totalTasks;
         document.getElementById('task-pending').textContent = pendingCount;
@@ -2280,31 +4003,44 @@
         document.getElementById('task-graded').textContent = gradedCount;
 
         filtered.forEach(function(task) {
-          const submissionKeys = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id + '-'); });
+          const submissionKeys = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id +
+            '-'); });
           const totalStudents = students.length;
           const submittedCount = submissionKeys.length;
 
           const card = document.createElement('div');
           card.className = 'task-card';
           const deadlineClass = task.deadline < new Date().toISOString().split('T')[0] ? 'overdue' : 'on-time';
-          const priorityLabel = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' }[task.priority] || 'Medium';
+          const priorityLabel = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' } [task.priority] || 'Medium';
           const priorityClass = task.priority || 'medium';
 
           let filesHtml = '';
           if (task.files && task.files.length > 0) {
             filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
             task.files.forEach(function(file) {
-              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="openFilePreview(\'' + file.name + '\', \'' + (file.data || '') + '\')">' + file.name + '</span></div>';
+              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="openFilePreview(\'' +
+                file.name + '\', \'' + (file.data || '') + '\')">' + file.name + '</span></div>';
             });
             filesHtml += '</div>';
           }
 
           card.innerHTML =
-            '<div class="task-header"><div><h3>' + task.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">Assigned to: ' + (task.assignedTo === 'all' ? 'All Students' : 'Specific') + '</div></div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="task-priority ' + priorityClass + '">' + priorityLabel + '</span><span class="task-type ' + task.type + '">' + task.type.charAt(0).toUpperCase() + task.type.slice(1) + '</span></div></div>' +
-            '<div class="task-body"><div class="task-description">' + task.description + '</div><div class="task-deadline ' + deadlineClass + '">⏰ Due: ' + task.deadline + (deadlineClass === 'overdue' ? ' (Overdue!)' : '') + '</div>' + filesHtml + '<div style="margin-top:8px;font-size:12px;color:var(--muted);">📊 ' + submittedCount + ' / ' + totalStudents + ' students submitted</div></div>' +
-            '<div class="task-footer"><button class="secondary-button view-submissions-btn" data-task="' + task.id + '">📋 View Submissions (' + submittedCount + ')</button><button class="action-btn delete" data-id="' + task.id + '" data-type="task">🗑️ Delete</button></div>';
+            '<div class="task-header"><div><h3>' + task.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">Assigned to: ' +
+            (task.assignedTo === 'all' ? 'All Students' : 'Specific') +
+            '</div></div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="task-priority ' +
+            priorityClass + '">' + priorityLabel + '</span><span class="task-type ' + task.type + '">' + task.type
+            .charAt(0).toUpperCase() + task.type.slice(1) + '</span></div></div>' +
+            '<div class="task-body"><div class="task-description">' + task.description + '</div><div class="task-deadline ' +
+            deadlineClass + '">⏰ Due: ' + task.deadline + (deadlineClass === 'overdue' ? ' (Overdue!)' : '') +
+            '</div>' + filesHtml +
+            '<div style="margin-top:8px;font-size:12px;color:var(--muted);">📊 ' + submittedCount + ' / ' +
+            totalStudents + ' students submitted</div></div>' +
+            '<div class="task-footer"><button class="secondary-button view-submissions-btn" data-task="' + task.id +
+            '">📋 View Submissions (' + submittedCount + ')</button><button class="action-btn delete" data-id="' +
+            task.id + '" data-type="task">🗑️ Delete</button></div>';
           container.appendChild(card);
         });
+        setLanguage(currentLang);
       }
 
       function renderStudentTasks() {
@@ -2320,7 +4056,9 @@
           return false;
         });
 
-        let pendingCount = 0, submittedCount = 0, gradedCount = 0;
+        let pendingCount = 0,
+          submittedCount = 0,
+          gradedCount = 0;
         assignedTasks.forEach(function(task) {
           const key = task.id + '-' + studentId;
           const sub = taskSubmissions[key];
@@ -2337,7 +4075,8 @@
         container.innerHTML = '';
 
         if (assignedTasks.length === 0) {
-          container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">No tasks assigned to you yet.</p>';
+          container.innerHTML =
+            '<p style="color:var(--muted);text-align:center;padding:40px;">No tasks assigned to you yet.</p>';
           return;
         }
 
@@ -2352,16 +4091,18 @@
         assignedTasks.forEach(function(task) {
           const key = task.id + '-' + studentId;
           const submission = taskSubmissions[key];
-          const status = submission ? (submission.grade !== null && submission.grade !== undefined ? 'graded' : 'submitted') : 'pending';
+          const status = submission ? (submission.grade !== null && submission.grade !== undefined ? 'graded' :
+            'submitted') : 'pending';
           const deadlineClass = task.deadline < new Date().toISOString().split('T')[0] ? 'overdue' : 'on-time';
-          const priorityLabel = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' }[task.priority] || 'Medium';
+          const priorityLabel = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' } [task.priority] || 'Medium';
           const priorityClass = task.priority || 'medium';
 
           let filesHtml = '';
           if (task.files && task.files.length > 0) {
             filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
             task.files.forEach(function(file) {
-              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="openFilePreview(\'' + file.name + '\', \'' + (file.data || '') + '\')">' + file.name + '</span></div>';
+              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="openFilePreview(\'' +
+                file.name + '\', \'' + (file.data || '') + '\')">' + file.name + '</span></div>';
             });
             filesHtml += '</div>';
           }
@@ -2374,26 +4115,36 @@
 
           if (status === 'graded') {
             statusDisplay = '<span class="graded-status">✅ Graded: ' + submission.grade + '%</span>';
-            footerHtml = '<div class="graded-status">✅ Graded: ' + submission.grade + '%</div>' + (submission.feedback ? '<div style="font-size:12px;color:var(--muted);">📝 ' + submission.feedback + '</div>' : '');
+            footerHtml = '<div class="graded-status">✅ Graded: ' + submission.grade + '%</div>' + (submission
+              .feedback ? '<div style="font-size:12px;color:var(--muted);">📝 ' + submission.feedback + '</div>' :
+              '');
           } else if (status === 'submitted') {
             statusDisplay = '<span class="submitted-status">⏳ Submitted</span>';
-            footerHtml = '<div class="submitted-status">⏳ Submitted</div><div style="font-size:12px;color:var(--muted);">Waiting for grading...</div>';
+            footerHtml =
+              '<div class="submitted-status">⏳ Submitted</div><div style="font-size:12px;color:var(--muted);">Waiting for grading...</div>';
             if (submission.files && submission.files.length > 0) {
-              footerHtml += '<div style="font-size:12px;color:var(--muted);">📎 ' + submission.files.map(function(f) { return f.name; }).join(', ') + '</div>';
+              footerHtml += '<div style="font-size:12px;color:var(--muted);">📎 ' + submission.files.map(function(
+                f) { return f.name; }).join(', ') + '</div>';
             }
           } else {
             statusDisplay = '<span class="pill danger">⚠️ Pending</span>';
             footerHtml =
               '<input type="text" class="answer-input" id="answer-' + task.id + '" placeholder="Enter your answer..." />' +
               '<input type="file" id="file-' + task.id + '" style="display:none;" multiple />' +
-              '<button class="file-upload-btn" onclick="document.getElementById(\'file-' + task.id + '\').click()">📎 Upload Files</button>' +
+              '<button class="file-upload-btn" onclick="document.getElementById(\'file-' + task.id +
+              '\').click()">📎 Upload Files</button>' +
               '<span id="file-name-' + task.id + '" class="file-name">No files chosen</span>' +
               '<button class="submit-btn" data-task="' + task.id + '">Submit</button>';
           }
 
           card.innerHTML =
-            '<div class="task-header"><div><h3>' + task.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">' + task.type.charAt(0).toUpperCase() + task.type.slice(1) + '</div></div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="task-priority ' + priorityClass + '">' + priorityLabel + '</span>' + statusDisplay + '</div></div>' +
-            '<div class="task-body"><div class="task-description">' + task.description + '</div><div class="task-deadline ' + deadlineClass + '">⏰ Due: ' + task.deadline + (deadlineClass === 'overdue' ? ' ⚠️ Overdue!' : '') + '</div>' + filesHtml + '</div>' +
+            '<div class="task-header"><div><h3>' + task.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">' +
+            task.type.charAt(0).toUpperCase() + task.type.slice(1) +
+            '</div></div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="task-priority ' +
+            priorityClass + '">' + priorityLabel + '</span>' + statusDisplay + '</div></div>' +
+            '<div class="task-body"><div class="task-description">' + task.description + '</div><div class="task-deadline ' +
+            deadlineClass + '">⏰ Due: ' + task.deadline + (deadlineClass === 'overdue' ? ' ⚠️ Overdue!' : '') +
+            '</div>' + filesHtml + '</div>' +
             '<div class="task-footer">' + footerHtml + '</div>';
           container.appendChild(card);
 
@@ -2406,14 +4157,16 @@
                 fileNameSpan.textContent = names;
                 const key = task.id + '-' + studentId;
                 if (!taskSubmissions[key]) {
-                  taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null, files: [] };
+                  taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null,
+                    files: [] };
                 }
                 const filesData = [];
                 let completed = 0;
                 Array.from(e.target.files).forEach(function(file, index) {
                   const reader = new FileReader();
                   reader.onload = function(event) {
-                    filesData[index] = { name: file.name, size: file.size, type: file.type, data: event.target.result };
+                    filesData[index] = { name: file.name, size: file.size, type: file.type,
+                      data: event.target.result };
                     completed++;
                     if (completed === e.target.files.length) {
                       taskSubmissions[key].files = filesData;
@@ -2428,6 +4181,7 @@
             });
           }
         });
+        setLanguage(currentLang);
       }
 
       // ----- File Preview -----
@@ -2436,7 +4190,9 @@
         body.innerHTML = '';
 
         if (!fileData || fileData === '' || fileData === 'dummy-pdf-data' || fileData === 'dummy-doc-data') {
-          body.innerHTML = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br>File content not available in demo mode.</div>';
+          body.innerHTML =
+            '<div class="file-preview-fallback">📄 ' + fileName +
+            '<br><br>File content not available in demo mode.</div>';
           document.getElementById('file-preview-overlay').classList.add('open');
           return;
         }
@@ -2448,9 +4204,12 @@
         if (isImage) {
           body.innerHTML = '<img src="' + fileData + '" class="file-preview-image" alt="' + fileName + '" />';
         } else if (isPDF) {
-          body.innerHTML = '<iframe src="' + fileData + '" class="file-preview-iframe" title="' + fileName + '"></iframe>';
+          body.innerHTML = '<iframe src="' + fileData + '" class="file-preview-iframe" title="' + fileName +
+            '"></iframe>';
         } else {
-          body.innerHTML = '<div class="file-preview-fallback">📄 ' + fileName + '<br><br><a href="' + fileData + '" download="' + fileName + '" style="color:var(--primary);">⬇️ Download file</a></div>';
+          body.innerHTML = '<div class="file-preview-fallback">📄 ' + fileName +
+            '<br><br><a href="' + fileData + '" download="' + fileName +
+            '" style="color:var(--primary);">⬇️ Download file</a></div>';
         }
         document.getElementById('file-preview-overlay').classList.add('open');
       }
@@ -2481,7 +4240,8 @@
         if (submission.files && submission.files.length > 0) {
           let html = '<strong>📎 Submission Files:</strong><div style="margin-top:4px;">';
           submission.files.forEach(function(file) {
-            html += '<span class="item-tag" style="display:inline-block;padding:2px 8px;margin:2px;background:#f3f4f6;border-radius:4px;font-size:12px;">📄 ' + file.name + '</span>';
+            html += '<span class="item-tag" style="display:inline-block;padding:2px 8px;margin:2px;background:#f3f4f6;border-radius:4px;font-size:12px;">📄 ' +
+              file.name + '</span>';
           });
           html += '</div>';
           fileContainer.innerHTML = html;
@@ -2490,6 +4250,7 @@
         }
 
         document.getElementById('grade-task-modal-overlay').classList.add('open');
+        setLanguage(currentLang);
       }
 
       function gradeSubmission(taskId, studentId, grade, feedback) {
@@ -2500,6 +4261,7 @@
           saveData();
           renderTasks();
           alert('Grade saved successfully!');
+          setLanguage(currentLang);
         }
       }
 
@@ -2519,6 +4281,7 @@
         saveData();
         renderTasks();
         alert('Task created successfully!');
+        setLanguage(currentLang);
       }
 
       function deleteTask(taskId) {
@@ -2528,6 +4291,7 @@
         });
         saveData();
         renderTasks();
+        setLanguage(currentLang);
       }
 
       function submitTaskAnswer(taskId, studentId, answer, files) {
@@ -2543,6 +4307,7 @@
         saveData();
         renderTasks();
         alert('Task submitted!');
+        setLanguage(currentLang);
       }
 
       function updateAdminStats() {
@@ -2550,7 +4315,8 @@
         totalStudentsEl.textContent = students.length;
         totalCoursesEl.textContent = courses.length;
         totalEnrollmentsEl.textContent = enrollments.length;
-        const totalIncome = budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(sum, b) { return sum + b.amount; }, 0);
+        const totalIncome = budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(sum, b) { return sum +
+            b.amount; }, 0);
         totalRevenueEl.textContent = '$' + totalIncome.toLocaleString();
       }
 
@@ -2561,6 +4327,7 @@
           if (activePage.id === 'students') renderStudents();
           else if (activePage.id === 'courses-admin') renderCourses();
         }
+        setLanguage(currentLang);
       }
 
       // ----- Modal Functions -----
@@ -2584,7 +4351,9 @@
             document.getElementById('modal-sub').textContent = 'Enter course details';
             document.getElementById('modal-fields').innerHTML =
               '<label>Course Name</label><input type="text" id="modal-course-name" placeholder="e.g. Physics" />' +
-              '<label>Teacher</label><select id="modal-course-teacher">' + teachers.map(function(t) { return '<option value="' + t.id + '">' + t.name + '</option>'; }).join('') + '</select>' +
+              '<label>Teacher</label><select id="modal-course-teacher">' + teachers.map(function(t) {
+                return '<option value="' + t.id + '">' + t.name + '</option>';
+              }).join('') + '</select>' +
               '<label>Description</label><input type="text" id="modal-course-description" placeholder="e.g. Year 10 Physics" />';
             editingId = null;
           } else {
@@ -2609,7 +4378,10 @@
                 '<label>Name</label><input type="text" id="modal-name" value="' + s.name + '" />' +
                 '<label>Email</label><input type="email" id="modal-email" value="' + s.email + '" />' +
                 '<label>Password</label><input type="password" id="modal-password" placeholder="Leave blank to keep current" />' +
-                '<label>Status</label><select id="modal-status"><option value="Active"' + (s.status === 'Active' ? ' selected' : '') + '>Active</option><option value="Warning"' + (s.status === 'Warning' ? ' selected' : '') + '>Warning</option><option value="Inactive"' + (s.status === 'Inactive' ? ' selected' : '') + '>Inactive</option></select>';
+                '<label>Status</label><select id="modal-status"><option value="Active"' + (s.status === 'Active' ?
+                  ' selected' : '') + '>Active</option><option value="Warning"' + (s.status === 'Warning' ?
+                  ' selected' : '') + '>Warning</option><option value="Inactive"' + (s.status === 'Inactive' ?
+                  ' selected' : '') + '>Inactive</option></select>';
             }
           } else if (type === 'course') {
             document.getElementById('modal-title').textContent = 'Edit Course';
@@ -2619,8 +4391,12 @@
               editingId = c.id;
               document.getElementById('modal-fields').innerHTML =
                 '<label>Course Name</label><input type="text" id="modal-course-name" value="' + c.name + '" />' +
-                '<label>Teacher</label><select id="modal-course-teacher">' + teachers.map(function(t) { return '<option value="' + t.id + '"' + (t.id === c.teacherId ? ' selected' : '') + '>' + t.name + '</option>'; }).join('') + '</select>' +
-                '<label>Description</label><input type="text" id="modal-course-description" value="' + c.description + '" />';
+                '<label>Teacher</label><select id="modal-course-teacher">' + teachers.map(function(t) {
+                  return '<option value="' + t.id + '"' + (t.id === c.teacherId ? ' selected' : '') + '>' + t
+                    .name + '</option>';
+                }).join('') + '</select>' +
+                '<label>Description</label><input type="text" id="modal-course-description" value="' + c
+                .description + '" />';
             }
           } else {
             document.getElementById('modal-title').textContent = 'Edit Budget Entry';
@@ -2631,14 +4407,21 @@
               const isIncome = b.type === 'Income';
               document.getElementById('modal-fields').innerHTML =
                 '<label>Category</label><input type="text" id="modal-category" value="' + b.category + '" />' +
-                '<label>Type</label><select id="modal-type"><option value="Income"' + (isIncome ? ' selected' : '') + '>Income</option><option value="Expense"' + (!isIncome ? ' selected' : '') + '>Expense</option></select>' +
-                '<label>Amount ($)</label><input type="number" id="modal-amount" value="' + Math.abs(b.amount) + '" min="0" step="1" />' +
+                '<label>Type</label><select id="modal-type"><option value="Income"' + (isIncome ? ' selected' :
+                  '') + '>Income</option><option value="Expense"' + (!isIncome ? ' selected' : '') +
+                '>Expense</option></select>' +
+                '<label>Amount ($)</label><input type="number" id="modal-amount" value="' + Math.abs(b.amount) +
+                '" min="0" step="1" />' +
                 '<label>Date</label><input type="date" id="modal-date" value="' + b.date + '" />' +
-                '<label>Status</label><select id="modal-status"><option value="Paid"' + (b.status === 'Paid' ? ' selected' : '') + '>Paid</option><option value="Pending"' + (b.status === 'Pending' ? ' selected' : '') + '>Pending</option><option value="Unpaid"' + (b.status === 'Unpaid' ? ' selected' : '') + '>Unpaid</option></select>';
+                '<label>Status</label><select id="modal-status"><option value="Paid"' + (b.status === 'Paid' ?
+                  ' selected' : '') + '>Paid</option><option value="Pending"' + (b.status === 'Pending' ?
+                  ' selected' : '') + '>Pending</option><option value="Unpaid"' + (b.status === 'Unpaid' ?
+                  ' selected' : '') + '>Unpaid</option></select>';
             }
           }
         }
         document.getElementById('modal-overlay').classList.add('open');
+        setLanguage(currentLang);
       }
 
       function closeModal() {
@@ -2657,7 +4440,8 @@
           if (!name || !email) { alert('Please fill in all fields'); return; }
           if (modalMode === 'add') {
             if (getUserByEmail(email)) { alert('Email already exists.'); return; }
-            students.push({ id: generateId(), name: name, email: email, password: password || 'password123', role: 'Student', status: status, createdAt: new Date().toISOString().split('T')[0] });
+            students.push({ id: generateId(), name: name, email: email, password: password || 'password123',
+              role: 'Student', status: status, createdAt: new Date().toISOString().split('T')[0] });
           } else {
             const index = students.findIndex(function(s) { return s.id === editingId; });
             if (index !== -1) {
@@ -2679,7 +4463,8 @@
             courses.push({ id: courses.length + 1, name: name, teacherId: teacherId, description: description });
           } else {
             const index = courses.findIndex(function(c) { return c.id === editingId; });
-            if (index !== -1) { courses[index] = { id: editingId, name: name, teacherId: teacherId, description: description }; }
+            if (index !== -1) { courses[index] = { id: editingId, name: name, teacherId: teacherId,
+              description: description }; }
           }
           saveData();
           renderCourses();
@@ -2694,15 +4479,18 @@
           if (!category || isNaN(amount) || !date) { alert('Please fill in all fields'); return; }
           const finalAmount = type === 'Income' ? amount : -amount;
           if (modalMode === 'add') {
-            budgetEntries.push({ id: budgetEntries.length + 1, category: category, type: type, amount: finalAmount, date: date, status: status });
+            budgetEntries.push({ id: budgetEntries.length + 1, category: category, type: type, amount: finalAmount,
+              date: date, status: status });
           } else {
             const index = budgetEntries.findIndex(function(b) { return b.id === editingId; });
-            if (index !== -1) { budgetEntries[index] = { id: editingId, category: category, type: type, amount: finalAmount, date: date, status: status }; }
+            if (index !== -1) { budgetEntries[index] = { id: editingId, category: category, type: type,
+                amount: finalAmount, date: date, status: status }; }
           }
           saveData();
           renderBudget();
           closeModal();
         }
+        setLanguage(currentLang);
       }
 
       function deleteEntry(type, id) {
@@ -2723,6 +4511,7 @@
         }
         saveData();
         updateAdminStats();
+        setLanguage(currentLang);
       }
 
       function openEnrollModal(studentId) {
@@ -2736,10 +4525,13 @@
         if (courses.length === 0) html = '<p style="color:var(--muted);padding:20px;text-align:center;">No courses available.</p>';
         else courses.forEach(function(c) {
           const checked = enrolledIds.includes(c.id) ? 'checked' : '';
-          html += '<div class="enrollment-item"><input type="checkbox" id="enroll-course-' + c.id + '" value="' + c.id + '" ' + checked + ' /><label for="enroll-course-' + c.id + '"><strong>' + c.name + '</strong></label><span class="course-teacher">' + getTeacherName(c.teacherId) + '</span></div>';
+          html += '<div class="enrollment-item"><input type="checkbox" id="enroll-course-' + c.id + '" value="' + c
+            .id + '" ' + checked + ' /><label for="enroll-course-' + c.id + '"><strong>' + c.name +
+            '</strong></label><span class="course-teacher">' + getTeacherName(c.teacherId) + '</span></div>';
         });
         document.getElementById('enrollment-list').innerHTML = html;
         document.getElementById('enroll-modal-overlay').classList.add('open');
+        setLanguage(currentLang);
       }
 
       function closeEnrollModal() {
@@ -2759,31 +4551,11 @@
         renderCourses();
         renderStudentCourses();
         closeEnrollModal();
-      }
-
-      // ----- Language -----
-      let currentLang = localStorage.getItem('nokj-language') || 'en';
-
-      function setLanguage(lang) {
-        currentLang = lang;
-        localStorage.setItem('nokj-language', lang);
-        if (lang === 'en') {
-          flagUK.style.display = 'block'; flagRU.style.display = 'none';
-          loginFlagUK.style.display = 'block'; loginFlagRU.style.display = 'none';
-          registerFlagUK.style.display = 'block'; registerFlagRU.style.display = 'none';
-        } else {
-          flagUK.style.display = 'none'; flagRU.style.display = 'block';
-          loginFlagUK.style.display = 'none'; loginFlagRU.style.display = 'block';
-          registerFlagUK.style.display = 'none'; registerFlagRU.style.display = 'block';
-        }
-      }
-
-      function toggleLanguage() {
-        setLanguage(currentLang === 'en' ? 'ru' : 'en');
+        setLanguage(currentLang);
       }
 
       // ----- Event Listeners -----
-      // Landing page buttons (using IDs instead of onclick)
+      // Landing page buttons
       document.getElementById('landing-login-btn').addEventListener('click', showLoginScreen);
       document.getElementById('landing-register-btn').addEventListener('click', showRegisterScreen);
       document.getElementById('landing-start-btn').addEventListener('click', showRegisterScreen);
@@ -2800,7 +4572,8 @@
       // Register
       registerForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        register(registerName.value.trim(), registerEmail.value.trim(), registerPassword.value.trim(), registerRole.value);
+        register(registerName.value.trim(), registerEmail.value.trim(), registerPassword.value.trim(), registerRole
+          .value);
       });
 
       // Logout
@@ -2888,11 +4661,12 @@
           const input = document.getElementById('grade-input-' + studentId + '-' + courseId);
           if (input) {
             const value = input.value.trim();
-            if (value === '') { delete gradeData[studentId + '-' + courseId]; }
-            else {
+            if (value === '') { delete gradeData[studentId + '-' + courseId]; } else {
               const grade = parseFloat(value);
-              if (!isNaN(grade) && grade >= 0 && grade <= 100) { gradeData[studentId + '-' + courseId] = grade; }
-              else { alert('Please enter a grade between 0 and 100.'); return; }
+              if (!isNaN(grade) && grade >= 0 && grade <= 100) { gradeData[studentId + '-' + courseId] = grade; } else {
+                alert('Please enter a grade between 0 and 100.');
+                return;
+              }
             }
             saveData();
             renderGrades();
@@ -2936,21 +4710,21 @@
       });
       document.addEventListener('keydown', function(e) {
         if (document.getElementById('presentation-overlay').classList.contains('open')) {
-          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
-          else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
-          else if (e.key === 'Escape') closePresentation();
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault();
+            nextSlide(); } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault();
+            prevSlide(); } else if (e.key === 'Escape') closePresentation();
         }
       });
 
       // Calendar navigation
       document.getElementById('calendar-prev').addEventListener('click', function() {
-        if (currentMonth === 0) { currentMonth = 11; currentYear--; }
-        else { currentMonth--; }
+        if (currentMonth === 0) { currentMonth = 11;
+          currentYear--; } else { currentMonth--; }
         renderCalendar();
       });
       document.getElementById('calendar-next').addEventListener('click', function() {
-        if (currentMonth === 11) { currentMonth = 0; currentYear++; }
-        else { currentMonth++; }
+        if (currentMonth === 11) { currentMonth = 0;
+          currentYear++; } else { currentMonth++; }
         renderCalendar();
       });
 
@@ -3003,6 +4777,7 @@
         tempTaskFiles = [];
         document.getElementById('task-modal-save').textContent = 'Create Task';
         document.getElementById('task-modal-overlay').classList.add('open');
+        setLanguage(currentLang);
       });
 
       document.getElementById('task-modal-cancel').addEventListener('click', function() {
@@ -3050,11 +4825,13 @@
         let html = '<label>Select ' + (val === 'course' ? 'Courses' : 'Students') + '</label>';
         if (val === 'course') {
           courses.forEach(function(c) {
-            html += '<div class="enrollment-item"><input type="checkbox" class="task-assign-checkbox" value="' + c.id + '" /><label>' + c.name + '</label></div>';
+            html += '<div class="enrollment-item"><input type="checkbox" class="task-assign-checkbox" value="' +
+              c.id + '" /><label>' + c.name + '</label></div>';
           });
         } else {
           students.forEach(function(s) {
-            html += '<div class="enrollment-item"><input type="checkbox" class="task-assign-checkbox" value="' + s.id + '" /><label>' + s.name + '</label></div>';
+            html += '<div class="enrollment-item"><input type="checkbox" class="task-assign-checkbox" value="' +
+              s.id + '" /><label>' + s.name + '</label></div>';
           });
         }
         optionsContainer.innerHTML = html;
@@ -3073,9 +4850,11 @@
 
         let assignedIds = [];
         if (assignTo !== 'all') {
-          const checkboxes = document.getElementById('task-modal-assign-options').querySelectorAll('.task-assign-checkbox:checked');
+          const checkboxes = document.getElementById('task-modal-assign-options').querySelectorAll(
+            '.task-assign-checkbox:checked');
           checkboxes.forEach(function(cb) { assignedIds.push(parseInt(cb.value)); });
-          if (assignedIds.length === 0) { alert('Please select at least one ' + (assignTo === 'course' ? 'course' : 'student') + '.'); return; }
+          if (assignedIds.length === 0) { alert('Please select at least one ' + (assignTo === 'course' ?
+              'course' : 'student') + '.'); return; }
         }
 
         const files = tempTaskFiles.map(function(f) { return { name: f.name, data: f.data }; });
@@ -3138,7 +4917,8 @@
               studentList.push({
                 id: studentId,
                 name: student.name,
-                status: submission.grade !== null && submission.grade !== undefined ? '✅ Graded: ' + submission.grade + '%' : '⏳ Pending',
+                status: submission.grade !== null && submission.grade !== undefined ? '✅ Graded: ' +
+                  submission.grade + '%' : '⏳ Pending',
                 submission: submission
               });
             }
@@ -3221,7 +5001,9 @@
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url; a.download = 'students.csv'; a.click();
+        a.href = url;
+        a.download = 'students.csv';
+        a.click();
         URL.revokeObjectURL(url);
       });
 
@@ -3236,7 +5018,9 @@
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url; a.download = 'budget.csv'; a.click();
+        a.href = url;
+        a.download = 'budget.csv';
+        a.click();
         URL.revokeObjectURL(url);
       });
 

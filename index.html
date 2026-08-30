@@ -7,7 +7,7 @@
   <title>NOKJ Academy</title>
 
   <style>
-    /* ===== RESET & VARIABLES ===== */
+    /* === RESET & VARIABLES === */
     :root {
       --primary: #4f46e5;
       --primary-dark: #3730a3;
@@ -39,7 +39,7 @@
       cursor: pointer;
     }
 
-    /* ===== LANDING PAGE ===== */
+    /* === LANDING PAGE === */
     #landing-page {
       display: flex;
       flex-direction: column;
@@ -220,7 +220,7 @@
       border-top: 1px solid rgba(0, 0, 0, 0.05);
     }
 
-    /* ===== LOGIN & REGISTER ===== */
+    /* === LOGIN & REGISTER === */
     #login-screen,
     #register-screen {
       display: none;
@@ -375,7 +375,7 @@
       text-decoration: underline;
     }
 
-    /* ===== MAIN APP ===== */
+    /* === MAIN APP === */
     #app {
       display: none;
     }
@@ -383,7 +383,7 @@
       display: block;
     }
 
-    /* ===== SIDEBAR ===== */
+    /* === SIDEBAR === */
     .sidebar {
       width: 245px;
       min-height: 100vh;
@@ -478,7 +478,7 @@
       line-height: 1.45;
     }
 
-    /* ===== TOPBAR ===== */
+    /* === TOPBAR === */
     main {
       min-height: 100vh;
       margin-left: 245px;
@@ -568,7 +568,7 @@
       background: #fee2e2;
     }
 
-    /* ===== PAGES ===== */
+    /* === PAGES === */
     .page {
       display: none;
       max-width: 1380px;
@@ -603,7 +603,7 @@
       font-size: 14px;
     }
 
-    /* ===== HERO ===== */
+    /* === HERO === */
     .hero {
       min-height: 190px;
       padding: 28px;
@@ -671,7 +671,7 @@
       background: white;
     }
 
-    /* ===== STATS & CARDS ===== */
+    /* === STATS & CARDS === */
     .stats {
       margin: 23px 0;
       display: grid;
@@ -748,7 +748,7 @@
       color: var(--success);
     }
 
-    /* ===== TABLES ===== */
+    /* === TABLES === */
     .table-container {
       overflow-x: auto;
       border: 1px solid var(--line);
@@ -944,7 +944,7 @@
       color: var(--danger);
     }
 
-    /* ===== GRADES ===== */
+    /* === GRADES === */
     .grade-pass {
       color: var(--success);
       font-weight: 700;
@@ -1011,7 +1011,7 @@
       font-size: 12px;
     }
 
-    /* ===== CLASSROOM ===== */
+    /* === CLASSROOM === */
     .meeting-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1073,7 +1073,7 @@
       font-family: monospace;
     }
 
-    /* ===== CALENDAR ===== */
+    /* === CALENDAR === */
     .calendar-container {
       background: white;
       border: 1px solid var(--line);
@@ -1167,7 +1167,7 @@
       color: var(--primary);
     }
 
-    /* ===== PRESENTATION ===== */
+    /* === PRESENTATION === */
     .presentation-overlay {
       display: none;
       position: fixed;
@@ -1220,7 +1220,7 @@
       white-space: pre-wrap;
     }
 
-    /* ===== TASKS ===== */
+    /* === TASKS === */
     .task-grid {
       display: grid;
       gap: 17px;
@@ -1433,7 +1433,7 @@
       margin-top: 4px;
     }
 
-    /* ===== FILE PREVIEW ===== */
+    /* === FILE PREVIEW === */
     .file-preview-overlay {
       display: none;
       position: fixed;
@@ -1496,7 +1496,7 @@
       color: var(--muted);
     }
 
-    /* ===== MODALS ===== */
+    /* === MODALS === */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -1920,7 +1920,7 @@
       display: none;
     }
 
-    /* ===== RESPONSIVE ===== */
+    /* === RESPONSIVE === */
     @media (max-width: 1030px) {
       .stats,
       .admin-stats,
@@ -2117,13 +2117,10 @@
 
 <body>
 
-  <!-- ========== LANDING PAGE ========== -->
+  <!-- ===== LANDING PAGE ===== -->
   <div id="landing-page">
     <header class="landing-header">
-      <div class="brand">
-        <div class="brand-mark">N</div>
-        <span>NOKJ Academy</span>
-      </div>
+      <div class="brand"><div class="brand-mark">N</div><span>NOKJ Academy</span></div>
       <div class="auth-buttons">
         <button class="btn-outline" id="landing-login-btn">Sign In</button>
         <button class="btn-primary" id="landing-register-btn">Join Academy</button>
@@ -2139,35 +2136,19 @@
           <button class="btn-large outline" id="landing-signin-btn">Sign In</button>
         </div>
       </div>
-      <div class="hero-image">
-        <div class="image-placeholder">🎓</div>
-      </div>
+      <div class="hero-image"><div class="image-placeholder">🎓</div></div>
     </section>
 
     <section class="landing-features">
-      <div class="feature-card">
-        <div class="icon">🎥</div>
-        <h3>Live Classes</h3>
-        <p>Join interactive live sessions with your teachers. Share your screen, ask questions, and learn in real-time.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">📝</div>
-        <h3>Smart Tasks</h3>
-        <p>Submit homework, take tests, and get instant feedback. Track your progress across all your courses.</p>
-      </div>
-      <div class="feature-card">
-        <div class="icon">📊</div>
-        <h3>Track Progress</h3>
-        <p>View your grades, attendance, and course progress at a glance. Stay on top of your learning journey.</p>
-      </div>
+      <div class="feature-card"><div class="icon">🎥</div><h3>Live Classes</h3><p>Join interactive live sessions with your teachers. Share your screen, ask questions, and learn in real-time.</p></div>
+      <div class="feature-card"><div class="icon">📝</div><h3>Smart Tasks</h3><p>Submit homework, take tests, and get instant feedback. Track your progress across all your courses.</p></div>
+      <div class="feature-card"><div class="icon">📊</div><h3>Track Progress</h3><p>View your grades, attendance, and course progress at a glance. Stay on top of your learning journey.</p></div>
     </section>
 
-    <footer class="landing-footer">
-      © 2026 NOKJ Academy — Empowering learners worldwide.
-    </footer>
+    <footer class="landing-footer">© 2026 NOKJ Academy — Empowering learners worldwide.</footer>
   </div>
 
-  <!-- ========== LOGIN SCREEN ========== -->
+  <!-- ===== LOGIN SCREEN ===== -->
   <div id="login-screen">
     <button id="login-lang-toggle" type="button" title="Change language" class="login-lang-toggle">
       <svg id="login-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
@@ -2185,14 +2166,8 @@
     </button>
 
     <div class="login-box">
-      <div class="brand">
-        <div class="brand-mark">N</div>
-        <div><strong style="font-size:20px;color:#182033;">NOKJ Academy</strong><small style="color:#6b7280;font-size:13px;">Student Portal</small></div>
-      </div>
-      <div class="login-header">
-        <h2>Welcome back</h2>
-        <p>Sign in to your account</p>
-      </div>
+      <div class="brand"><div class="brand-mark">N</div><div><strong style="font-size:20px;color:#182033;">NOKJ Academy</strong><small style="color:#6b7280;font-size:13px;">Student Portal</small></div></div>
+      <div class="login-header"><h2>Welcome back</h2><p>Sign in to your account</p></div>
       <form id="login-form" autocomplete="off">
         <label for="login-email">Email address</label>
         <input type="email" id="login-email" placeholder="you@example.com" />
@@ -2201,13 +2176,11 @@
         <button type="submit" class="login-btn">Sign In</button>
         <div id="login-error" class="login-error"></div>
       </form>
-      <div class="login-footer">
-        Don't have an account? <a id="login-to-register">Join Academy</a>
-      </div>
+      <div class="login-footer">Don't have an account? <a id="login-to-register">Join Academy</a></div>
     </div>
   </div>
 
-  <!-- ========== REGISTER SCREEN ========== -->
+  <!-- ===== REGISTER SCREEN ===== -->
   <div id="register-screen">
     <button id="register-lang-toggle" type="button" title="Change language" class="login-lang-toggle">
       <svg id="register-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
@@ -2225,36 +2198,25 @@
     </button>
 
     <div class="register-box">
-      <div class="brand">
-        <div class="brand-mark">N</div>
-        <div><strong style="font-size:20px;color:#182033;">NOKJ Academy</strong><small style="color:#6b7280;font-size:13px;">Join the community</small></div>
-      </div>
-      <div class="register-header">
-        <h2>Create Account</h2>
-        <p>Start your learning journey today</p>
-      </div>
+      <div class="brand"><div class="brand-mark">N</div><div><strong style="font-size:20px;color:#182033;">NOKJ Academy</strong><small style="color:#6b7280;font-size:13px;">Join the community</small></div></div>
+      <div class="register-header"><h2>Create Account</h2><p>Start your learning journey today</p></div>
       <form id="register-form" autocomplete="off">
         <label for="register-name">Full Name</label>
         <input type="text" id="register-name" placeholder="Alex Student" />
         <label for="register-email">Email address</label>
         <input type="email" id="register-email" placeholder="you@example.com" />
         <label for="register-role">I am a...</label>
-        <select id="register-role">
-          <option value="Student">Student</option>
-          <option value="Teacher">Teacher</option>
-        </select>
+        <select id="register-role"><option value="Student">Student</option><option value="Teacher">Teacher</option></select>
         <label for="register-password">Password</label>
         <input type="password" id="register-password" placeholder="Min 6 characters" />
         <button type="submit" class="register-btn">Create Account</button>
         <div id="register-error" class="register-error"></div>
       </form>
-      <div class="register-footer">
-        Already have an account? <a id="register-to-login">Sign In</a>
-      </div>
+      <div class="register-footer">Already have an account? <a id="register-to-login">Sign In</a></div>
     </div>
   </div>
 
-  <!-- ========== MAIN APP ========== -->
+  <!-- ===== MAIN APP ===== -->
   <div id="app">
 
     <aside class="sidebar">
@@ -2565,8 +2527,7 @@
     </nav>
   </div>
 
-  <!-- ========== OVERLAYS & MODALS ========== -->
-  <!-- Presentation -->
+  <!-- ===== OVERLAYS & MODALS ===== -->
   <div class="presentation-overlay" id="presentation-overlay">
     <div class="presentation-toolbar">
       <span id="presentation-title">Presentation</span>
@@ -2590,7 +2551,6 @@
     </div>
   </div>
 
-  <!-- File Preview -->
   <div class="file-preview-overlay" id="file-preview-overlay">
     <div class="file-preview-content">
       <span class="preview-close" id="file-preview-close">&times;</span>
@@ -2598,7 +2558,6 @@
     </div>
   </div>
 
-  <!-- Modal -->
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal">
       <h2 id="modal-title">Add Entry</h2>
@@ -2612,14 +2571,11 @@
     </div>
   </div>
 
-  <!-- Enroll Modal -->
   <div class="modal-overlay" id="enroll-modal-overlay">
     <div class="modal">
       <h2 id="enroll-modal-title">Enroll Student</h2>
       <p class="sub" id="enroll-modal-sub">Select courses for this student.</p>
-      <div id="enroll-modal-fields">
-        <div class="enrollment-list" id="enrollment-list"></div>
-      </div>
+      <div id="enroll-modal-fields"><div class="enrollment-list" id="enrollment-list"></div></div>
       <div class="modal-actions">
         <button type="button" class="cancel-btn" id="enroll-modal-cancel">Cancel</button>
         <button type="button" class="save-btn" id="enroll-modal-save">Save</button>
@@ -2627,7 +2583,6 @@
     </div>
   </div>
 
-  <!-- Task Modal -->
   <div class="modal-overlay" id="task-modal-overlay">
     <div class="modal">
       <h2 id="task-modal-title">Create Task</h2>
@@ -2660,7 +2615,6 @@
     </div>
   </div>
 
-  <!-- Grade Task Modal -->
   <div class="modal-overlay" id="grade-task-modal-overlay">
     <div class="modal">
       <h2 id="grade-task-modal-title">Grade Submission</h2>
@@ -2683,7 +2637,6 @@
     </div>
   </div>
 
-  <!-- Schedule Class Modal -->
   <div class="modal-overlay" id="schedule-modal-overlay">
     <div class="modal">
       <h2 id="schedule-modal-title">Schedule Class</h2>
@@ -2715,11 +2668,11 @@
     </div>
   </div>
 
-  <!-- ========== JAVASCRIPT ========== -->
+  <!-- ===== JAVASCRIPT ===== -->
   <script>
     (function() {
 
-      // ----- DEMO ACCOUNTS (used only for quick login) -----
+      // ----- DEMO ACCOUNTS (used for quick login) -----
       const DEMO_USERS = {
         'admin@nokj.com': { password: 'admin123', role: 'Admin' },
         'student@nokj.com': { password: 'password123', role: 'Student' },
@@ -2780,8 +2733,39 @@
           createdAt: '2026-08-28' }
       ];
 
+      // Fixed DEFAULT_TASK_SUBMISSIONS with real image data for preview
       const DEFAULT_TASK_SUBMISSIONS = {
-        '1-1': { answer: 'x = -2, x = -3', submittedAt: '2026-08-29T10:00:00', grade: null, feedback: null, files: [] }
+        '1-1': {
+          answer: 'x = -2, x = -3',
+          submittedAt: '2026-08-29T10:00:00',
+          grade: null,
+          feedback: null,
+          files: [{
+            name: 'sample_image.jpg',
+            size: 1234,
+            type: 'image/jpeg',
+            data: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+          }]
+        },
+        '2-1': {
+          answer: 'Ambition is the driving force in Macbeth...',
+          submittedAt: '2026-08-30T14:00:00',
+          grade: 85,
+          feedback: 'Good analysis, could use more quotes.',
+          files: []
+        },
+        '3-1': {
+          answer: '1. B, 2. A, 3. C, 4. D, 5. B',
+          submittedAt: '2026-08-31T16:00:00',
+          grade: null,
+          feedback: null,
+          files: [{
+            name: 'quiz_answers.docx',
+            size: 12345,
+            type: 'application/msword',
+            data: 'data:application/msword;base64,/9j/4AAQSkZJRgABAQEAYABgAAD...'
+          }]
+        }
       };
 
       const DEFAULT_BUDGET = [
@@ -2819,7 +2803,7 @@
       let currentMonth = new Date().getMonth(),
         currentYear = new Date().getFullYear();
 
-      // ----- DOM refs (abbreviated for brevity) -----
+      // ----- DOM refs (abridged) -----
       const landingPage = document.getElementById('landing-page');
       const loginScreen = document.getElementById('login-screen');
       const registerScreen = document.getElementById('register-screen');
@@ -2899,10 +2883,9 @@
       const totalRevenueEl = document.getElementById('total-revenue');
 
       // ============================================================
-      //  TRANSLATION SYSTEM
+      //  TRANSLATION SYSTEM (with original text stored)
       // ============================================================
       const translations = {
-        // ---- Common ----
         'Dashboard': 'Главная',
         'Timetable': 'Расписание',
         'My courses': 'Мои курсы',
@@ -3002,9 +2985,9 @@
       };
 
       let currentLang = localStorage.getItem('nokj-language') || 'en';
+      const originalTextMap = new WeakMap();
 
       function applyTranslation(lang) {
-        // Walk all text nodes and replace exact matches
         const walker = document.createTreeWalker(
           document.body,
           NodeFilter.SHOW_TEXT, {
@@ -3026,10 +3009,16 @@
         }
 
         nodes.forEach(function(textNode) {
-          const original = textNode.nodeValue;
+          if (!originalTextMap.has(textNode)) {
+            originalTextMap.set(textNode, textNode.nodeValue);
+          }
+          const original = originalTextMap.get(textNode);
           const trimmed = original.trim();
           if (lang === 'ru' && translations[trimmed] !== undefined) {
             textNode.nodeValue = original.replace(trimmed, translations[trimmed]);
+          } else {
+            // restore original
+            textNode.nodeValue = original;
           }
         });
 
@@ -3040,9 +3029,6 @@
             el.placeholder = translations[placeholder];
           }
         });
-
-        // Also update the sidebar role and greeting dynamically if needed
-        // (these are updated via the showApp function)
       }
 
       function setLanguage(lang) {
@@ -3070,6 +3056,10 @@
 
       function toggleLanguage() {
         setLanguage(currentLang === 'en' ? 'ru' : 'en');
+        // Force re-apply after any pending DOM updates
+        setTimeout(function() {
+          applyTranslation(currentLang);
+        }, 50);
       }
 
       // ============================================================
@@ -3126,17 +3116,17 @@
       //  HELPER FUNCTIONS
       // ============================================================
       function getTeacherName(id) {
-        const t = teachers.find(function(tc) { return tc.id === id; });
+        var t = teachers.find(function(tc) { return tc.id === id; });
         return t ? t.name : 'Unknown';
       }
 
       function getStudentName(id) {
-        const s = students.find(function(st) { return st.id === id; });
+        var s = students.find(function(st) { return st.id === id; });
         return s ? s.name : 'Unknown';
       }
 
       function getCourseName(id) {
-        const c = courses.find(function(co) { return co.id === id; });
+        var c = courses.find(function(co) { return co.id === id; });
         return c ? c.name : 'Unknown';
       }
 
@@ -3157,7 +3147,7 @@
       }
 
       function getUserByEmail(email) {
-        let user = students.find(function(s) { return s.email === email; });
+        var user = students.find(function(s) { return s.email === email; });
         if (user) return user;
         user = teachers.find(function(t) { return t.email === email; });
         if (user) return user;
@@ -3166,11 +3156,15 @@
       }
 
       function getAllUsers() {
-        return [...students, ...teachers, ...admins];
+        return [].concat(students, teachers, admins);
       }
 
       function generateId() {
-        return Math.max(1, ...getAllUsers().map(function(u) { return u.id; }), 0) + 1;
+        var maxId = 1;
+        getAllUsers().forEach(function(u) {
+          if (u.id > maxId) maxId = u.id;
+        });
+        return maxId + 1;
       }
 
       // ============================================================
@@ -3220,7 +3214,6 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
         if (pageName === 'calendar') renderCalendar();
         if (pageName === 'classroom') renderMeetings();
-        // Reapply translation after switching page
         setLanguage(currentLang);
       }
 
@@ -3228,7 +3221,7 @@
       //  LOGIN / REGISTER
       // ============================================================
       function login(email, password) {
-        const user = getUserByEmail(email);
+        var user = getUserByEmail(email);
         if (user && user.password === password) {
           currentUser = user;
           localStorage.setItem('nokj-user', JSON.stringify(user));
@@ -3250,7 +3243,7 @@
           registerError.textContent = 'Password must be at least 6 characters.';
           return false;
         }
-        const newUser = {
+        var newUser = {
           id: generateId(),
           name: name,
           email: email,
@@ -3281,7 +3274,7 @@
         landingPage.classList.add('hidden');
         app.classList.add('logged-in');
 
-        const initials = user.name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
+        var initials = user.name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
         userAvatar.textContent = initials;
         userAvatar.className = 'avatar' + (user.role === 'Admin' ? ' admin-avatar' : user.role === 'Teacher' ?
           ' teacher-avatar' : '');
@@ -3298,15 +3291,11 @@
         profileRole.textContent = user.role;
         profileSince.textContent = user.createdAt || '2026';
 
-        const time = new Date().getHours();
-        let greetingText = (time < 12) ? 'Good morning' : (time < 17) ? 'Good afternoon' : 'Good evening';
+        var time = new Date().getHours();
+        var greetingText = (time < 12) ? 'Good morning' : (time < 17) ? 'Good afternoon' : 'Good evening';
         greeting.textContent = greetingText + ', ' + user.name + ' 👋';
 
-        const isAdmin = user.role === 'Admin';
-        const isTeacher = user.role === 'Teacher';
-        const isStudent = user.role === 'Student';
-
-        if (isAdmin) {
+        if (user.role === 'Admin') {
           adminNavLabel.style.display = 'block';
           adminStudentsBtn.style.display = 'flex';
           adminBudgetBtn.style.display = 'flex';
@@ -3334,7 +3323,6 @@
         renderTasks();
         renderCalendar();
         renderUpcomingClasses();
-        // Reapply translation after rendering
         setLanguage(currentLang);
       }
 
@@ -3350,10 +3338,10 @@
       }
 
       function checkSession() {
-        const saved = localStorage.getItem('nokj-user');
+        var saved = localStorage.getItem('nokj-user');
         if (saved) {
           try {
-            const user = JSON.parse(saved);
+            var user = JSON.parse(saved);
             if (user && getUserByEmail(user.email)) {
               currentUser = user;
               showApp(user);
@@ -3365,21 +3353,21 @@
       }
 
       // ============================================================
-      //  RENDER FUNCTIONS (abridged, all call setLanguage at end)
+      //  RENDER FUNCTIONS (abridged, with setLanguage at end)
       // ============================================================
       function renderStudents() {
-        const search = studentSearch.value.toLowerCase();
-        const filter = studentFilter.value;
-        let filtered = students.filter(function(s) {
+        var search = studentSearch.value.toLowerCase();
+        var filter = studentFilter.value;
+        var filtered = students.filter(function(s) {
           return (s.name.toLowerCase().includes(search) || s.email.toLowerCase().includes(search)) &&
             (filter === 'all' || s.status === filter);
         });
         filtered.sort(function(a, b) { return a.name.localeCompare(b.name); });
         studentTableBody.innerHTML = '';
         filtered.forEach(function(s) {
-          const isExpanded = expandedRows['student-' + s.id] || false;
-          const icon = isExpanded ? '▼' : '▶';
-          const tr = document.createElement('tr');
+          var isExpanded = expandedRows['student-' + s.id] || false;
+          var icon = isExpanded ? '▼' : '▶';
+          var tr = document.createElement('tr');
           tr.className = 'expandable-row';
           tr.dataset.expandId = 'student-' + s.id;
           tr.innerHTML = '<td style="cursor:pointer;"><span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon +
@@ -3389,15 +3377,15 @@
             '" data-type="student">🗑️</button><button class="action-btn enroll" data-id="' + s.id +
             '" data-type="enroll">📚 Enroll</button></td>';
           studentTableBody.appendChild(tr);
-          const detailTr = document.createElement('tr');
+          var detailTr = document.createElement('tr');
           detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
           detailTr.dataset.parentId = 'student-' + s.id;
-          const courseIds = getEnrolledCourseIds(s.id);
-          let detailHtml = '<div class="detail-content"><strong>Enrolled Courses:</strong> ';
+          var courseIds = getEnrolledCourseIds(s.id);
+          var detailHtml = '<div class="detail-content"><strong>Enrolled Courses:</strong> ';
           if (courseIds.length === 0) detailHtml += '<span class="empty-msg">Not enrolled in any courses.</span>';
           else {
             courseIds.forEach(function(cid) {
-              const c = courses.find(function(co) { return co.id === cid; });
+              var c = courses.find(function(co) { return co.id === cid; });
               if (c) detailHtml += '<span class="item-tag">📚 ' + c.name + ' <span style="color:var(--muted);font-size:11px;">(' +
                 c.teacherId + ')</span></span>';
             });
@@ -3413,15 +3401,15 @@
       }
 
       function renderCourses() {
-        const search = document.getElementById('course-search').value.toLowerCase();
-        let filtered = courses.filter(function(c) { return c.name.toLowerCase().includes(search); });
+        var search = document.getElementById('course-search').value.toLowerCase();
+        var filtered = courses.filter(function(c) { return c.name.toLowerCase().includes(search); });
         filtered.sort(function(a, b) { return a.name.localeCompare(b.name); });
         document.getElementById('course-table-body').innerHTML = '';
         filtered.forEach(function(c) {
-          const studentCount = getCourseStudentCount(c.id);
-          const isExpanded = expandedRows['course-' + c.id] || false;
-          const icon = isExpanded ? '▼' : '▶';
-          const tr = document.createElement('tr');
+          var studentCount = getCourseStudentCount(c.id);
+          var isExpanded = expandedRows['course-' + c.id] || false;
+          var icon = isExpanded ? '▼' : '▶';
+          var tr = document.createElement('tr');
           tr.className = 'expandable-row';
           tr.dataset.expandId = 'course-' + c.id;
           tr.innerHTML = '<td style="cursor:pointer;"><span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon +
@@ -3431,15 +3419,15 @@
             '" data-type="course">✏️</button><button class="action-btn delete" data-id="' + c.id +
             '" data-type="course">🗑️</button></td>';
           document.getElementById('course-table-body').appendChild(tr);
-          const detailTr = document.createElement('tr');
+          var detailTr = document.createElement('tr');
           detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
           detailTr.dataset.parentId = 'course-' + c.id;
-          const studentIds = getEnrolledStudentIds(c.id);
-          let detailHtml = '<div class="detail-content"><strong>Enrolled Students:</strong> ';
+          var studentIds = getEnrolledStudentIds(c.id);
+          var detailHtml = '<div class="detail-content"><strong>Enrolled Students:</strong> ';
           if (studentIds.length === 0) detailHtml += '<span class="empty-msg">No students enrolled.</span>';
           else {
             studentIds.forEach(function(sid) {
-              const s = students.find(function(st) { return st.id === sid; });
+              var s = students.find(function(st) { return st.id === sid; });
               if (s) detailHtml += '<span class="item-tag">👤 ' + s.name + ' <span class="status-badge ' + s.status
                 .toLowerCase() + '">' + s.status + '</span></span>';
             });
@@ -3456,18 +3444,18 @@
       }
 
       function renderBudget() {
-        const search = document.getElementById('budget-search').value.toLowerCase();
-        const filter = document.getElementById('budget-filter').value;
-        let filtered = budgetEntries.filter(function(b) {
+        var search = document.getElementById('budget-search').value.toLowerCase();
+        var filter = document.getElementById('budget-filter').value;
+        var filtered = budgetEntries.filter(function(b) {
           return b.category.toLowerCase().includes(search) && (filter === 'all' || b.type === filter);
         });
         filtered.sort(function(a, b) { return b.date.localeCompare(a.date); });
         document.getElementById('budget-table-body').innerHTML = '';
         filtered.forEach(function(b) {
-          const isIncome = b.type === 'Income';
-          const amountDisplay = isIncome ? '+' + b.amount : '-' + Math.abs(b.amount);
-          const amountClass = isIncome ? 'income' : 'expense';
-          const tr = document.createElement('tr');
+          var isIncome = b.type === 'Income';
+          var amountDisplay = isIncome ? '+' + b.amount : '-' + Math.abs(b.amount);
+          var amountClass = isIncome ? 'income' : 'expense';
+          var tr = document.createElement('tr');
           tr.innerHTML = '<td><strong>' + b.category + '</strong></td><td>' + b.type + '</td><td class="' + amountClass +
             '" style="font-weight:700;">$' + amountDisplay + '</td><td>' + b.date + '</td><td><span class="status-badge ' +
             b.status.toLowerCase() + '">' + b.status + '</span></td><td><button class="action-btn edit" data-id="' + b.id +
@@ -3475,11 +3463,11 @@
             '" data-type="budget">🗑️</button></td>';
           document.getElementById('budget-table-body').appendChild(tr);
         });
-        const total = budgetEntries.length;
+        var total = budgetEntries.length;
         document.getElementById('budget-count').textContent = filtered.length + ' entries';
-        const totalIncome = budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(sum, b) { return sum +
+        var totalIncome = budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(sum, b) { return sum +
             b.amount; }, 0);
-        const totalExpense = budgetEntries.filter(function(b) { return b.type === 'Expense'; }).reduce(function(sum, b) { return sum +
+        var totalExpense = budgetEntries.filter(function(b) { return b.type === 'Expense'; }).reduce(function(sum, b) { return sum +
             Math.abs(b.amount); }, 0);
         document.getElementById('budget-total-income').textContent = '$' + totalIncome.toLocaleString();
         document.getElementById('budget-total-expense').textContent = '$' + totalExpense.toLocaleString();
@@ -3492,19 +3480,19 @@
 
       function renderStudentCourses() {
         if (!currentUser || currentUser.role !== 'Student') return;
-        const studentId = currentUser.id;
-        const enrolledIds = getEnrolledCourseIds(studentId);
-        const enrolledCourses = courses.filter(function(c) { return enrolledIds.includes(c.id); });
+        var studentId = currentUser.id;
+        var enrolledIds = getEnrolledCourseIds(studentId);
+        var enrolledCourses = courses.filter(function(c) { return enrolledIds.includes(c.id); });
         if (enrolledCourses.length === 0) {
           document.getElementById('student-courses-container').innerHTML =
             '<p style="color:var(--muted);">You are not enrolled in any courses yet.</p>';
           return;
         }
-        let html = '<div class="course-grid">';
+        var html = '<div class="course-grid">';
         enrolledCourses.forEach(function(c) {
-          const colors = ['', 'orange-cover', 'green-cover'];
-          const colorClass = colors[c.id % 3];
-          const progress = Math.floor(Math.random() * 30) + 60;
+          var colors = ['', 'orange-cover', 'green-cover'];
+          var colorClass = colors[c.id % 3];
+          var progress = Math.floor(Math.random() * 30) + 60;
           html += '<article class="course"><div class="course-cover ' + colorClass + '">' + c.name +
             '</div><div class="course-body"><h3>' + c.name + '</h3><p>Teacher: ' + getTeacherName(c.teacherId) +
             '</p><div class="track"><div class="fill" style="width:' + progress +
@@ -3516,24 +3504,24 @@
         setLanguage(currentLang);
       }
 
-      // ----- Grades (abridged) -----
+      // ----- Grades -----
       function renderGrades() {
         if (!currentUser) return;
-        const isAdmin = currentUser.role === 'Admin';
-        const adminView = document.getElementById('admin-grades-view');
-        const studentView = document.getElementById('student-grades-view');
+        var isAdmin = currentUser.role === 'Admin';
+        var adminView = document.getElementById('admin-grades-view');
+        var studentView = document.getElementById('student-grades-view');
         if (isAdmin) {
           adminView.style.display = 'block';
           studentView.style.display = 'none';
-          const courseFilter = document.getElementById('grade-course-filter');
-          const currentCourseFilter = courseFilter.value;
+          var courseFilter = document.getElementById('grade-course-filter');
+          var currentCourseFilter = courseFilter.value;
           courseFilter.innerHTML = '<option value="all">All Courses</option>';
           courses.forEach(function(c) {
             courseFilter.innerHTML += '<option value="' + c.id + '" ' + (currentCourseFilter === String(c.id) ?
               'selected' : '') + '>' + c.name + '</option>';
           });
-          const studentFilter = document.getElementById('grade-student-filter');
-          const currentStudentFilter = studentFilter.value;
+          var studentFilter = document.getElementById('grade-student-filter');
+          var currentStudentFilter = studentFilter.value;
           studentFilter.innerHTML = '<option value="all">All Students</option>';
           students.forEach(function(s) {
             studentFilter.innerHTML += '<option value="' + s.id + '" ' + (currentStudentFilter === String(s.id) ?
@@ -3549,32 +3537,31 @@
       }
 
       function renderGradeTable() {
-        // (same as before, with setLanguage at end)
-        const courseFilter = document.getElementById('grade-course-filter').value;
-        const studentFilter = document.getElementById('grade-student-filter').value;
-        let filtered = [];
+        var courseFilter = document.getElementById('grade-course-filter').value;
+        var studentFilter = document.getElementById('grade-student-filter').value;
+        var filtered = [];
         enrollments.forEach(function(e) {
-          const student = students.find(function(s) { return s.id === e.studentId; });
-          const course = courses.find(function(c) { return c.id === e.courseId; });
+          var student = students.find(function(s) { return s.id === e.studentId; });
+          var course = courses.find(function(c) { return c.id === e.courseId; });
           if (!student || !course) return;
-          const courseMatch = courseFilter === 'all' || e.courseId === parseInt(courseFilter);
-          const studentMatch = studentFilter === 'all' || e.studentId === parseInt(studentFilter);
+          var courseMatch = courseFilter === 'all' || e.courseId === parseInt(courseFilter);
+          var studentMatch = studentFilter === 'all' || e.studentId === parseInt(studentFilter);
           if (courseMatch && studentMatch) filtered.push({ studentId: e.studentId, studentName: student.name,
             courseId: e.courseId, courseName: course.name });
         });
         filtered.sort(function(a, b) { return a.studentName.localeCompare(b.studentName); });
-        const tbody = document.getElementById('grade-table-body');
+        var tbody = document.getElementById('grade-table-body');
         tbody.innerHTML = '';
-        let totalGrades = 0,
+        var totalGrades = 0,
           passingCount = 0,
           failingCount = 0;
         filtered.forEach(function(item) {
-          const grade = gradeData[item.studentId + '-' + item.courseId] || null;
+          var grade = gradeData[item.studentId + '-' + item.courseId] || null;
           totalGrades++;
-          const tr = document.createElement('tr');
-          const gradeDisplay = grade !== null ? grade : '-';
-          const statusClass = grade !== null ? (grade >= 60 ? 'grade-pass' : 'grade-fail') : '';
-          const statusText = grade !== null ? (grade >= 60 ? '✅ Pass' : '❌ Fail') : 'Not graded';
+          var tr = document.createElement('tr');
+          var gradeDisplay = grade !== null ? grade : '-';
+          var statusClass = grade !== null ? (grade >= 60 ? 'grade-pass' : 'grade-fail') : '';
+          var statusText = grade !== null ? (grade >= 60 ? '✅ Pass' : '❌ Fail') : 'Not graded';
           if (grade !== null) { if (grade >= 60) passingCount++;
             else failingCount++; }
           tr.innerHTML = '<td><strong>' + item.studentName + '</strong></td><td>' + item.courseName +
@@ -3590,48 +3577,47 @@
         document.getElementById('grade-passing-count').textContent = passingCount;
         document.getElementById('grade-failing-count').textContent = failingCount;
         document.getElementById('grade-count').textContent = filtered.length + ' entries';
-        const allGrades = [];
+        var allGrades = [];
         enrollments.forEach(function(e) {
-          const g = gradeData[e.studentId + '-' + e.courseId] || null;
+          var g = gradeData[e.studentId + '-' + e.courseId] || null;
           if (g !== null) allGrades.push(g);
         });
-        const avgAll = allGrades.length > 0 ? Math.round(allGrades.reduce(function(a, b) { return a + b; }, 0) / allGrades
+        var avgAll = allGrades.length > 0 ? Math.round(allGrades.reduce(function(a, b) { return a + b; }, 0) / allGrades
           .length) : 0;
         document.getElementById('avg-grade-all').textContent = avgAll + '%';
-        const passing = allGrades.filter(function(g) { return g >= 60; }).length;
-        const failing = allGrades.filter(function(g) { return g < 60; }).length;
+        var passing = allGrades.filter(function(g) { return g >= 60; }).length;
+        var failing = allGrades.filter(function(g) { return g < 60; }).length;
         document.getElementById('passing-students').textContent = passing;
         document.getElementById('failing-students').textContent = failing;
         setLanguage(currentLang);
       }
 
       function renderStudentGrades() {
-        // (same as before, with setLanguage at end)
         if (!currentUser || currentUser.role !== 'Student') return;
-        const studentId = currentUser.id;
-        const enrolled = getEnrolledCourseIds(studentId);
-        const tbody = document.getElementById('student-grade-table-body');
+        var studentId = currentUser.id;
+        var enrolled = getEnrolledCourseIds(studentId);
+        var tbody = document.getElementById('student-grade-table-body');
         tbody.innerHTML = '';
-        let gradesList = [];
+        var gradesList = [];
         enrolled.forEach(function(courseId) {
-          const course = courses.find(function(c) { return c.id === courseId; });
+          var course = courses.find(function(c) { return c.id === courseId; });
           if (!course) return;
-          const grade = gradeData[studentId + '-' + courseId] || null;
-          const tr = document.createElement('tr');
-          const gradeDisplay = grade !== null ? grade : '-';
-          const statusClass = grade !== null ? (grade >= 60 ? 'grade-pass' : 'grade-fail') : '';
-          const statusText = grade !== null ? (grade >= 60 ? '✅ Pass' : '❌ Fail') : 'Not graded';
+          var grade = gradeData[studentId + '-' + courseId] || null;
+          var tr = document.createElement('tr');
+          var gradeDisplay = grade !== null ? grade : '-';
+          var statusClass = grade !== null ? (grade >= 60 ? 'grade-pass' : 'grade-fail') : '';
+          var statusText = grade !== null ? (grade >= 60 ? '✅ Pass' : '❌ Fail') : 'Not graded';
           if (grade !== null) gradesList.push(grade);
           tr.innerHTML = '<td><strong>' + course.name + '</strong><br><span style="font-size:12px;color:var(--muted);">' +
             getTeacherName(course.teacherId) + '</span></td><td class="' + statusClass +
             '" style="font-size:18px;font-weight:700;">' + gradeDisplay + '%</td><td>' + statusText + '</td>';
           tbody.appendChild(tr);
         });
-        const avg = gradesList.length > 0 ? Math.round(gradesList.reduce(function(a, b) { return a + b; }, 0) / gradesList
+        var avg = gradesList.length > 0 ? Math.round(gradesList.reduce(function(a, b) { return a + b; }, 0) / gradesList
           .length) : 0;
         document.getElementById('student-avg-grade-display').textContent = avg + '%';
-        const passed = gradesList.filter(function(g) { return g >= 60; }).length;
-        const failed = gradesList.filter(function(g) { return g < 60; }).length;
+        var passed = gradesList.filter(function(g) { return g >= 60; }).length;
+        var failed = gradesList.filter(function(g) { return g < 60; }).length;
         document.getElementById('student-courses-passed').textContent = passed;
         document.getElementById('student-courses-failed').textContent = failed;
         setLanguage(currentLang);
@@ -3640,7 +3626,7 @@
       // ----- Classroom / Meetings -----
       function renderMeetings() {
         meetingGrid.innerHTML = '';
-        const userMeetings = meetings.filter(function(m) {
+        var userMeetings = meetings.filter(function(m) {
           if (!currentUser) return false;
           if (currentUser.role === 'Admin') return true;
           if (currentUser.role === 'Teacher') return m.teacherId === currentUser.id;
@@ -3653,9 +3639,9 @@
           return;
         }
         userMeetings.forEach(function(meeting) {
-          const card = document.createElement('div');
+          var card = document.createElement('div');
           card.className = 'meeting-card';
-          const isTeacher = currentUser && currentUser.role === 'Teacher' && meeting.teacherId === currentUser.id;
+          var isTeacher = currentUser && currentUser.role === 'Teacher' && meeting.teacherId === currentUser.id;
           card.innerHTML = '<div class="meeting-header"><h3>' + meeting.title + '</h3><div class="teacher">👨‍🏫 ' +
             getTeacherName(meeting.teacherId) + '</div></div><div class="meeting-body"><div class="time">📅 ' + meeting
             .date + ' • 🕐 ' + meeting.time + ' (' + meeting.duration + ' min)</div>' + (isTeacher ?
@@ -3664,7 +3650,7 @@
           meetingGrid.appendChild(card);
         });
         if (currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Teacher')) {
-          const addCard = document.createElement('div');
+          var addCard = document.createElement('div');
           addCard.className = 'meeting-card';
           addCard.style.border = '2px dashed var(--line)';
           addCard.style.display = 'flex';
@@ -3679,7 +3665,7 @@
       }
 
       function openPresentation(meetingId) {
-        const meeting = meetings.find(function(m) { return m.id === meetingId; });
+        var meeting = meetings.find(function(m) { return m.id === meetingId; });
         if (!meeting) return;
         presentationSlides = DEFAULT_PRESENTATION;
         currentSlide = 0;
@@ -3689,7 +3675,7 @@
       }
 
       function updateSlide() {
-        const slide = presentationSlides[currentSlide];
+        var slide = presentationSlides[currentSlide];
         document.getElementById('presentation-slide-title').textContent = slide.title;
         document.getElementById('presentation-slide-text').textContent = slide.content;
         document.getElementById('presentation-slide-counter').textContent = 'Slide ' + (currentSlide + 1) + ' of ' +
@@ -3710,48 +3696,48 @@
           updateSlide(); }
       }
 
-      // ----- Calendar (abridged) -----
+      // ----- Calendar -----
       function renderCalendar() {
-        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        const today = new Date();
-        const todayStr = today.toISOString().split('T')[0];
+        var firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        var daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        var today = new Date();
+        var todayStr = today.toISOString().split('T')[0];
 
         calendarMonthLabel.textContent = new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long',
           year: 'numeric' });
         calendarGrid.innerHTML = '';
 
-        const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        var dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         dayLabels.forEach(function(label) {
-          const div = document.createElement('div');
+          var div = document.createElement('div');
           div.className = 'day-label';
           div.textContent = label;
           calendarGrid.appendChild(div);
         });
 
-        for (let i = 0; i < firstDay; i++) {
-          const div = document.createElement('div');
+        for (var i = 0; i < firstDay; i++) {
+          var div = document.createElement('div');
           div.className = 'day-cell empty';
           calendarGrid.appendChild(div);
         }
 
-        for (let day = 1; day <= daysInMonth; day++) {
-          const dateStr = currentYear + '-' + String(currentMonth + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
-          const div = document.createElement('div');
+        for (var day = 1; day <= daysInMonth; day++) {
+          var dateStr = currentYear + '-' + String(currentMonth + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+          var div = document.createElement('div');
           div.className = 'day-cell' + (dateStr === todayStr ? ' today' : '');
           div.dataset.date = dateStr;
 
-          const number = document.createElement('div');
+          var number = document.createElement('div');
           number.className = 'day-number';
           number.textContent = day;
           div.appendChild(number);
 
-          const dayMeetings = meetings.filter(function(m) { return m.date === dateStr; });
+          var dayMeetings = meetings.filter(function(m) { return m.date === dateStr; });
           if (dayMeetings.length > 0) {
-            const eventsDiv = document.createElement('div');
+            var eventsDiv = document.createElement('div');
             eventsDiv.className = 'day-events';
             dayMeetings.forEach(function(m) {
-              const dot = document.createElement('div');
+              var dot = document.createElement('div');
               dot.className = 'event-dot' + (m.teacherId === (currentUser ? currentUser.id : null) ? ' teacher' :
                 '');
               dot.textContent = '• ' + m.title + ' (' + m.time + ')';
@@ -3761,12 +3747,12 @@
           }
 
           div.addEventListener('click', function() {
-            const date = this.dataset.date;
+            var date = this.dataset.date;
             if (currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Teacher')) {
               scheduleDate.value = date;
               openScheduleModal();
             } else {
-              const dayMeetings = meetings.filter(function(m) { return m.date === date; });
+              var dayMeetings = meetings.filter(function(m) { return m.date === date; });
               alert('Classes on ' + date + ': ' + (dayMeetings.length > 0 ? dayMeetings.map(function(m) { return m
                   .title; }).join(', ') : 'No classes scheduled.'));
             }
@@ -3780,8 +3766,8 @@
       }
 
       function renderUpcomingClasses() {
-        const today = new Date().toISOString().split('T')[0];
-        const upcoming = meetings.filter(function(m) { return m.date >= today; }).sort(function(a, b) { return a.date
+        var today = new Date().toISOString().split('T')[0];
+        var upcoming = meetings.filter(function(m) { return m.date >= today; }).sort(function(a, b) { return a.date
             .localeCompare(b.date) || a.time.localeCompare(b.time); });
 
         if (upcoming.length === 0) {
@@ -3789,9 +3775,9 @@
           return;
         }
 
-        let html = '';
+        var html = '';
         upcoming.slice(0, 10).forEach(function(m) {
-          const isTeacher = currentUser && currentUser.role === 'Teacher' && m.teacherId === currentUser.id;
+          var isTeacher = currentUser && currentUser.role === 'Teacher' && m.teacherId === currentUser.id;
           html +=
             '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border:1px solid var(--line);border-radius:8px;background:white;">' +
             '<div><strong>' + m.title + '</strong><br><span style="font-size:12px;color:var(--muted);">📅 ' + m.date +
@@ -3804,7 +3790,7 @@
 
         upcomingClassesList.querySelectorAll('.join-btn').forEach(function(btn) {
           btn.addEventListener('click', function() {
-            const meetingId = parseInt(this.dataset.meeting);
+            var meetingId = parseInt(this.dataset.meeting);
             openPresentation(meetingId);
           });
         });
@@ -3820,13 +3806,13 @@
         scheduleTeacher.innerHTML = '';
         if (currentUser.role === 'Admin') {
           teachers.forEach(function(t) {
-            const opt = document.createElement('option');
+            var opt = document.createElement('option');
             opt.value = t.id;
             opt.textContent = t.name;
             scheduleTeacher.appendChild(opt);
           });
         } else {
-          const opt = document.createElement('option');
+          var opt = document.createElement('option');
           opt.value = currentUser.id;
           opt.textContent = currentUser.name;
           scheduleTeacher.appendChild(opt);
@@ -3838,7 +3824,7 @@
         }
 
         if (!scheduleDate.value) {
-          const tomorrow = new Date();
+          var tomorrow = new Date();
           tomorrow.setDate(tomorrow.getDate() + 1);
           scheduleDate.value = tomorrow.toISOString().split('T')[0];
         }
@@ -3869,13 +3855,13 @@
         setLanguage(currentLang);
       }
 
-      // ----- Tasks (abridged, but with file preview fixed) -----
+      // ----- Tasks -----
       function renderTasks() {
         if (!currentUser) return;
-        const isAdmin = currentUser.role === 'Admin';
-        const isTeacher = currentUser.role === 'Teacher';
-        const adminView = document.getElementById('admin-tasks-view');
-        const studentView = document.getElementById('student-tasks-view');
+        var isAdmin = currentUser.role === 'Admin';
+        var isTeacher = currentUser.role === 'Teacher';
+        var adminView = document.getElementById('admin-tasks-view');
+        var studentView = document.getElementById('student-tasks-view');
 
         if (isAdmin || isTeacher) {
           adminView.style.display = 'block';
@@ -3890,16 +3876,16 @@
       }
 
       function renderAdminTasks() {
-        const search = document.getElementById('task-search').value.toLowerCase();
-        const typeFilter = document.getElementById('task-type-filter').value;
+        var search = document.getElementById('task-search').value.toLowerCase();
+        var typeFilter = document.getElementById('task-type-filter').value;
 
-        let filtered = tasks.filter(function(t) {
-          const matchesSearch = t.title.toLowerCase().includes(search) || t.description.toLowerCase().includes(search);
-          const matchesType = typeFilter === 'all' || t.type === typeFilter;
+        var filtered = tasks.filter(function(t) {
+          var matchesSearch = t.title.toLowerCase().includes(search) || t.description.toLowerCase().includes(search);
+          var matchesType = typeFilter === 'all' || t.type === typeFilter;
           return matchesSearch && matchesType;
         });
 
-        const container = document.getElementById('admin-task-list');
+        var container = document.getElementById('admin-task-list');
         container.innerHTML = '';
 
         if (filtered.length === 0) {
@@ -3907,14 +3893,14 @@
           return;
         }
 
-        const totalTasks = tasks.length;
-        let pendingCount = 0,
+        var totalTasks = tasks.length;
+        var pendingCount = 0,
           submittedCount = 0,
           gradedCount = 0;
         tasks.forEach(function(task) {
-          const submissions = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id +
+          var submissions = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id +
             '-'); });
-          const graded = submissions.filter(function(key) {
+          var graded = submissions.filter(function(key) {
             return taskSubmissions[key] && taskSubmissions[key].grade !== null && taskSubmissions[key].grade !==
             undefined;
           });
@@ -3927,25 +3913,26 @@
         document.getElementById('task-graded').textContent = gradedCount;
 
         filtered.forEach(function(task) {
-          const submissionKeys = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id +
+          var submissionKeys = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id +
             '-'); });
-          const totalStudents = students.length;
-          const submittedCount = submissionKeys.length;
+          var totalStudents = students.length;
+          var submittedCount = submissionKeys.length;
 
-          const card = document.createElement('div');
+          var card = document.createElement('div');
           card.className = 'task-card';
-          const deadlineClass = task.deadline < new Date().toISOString().split('T')[0] ? 'overdue' : 'on-time';
-          const priorityLabel = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' } [task.priority] || 'Medium';
-          const priorityClass = task.priority || 'medium';
+          var deadlineClass = task.deadline < new Date().toISOString().split('T')[0] ? 'overdue' : 'on-time';
+          var priorityLabel = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' } [task.priority] || 'Medium';
+          var priorityClass = task.priority || 'medium';
 
-          let filesHtml = '';
+          var filesHtml = '';
           if (task.files && task.files.length > 0) {
             filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
             task.files.forEach(function(file) {
-              // Note: file.data may be a base64 string or empty; we'll pass it to preview
-              const fileData = file.data || '';
+              var fileData = file.data || '';
+              // Escape single quotes for onclick
+              var escapedData = fileData.replace(/'/g, "\\'");
               filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="openFilePreview(\'' +
-                file.name + '\', \'' + fileData + '\')">' + file.name + '</span></div>';
+                file.name + '\', \'' + escapedData + '\')">' + file.name + '</span></div>';
             });
             filesHtml += '</div>';
           }
@@ -3970,24 +3957,24 @@
       }
 
       function renderStudentTasks() {
-        const studentId = currentUser.id;
-        const container = document.getElementById('student-task-list');
-        const assignedTasks = tasks.filter(function(task) {
+        var studentId = currentUser.id;
+        var container = document.getElementById('student-task-list');
+        var assignedTasks = tasks.filter(function(task) {
           if (task.assignedTo === 'all') return true;
           if (task.assignedTo === 'student') return task.assignedIds && task.assignedIds.includes(studentId);
           if (task.assignedTo === 'course') {
-            const studentCourses = getEnrolledCourseIds(studentId);
+            var studentCourses = getEnrolledCourseIds(studentId);
             return task.assignedIds && task.assignedIds.some(function(cid) { return studentCourses.includes(cid); });
           }
           return false;
         });
 
-        let pendingCount = 0,
+        var pendingCount = 0,
           submittedCount = 0,
           gradedCount = 0;
         assignedTasks.forEach(function(task) {
-          const key = task.id + '-' + studentId;
-          const sub = taskSubmissions[key];
+          var key = task.id + '-' + studentId;
+          var sub = taskSubmissions[key];
           if (sub && sub.grade !== null && sub.grade !== undefined) gradedCount++;
           else if (sub) submittedCount++;
           else pendingCount++;
@@ -4007,38 +3994,39 @@
         }
 
         assignedTasks.sort(function(a, b) {
-          const aOverdue = a.deadline < new Date().toISOString().split('T')[0];
-          const bOverdue = b.deadline < new Date().toISOString().split('T')[0];
+          var aOverdue = a.deadline < new Date().toISOString().split('T')[0];
+          var bOverdue = b.deadline < new Date().toISOString().split('T')[0];
           if (aOverdue && !bOverdue) return -1;
           if (!aOverdue && bOverdue) return 1;
           return a.deadline.localeCompare(b.deadline);
         });
 
         assignedTasks.forEach(function(task) {
-          const key = task.id + '-' + studentId;
-          const submission = taskSubmissions[key];
-          const status = submission ? (submission.grade !== null && submission.grade !== undefined ? 'graded' :
+          var key = task.id + '-' + studentId;
+          var submission = taskSubmissions[key];
+          var status = submission ? (submission.grade !== null && submission.grade !== undefined ? 'graded' :
             'submitted') : 'pending';
-          const deadlineClass = task.deadline < new Date().toISOString().split('T')[0] ? 'overdue' : 'on-time';
-          const priorityLabel = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' } [task.priority] || 'Medium';
-          const priorityClass = task.priority || 'medium';
+          var deadlineClass = task.deadline < new Date().toISOString().split('T')[0] ? 'overdue' : 'on-time';
+          var priorityLabel = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' } [task.priority] || 'Medium';
+          var priorityClass = task.priority || 'medium';
 
-          let filesHtml = '';
+          var filesHtml = '';
           if (task.files && task.files.length > 0) {
             filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
             task.files.forEach(function(file) {
-              const fileData = file.data || '';
+              var fileData = file.data || '';
+              var escapedData = fileData.replace(/'/g, "\\'");
               filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="openFilePreview(\'' +
-                file.name + '\', \'' + fileData + '\')">' + file.name + '</span></div>';
+                file.name + '\', \'' + escapedData + '\')">' + file.name + '</span></div>';
             });
             filesHtml += '</div>';
           }
 
-          const card = document.createElement('div');
+          var card = document.createElement('div');
           card.className = 'task-card';
 
-          let statusDisplay = '';
-          let footerHtml = '';
+          var statusDisplay = '';
+          var footerHtml = '';
 
           if (status === 'graded') {
             statusDisplay = '<span class="graded-status">✅ Graded: ' + submission.grade + '%</span>';
@@ -4050,12 +4038,12 @@
             footerHtml =
               '<div class="submitted-status">⏳ Submitted</div><div style="font-size:12px;color:var(--muted);">Waiting for grading...</div>';
             if (submission.files && submission.files.length > 0) {
-              // Show file names with preview
-              let fileLinks = '';
+              var fileLinks = '';
               submission.files.forEach(function(file) {
-                const fileData = file.data || '';
+                var fileData = file.data || '';
+                var escapedData = fileData.replace(/'/g, "\\'");
                 fileLinks += '<span class="item-tag" style="cursor:pointer;color:var(--primary);text-decoration:underline;margin-right:6px;" onclick="openFilePreview(\'' +
-                  file.name + '\', \'' + fileData + '\')">📄 ' + file.name + '</span>';
+                  file.name + '\', \'' + escapedData + '\')">📄 ' + file.name + '</span>';
               });
               footerHtml += '<div style="font-size:12px;color:var(--muted);margin-top:4px;">📎 ' + fileLinks +
                 '</div>';
@@ -4082,23 +4070,22 @@
             '<div class="task-footer">' + footerHtml + '</div>';
           container.appendChild(card);
 
-          // File upload with data reading
-          const fileInput = document.getElementById('file-' + task.id);
+          var fileInput = document.getElementById('file-' + task.id);
           if (fileInput) {
             fileInput.addEventListener('change', function(e) {
-              const fileNameSpan = document.getElementById('file-name-' + task.id);
+              var fileNameSpan = document.getElementById('file-name-' + task.id);
               if (e.target.files && e.target.files.length > 0) {
-                const names = Array.from(e.target.files).map(function(f) { return f.name; }).join(', ');
+                var names = Array.from(e.target.files).map(function(f) { return f.name; }).join(', ');
                 fileNameSpan.textContent = names;
-                const key = task.id + '-' + studentId;
+                var key = task.id + '-' + studentId;
                 if (!taskSubmissions[key]) {
                   taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null,
                     files: [] };
                 }
-                const filesData = [];
-                let completed = 0;
+                var filesData = [];
+                var completed = 0;
                 Array.from(e.target.files).forEach(function(file, index) {
-                  const reader = new FileReader();
+                  var reader = new FileReader();
                   reader.onload = function(event) {
                     filesData[index] = { name: file.name, size: file.size, type: file.type,
                       data: event.target.result };
@@ -4119,9 +4106,11 @@
         setLanguage(currentLang);
       }
 
-      // ----- File Preview -----
+      // ============================================================
+      //  FILE PREVIEW (globally accessible)
+      // ============================================================
       function openFilePreview(fileName, fileData) {
-        const body = document.getElementById('file-preview-body');
+        var body = document.getElementById('file-preview-body');
         body.innerHTML = '';
 
         // If no data, show fallback
@@ -4133,12 +4122,12 @@
           return;
         }
 
-        const ext = fileName.split('.').pop().toLowerCase();
-        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp'].includes(ext);
-        const isPDF = ext === 'pdf';
-        const isText = ['txt', 'md', 'csv', 'json', 'xml', 'html', 'css', 'js', 'log'].includes(ext);
+        var ext = fileName.split('.').pop().toLowerCase();
+        var isImage = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp'].includes(ext);
+        var isPDF = ext === 'pdf';
+        var isText = ['txt', 'md', 'csv', 'json', 'xml', 'html', 'css', 'js', 'log'].includes(ext);
 
-        let content = '';
+        var content = '';
 
         if (isImage) {
           content = '<img src="' + fileData + '" class="file-preview-image" alt="' + fileName + '" />';
@@ -4147,8 +4136,8 @@
             '"></iframe>';
         } else if (isText) {
           try {
-            const base64Data = fileData.split(',')[1] || fileData;
-            const decoded = atob(base64Data);
+            var base64Data = fileData.split(',')[1] || fileData;
+            var decoded = atob(base64Data);
             content = '<pre class="file-preview-text">' + decoded + '</pre>';
           } catch (e) {
             content = '<div class="file-preview-fallback">📄 ' + fileName +
@@ -4156,7 +4145,6 @@
               '" style="color:var(--primary);">⬇️ Download file</a></div>';
           }
         } else {
-          // For doc, docx, xls, ppt, etc. show download link
           content = '<div class="file-preview-fallback">📄 ' + fileName +
             '<br><br>This file type may not be previewed directly.<br><a href="' + fileData + '" download="' +
             fileName + '" style="color:var(--primary);">⬇️ Download file</a></div>';
@@ -4166,23 +4154,26 @@
         document.getElementById('file-preview-overlay').classList.add('open');
       }
 
+      // Make it globally accessible for inline onclick
+      window.openFilePreview = openFilePreview;
+
       function closeFilePreview() {
         document.getElementById('file-preview-overlay').classList.remove('open');
         document.getElementById('file-preview-body').innerHTML = '';
       }
 
       // ============================================================
-      //  GRADE TASK MODAL & OTHER HELPERS
+      //  GRADE TASK MODAL & HELPERS
       // ============================================================
       function openGradeModal(taskId, studentId) {
         gradingTaskId = taskId;
         gradingStudentId = studentId;
-        const key = taskId + '-' + studentId;
-        const submission = taskSubmissions[key];
+        var key = taskId + '-' + studentId;
+        var submission = taskSubmissions[key];
         if (!submission) return;
 
-        const task = tasks.find(function(t) { return t.id === taskId; });
-        const student = students.find(function(s) { return s.id === studentId; });
+        var task = tasks.find(function(t) { return t.id === taskId; });
+        var student = students.find(function(s) { return s.id === studentId; });
         if (!task || !student) return;
 
         document.getElementById('grade-task-student-name').value = student.name;
@@ -4191,13 +4182,14 @@
         document.getElementById('grade-task-grade').value = submission.grade || '';
         document.getElementById('grade-task-feedback').value = submission.feedback || '';
 
-        const fileContainer = document.getElementById('grade-task-submission-file');
+        var fileContainer = document.getElementById('grade-task-submission-file');
         if (submission.files && submission.files.length > 0) {
-          let html = '<strong>📎 Submission Files:</strong><div style="margin-top:4px;">';
+          var html = '<strong>📎 Submission Files:</strong><div style="margin-top:4px;">';
           submission.files.forEach(function(file) {
-            const fileData = file.data || '';
+            var fileData = file.data || '';
+            var escapedData = fileData.replace(/'/g, "\\'");
             html += '<span class="item-tag" style="display:inline-block;padding:2px 8px;margin:2px;background:#f3f4f6;border-radius:4px;font-size:12px;cursor:pointer;color:var(--primary);text-decoration:underline;" onclick="openFilePreview(\'' +
-              file.name + '\', \'' + fileData + '\')">📄 ' + file.name + '</span>';
+              file.name + '\', \'' + escapedData + '\')">📄 ' + file.name + '</span>';
           });
           html += '</div>';
           fileContainer.innerHTML = html;
@@ -4210,7 +4202,7 @@
       }
 
       function gradeSubmission(taskId, studentId, grade, feedback) {
-        const key = taskId + '-' + studentId;
+        var key = taskId + '-' + studentId;
         if (taskSubmissions[key]) {
           taskSubmissions[key].grade = Math.min(100, Math.max(0, Math.round(parseFloat(grade))));
           taskSubmissions[key].feedback = feedback || '';
@@ -4251,7 +4243,7 @@
       }
 
       function submitTaskAnswer(taskId, studentId, answer, files) {
-        const key = taskId + '-' + studentId;
+        var key = taskId + '-' + studentId;
         if (!taskSubmissions[key]) {
           taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null, files: [] };
         }
@@ -4271,14 +4263,14 @@
         totalStudentsEl.textContent = students.length;
         totalCoursesEl.textContent = courses.length;
         totalEnrollmentsEl.textContent = enrollments.length;
-        const totalIncome = budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(sum, b) { return sum +
+        var totalIncome = budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(sum, b) { return sum +
             b.amount; }, 0);
         totalRevenueEl.textContent = '$' + totalIncome.toLocaleString();
       }
 
       function toggleExpand(expandId) {
         expandedRows[expandId] = !expandedRows[expandId];
-        const activePage = document.querySelector('.page.active');
+        var activePage = document.querySelector('.page.active');
         if (activePage) {
           if (activePage.id === 'students') renderStudents();
           else if (activePage.id === 'courses-admin') renderCourses();
@@ -4289,11 +4281,9 @@
       // ============================================================
       //  MODAL HELPERS (abridged)
       // ============================================================
-      let modalType, modalMode, editingId, enrollStudentId;
+      var modalType, modalMode, editingId, enrollStudentId;
 
       function openModal(type, mode, data) {
-        // ... (same as before)
-        // We'll keep the same logic but ensure setLanguage is called at end.
         modalType = type;
         modalMode = mode;
         if (mode === 'add') {
@@ -4328,7 +4318,52 @@
             editingId = null;
           }
         } else {
-          // edit mode... (similar logic)
+          // edit mode...
+          if (type === 'student') {
+            var s = students.find(function(st) { return st.id === data.id; });
+            if (s) {
+              editingId = s.id;
+              document.getElementById('modal-fields').innerHTML =
+                '<label>Name</label><input type="text" id="modal-name" value="' + s.name + '" />' +
+                '<label>Email</label><input type="email" id="modal-email" value="' + s.email + '" />' +
+                '<label>Password</label><input type="password" id="modal-password" placeholder="Leave blank to keep current" />' +
+                '<label>Status</label><select id="modal-status"><option value="Active"' + (s.status === 'Active' ?
+                  ' selected' : '') + '>Active</option><option value="Warning"' + (s.status === 'Warning' ?
+                  ' selected' : '') + '>Warning</option><option value="Inactive"' + (s.status === 'Inactive' ?
+                  ' selected' : '') + '>Inactive</option></select>';
+            }
+          } else if (type === 'course') {
+            var c = courses.find(function(co) { return co.id === data.id; });
+            if (c) {
+              editingId = c.id;
+              document.getElementById('modal-fields').innerHTML =
+                '<label>Course Name</label><input type="text" id="modal-course-name" value="' + c.name + '" />' +
+                '<label>Teacher</label><select id="modal-course-teacher">' + teachers.map(function(t) {
+                  return '<option value="' + t.id + '"' + (t.id === c.teacherId ? ' selected' : '') + '>' + t
+                    .name + '</option>';
+                }).join('') + '</select>' +
+                '<label>Description</label><input type="text" id="modal-course-description" value="' + c
+                .description + '" />';
+            }
+          } else {
+            var b = budgetEntries.find(function(bg) { return bg.id === data.id; });
+            if (b) {
+              editingId = b.id;
+              var isIncome = b.type === 'Income';
+              document.getElementById('modal-fields').innerHTML =
+                '<label>Category</label><input type="text" id="modal-category" value="' + b.category + '" />' +
+                '<label>Type</label><select id="modal-type"><option value="Income"' + (isIncome ? ' selected' :
+                  '') + '>Income</option><option value="Expense"' + (!isIncome ? ' selected' : '') +
+                '>Expense</option></select>' +
+                '<label>Amount ($)</label><input type="number" id="modal-amount" value="' + Math.abs(b.amount) +
+                '" min="0" step="1" />' +
+                '<label>Date</label><input type="date" id="modal-date" value="' + b.date + '" />' +
+                '<label>Status</label><select id="modal-status"><option value="Paid"' + (b.status === 'Paid' ?
+                  ' selected' : '') + '>Paid</option><option value="Pending"' + (b.status === 'Pending' ?
+                  ' selected' : '') + '>Pending</option><option value="Unpaid"' + (b.status === 'Unpaid' ?
+                  ' selected' : '') + '>Unpaid</option></select>';
+            }
+          }
         }
         document.getElementById('modal-overlay').classList.add('open');
         setLanguage(currentLang);
@@ -4341,26 +4376,126 @@
 
       function handleModalSubmit(e) {
         e.preventDefault();
-        // ... (same as previous version)
+        var type = modalType;
+        if (type === 'student') {
+          var name = document.getElementById('modal-name').value.trim();
+          var email = document.getElementById('modal-email').value.trim();
+          var password = document.getElementById('modal-password').value.trim();
+          var status = document.getElementById('modal-status').value;
+          if (!name || !email) { alert('Please fill in all fields'); return; }
+          if (modalMode === 'add') {
+            if (getUserByEmail(email)) { alert('Email already exists.'); return; }
+            students.push({ id: generateId(), name: name, email: email, password: password || 'password123',
+              role: 'Student', status: status, createdAt: new Date().toISOString().split('T')[0] });
+          } else {
+            var index = students.findIndex(function(s) { return s.id === editingId; });
+            if (index !== -1) {
+              students[index].name = name;
+              students[index].email = email;
+              if (password) students[index].password = password;
+              students[index].status = status;
+            }
+          }
+          saveData();
+          renderStudents();
+          closeModal();
+        } else if (type === 'course') {
+          var name = document.getElementById('modal-course-name').value.trim();
+          var teacherId = parseInt(document.getElementById('modal-course-teacher').value);
+          var description = document.getElementById('modal-course-description').value.trim();
+          if (!name || !teacherId) { alert('Please fill in all fields'); return; }
+          if (modalMode === 'add') {
+            courses.push({ id: courses.length + 1, name: name, teacherId: teacherId, description: description });
+          } else {
+            var index = courses.findIndex(function(c) { return c.id === editingId; });
+            if (index !== -1) { courses[index] = { id: editingId, name: name, teacherId: teacherId,
+              description: description }; }
+          }
+          saveData();
+          renderCourses();
+          renderStudentCourses();
+          closeModal();
+        } else {
+          var category = document.getElementById('modal-category').value.trim();
+          var type = document.getElementById('modal-type').value;
+          var amount = parseFloat(document.getElementById('modal-amount').value);
+          var date = document.getElementById('modal-date').value;
+          var status = document.getElementById('modal-status').value;
+          if (!category || isNaN(amount) || !date) { alert('Please fill in all fields'); return; }
+          var finalAmount = type === 'Income' ? amount : -amount;
+          if (modalMode === 'add') {
+            budgetEntries.push({ id: budgetEntries.length + 1, category: category, type: type, amount: finalAmount,
+              date: date, status: status });
+          } else {
+            var index = budgetEntries.findIndex(function(b) { return b.id === editingId; });
+            if (index !== -1) { budgetEntries[index] = { id: editingId, category: category, type: type,
+                amount: finalAmount, date: date, status: status }; }
+          }
+          saveData();
+          renderBudget();
+          closeModal();
+        }
         setLanguage(currentLang);
       }
 
       function deleteEntry(type, id) {
-        // ... (same)
+        if (!confirm('Are you sure you want to delete this entry?')) return;
+        if (type === 'student') {
+          enrollments = enrollments.filter(function(e) { return e.studentId !== id; });
+          students = students.filter(function(s) { return s.id !== id; });
+          renderStudents();
+          renderStudentCourses();
+        } else if (type === 'course') {
+          enrollments = enrollments.filter(function(e) { return e.courseId !== id; });
+          courses = courses.filter(function(c) { return c.id !== id; });
+          renderCourses();
+          renderStudentCourses();
+        } else if (type === 'budget') {
+          budgetEntries = budgetEntries.filter(function(b) { return b.id !== id; });
+          renderBudget();
+        }
+        saveData();
+        updateAdminStats();
         setLanguage(currentLang);
       }
 
       function openEnrollModal(studentId) {
-        // ... (same)
+        enrollStudentId = studentId;
+        var student = students.find(function(s) { return s.id === studentId; });
+        if (!student) return;
+        document.getElementById('enroll-modal-title').textContent = 'Enroll Student';
+        document.getElementById('enroll-modal-sub').textContent = 'Select courses for ' + student.name;
+        var enrolledIds = getEnrolledCourseIds(studentId);
+        var html = '';
+        if (courses.length === 0) html = '<p style="color:var(--muted);padding:20px;text-align:center;">No courses available.</p>';
+        else courses.forEach(function(c) {
+          var checked = enrolledIds.includes(c.id) ? 'checked' : '';
+          html += '<div class="enrollment-item"><input type="checkbox" id="enroll-course-' + c.id + '" value="' + c
+            .id + '" ' + checked + ' /><label for="enroll-course-' + c.id + '"><strong>' + c.name +
+            '</strong></label><span class="course-teacher">' + getTeacherName(c.teacherId) + '</span></div>';
+        });
+        document.getElementById('enrollment-list').innerHTML = html;
+        document.getElementById('enroll-modal-overlay').classList.add('open');
         setLanguage(currentLang);
       }
 
       function closeEnrollModal() {
-        // ...
+        document.getElementById('enroll-modal-overlay').classList.remove('open');
+        enrollStudentId = null;
       }
 
       function saveEnrollments() {
-        // ...
+        if (enrollStudentId === null) return;
+        var checkboxes = document.getElementById('enrollment-list').querySelectorAll('input[type="checkbox"]');
+        var selectedIds = [];
+        checkboxes.forEach(function(cb) { if (cb.checked) selectedIds.push(parseInt(cb.value)); });
+        enrollments = enrollments.filter(function(e) { return e.studentId !== enrollStudentId; });
+        selectedIds.forEach(function(courseId) { enrollments.push({ studentId: enrollStudentId, courseId: courseId }); });
+        saveData();
+        renderStudents();
+        renderCourses();
+        renderStudentCourses();
+        closeEnrollModal();
         setLanguage(currentLang);
       }
 
@@ -4397,78 +4532,70 @@
       if (loginLangToggle) loginLangToggle.addEventListener('click', toggleLanguage);
       if (registerLangToggle) registerLangToggle.addEventListener('click', toggleLanguage);
 
-      // Expandable rows
       document.addEventListener('click', function(e) {
-        const target = e.target.closest('.expandable-row');
+        var target = e.target.closest('.expandable-row');
         if (target && target.dataset.expandId) toggleExpand(target.dataset.expandId);
       });
 
-      // Notification
       document.getElementById('notification-button').addEventListener('click', function() {
         alert('You have 2 new announcements and 1 assignment due tomorrow.');
       });
 
-      // Assignment buttons (placeholder)
       document.querySelectorAll('.assignment-button').forEach(function(btn) {
         btn.addEventListener('click', function() {
           alert('Assignment details and submissions will be added in the next development step.');
         });
       });
 
-      // File preview close
       document.getElementById('file-preview-close').addEventListener('click', closeFilePreview);
       document.getElementById('file-preview-overlay').addEventListener('click', function(e) {
         if (e.target === this) closeFilePreview();
       });
 
-      // Student table events
       studentTableBody.addEventListener('click', function(e) {
-        const target = e.target.closest('button');
+        var target = e.target.closest('button');
         if (!target) return;
-        const id = parseInt(target.dataset.id);
+        var id = parseInt(target.dataset.id);
         if (target.classList.contains('delete')) deleteEntry('student', id);
         else if (target.classList.contains('edit')) {
-          const s = students.find(function(st) { return st.id === id; });
+          var s = students.find(function(st) { return st.id === id; });
           if (s) openModal('student', 'edit', s);
         } else if (target.classList.contains('enroll')) openEnrollModal(id);
       });
 
-      // Budget table events
       document.getElementById('budget-table-body').addEventListener('click', function(e) {
-        const target = e.target.closest('button');
+        var target = e.target.closest('button');
         if (!target) return;
-        const id = parseInt(target.dataset.id);
+        var id = parseInt(target.dataset.id);
         if (target.classList.contains('delete')) deleteEntry('budget', id);
         else if (target.classList.contains('edit')) {
-          const b = budgetEntries.find(function(bg) { return bg.id === id; });
+          var b = budgetEntries.find(function(bg) { return bg.id === id; });
           if (b) openModal('budget', 'edit', b);
         }
       });
 
-      // Course table events
       document.getElementById('course-table-body').addEventListener('click', function(e) {
-        const target = e.target.closest('button');
+        var target = e.target.closest('button');
         if (!target) return;
-        const id = parseInt(target.dataset.id);
+        var id = parseInt(target.dataset.id);
         if (target.classList.contains('delete')) deleteEntry('course', id);
         else if (target.classList.contains('edit')) {
-          const c = courses.find(function(co) { return co.id === id; });
+          var c = courses.find(function(co) { return co.id === id; });
           if (c) openModal('course', 'edit', c);
         }
       });
 
-      // Grade table events
       document.getElementById('grade-table-body').addEventListener('click', function(e) {
-        const target = e.target.closest('button');
+        var target = e.target.closest('button');
         if (!target) return;
         if (target.classList.contains('save-grade-btn')) {
-          const studentId = parseInt(target.dataset.student);
-          const courseId = parseInt(target.dataset.course);
-          const input = document.getElementById('grade-input-' + studentId + '-' + courseId);
+          var studentId = parseInt(target.dataset.student);
+          var courseId = parseInt(target.dataset.course);
+          var input = document.getElementById('grade-input-' + studentId + '-' + courseId);
           if (input) {
-            const value = input.value.trim();
+            var value = input.value.trim();
             if (value === '') { delete gradeData[studentId + '-' + courseId]; } else {
-              const grade = parseFloat(value);
+              var grade = parseFloat(value);
               if (!isNaN(grade) && grade >= 0 && grade <= 100) { gradeData[studentId + '-' + courseId] = grade; } else {
                 alert('Please enter a grade between 0 and 100.');
                 return;
@@ -4480,8 +4607,8 @@
           }
         }
         if (target.classList.contains('delete') && target.dataset.type === 'grade') {
-          const studentId = parseInt(target.dataset.student);
-          const courseId = parseInt(target.dataset.course);
+          var studentId = parseInt(target.dataset.student);
+          var courseId = parseInt(target.dataset.course);
           if (confirm('Remove this grade?')) {
             delete gradeData[studentId + '-' + courseId];
             saveData();
@@ -4494,11 +4621,10 @@
       document.getElementById('grade-course-filter').addEventListener('change', renderGrades);
       document.getElementById('grade-student-filter').addEventListener('change', renderGrades);
 
-      // Classroom events
       meetingGrid.addEventListener('click', function(e) {
-        const target = e.target.closest('.join-btn');
+        var target = e.target.closest('.join-btn');
         if (target) {
-          const meetingId = parseInt(target.dataset.meeting);
+          var meetingId = parseInt(target.dataset.meeting);
           openPresentation(meetingId);
         }
         if (e.target.id === 'open-schedule-modal-btn' || e.target.closest('#open-schedule-modal-btn')) {
@@ -4506,7 +4632,6 @@
         }
       });
 
-      // Presentation controls
       document.getElementById('presentation-close').addEventListener('click', closePresentation);
       document.getElementById('presentation-next').addEventListener('click', nextSlide);
       document.getElementById('presentation-prev').addEventListener('click', prevSlide);
@@ -4522,7 +4647,6 @@
         }
       });
 
-      // Calendar navigation
       document.getElementById('calendar-prev').addEventListener('click', function() {
         if (currentMonth === 0) { currentMonth = 11;
           currentYear--; } else { currentMonth--; }
@@ -4534,7 +4658,6 @@
         renderCalendar();
       });
 
-      // Schedule class modal
       addClassBtn.addEventListener('click', openScheduleModal);
       scheduleModalCancel.addEventListener('click', function() { scheduleModalOverlay.classList.remove('open'); });
       scheduleModalOverlay.addEventListener('click', function(e) {
@@ -4543,12 +4666,12 @@
 
       scheduleModalForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const title = scheduleTitle.value.trim();
-        const teacherId = parseInt(scheduleTeacher.value);
-        const date = scheduleDate.value;
-        const time = scheduleTime.value;
-        const duration = parseInt(scheduleDuration.value);
-        const link = scheduleLink.value.trim();
+        var title = scheduleTitle.value.trim();
+        var teacherId = parseInt(scheduleTeacher.value);
+        var date = scheduleDate.value;
+        var time = scheduleTime.value;
+        var duration = parseInt(scheduleDuration.value);
+        var link = scheduleLink.value.trim();
 
         if (!title || !date || !time) {
           alert('Please fill in all required fields.');
@@ -4559,16 +4682,14 @@
         scheduleModalOverlay.classList.remove('open');
       });
 
-      // Upcoming classes join buttons (delegated)
       upcomingClassesList.addEventListener('click', function(e) {
-        const target = e.target.closest('.join-btn');
+        var target = e.target.closest('.join-btn');
         if (target) {
-          const meetingId = parseInt(target.dataset.meeting);
+          var meetingId = parseInt(target.dataset.meeting);
           openPresentation(meetingId);
         }
       });
 
-      // Task modal
       document.getElementById('add-task-btn').addEventListener('click', function() {
         document.getElementById('task-modal-title').textContent = 'Create Task';
         document.getElementById('task-modal-sub').textContent = 'Fill in the task details below.';
@@ -4594,9 +4715,9 @@
       });
 
       document.getElementById('task-file-input').addEventListener('change', function(e) {
-        const files = Array.from(e.target.files);
+        var files = Array.from(e.target.files);
         files.forEach(function(file) {
-          const reader = new FileReader();
+          var reader = new FileReader();
           reader.onload = function(event) {
             tempTaskFiles.push({ name: file.name, data: event.target.result });
             updateTaskFileList();
@@ -4606,17 +4727,17 @@
       });
 
       function updateTaskFileList() {
-        const list = document.getElementById('task-file-list');
+        var list = document.getElementById('task-file-list');
         list.innerHTML = '';
         tempTaskFiles.forEach(function(file, index) {
-          const tag = document.createElement('span');
+          var tag = document.createElement('span');
           tag.className = 'file-tag';
           tag.innerHTML = '📄 ' + file.name + ' <span class="remove-file" data-index="' + index + '">✕</span>';
           list.appendChild(tag);
         });
         list.querySelectorAll('.remove-file').forEach(function(el) {
           el.addEventListener('click', function() {
-            const index = parseInt(this.dataset.index);
+            var index = parseInt(this.dataset.index);
             tempTaskFiles.splice(index, 1);
             updateTaskFileList();
           });
@@ -4624,11 +4745,11 @@
       }
 
       document.getElementById('task-modal-assign').addEventListener('change', function() {
-        const val = this.value;
-        const optionsContainer = document.getElementById('task-modal-assign-options');
+        var val = this.value;
+        var optionsContainer = document.getElementById('task-modal-assign-options');
         if (val === 'all') { optionsContainer.style.display = 'none'; return; }
         optionsContainer.style.display = 'block';
-        let html = '<label>Select ' + (val === 'course' ? 'Courses' : 'Students') + '</label>';
+        var html = '<label>Select ' + (val === 'course' ? 'Courses' : 'Students') + '</label>';
         if (val === 'course') {
           courses.forEach(function(c) {
             html += '<div class="enrollment-item"><input type="checkbox" class="task-assign-checkbox" value="' +
@@ -4645,67 +4766,64 @@
 
       document.getElementById('task-modal-form').addEventListener('submit', function(e) {
         e.preventDefault();
-        const title = document.getElementById('task-modal-title-input').value.trim();
-        const type = document.getElementById('task-modal-type').value;
-        const priority = document.getElementById('task-modal-priority').value;
-        const description = document.getElementById('task-modal-description').value.trim();
-        const deadline = document.getElementById('task-modal-deadline').value;
-        const assignTo = document.getElementById('task-modal-assign').value;
+        var title = document.getElementById('task-modal-title-input').value.trim();
+        var type = document.getElementById('task-modal-type').value;
+        var priority = document.getElementById('task-modal-priority').value;
+        var description = document.getElementById('task-modal-description').value.trim();
+        var deadline = document.getElementById('task-modal-deadline').value;
+        var assignTo = document.getElementById('task-modal-assign').value;
 
         if (!title || !description || !deadline) { alert('Please fill in all required fields.'); return; }
 
-        let assignedIds = [];
+        var assignedIds = [];
         if (assignTo !== 'all') {
-          const checkboxes = document.getElementById('task-modal-assign-options').querySelectorAll(
+          var checkboxes = document.getElementById('task-modal-assign-options').querySelectorAll(
             '.task-assign-checkbox:checked');
           checkboxes.forEach(function(cb) { assignedIds.push(parseInt(cb.value)); });
           if (assignedIds.length === 0) { alert('Please select at least one ' + (assignTo === 'course' ?
               'course' : 'student') + '.'); return; }
         }
 
-        const files = tempTaskFiles.map(function(f) { return { name: f.name, data: f.data }; });
+        var files = tempTaskFiles.map(function(f) { return { name: f.name, data: f.data }; });
         createTask(title, type, description, deadline, priority, assignTo, assignedIds, files);
         tempTaskFiles = [];
         document.getElementById('task-modal-overlay').classList.remove('open');
       });
 
-      // Task search/filter
       document.getElementById('task-search').addEventListener('input', renderTasks);
       document.getElementById('task-type-filter').addEventListener('change', renderTasks);
       document.getElementById('task-status-filter').addEventListener('change', renderTasks);
 
-      // Student task submit
       document.getElementById('student-task-list').addEventListener('click', function(e) {
-        const target = e.target.closest('.submit-btn');
+        var target = e.target.closest('.submit-btn');
         if (target) {
-          const taskId = parseInt(target.dataset.task);
-          const input = document.getElementById('answer-' + taskId);
-          const fileInput = document.getElementById('file-' + taskId);
-          const studentId = currentUser.id;
+          var taskId = parseInt(target.dataset.task);
+          var input = document.getElementById('answer-' + taskId);
+          var fileInput = document.getElementById('file-' + taskId);
+          var studentId = currentUser.id;
 
-          let files = [];
+          var files = [];
           if (fileInput && fileInput.files && fileInput.files.length > 0) {
             files = Array.from(fileInput.files).map(function(f) {
               return { name: f.name, size: f.size, type: f.type };
             });
           }
 
-          const answer = input ? input.value.trim() : '';
+          var answer = input ? input.value.trim() : '';
           if (!answer && files.length === 0) { alert('Please enter your answer or upload a file.'); return; }
 
           submitTaskAnswer(taskId, studentId, answer, files);
         }
       });
 
-      // View submissions (with file preview)
       document.getElementById('admin-task-list').addEventListener('click', function(e) {
-        const target = e.target.closest('.view-submissions-btn');
+        var target = e.target.closest('.view-submissions-btn');
         if (target) {
-          const taskId = parseInt(target.dataset.task);
-          const task = tasks.find(function(t) { return t.id === taskId; });
+          var taskId = parseInt(target.dataset.task);
+          var task = tasks.find(function(t) { return t.id === taskId; });
           if (!task) return;
 
-          const submissionKeys = Object.keys(taskSubmissions).filter(function(key) {
+          var submissionKeys = Object.keys(taskSubmissions).filter(function(key) {
             return key.startsWith(taskId + '-');
           });
 
@@ -4714,11 +4832,11 @@
             return;
           }
 
-          let studentList = [];
+          var studentList = [];
           submissionKeys.forEach(function(key) {
-            const studentId = parseInt(key.split('-')[1]);
-            const student = students.find(function(s) { return s.id === studentId; });
-            const submission = taskSubmissions[key];
+            var studentId = parseInt(key.split('-')[1]);
+            var student = students.find(function(s) { return s.id === studentId; });
+            var submission = taskSubmissions[key];
             if (student) {
               studentList.push({
                 id: studentId,
@@ -4731,26 +4849,25 @@
           });
 
           studentList.sort(function(a, b) {
-            const aGraded = a.submission.grade !== null && a.submission.grade !== undefined;
-            const bGraded = b.submission.grade !== null && b.submission.grade !== undefined;
+            var aGraded = a.submission.grade !== null && a.submission.grade !== undefined;
+            var bGraded = b.submission.grade !== null && b.submission.grade !== undefined;
             if (!aGraded && bGraded) return -1;
             if (aGraded && !bGraded) return 1;
             return a.name.localeCompare(b.name);
           });
 
-          // Build a modal with submissions and grade buttons
-          const overlay = document.createElement('div');
+          var overlay = document.createElement('div');
           overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:20px;';
 
-          const modal = document.createElement('div');
+          var modal = document.createElement('div');
           modal.style.cssText = 'max-width:750px;width:100%;max-height:90vh;background:white;border-radius:18px;padding:24px;overflow:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);';
 
-          const title = document.createElement('h2');
+          var title = document.createElement('h2');
           title.textContent = '📋 Submissions: ' + task.title;
           title.style.marginTop = '0';
           title.style.marginBottom = '8px';
 
-          const sub = document.createElement('p');
+          var sub = document.createElement('p');
           sub.textContent = 'Total: ' + studentList.length + ' submissions';
           sub.style.color = '#6b7280';
           sub.style.marginBottom = '16px';
@@ -4759,26 +4876,27 @@
           modal.appendChild(sub);
 
           studentList.forEach(function(item) {
-            const section = document.createElement('div');
+            var section = document.createElement('div');
             section.style.cssText = 'padding:12px;margin-bottom:12px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;';
 
-            const nameRow = document.createElement('div');
+            var nameRow = document.createElement('div');
             nameRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;';
             nameRow.innerHTML = '<strong>' + item.name + '</strong> <span>' + item.status + '</span>';
             section.appendChild(nameRow);
 
-            const answerRow = document.createElement('div');
+            var answerRow = document.createElement('div');
             answerRow.style.cssText = 'margin-top:6px;font-size:13px;color:#4b5563;';
             answerRow.textContent = '📝 ' + (item.submission.answer || 'No answer provided.');
             section.appendChild(answerRow);
 
             if (item.submission.files && item.submission.files.length > 0) {
-              const filesRow = document.createElement('div');
+              var filesRow = document.createElement('div');
               filesRow.style.cssText = 'margin-top:4px;font-size:12px;';
               filesRow.innerHTML = '<strong>📎 Files:</strong> ';
               item.submission.files.forEach(function(file) {
-                const fileData = file.data || '';
-                const link = document.createElement('span');
+                var fileData = file.data || '';
+                var escapedData = fileData.replace(/'/g, "\\'");
+                var link = document.createElement('span');
                 link.style.cssText =
                   'color:#4f46e5;text-decoration:underline;cursor:pointer;margin-right:8px;';
                 link.textContent = file.name;
@@ -4789,7 +4907,7 @@
             }
 
             if (item.submission.grade === null || item.submission.grade === undefined) {
-              const gradeBtn = document.createElement('button');
+              var gradeBtn = document.createElement('button');
               gradeBtn.textContent = '⭐ Grade';
               gradeBtn.style.cssText = 'margin-top:8px;padding:4px 16px;background:#4f46e5;color:white;border:0;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px;';
               gradeBtn.onclick = function() {
@@ -4798,7 +4916,7 @@
               };
               section.appendChild(gradeBtn);
             } else if (item.submission.feedback) {
-              const feedbackRow = document.createElement('div');
+              var feedbackRow = document.createElement('div');
               feedbackRow.style.cssText = 'margin-top:4px;font-size:12px;color:#6b7280;';
               feedbackRow.textContent = '💬 Feedback: ' + item.submission.feedback;
               section.appendChild(feedbackRow);
@@ -4807,14 +4925,14 @@
             modal.appendChild(section);
           });
 
-          const closeBtn = document.createElement('button');
+          var closeBtn = document.createElement('button');
           closeBtn.textContent = 'Close';
           closeBtn.style.cssText = 'padding:10px 24px;background:#4f46e5;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer;margin-top:8px;';
           closeBtn.addEventListener('click', function() {
             document.body.removeChild(overlay);
           });
 
-          const btnWrapper = document.createElement('div');
+          var btnWrapper = document.createElement('div');
           btnWrapper.style.display = 'flex';
           btnWrapper.style.justifyContent = 'flex-end';
           btnWrapper.appendChild(closeBtn);
@@ -4831,16 +4949,14 @@
         }
       });
 
-      // Delete task
       document.getElementById('admin-task-list').addEventListener('click', function(e) {
-        const target = e.target.closest('.delete');
+        var target = e.target.closest('.delete');
         if (target && target.dataset.type === 'task') {
-          const taskId = parseInt(target.dataset.id);
+          var taskId = parseInt(target.dataset.id);
           if (confirm('Delete this task?')) deleteTask(taskId);
         }
       });
 
-      // Grade task modal
       document.getElementById('grade-task-modal-cancel').addEventListener('click', function() {
         document.getElementById('grade-task-modal-overlay').classList.remove('open');
       });
@@ -4852,36 +4968,34 @@
         e.preventDefault();
         if (gradingTaskId === null || gradingStudentId === null) return;
 
-        const grade = parseFloat(document.getElementById('grade-task-grade').value);
+        var grade = parseFloat(document.getElementById('grade-task-grade').value);
         if (isNaN(grade) || grade < 0 || grade > 100) {
           alert('Please enter a valid grade between 0 and 100.');
           return;
         }
 
-        const feedback = document.getElementById('grade-task-feedback').value.trim();
+        var feedback = document.getElementById('grade-task-feedback').value.trim();
         gradeSubmission(gradingTaskId, gradingStudentId, grade, feedback);
         document.getElementById('grade-task-modal-overlay').classList.remove('open');
         renderTasks();
       });
 
-      // Add buttons
       addStudentBtn.addEventListener('click', function() { openModal('student', 'add'); });
       document.getElementById('add-budget-btn').addEventListener('click', function() { openModal('budget', 'add'); });
       document.getElementById('add-course-btn').addEventListener('click', function() { openModal('course', 'add'); });
 
-      // Export buttons
       exportStudentsBtn.addEventListener('click', function() {
-        const headers = ['Name', 'Email', 'Status', 'Enrolled Courses'];
-        const data = students.map(function(s) {
-          const enrolledIds = getEnrolledCourseIds(s.id);
-          const courseNames = enrolledIds.map(function(id) { return getCourseName(id); }).join('; ');
+        var headers = ['Name', 'Email', 'Status', 'Enrolled Courses'];
+        var data = students.map(function(s) {
+          var enrolledIds = getEnrolledCourseIds(s.id);
+          var courseNames = enrolledIds.map(function(id) { return getCourseName(id); }).join('; ');
           return [s.name, s.email, s.status, courseNames];
         });
-        let csv = headers.join(',') + '\n';
+        var csv = headers.join(',') + '\n';
         data.forEach(function(row) { csv += row.join(',') + '\n'; });
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        var blob = new Blob([csv], { type: 'text/csv' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
         a.href = url;
         a.download = 'students.csv';
         a.click();
@@ -4889,44 +5003,40 @@
       });
 
       document.getElementById('export-budget-btn').addEventListener('click', function() {
-        const headers = ['Category', 'Type', 'Amount', 'Date', 'Status'];
-        const data = budgetEntries.map(function(b) {
-          const amountDisplay = b.type === 'Income' ? '+' + b.amount : '-' + Math.abs(b.amount);
+        var headers = ['Category', 'Type', 'Amount', 'Date', 'Status'];
+        var data = budgetEntries.map(function(b) {
+          var amountDisplay = b.type === 'Income' ? '+' + b.amount : '-' + Math.abs(b.amount);
           return [b.category, b.type, '$' + amountDisplay, b.date, b.status];
         });
-        let csv = headers.join(',') + '\n';
+        var csv = headers.join(',') + '\n';
         data.forEach(function(row) { csv += row.join(',') + '\n'; });
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        var blob = new Blob([csv], { type: 'text/csv' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
         a.href = url;
         a.download = 'budget.csv';
         a.click();
         URL.revokeObjectURL(url);
       });
 
-      // Search/filter
       studentSearch.addEventListener('input', renderStudents);
       studentFilter.addEventListener('change', renderStudents);
       document.getElementById('budget-search').addEventListener('input', renderBudget);
       document.getElementById('budget-filter').addEventListener('change', renderBudget);
       document.getElementById('course-search').addEventListener('input', renderCourses);
 
-      // Modal events
       document.getElementById('modal-cancel').addEventListener('click', closeModal);
       document.getElementById('modal-overlay').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
       });
       document.getElementById('modal-form').addEventListener('submit', handleModalSubmit);
 
-      // Enrollment modal events
       document.getElementById('enroll-modal-cancel').addEventListener('click', closeEnrollModal);
       document.getElementById('enroll-modal-overlay').addEventListener('click', function(e) {
         if (e.target === this) closeEnrollModal();
       });
       document.getElementById('enroll-modal-save').addEventListener('click', saveEnrollments);
 
-      // Enter key on login/register
       loginPassword.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') loginForm.dispatchEvent(new Event('submit'));
       });

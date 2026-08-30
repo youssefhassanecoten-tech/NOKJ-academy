@@ -1944,6 +1944,7 @@
       border: none;
       font-size: 14px;
       cursor: pointer;
+      padding: 4px 8px;
     }
     .question-builder input[type="text"],
     .question-builder textarea,
@@ -1953,8 +1954,13 @@
       margin-bottom: 8px;
       border: 1px solid var(--line);
       border-radius: 6px;
-      font-size: 13px;
+      font-size: 14px;
       background: white;
+    }
+    .question-builder input[type="text"]:focus,
+    .question-builder textarea:focus {
+      outline: none;
+      border-color: var(--primary);
     }
     .question-builder .options-group {
       display: grid;
@@ -1970,9 +1976,18 @@
     .question-builder .options-group .option-item input[type="text"] {
       flex: 1;
       margin-bottom: 0;
+      padding: 6px 10px;
+      font-size: 13px;
     }
     .question-builder .options-group .option-item input[type="radio"] {
       margin: 0;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .question-builder .options-group .option-item input[type="radio"]:checked {
+      accent-color: var(--primary);
     }
 
     .test-preview {
@@ -2767,7 +2782,7 @@
 
   <!-- ===== TEST MODAL ===== -->
   <div class="modal-overlay" id="test-modal-overlay">
-    <div class="modal">
+    <div class="modal" style="max-width:800px;">
       <h2 id="test-modal-title">Create Test</h2>
       <p class="sub" id="test-modal-sub">Build your test with multiple choice questions.</p>
       <form id="test-modal-form">
@@ -3049,7 +3064,6 @@
         'Question': 'Вопрос',
         'Options': 'Варианты',
         'Correct Answer': 'Правильный ответ',
-        'Take Test': 'Пройти тест',
         'Take Test': 'Пройти тест',
         'Answer all questions and submit.': 'Ответьте на все вопросы и отправьте.',
         'Submit Test': 'Отправить тест',
@@ -5504,21 +5518,26 @@
         var div = document.createElement('div');
         div.className = 'question-builder';
         div.dataset.qIndex = questionCounter;
+
+        // Create unique name for radio group
+        var radioName = 'correct-' + questionCounter + '-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+
         div.innerHTML =
           '<div class="question-header"><span class="q-number">Question ' + qNum +
           '</span><button type="button" class="remove-question" data-qindex="' + questionCounter +
           '">✕ Remove</button></div>' +
-          '<input type="text" class="q-text-input" placeholder="Enter question text..." />' +
+          '<input type="text" class="q-text-input" placeholder="Enter question text..." style="width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:6px;font-size:14px;" />' +
           '<div class="options-group">' +
-          '<div class="option-item"><input type="radio" name="correct-' + questionCounter +
-          '" value="0" checked /><input type="text" class="option-input" placeholder="Option A" /></div>' +
-          '<div class="option-item"><input type="radio" name="correct-' + questionCounter +
-          '" value="1" /><input type="text" class="option-input" placeholder="Option B" /></div>' +
-          '<div class="option-item"><input type="radio" name="correct-' + questionCounter +
-          '" value="2" /><input type="text" class="option-input" placeholder="Option C" /></div>' +
-          '<div class="option-item"><input type="radio" name="correct-' + questionCounter +
-          '" value="3" /><input type="text" class="option-input" placeholder="Option D" /></div>' +
+          '<div class="option-item"><input type="radio" name="' + radioName +
+          '" value="0" checked /><input type="text" class="option-input" placeholder="Option A" style="flex:1;padding:6px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;" /></div>' +
+          '<div class="option-item"><input type="radio" name="' + radioName +
+          '" value="1" /><input type="text" class="option-input" placeholder="Option B" style="flex:1;padding:6px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;" /></div>' +
+          '<div class="option-item"><input type="radio" name="' + radioName +
+          '" value="2" /><input type="text" class="option-input" placeholder="Option C" style="flex:1;padding:6px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;" /></div>' +
+          '<div class="option-item"><input type="radio" name="' + radioName +
+          '" value="3" /><input type="text" class="option-input" placeholder="Option D" style="flex:1;padding:6px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;" /></div>' +
           '</div>';
+
         container.appendChild(div);
 
         div.querySelector('.remove-question').addEventListener('click', function() {

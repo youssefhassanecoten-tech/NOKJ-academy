@@ -1920,6 +1920,86 @@
       display: none;
     }
 
+    /* === TEST CONSTRUCTOR === */
+    .question-builder {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      background: #fafafa;
+    }
+    .question-builder .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .question-builder .question-header .q-number {
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .question-builder .remove-question {
+      color: var(--danger);
+      background: none;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .question-builder input[type="text"],
+    .question-builder textarea,
+    .question-builder select {
+      width: 100%;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 13px;
+      background: white;
+    }
+    .question-builder .options-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .question-builder .options-group .option-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .question-builder .options-group .option-item input[type="text"] {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    .question-builder .options-group .option-item input[type="radio"] {
+      margin: 0;
+    }
+
+    .test-preview {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      background: white;
+      margin-top: 20px;
+    }
+    .test-preview .test-question {
+      padding: 12px;
+      border-bottom: 1px solid #f0f1f4;
+    }
+    .test-preview .test-question:last-child {
+      border-bottom: none;
+    }
+    .test-preview .test-question .q-text {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .test-preview .test-question .q-options label {
+      display: block;
+      padding: 4px 0;
+      font-weight: 400;
+      font-size: 13px;
+    }
+
     /* === RESPONSIVE === */
     @media (max-width: 1030px) {
       .stats,
@@ -2229,6 +2309,7 @@
       <button class="nav-button" data-page="announcements"><span class="nav-icon">◉</span> <span class="nav-text">Announcements</span></button>
       <button class="nav-button" data-page="classroom"><span class="nav-icon">🎥</span> <span class="nav-text">Classroom</span></button>
       <button class="nav-button" data-page="tasks"><span class="nav-icon">📝</span> <span class="nav-text">Tasks</span></button>
+      <button class="nav-button" data-page="tests"><span class="nav-icon">📋</span> <span class="nav-text">Tests</span></button>
       <p class="nav-label">Account</p>
       <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span> <span class="nav-text">My profile</span></button>
 
@@ -2395,6 +2476,22 @@
         </div>
       </section>
 
+      <!-- ===== TESTS ===== -->
+      <section class="page" id="tests">
+        <div class="heading"><h1>Tests &amp; Quizzes</h1><p id="tests-subheading">Create and take tests with questions.</p></div>
+
+        <div id="admin-tests-view" style="display:none;">
+          <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="primary-button" id="create-test-btn">+ Create Test</button>
+          </div>
+          <div id="admin-test-list" class="task-grid"></div>
+        </div>
+
+        <div id="student-tests-view" style="display:none;">
+          <div id="student-test-list" class="task-grid"></div>
+        </div>
+      </section>
+
       <!-- ===== PROFILE ===== -->
       <section class="page" id="profile">
         <div class="heading"><h1>My profile</h1><p>View your account information.</p></div>
@@ -2522,7 +2619,7 @@
       <button class="nav-button active" data-page="dashboard"><span class="nav-icon">⌂</span><span>Home</span></button>
       <button class="nav-button" data-page="timetable"><span class="nav-icon">▦</span><span>Schedule</span></button>
       <button class="nav-button" data-page="courses"><span class="nav-icon">▣</span><span>Courses</span></button>
-      <button class="nav-button" data-page="assignments"><span class="nav-icon">✓</span><span>Work</span></button>
+      <button class="nav-button" data-page="tasks"><span class="nav-icon">✓</span><span>Tasks</span></button>
       <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span><span>Profile</span></button>
     </nav>
   </div>
@@ -2668,6 +2765,50 @@
     </div>
   </div>
 
+  <!-- ===== TEST MODAL ===== -->
+  <div class="modal-overlay" id="test-modal-overlay">
+    <div class="modal">
+      <h2 id="test-modal-title">Create Test</h2>
+      <p class="sub" id="test-modal-sub">Build your test with multiple choice questions.</p>
+      <form id="test-modal-form">
+        <label>Test Title</label>
+        <input type="text" id="test-modal-title-input" placeholder="e.g. Algebra Quiz 1" />
+        <label>Course</label>
+        <select id="test-modal-course"></select>
+        <label>Description</label>
+        <textarea id="test-modal-description" placeholder="Describe the test..."></textarea>
+        <label>Deadline</label>
+        <input type="date" id="test-modal-deadline" />
+
+        <div style="margin:16px 0 8px 0;display:flex;justify-content:space-between;align-items:center;">
+          <strong>Questions</strong>
+          <button type="button" class="primary-button" id="add-question-btn" style="padding:4px 12px;font-size:12px;">+ Add Question</button>
+        </div>
+        <div id="questions-container"></div>
+
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="test-modal-cancel">Cancel</button>
+          <button type="submit" class="save-btn" id="test-modal-save">Create Test</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== TAKE TEST MODAL ===== -->
+  <div class="modal-overlay" id="take-test-modal-overlay">
+    <div class="modal" style="max-width:800px;">
+      <h2 id="take-test-title">Take Test</h2>
+      <p class="sub" id="take-test-sub">Answer all questions and submit.</p>
+      <form id="take-test-form">
+        <div id="take-test-questions"></div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="take-test-cancel">Close</button>
+          <button type="submit" class="save-btn" id="take-test-submit">Submit Test</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- ===== JAVASCRIPT ===== -->
   <script>
     (function() {
@@ -2782,6 +2923,8 @@
         tasks = [],
         taskSubmissions = {},
         budgetEntries = [];
+      let tests = [],
+        testSubmissions = {};
       let currentUser = null,
         expandedRows = {},
         currentSlide = 0,
@@ -2791,6 +2934,7 @@
         gradingStudentId = null;
       let currentMonth = new Date().getMonth(),
         currentYear = new Date().getFullYear();
+      let questionCounter = 0;
 
       // ============================================================
       //  TRANSLATION SYSTEM
@@ -2891,14 +3035,38 @@
         'Grade saved successfully!': 'Оценка успешно сохранена!',
         'Task created successfully!': 'Задание успешно создано!',
         'Task submitted!': 'Задание отправлено!',
-        'Class scheduled successfully!': 'Занятие успешно запланировано!'
+        'Class scheduled successfully!': 'Занятие успешно запланировано!',
+        'Tests': 'Тесты',
+        'Tests & Quizzes': 'Тесты и викторины',
+        'Create and take tests with questions.': 'Создавайте и проходите тесты с вопросами.',
+        '+ Create Test': '+ Создать тест',
+        'Create Test': 'Создать тест',
+        'Build your test with multiple choice questions.': 'Создайте тест с вопросами с выбором ответа.',
+        'Test Title': 'Название теста',
+        'Course': 'Курс',
+        'Questions': 'Вопросы',
+        '+ Add Question': '+ Добавить вопрос',
+        'Question': 'Вопрос',
+        'Options': 'Варианты',
+        'Correct Answer': 'Правильный ответ',
+        'Take Test': 'Пройти тест',
+        'Take Test': 'Пройти тест',
+        'Answer all questions and submit.': 'Ответьте на все вопросы и отправьте.',
+        'Submit Test': 'Отправить тест',
+        'Test submitted successfully!': 'Тест успешно отправлен!',
+        'Test created successfully!': 'Тест успешно создан!',
+        'No tests available.': 'Нет доступных тестов.',
+        'No tests assigned to you yet.': 'Вам пока не назначены тесты.',
+        'Your Score': 'Ваш результат',
+        'Correct': 'Правильно',
+        'Incorrect': 'Неправильно',
+        'View Results': 'Посмотреть результаты'
       };
 
       let currentLang = localStorage.getItem('nokj-language') || 'en';
       const originalTextMap = new WeakMap();
 
       function applyTranslation(lang) {
-        // Simple text node translation
         const walker = document.createTreeWalker(
           document.body,
           NodeFilter.SHOW_TEXT, {
@@ -2932,16 +3100,10 @@
           }
         });
 
-        // Placeholders
         document.querySelectorAll('[placeholder]').forEach(function(el) {
           const placeholder = el.placeholder;
           if (lang === 'ru' && translations[placeholder] !== undefined) {
             el.placeholder = translations[placeholder];
-          } else if (lang === 'en') {
-            // Restore original placeholder if we have it stored
-            if (el.dataset.originalPlaceholder) {
-              el.placeholder = el.dataset.originalPlaceholder;
-            }
           }
         });
       }
@@ -2950,7 +3112,6 @@
         currentLang = lang;
         localStorage.setItem('nokj-language', lang);
 
-        // Update flags
         const ukFlags = document.querySelectorAll('#flag-uk, #login-flag-uk, #register-flag-uk');
         const ruFlags = document.querySelectorAll('#flag-ru, #login-flag-ru, #register-flag-ru');
 
@@ -2984,6 +3145,8 @@
         const savedTasks = localStorage.getItem('nokj-tasks');
         const savedSubmissions = localStorage.getItem('nokj-submissions');
         const savedBudget = localStorage.getItem('nokj-budget');
+        const savedTests = localStorage.getItem('nokj-tests');
+        const savedTestSubmissions = localStorage.getItem('nokj-test-submissions');
 
         if (savedStudents) { try { students = JSON.parse(savedStudents); } catch (e) { students = DEFAULT_STUDENTS.slice(); } } else { students =
             DEFAULT_STUDENTS.slice(); }
@@ -3005,6 +3168,9 @@
               DEFAULT_TASK_SUBMISSIONS; } } else { taskSubmissions = DEFAULT_TASK_SUBMISSIONS; }
         if (savedBudget) { try { budgetEntries = JSON.parse(savedBudget); } catch (e) { budgetEntries = DEFAULT_BUDGET.slice(); } } else { budgetEntries =
             DEFAULT_BUDGET.slice(); }
+        if (savedTests) { try { tests = JSON.parse(savedTests); } catch (e) { tests = []; } } else { tests = []; }
+        if (savedTestSubmissions) { try { testSubmissions = JSON.parse(savedTestSubmissions); } catch (e) { testSubmissions =
+              {}; } } else { testSubmissions = {}; }
       }
 
       function saveData() {
@@ -3018,6 +3184,8 @@
         localStorage.setItem('nokj-tasks', JSON.stringify(tasks));
         localStorage.setItem('nokj-submissions', JSON.stringify(taskSubmissions));
         localStorage.setItem('nokj-budget', JSON.stringify(budgetEntries));
+        localStorage.setItem('nokj-tests', JSON.stringify(tests));
+        localStorage.setItem('nokj-test-submissions', JSON.stringify(testSubmissions));
       }
 
       // ============================================================
@@ -3118,6 +3286,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
         if (pageName === 'calendar') renderCalendar();
         if (pageName === 'classroom') renderMeetings();
+        if (pageName === 'tests') renderTests();
         setLanguage(currentLang);
       }
 
@@ -3225,6 +3394,7 @@
         renderStudentCourses();
         renderMeetings();
         renderTasks();
+        renderTests();
         renderCalendar();
         renderUpcomingClasses();
         setLanguage(currentLang);
@@ -3756,6 +3926,9 @@
         setLanguage(currentLang);
       }
 
+      // ============================================================
+      //  TASKS
+      // ============================================================
       function renderTasks() {
         if (!currentUser) return;
         var isAdmin = currentUser.role === 'Admin';
@@ -4002,6 +4175,292 @@
             });
           }
         });
+        setLanguage(currentLang);
+      }
+
+      // ============================================================
+      //  TESTS
+      // ============================================================
+      function renderTests() {
+        if (!currentUser) return;
+        var isAdmin = currentUser.role === 'Admin';
+        var isTeacher = currentUser.role === 'Teacher';
+        var adminView = document.getElementById('admin-tests-view');
+        var studentView = document.getElementById('student-tests-view');
+
+        if (isAdmin || isTeacher) {
+          adminView.style.display = 'block';
+          studentView.style.display = 'none';
+          renderAdminTests();
+        } else {
+          adminView.style.display = 'none';
+          studentView.style.display = 'block';
+          renderStudentTests();
+        }
+        setLanguage(currentLang);
+      }
+
+      function renderAdminTests() {
+        var container = document.getElementById('admin-test-list');
+        container.innerHTML = '';
+
+        if (tests.length === 0) {
+          container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">No tests created yet.</p>';
+          return;
+        }
+
+        tests.forEach(function(test) {
+          var card = document.createElement('div');
+          card.className = 'task-card';
+          var subCount = Object.keys(testSubmissions).filter(function(key) { return key.startsWith(test.id + '-'); })
+            .length;
+
+          card.innerHTML =
+            '<div class="task-header"><div><h3>' + test.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">' +
+            getCourseName(test.courseId) + ' · ' + test.questions.length + ' questions</div></div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="task-type test">Test</span></div></div>' +
+            '<div class="task-body"><div class="task-description">' + test.description + '</div><div class="task-deadline on-time">⏰ Due: ' +
+            test.deadline + '</div><div style="margin-top:8px;font-size:12px;color:var(--muted);">📊 ' + subCount +
+            ' submissions</div></div>' +
+            '<div class="task-footer"><button class="secondary-button view-test-results" data-test="' + test.id +
+            '">📊 View Results</button><button class="action-btn delete" data-id="' + test.id +
+            '" data-type="test">🗑️ Delete</button></div>';
+          container.appendChild(card);
+        });
+
+        container.querySelectorAll('.view-test-results').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var testId = parseInt(this.dataset.test);
+            viewTestResults(testId);
+          });
+        });
+
+        container.querySelectorAll('.delete[data-type="test"]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var testId = parseInt(this.dataset.id);
+            if (confirm('Delete this test?')) {
+              tests = tests.filter(function(t) { return t.id !== testId; });
+              Object.keys(testSubmissions).forEach(function(key) {
+                if (key.startsWith(testId + '-')) delete testSubmissions[key];
+              });
+              saveData();
+              renderTests();
+            }
+          });
+        });
+        setLanguage(currentLang);
+      }
+
+      function renderStudentTests() {
+        var studentId = currentUser.id;
+        var container = document.getElementById('student-test-list');
+        var enrolledCourses = getEnrolledCourseIds(studentId);
+
+        var assignedTests = tests.filter(function(test) {
+          return enrolledCourses.includes(test.courseId);
+        });
+
+        container.innerHTML = '';
+
+        if (assignedTests.length === 0) {
+          container.innerHTML =
+            '<p style="color:var(--muted);text-align:center;padding:40px;">No tests assigned to you yet.</p>';
+          return;
+        }
+
+        assignedTests.forEach(function(test) {
+          var key = test.id + '-' + studentId;
+          var submission = testSubmissions[key];
+          var status = submission ? 'submitted' : 'pending';
+          var score = submission ? submission.score : null;
+
+          var card = document.createElement('div');
+          card.className = 'task-card';
+          var deadlineClass = test.deadline < new Date().toISOString().split('T')[0] ? 'overdue' : 'on-time';
+
+          var actionHtml = '';
+          if (status === 'submitted') {
+            actionHtml = '<div><span class="submitted-status">✅ Submitted</span>' +
+              (score !== null ? ' · Score: ' + score + '%' : '') +
+              '</div><button class="secondary-button view-test-results-btn" data-test="' + test.id +
+              '" style="margin-top:8px;">📊 View Results</button>';
+          } else {
+            actionHtml = '<button class="primary-button take-test-btn" data-test="' + test.id +
+              '" style="padding:8px 20px;">Take Test</button>';
+          }
+
+          card.innerHTML =
+            '<div class="task-header"><div><h3>' + test.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">' +
+            getCourseName(test.courseId) + ' · ' + test.questions.length + ' questions</div></div><span class="task-type test">Test</span></div>' +
+            '<div class="task-body"><div class="task-description">' + test.description + '</div><div class="task-deadline ' +
+            deadlineClass + '">⏰ Due: ' + test.deadline + (deadlineClass === 'overdue' ? ' ⚠️ Overdue!' : '') +
+            '</div></div>' +
+            '<div class="task-footer">' + actionHtml + '</div>';
+          container.appendChild(card);
+        });
+
+        container.querySelectorAll('.take-test-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var testId = parseInt(this.dataset.test);
+            openTakeTestModal(testId);
+          });
+        });
+
+        container.querySelectorAll('.view-test-results-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var testId = parseInt(this.dataset.test);
+            viewStudentTestResults(testId);
+          });
+        });
+        setLanguage(currentLang);
+      }
+
+      function openTakeTestModal(testId) {
+        var test = tests.find(function(t) { return t.id === testId; });
+        if (!test) return;
+
+        document.getElementById('take-test-title').textContent = test.title;
+        document.getElementById('take-test-sub').textContent = test.description + ' · ' + test.questions.length +
+          ' questions';
+
+        var container = document.getElementById('take-test-questions');
+        container.innerHTML = '';
+
+        test.questions.forEach(function(q, index) {
+          var div = document.createElement('div');
+          div.className = 'test-question';
+          div.innerHTML = '<div class="q-text">' + (index + 1) + '. ' + q.question + '</div><div class="q-options">';
+          q.options.forEach(function(option, optIndex) {
+            var letter = String.fromCharCode(65 + optIndex);
+            div.innerHTML +=
+              '<label><input type="radio" name="q-' + index + '" value="' + optIndex + '" /> ' + letter +
+              '. ' + option + '</label>';
+          });
+          div.innerHTML += '</div>';
+          container.appendChild(div);
+        });
+
+        document.getElementById('take-test-modal-overlay').classList.add('open');
+        document.getElementById('take-test-form').dataset.testId = testId;
+        setLanguage(currentLang);
+      }
+
+      function submitTest(testId) {
+        var test = tests.find(function(t) { return t.id === testId; });
+        if (!test) return;
+
+        var studentId = currentUser.id;
+        var answers = {};
+        var allAnswered = true;
+
+        test.questions.forEach(function(q, index) {
+          var selected = document.querySelector('input[name="q-' + index + '"]:checked');
+          if (selected) {
+            answers[index] = parseInt(selected.value);
+          } else {
+            allAnswered = false;
+          }
+        });
+
+        if (!allAnswered) {
+          alert('Please answer all questions before submitting.');
+          return;
+        }
+
+        // Calculate score
+        var correct = 0;
+        test.questions.forEach(function(q, index) {
+          if (answers[index] === q.correctAnswer) correct++;
+        });
+        var score = Math.round((correct / test.questions.length) * 100);
+
+        var key = testId + '-' + studentId;
+        testSubmissions[key] = {
+          answers: answers,
+          score: score,
+          correct: correct,
+          total: test.questions.length,
+          submittedAt: new Date().toISOString()
+        };
+
+        saveData();
+        document.getElementById('take-test-modal-overlay').classList.remove('open');
+        alert('Test submitted successfully! Your score: ' + score + '%');
+        renderTests();
+        setLanguage(currentLang);
+      }
+
+      function viewStudentTestResults(testId) {
+        var studentId = currentUser.id;
+        var key = testId + '-' + studentId;
+        var submission = testSubmissions[key];
+        if (!submission) {
+          alert('No submission found.');
+          return;
+        }
+
+        var test = tests.find(function(t) { return t.id === testId; });
+        if (!test) return;
+
+        var msg = '📊 Test Results: ' + test.title + '\n\n';
+        msg += 'Score: ' + submission.score + '% (' + submission.correct + '/' + submission.total + ')\n\n';
+        msg += 'Question Details:\n';
+        test.questions.forEach(function(q, index) {
+          var userAnswer = submission.answers[index];
+          var isCorrect = userAnswer === q.correctAnswer;
+          var letter = String.fromCharCode(65 + (userAnswer !== undefined ? userAnswer : 0));
+          msg += (index + 1) + '. ' + (isCorrect ? '✅' : '❌') + ' ' + q.question + '\n';
+          msg += '   Your answer: ' + letter + '. ' + (userAnswer !== undefined ? q.options[userAnswer] : 'Not answered') +
+            '\n';
+          msg += '   Correct: ' + String.fromCharCode(65 + q.correctAnswer) + '. ' + q.options[q.correctAnswer] + '\n\n';
+        });
+
+        alert(msg);
+        setLanguage(currentLang);
+      }
+
+      function viewTestResults(testId) {
+        var test = tests.find(function(t) { return t.id === testId; });
+        if (!test) return;
+
+        var submissions = Object.keys(testSubmissions).filter(function(key) { return key.startsWith(testId + '-'); });
+
+        if (submissions.length === 0) {
+          alert('No submissions for this test yet.');
+          return;
+        }
+
+        var msg = '📊 Test Results: ' + test.title + '\n\n';
+        submissions.forEach(function(key) {
+          var studentId = parseInt(key.split('-')[1]);
+          var student = students.find(function(s) { return s.id === studentId; });
+          var sub = testSubmissions[key];
+          if (student) {
+            msg += '👤 ' + student.name + ': ' + sub.score + '% (' + sub.correct + '/' + sub.total + ')\n';
+          }
+        });
+
+        // Calculate average
+        var scores = submissions.map(function(key) { return testSubmissions[key].score; });
+        var avg = scores.length > 0 ? Math.round(scores.reduce(function(a, b) { return a + b; }, 0) / scores.length) : 0;
+        msg += '\n📊 Average Score: ' + avg + '%';
+
+        alert(msg);
+        setLanguage(currentLang);
+      }
+
+      function createTest(title, courseId, description, deadline, questions) {
+        tests.push({
+          id: tests.length + 1,
+          title: title,
+          courseId: parseInt(courseId),
+          description: description,
+          deadline: deadline,
+          questions: questions,
+          createdAt: new Date().toISOString().split('T')[0]
+        });
+        saveData();
+        renderTests();
+        alert('Test created successfully!');
         setLanguage(currentLang);
       }
 
@@ -4661,6 +5120,7 @@
         }
       });
 
+      // ----- TASK EVENTS -----
       document.getElementById('add-task-btn').addEventListener('click', function() {
         document.getElementById('task-modal-title').textContent = 'Create Task';
         document.getElementById('task-modal-sub').textContent = 'Fill in the task details below.';
@@ -5013,6 +5473,133 @@
       });
       registerPassword.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') registerForm.dispatchEvent(new Event('submit'));
+      });
+
+      // ----- TEST EVENTS -----
+      document.getElementById('create-test-btn').addEventListener('click', function() {
+        document.getElementById('test-modal-title').textContent = 'Create Test';
+        document.getElementById('test-modal-sub').textContent = 'Build your test with multiple choice questions.';
+        document.getElementById('test-modal-title-input').value = '';
+        document.getElementById('test-modal-description').value = '';
+        document.getElementById('test-modal-deadline').value = '';
+
+        var courseSelect = document.getElementById('test-modal-course');
+        courseSelect.innerHTML = '';
+        courses.forEach(function(c) {
+          var opt = document.createElement('option');
+          opt.value = c.id;
+          opt.textContent = c.name;
+          courseSelect.appendChild(opt);
+        });
+
+        document.getElementById('questions-container').innerHTML = '';
+        questionCounter = 0;
+        document.getElementById('test-modal-overlay').classList.add('open');
+        setLanguage(currentLang);
+      });
+
+      document.getElementById('add-question-btn').addEventListener('click', function() {
+        var container = document.getElementById('questions-container');
+        var qNum = questionCounter + 1;
+        var div = document.createElement('div');
+        div.className = 'question-builder';
+        div.dataset.qIndex = questionCounter;
+        div.innerHTML =
+          '<div class="question-header"><span class="q-number">Question ' + qNum +
+          '</span><button type="button" class="remove-question" data-qindex="' + questionCounter +
+          '">✕ Remove</button></div>' +
+          '<input type="text" class="q-text-input" placeholder="Enter question text..." />' +
+          '<div class="options-group">' +
+          '<div class="option-item"><input type="radio" name="correct-' + questionCounter +
+          '" value="0" checked /><input type="text" class="option-input" placeholder="Option A" /></div>' +
+          '<div class="option-item"><input type="radio" name="correct-' + questionCounter +
+          '" value="1" /><input type="text" class="option-input" placeholder="Option B" /></div>' +
+          '<div class="option-item"><input type="radio" name="correct-' + questionCounter +
+          '" value="2" /><input type="text" class="option-input" placeholder="Option C" /></div>' +
+          '<div class="option-item"><input type="radio" name="correct-' + questionCounter +
+          '" value="3" /><input type="text" class="option-input" placeholder="Option D" /></div>' +
+          '</div>';
+        container.appendChild(div);
+
+        div.querySelector('.remove-question').addEventListener('click', function() {
+          div.remove();
+          // Renumber remaining questions
+          var questions = container.querySelectorAll('.question-builder');
+          questions.forEach(function(q, idx) {
+            q.querySelector('.q-number').textContent = 'Question ' + (idx + 1);
+          });
+        });
+
+        questionCounter++;
+        setLanguage(currentLang);
+      });
+
+      document.getElementById('test-modal-cancel').addEventListener('click', function() {
+        document.getElementById('test-modal-overlay').classList.remove('open');
+      });
+      document.getElementById('test-modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) document.getElementById('test-modal-overlay').classList.remove('open');
+      });
+
+      document.getElementById('test-modal-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var title = document.getElementById('test-modal-title-input').value.trim();
+        var courseId = document.getElementById('test-modal-course').value;
+        var description = document.getElementById('test-modal-description').value.trim();
+        var deadline = document.getElementById('test-modal-deadline').value;
+
+        if (!title || !courseId || !deadline) {
+          alert('Please fill in all required fields.');
+          return;
+        }
+
+        var questionDivs = document.querySelectorAll('.question-builder');
+        if (questionDivs.length === 0) {
+          alert('Please add at least one question.');
+          return;
+        }
+
+        var questions = [];
+        var valid = true;
+        questionDivs.forEach(function(qDiv, index) {
+          var qText = qDiv.querySelector('.q-text-input').value.trim();
+          var options = qDiv.querySelectorAll('.option-input');
+          var optionTexts = [];
+          options.forEach(function(opt) { optionTexts.push(opt.value.trim()); });
+          var correctRadio = qDiv.querySelector('input[type="radio"]:checked');
+          var correctAnswer = correctRadio ? parseInt(correctRadio.value) : 0;
+
+          if (!qText) { alert('Please enter text for question ' + (index + 1) + '.'); valid = false; return; }
+          if (optionTexts.some(function(opt) { return opt === ''; })) {
+            alert('Please fill in all options for question ' + (index + 1) + '.');
+            valid = false;
+            return;
+          }
+
+          questions.push({
+            question: qText,
+            options: optionTexts,
+            correctAnswer: correctAnswer
+          });
+        });
+
+        if (!valid) return;
+
+        createTest(title, courseId, description, deadline, questions);
+        document.getElementById('test-modal-overlay').classList.remove('open');
+      });
+
+      document.getElementById('take-test-cancel').addEventListener('click', function() {
+        document.getElementById('take-test-modal-overlay').classList.remove('open');
+      });
+      document.getElementById('take-test-modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) document.getElementById('take-test-modal-overlay').classList.remove('open');
+      });
+
+      document.getElementById('take-test-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var testId = parseInt(this.dataset.testId);
+        submitTest(testId);
       });
 
       // ----- Init -----

@@ -2672,7 +2672,7 @@
   <script>
     (function() {
 
-      // ----- DEMO ACCOUNTS (used for quick login) -----
+      // ----- DEMO ACCOUNTS -----
       const DEMO_USERS = {
         'admin@nokj.com': { password: 'admin123', role: 'Admin' },
         'student@nokj.com': { password: 'password123', role: 'Student' },
@@ -2733,19 +2733,13 @@
           createdAt: '2026-08-28' }
       ];
 
-      // Fixed DEFAULT_TASK_SUBMISSIONS with real image data for preview
       const DEFAULT_TASK_SUBMISSIONS = {
         '1-1': {
           answer: 'x = -2, x = -3',
           submittedAt: '2026-08-29T10:00:00',
           grade: null,
           feedback: null,
-          files: [{
-            name: 'sample_image.jpg',
-            size: 1234,
-            type: 'image/jpeg',
-            data: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
-          }]
+          files: []
         },
         '2-1': {
           answer: 'Ambition is the driving force in Macbeth...',
@@ -2759,12 +2753,7 @@
           submittedAt: '2026-08-31T16:00:00',
           grade: null,
           feedback: null,
-          files: [{
-            name: 'quiz_answers.docx',
-            size: 12345,
-            type: 'application/msword',
-            data: 'data:application/msword;base64,/9j/4AAQSkZJRgABAQEAYABgAAD...'
-          }]
+          files: []
         }
       };
 
@@ -2803,87 +2792,8 @@
       let currentMonth = new Date().getMonth(),
         currentYear = new Date().getFullYear();
 
-      // ----- DOM refs (abridged) -----
-      const landingPage = document.getElementById('landing-page');
-      const loginScreen = document.getElementById('login-screen');
-      const registerScreen = document.getElementById('register-screen');
-      const app = document.getElementById('app');
-      const loginForm = document.getElementById('login-form');
-      const loginEmail = document.getElementById('login-email');
-      const loginPassword = document.getElementById('login-password');
-      const loginError = document.getElementById('login-error');
-      const registerForm = document.getElementById('register-form');
-      const registerName = document.getElementById('register-name');
-      const registerEmail = document.getElementById('register-email');
-      const registerPassword = document.getElementById('register-password');
-      const registerRole = document.getElementById('register-role');
-      const registerError = document.getElementById('register-error');
-
-      const userAvatar = document.getElementById('user-avatar');
-      const userDisplayName = document.getElementById('user-display-name');
-      const userRole = document.getElementById('user-role');
-      const profileAvatar = document.getElementById('profile-avatar');
-      const profileName = document.getElementById('profile-name');
-      const profileRoleText = document.getElementById('profile-role-text');
-      const profileEmail = document.getElementById('profile-email');
-      const profileId = document.getElementById('profile-id');
-      const profileRole = document.getElementById('profile-role');
-      const profileSince = document.getElementById('profile-since');
-      const greeting = document.getElementById('greeting');
-      const logoutBtn = document.getElementById('logout-btn');
-      const sidebarRole = document.getElementById('sidebar-role');
-
-      const pages = document.querySelectorAll('.page');
-      const navButtons = document.querySelectorAll('[data-page]');
-      const langToggle = document.getElementById('language-toggle');
-      const flagUK = document.getElementById('flag-uk');
-      const flagRU = document.getElementById('flag-ru');
-      const loginFlagUK = document.getElementById('login-flag-uk');
-      const loginFlagRU = document.getElementById('login-flag-ru');
-      const registerFlagUK = document.getElementById('register-flag-uk');
-      const registerFlagRU = document.getElementById('register-flag-ru');
-      const loginLangToggle = document.getElementById('login-lang-toggle');
-      const registerLangToggle = document.getElementById('register-lang-toggle');
-
-      const adminNavLabel = document.getElementById('admin-nav-label');
-      const adminStudentsBtn = document.getElementById('admin-students-btn');
-      const adminBudgetBtn = document.getElementById('admin-budget-btn');
-      const adminCoursesBtn = document.getElementById('admin-courses-btn');
-      const adminGradesBtn = document.getElementById('admin-grades-btn');
-      const adminCalendarBtn = document.getElementById('admin-calendar-btn');
-      const adminStatsContainer = document.getElementById('admin-stats-container');
-
-      const studentTableBody = document.getElementById('student-table-body');
-      const studentSearch = document.getElementById('student-search');
-      const studentFilter = document.getElementById('student-filter');
-      const studentCount = document.getElementById('student-count');
-      const studentTotal = document.getElementById('student-total');
-      const addStudentBtn = document.getElementById('add-student-btn');
-      const exportStudentsBtn = document.getElementById('export-students-btn');
-
-      const meetingGrid = document.getElementById('meeting-grid');
-      const calendarGrid = document.getElementById('calendar-grid');
-      const calendarMonthLabel = document.getElementById('calendar-month-label');
-      const upcomingClassesList = document.getElementById('upcoming-classes-list');
-      const addClassBtn = document.getElementById('add-class-btn');
-      const scheduleModalOverlay = document.getElementById('schedule-modal-overlay');
-      const scheduleModalForm = document.getElementById('schedule-modal-form');
-      const scheduleModalCancel = document.getElementById('schedule-modal-cancel');
-      const scheduleModalSave = document.getElementById('schedule-modal-save');
-      const scheduleTitle = document.getElementById('schedule-title');
-      const scheduleTeacher = document.getElementById('schedule-teacher');
-      const scheduleDate = document.getElementById('schedule-date');
-      const scheduleTime = document.getElementById('schedule-time');
-      const scheduleDuration = document.getElementById('schedule-duration');
-      const scheduleLink = document.getElementById('schedule-link');
-
-      const totalStudentsEl = document.getElementById('total-students');
-      const totalCoursesEl = document.getElementById('total-courses');
-      const totalEnrollmentsEl = document.getElementById('total-enrollments');
-      const totalRevenueEl = document.getElementById('total-revenue');
-
       // ============================================================
-      //  TRANSLATION SYSTEM (with original text stored)
+      //  TRANSLATION SYSTEM
       // ============================================================
       const translations = {
         'Dashboard': 'Главная',
@@ -2988,6 +2898,7 @@
       const originalTextMap = new WeakMap();
 
       function applyTranslation(lang) {
+        // Simple text node translation
         const walker = document.createTreeWalker(
           document.body,
           NodeFilter.SHOW_TEXT, {
@@ -3016,8 +2927,7 @@
           const trimmed = original.trim();
           if (lang === 'ru' && translations[trimmed] !== undefined) {
             textNode.nodeValue = original.replace(trimmed, translations[trimmed]);
-          } else {
-            // restore original
+          } else if (lang === 'en') {
             textNode.nodeValue = original;
           }
         });
@@ -3027,6 +2937,11 @@
           const placeholder = el.placeholder;
           if (lang === 'ru' && translations[placeholder] !== undefined) {
             el.placeholder = translations[placeholder];
+          } else if (lang === 'en') {
+            // Restore original placeholder if we have it stored
+            if (el.dataset.originalPlaceholder) {
+              el.placeholder = el.dataset.originalPlaceholder;
+            }
           }
         });
       }
@@ -3034,32 +2949,25 @@
       function setLanguage(lang) {
         currentLang = lang;
         localStorage.setItem('nokj-language', lang);
+
         // Update flags
+        const ukFlags = document.querySelectorAll('#flag-uk, #login-flag-uk, #register-flag-uk');
+        const ruFlags = document.querySelectorAll('#flag-ru, #login-flag-ru, #register-flag-ru');
+
         if (lang === 'en') {
-          flagUK.style.display = 'block';
-          flagRU.style.display = 'none';
-          loginFlagUK.style.display = 'block';
-          loginFlagRU.style.display = 'none';
-          registerFlagUK.style.display = 'block';
-          registerFlagRU.style.display = 'none';
+          ukFlags.forEach(el => el.style.display = 'block');
+          ruFlags.forEach(el => el.style.display = 'none');
         } else {
-          flagUK.style.display = 'none';
-          flagRU.style.display = 'block';
-          loginFlagUK.style.display = 'none';
-          loginFlagRU.style.display = 'block';
-          registerFlagUK.style.display = 'none';
-          registerFlagRU.style.display = 'block';
+          ukFlags.forEach(el => el.style.display = 'none');
+          ruFlags.forEach(el => el.style.display = 'block');
         }
+
         applyTranslation(lang);
         document.documentElement.lang = lang;
       }
 
       function toggleLanguage() {
         setLanguage(currentLang === 'en' ? 'ru' : 'en');
-        // Force re-apply after any pending DOM updates
-        setTimeout(function() {
-          applyTranslation(currentLang);
-        }, 50);
       }
 
       // ============================================================
@@ -3140,10 +3048,6 @@
 
       function getCourseStudentCount(courseId) {
         return enrollments.filter(function(e) { return e.courseId === courseId; }).length;
-      }
-
-      function getStudentCourseCount(studentId) {
-        return enrollments.filter(function(e) { return e.studentId === studentId; }).length;
       }
 
       function getUserByEmail(email) {
@@ -3353,7 +3257,7 @@
       }
 
       // ============================================================
-      //  RENDER FUNCTIONS (abridged, with setLanguage at end)
+      //  RENDER FUNCTIONS
       // ============================================================
       function renderStudents() {
         var search = studentSearch.value.toLowerCase();
@@ -3504,7 +3408,6 @@
         setLanguage(currentLang);
       }
 
-      // ----- Grades -----
       function renderGrades() {
         if (!currentUser) return;
         var isAdmin = currentUser.role === 'Admin';
@@ -3623,7 +3526,6 @@
         setLanguage(currentLang);
       }
 
-      // ----- Classroom / Meetings -----
       function renderMeetings() {
         meetingGrid.innerHTML = '';
         var userMeetings = meetings.filter(function(m) {
@@ -3696,7 +3598,6 @@
           updateSlide(); }
       }
 
-      // ----- Calendar -----
       function renderCalendar() {
         var firstDay = new Date(currentYear, currentMonth, 1).getDay();
         var daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -3855,7 +3756,6 @@
         setLanguage(currentLang);
       }
 
-      // ----- Tasks -----
       function renderTasks() {
         if (!currentUser) return;
         var isAdmin = currentUser.role === 'Admin';
@@ -3929,9 +3829,8 @@
             filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
             task.files.forEach(function(file) {
               var fileData = file.data || '';
-              // Escape single quotes for onclick
               var escapedData = fileData.replace(/'/g, "\\'");
-              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="openFilePreview(\'' +
+              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="window.openFilePreview(\'' +
                 file.name + '\', \'' + escapedData + '\')">' + file.name + '</span></div>';
             });
             filesHtml += '</div>';
@@ -4016,7 +3915,7 @@
             task.files.forEach(function(file) {
               var fileData = file.data || '';
               var escapedData = fileData.replace(/'/g, "\\'");
-              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="openFilePreview(\'' +
+              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="window.openFilePreview(\'' +
                 file.name + '\', \'' + escapedData + '\')">' + file.name + '</span></div>';
             });
             filesHtml += '</div>';
@@ -4042,7 +3941,7 @@
               submission.files.forEach(function(file) {
                 var fileData = file.data || '';
                 var escapedData = fileData.replace(/'/g, "\\'");
-                fileLinks += '<span class="item-tag" style="cursor:pointer;color:var(--primary);text-decoration:underline;margin-right:6px;" onclick="openFilePreview(\'' +
+                fileLinks += '<span class="item-tag" style="cursor:pointer;color:var(--primary);text-decoration:underline;margin-right:6px;" onclick="window.openFilePreview(\'' +
                   file.name + '\', \'' + escapedData + '\')">📄 ' + file.name + '</span>';
               });
               footerHtml += '<div style="font-size:12px;color:var(--muted);margin-top:4px;">📎 ' + fileLinks +
@@ -4107,13 +4006,12 @@
       }
 
       // ============================================================
-      //  FILE PREVIEW (globally accessible)
+      //  FILE PREVIEW
       // ============================================================
       function openFilePreview(fileName, fileData) {
         var body = document.getElementById('file-preview-body');
         body.innerHTML = '';
 
-        // If no data, show fallback
         if (!fileData || fileData === '' || fileData === 'dummy-pdf-data' || fileData === 'dummy-doc-data') {
           body.innerHTML =
             '<div class="file-preview-fallback">📄 ' + fileName +
@@ -4154,7 +4052,6 @@
         document.getElementById('file-preview-overlay').classList.add('open');
       }
 
-      // Make it globally accessible for inline onclick
       window.openFilePreview = openFilePreview;
 
       function closeFilePreview() {
@@ -4163,7 +4060,7 @@
       }
 
       // ============================================================
-      //  GRADE TASK MODAL & HELPERS
+      //  GRADE TASK MODAL
       // ============================================================
       function openGradeModal(taskId, studentId) {
         gradingTaskId = taskId;
@@ -4188,7 +4085,7 @@
           submission.files.forEach(function(file) {
             var fileData = file.data || '';
             var escapedData = fileData.replace(/'/g, "\\'");
-            html += '<span class="item-tag" style="display:inline-block;padding:2px 8px;margin:2px;background:#f3f4f6;border-radius:4px;font-size:12px;cursor:pointer;color:var(--primary);text-decoration:underline;" onclick="openFilePreview(\'' +
+            html += '<span class="item-tag" style="display:inline-block;padding:2px 8px;margin:2px;background:#f3f4f6;border-radius:4px;font-size:12px;cursor:pointer;color:var(--primary);text-decoration:underline;" onclick="window.openFilePreview(\'' +
               file.name + '\', \'' + escapedData + '\')">📄 ' + file.name + '</span>';
           });
           html += '</div>';
@@ -4279,7 +4176,7 @@
       }
 
       // ============================================================
-      //  MODAL HELPERS (abridged)
+      //  MODAL HELPERS
       // ============================================================
       var modalType, modalMode, editingId, enrollStudentId;
 
@@ -4318,7 +4215,6 @@
             editingId = null;
           }
         } else {
-          // edit mode...
           if (type === 'student') {
             var s = students.find(function(st) { return st.id === data.id; });
             if (s) {
@@ -4500,6 +4396,81 @@
       }
 
       // ============================================================
+      //  DOM REFS
+      // ============================================================
+      const landingPage = document.getElementById('landing-page');
+      const loginScreen = document.getElementById('login-screen');
+      const registerScreen = document.getElementById('register-screen');
+      const app = document.getElementById('app');
+      const loginForm = document.getElementById('login-form');
+      const loginEmail = document.getElementById('login-email');
+      const loginPassword = document.getElementById('login-password');
+      const loginError = document.getElementById('login-error');
+      const registerForm = document.getElementById('register-form');
+      const registerName = document.getElementById('register-name');
+      const registerEmail = document.getElementById('register-email');
+      const registerPassword = document.getElementById('register-password');
+      const registerRole = document.getElementById('register-role');
+      const registerError = document.getElementById('register-error');
+
+      const userAvatar = document.getElementById('user-avatar');
+      const userDisplayName = document.getElementById('user-display-name');
+      const userRole = document.getElementById('user-role');
+      const profileAvatar = document.getElementById('profile-avatar');
+      const profileName = document.getElementById('profile-name');
+      const profileRoleText = document.getElementById('profile-role-text');
+      const profileEmail = document.getElementById('profile-email');
+      const profileId = document.getElementById('profile-id');
+      const profileRole = document.getElementById('profile-role');
+      const profileSince = document.getElementById('profile-since');
+      const greeting = document.getElementById('greeting');
+      const logoutBtn = document.getElementById('logout-btn');
+      const sidebarRole = document.getElementById('sidebar-role');
+
+      const pages = document.querySelectorAll('.page');
+      const navButtons = document.querySelectorAll('[data-page]');
+      const langToggle = document.getElementById('language-toggle');
+      const loginLangToggle = document.getElementById('login-lang-toggle');
+      const registerLangToggle = document.getElementById('register-lang-toggle');
+
+      const adminNavLabel = document.getElementById('admin-nav-label');
+      const adminStudentsBtn = document.getElementById('admin-students-btn');
+      const adminBudgetBtn = document.getElementById('admin-budget-btn');
+      const adminCoursesBtn = document.getElementById('admin-courses-btn');
+      const adminGradesBtn = document.getElementById('admin-grades-btn');
+      const adminCalendarBtn = document.getElementById('admin-calendar-btn');
+      const adminStatsContainer = document.getElementById('admin-stats-container');
+
+      const studentTableBody = document.getElementById('student-table-body');
+      const studentSearch = document.getElementById('student-search');
+      const studentFilter = document.getElementById('student-filter');
+      const studentCount = document.getElementById('student-count');
+      const studentTotal = document.getElementById('student-total');
+      const addStudentBtn = document.getElementById('add-student-btn');
+      const exportStudentsBtn = document.getElementById('export-students-btn');
+
+      const meetingGrid = document.getElementById('meeting-grid');
+      const calendarGrid = document.getElementById('calendar-grid');
+      const calendarMonthLabel = document.getElementById('calendar-month-label');
+      const upcomingClassesList = document.getElementById('upcoming-classes-list');
+      const addClassBtn = document.getElementById('add-class-btn');
+      const scheduleModalOverlay = document.getElementById('schedule-modal-overlay');
+      const scheduleModalForm = document.getElementById('schedule-modal-form');
+      const scheduleModalCancel = document.getElementById('schedule-modal-cancel');
+      const scheduleModalSave = document.getElementById('schedule-modal-save');
+      const scheduleTitle = document.getElementById('schedule-title');
+      const scheduleTeacher = document.getElementById('schedule-teacher');
+      const scheduleDate = document.getElementById('schedule-date');
+      const scheduleTime = document.getElementById('schedule-time');
+      const scheduleDuration = document.getElementById('schedule-duration');
+      const scheduleLink = document.getElementById('schedule-link');
+
+      const totalStudentsEl = document.getElementById('total-students');
+      const totalCoursesEl = document.getElementById('total-courses');
+      const totalEnrollmentsEl = document.getElementById('total-enrollments');
+      const totalRevenueEl = document.getElementById('total-revenue');
+
+      // ============================================================
       //  EVENT LISTENERS
       // ============================================================
       document.getElementById('landing-login-btn').addEventListener('click', showLoginScreen);
@@ -4528,9 +4499,9 @@
         });
       });
 
-      if (langToggle) langToggle.addEventListener('click', toggleLanguage);
-      if (loginLangToggle) loginLangToggle.addEventListener('click', toggleLanguage);
-      if (registerLangToggle) registerLangToggle.addEventListener('click', toggleLanguage);
+      langToggle.addEventListener('click', toggleLanguage);
+      loginLangToggle.addEventListener('click', toggleLanguage);
+      registerLangToggle.addEventListener('click', toggleLanguage);
 
       document.addEventListener('click', function(e) {
         var target = e.target.closest('.expandable-row');
@@ -4900,7 +4871,7 @@
                 link.style.cssText =
                   'color:#4f46e5;text-decoration:underline;cursor:pointer;margin-right:8px;';
                 link.textContent = file.name;
-                link.onclick = function() { openFilePreview(file.name, fileData); };
+                link.onclick = function() { window.openFilePreview(file.name, fileData); };
                 filesRow.appendChild(link);
               });
               section.appendChild(filesRow);

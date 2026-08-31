@@ -1921,6 +1921,7 @@
     }
 
     /* === TEST CONSTRUCTOR === */
+      /* === TEST CONSTRUCTOR === */
     .question-builder {
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -2218,6 +2219,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- ===== LANDING PAGE ===== -->
@@ -2229,6 +2231,7 @@
         <button class="btn-primary" id="landing-register-btn">Join Academy</button>
       </div>
     </header>
+
     <section class="landing-hero">
       <div class="hero-content">
         <h1>Learn Anything, <span>Anytime</span></h1>
@@ -2240,11 +2243,13 @@
       </div>
       <div class="hero-image"><div class="image-placeholder">🎓</div></div>
     </section>
+
     <section class="landing-features">
       <div class="feature-card"><div class="icon">🎥</div><h3>Live Classes</h3><p>Join interactive live sessions with your teachers. Share your screen, ask questions, and learn in real-time.</p></div>
       <div class="feature-card"><div class="icon">📝</div><h3>Smart Tasks</h3><p>Submit homework, take tests, and get instant feedback. Track your progress across all your courses.</p></div>
       <div class="feature-card"><div class="icon">📊</div><h3>Track Progress</h3><p>View your grades, attendance, and course progress at a glance. Stay on top of your learning journey.</p></div>
     </section>
+
     <footer class="landing-footer">© 2026 NOKJ Academy — Empowering learners worldwide.</footer>
   </div>
 
@@ -2264,6 +2269,7 @@
         <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
       </svg>
     </button>
+
     <div class="login-box">
       <div class="brand"><div class="brand-mark">N</div><div><strong style="font-size:20px;color:#182033;">NOKJ Academy</strong><small style="color:#6b7280;font-size:13px;">Student Portal</small></div></div>
       <div class="login-header"><h2>Welcome back</h2><p>Sign in to your account</p></div>
@@ -2295,6 +2301,7 @@
         <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
       </svg>
     </button>
+
     <div class="register-box">
       <div class="brand"><div class="brand-mark">N</div><div><strong style="font-size:20px;color:#182033;">NOKJ Academy</strong><small style="color:#6b7280;font-size:13px;">Join the community</small></div></div>
       <div class="register-header"><h2>Create Account</h2><p>Start your learning journey today</p></div>
@@ -2316,6 +2323,7 @@
 
   <!-- ===== MAIN APP ===== -->
   <div id="app">
+
     <aside class="sidebar">
       <div class="brand"><div class="brand-mark">N</div><div><strong>NOKJ Academy</strong><small id="sidebar-role">Student Portal</small></div></div>
       <p class="nav-label">Menu</p>
@@ -2329,12 +2337,14 @@
       <button class="nav-button" data-page="tests"><span class="nav-icon">📋</span> <span class="nav-text">Tests</span></button>
       <p class="nav-label">Account</p>
       <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span> <span class="nav-text">My profile</span></button>
+
       <p class="nav-label" id="admin-nav-label" style="display:none;">Management</p>
       <button class="nav-button" data-page="students" id="admin-students-btn" style="display:none;"><span class="nav-icon">👥</span> <span class="nav-text">Students</span></button>
       <button class="nav-button" data-page="budget" id="admin-budget-btn" style="display:none;"><span class="nav-icon">💰</span> <span class="nav-text">Budget</span></button>
       <button class="nav-button" data-page="courses-admin" id="admin-courses-btn" style="display:none;"><span class="nav-icon">📚</span> <span class="nav-text">Courses</span></button>
       <button class="nav-button" data-page="grades" id="admin-grades-btn" style="display:none;"><span class="nav-icon">📊</span> <span class="nav-text">Grades</span></button>
       <button class="nav-button" data-page="calendar" id="admin-calendar-btn" style="display:none;"><span class="nav-icon">📅</span> <span class="nav-text">Calendar</span></button>
+
       <div class="help-card"><strong>Need help?</strong><span>Contact the NOKJ Academy support team for assistance.</span></div>
     </aside>
 
@@ -2461,6 +2471,7 @@
       <!-- ===== TASKS ===== -->
       <section class="page" id="tasks">
         <div class="heading"><h1>Tasks</h1><p id="tasks-subheading">View and complete your assignments.</p></div>
+
         <div id="admin-tasks-view" style="display:none;">
           <div class="task-stats-grid">
             <div class="task-stat-card"><div class="number" id="task-total">0</div><div class="label">Total Tasks</div></div>
@@ -2468,6 +2479,7 @@
             <div class="task-stat-card"><div class="number" id="task-submitted">0</div><div class="label">Submitted</div></div>
             <div class="task-stat-card"><div class="number" id="task-graded">0</div><div class="label">Graded</div></div>
           </div>
+
           <div class="task-admin-actions">
             <input type="text" id="task-search" placeholder="Search tasks..." />
             <select id="task-type-filter"><option value="all">All Types</option><option value="homework">Homework</option><option value="test">Test</option><option value="assignment">Assignment</option></select>
@@ -2476,6 +2488,7 @@
           </div>
           <div class="task-grid" id="admin-task-list"></div>
         </div>
+
         <div id="student-tasks-view" style="display:none;">
           <div class="task-stats-grid">
             <div class="task-stat-card"><div class="number" id="student-task-total">0</div><div class="label">Total Tasks</div></div>
@@ -2483,6 +2496,7 @@
             <div class="task-stat-card"><div class="number" id="student-task-submitted" style="color:var(--warning);">0</div><div class="label">Submitted</div></div>
             <div class="task-stat-card"><div class="number" id="student-task-graded" style="color:var(--success);">0</div><div class="label">Graded</div></div>
           </div>
+
           <div class="task-grid" id="student-task-list"></div>
         </div>
       </section>
@@ -2490,12 +2504,14 @@
       <!-- ===== TESTS ===== -->
       <section class="page" id="tests">
         <div class="heading"><h1>Tests &amp; Quizzes</h1><p id="tests-subheading">Create and take tests with questions.</p></div>
+
         <div id="admin-tests-view" style="display:none;">
           <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
             <button class="primary-button" id="create-test-btn">+ Create Test</button>
           </div>
           <div id="admin-test-list" class="task-grid"></div>
         </div>
+
         <div id="student-tests-view" style="display:none;">
           <div id="student-test-list" class="task-grid"></div>
         </div>
@@ -2598,22 +2614,30 @@
       <!-- ===== CALENDAR ===== -->
       <section class="page" id="calendar">
         <div class="heading"><h1>Class Calendar</h1><p>Schedule and manage your classes.</p></div>
+
         <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
           <button class="primary-button" id="add-class-btn">+ Schedule Class</button>
         </div>
+
         <div class="calendar-container">
           <div class="calendar-header">
             <button class="nav-btn" id="calendar-prev">◀</button>
             <span class="month-label" id="calendar-month-label">August 2026</span>
             <button class="nav-btn" id="calendar-next">▶</button>
           </div>
-          <div class="calendar-grid" id="calendar-grid"></div>
+          <div class="calendar-grid" id="calendar-grid">
+            <!-- Rendered by JavaScript -->
+          </div>
         </div>
+
         <div style="margin-top:20px;">
           <h3>Upcoming Classes</h3>
-          <div id="upcoming-classes-list" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;"></div>
+          <div id="upcoming-classes-list" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+            <!-- Rendered by JavaScript -->
+          </div>
         </div>
       </section>
+
     </main>
 
     <nav class="mobile-nav">
@@ -2780,11 +2804,13 @@
         <textarea id="test-modal-description" placeholder="Describe the test..."></textarea>
         <label>Deadline</label>
         <input type="date" id="test-modal-deadline" />
+
         <div style="margin:16px 0 8px 0;display:flex;justify-content:space-between;align-items:center;">
           <strong>Questions</strong>
           <button type="button" class="primary-button" id="add-question-btn" style="padding:4px 12px;font-size:12px;">+ Add Question</button>
         </div>
         <div id="questions-container"></div>
+
         <div class="modal-actions">
           <button type="button" class="cancel-btn" id="test-modal-cancel">Cancel</button>
           <button type="submit" class="save-btn" id="test-modal-save">Create Test</button>
@@ -2808,11 +2834,2810 @@
     </div>
   </div>
 
+  <!-- ===== JAVASCRIPT ===== -->
   <script>
-    // The JavaScript is the same as before - the file is complete
-    // Please see the previous response for the full JavaScript
-    // This is just a placeholder to show the complete file structure
-    console.log('NOKJ Academy loaded successfully!');
+    (function() {
+
+      // ----- DEMO ACCOUNTS -----
+      const DEMO_USERS = {
+        'admin@nokj.com': { password: 'admin123', role: 'Admin' },
+        'student@nokj.com': { password: 'password123', role: 'Student' },
+        'wilson@nokj.com': { password: 'password123', role: 'Teacher' },
+        'evans@nokj.com': { password: 'password123', role: 'Teacher' }
+      };
+
+      // ----- DEFAULT DATA -----
+      const DEFAULT_STUDENTS = [
+        { id: 1, name: 'Alex Student', email: 'student@nokj.com', password: 'password123', role: 'Student', status: 'Active',
+          createdAt: '2026-08-01' },
+        { id: 2, name: 'Sarah Chen', email: 'sarah@example.com', password: 'password123', role: 'Student', status: 'Active',
+          createdAt: '2026-08-15' },
+        { id: 3, name: 'Marcus Webb', email: 'marcus@example.com', password: 'password123', role: 'Student', status: 'Warning',
+          createdAt: '2026-08-20' }
+      ];
+
+      const DEFAULT_TEACHERS = [
+        { id: 1, name: 'Dr. Wilson', email: 'wilson@nokj.com', password: 'password123', role: 'Teacher',
+          createdAt: '2026-08-01' },
+        { id: 2, name: 'Ms. Evans', email: 'evans@nokj.com', password: 'password123', role: 'Teacher',
+          createdAt: '2026-08-10' }
+      ];
+
+      const DEFAULT_ADMINS = [
+        { id: 1, name: 'Admin User', email: 'admin@nokj.com', password: 'admin123', role: 'Admin', createdAt: '2026-08-01' }
+      ];
+
+      const DEFAULT_COURSES = [
+        { id: 1, name: 'Mathematics', teacherId: 1, description: 'Year 10 Mathematics' },
+        { id: 2, name: 'Biology', teacherId: 1, description: 'Year 10 Biology' },
+        { id: 3, name: 'English Literature', teacherId: 2, description: 'Year 10 English Literature' }
+      ];
+
+      const DEFAULT_ENROLLMENTS = [
+        { studentId: 1, courseId: 1 }, { studentId: 1, courseId: 2 }, { studentId: 1, courseId: 3 },
+        { studentId: 2, courseId: 1 }, { studentId: 2, courseId: 3 },
+        { studentId: 3, courseId: 2 }
+      ];
+
+      const DEFAULT_MEETINGS = [
+        { id: 1, title: 'Mathematics: Quadratic Equations', teacherId: 1, date: '2026-08-28', time: '15:30', duration: 60,
+          link: '#' },
+        { id: 2, title: 'Biology: Cell Structure', teacherId: 1, date: '2026-08-29', time: '12:00', duration: 60, link: '#' },
+        { id: 3, title: 'English Literature: Macbeth Analysis', teacherId: 2, date: '2026-08-30', time: '09:00', duration: 60,
+          link: '#' }
+      ];
+
+      const DEFAULT_TASKS = [
+        { id: 1, title: 'Quadratic Equations Practice', type: 'homework', description: 'Solve problems 1-20 from the textbook.',
+          deadline: '2026-09-05', priority: 'high', assignedTo: 'all', assignedIds: [], files: [],
+          createdAt: '2026-08-28' },
+        { id: 2, title: 'Macbeth Essay', type: 'assignment', description: 'Write a 500-word essay on ambition.',
+          deadline: '2026-09-10', priority: 'medium', assignedTo: 'all', assignedIds: [], files: [],
+          createdAt: '2026-08-28' },
+        { id: 3, title: 'Cell Biology Quiz', type: 'test', description: 'Multiple choice quiz on cell structure.',
+          deadline: '2026-09-03', priority: 'medium', assignedTo: 'all', assignedIds: [], files: [],
+          createdAt: '2026-08-28' }
+      ];
+
+      const DEFAULT_TASK_SUBMISSIONS = {
+        '1-1': {
+          answer: 'x = -2, x = -3',
+          submittedAt: '2026-08-29T10:00:00',
+          grade: null,
+          feedback: null,
+          files: []
+        },
+        '2-1': {
+          answer: 'Ambition is the driving force in Macbeth...',
+          submittedAt: '2026-08-30T14:00:00',
+          grade: 85,
+          feedback: 'Good analysis, could use more quotes.',
+          files: []
+        },
+        '3-1': {
+          answer: '1. B, 2. A, 3. C, 4. D, 5. B',
+          submittedAt: '2026-08-31T16:00:00',
+          grade: null,
+          feedback: null,
+          files: []
+        }
+      };
+
+      const DEFAULT_BUDGET = [
+        { id: 1, category: 'Student Fees', type: 'Income', amount: 12000, date: '2026-08-01', status: 'Paid' },
+        { id: 2, category: 'Staff Salaries', type: 'Expense', amount: -8500, date: '2026-08-05', status: 'Paid' }
+      ];
+
+      const DEFAULT_GRADES = { '1-1': 85, '1-2': 78, '1-3': 92, '2-1': 88, '2-3': 95, '3-2': 65 };
+      const DEFAULT_PRESENTATION = [
+        { title: 'Quadratic Equations', content: 'Introduction to solving quadratic equations.' },
+        { title: 'Formula', content: 'x = (-b ± √(b² - 4ac)) / 2a' },
+        { title: 'Example 1', content: 'Solve: x² + 5x + 6 = 0\nAnswer: x = -2, x = -3' },
+        { title: 'Example 2', content: 'Solve: 2x² - 4x - 6 = 0\nAnswer: x = 3, x = -1' },
+        { title: 'Practice', content: 'Try these on your own:\n1) x² - 7x + 12 = 0\n2) 3x² + 2x - 1 = 0' }
+      ];
+
+      // ----- Data Storage -----
+      let students = [],
+        teachers = [],
+        admins = [],
+        courses = [],
+        enrollments = [],
+        meetings = [];
+      let gradeData = {},
+        tasks = [],
+        taskSubmissions = {},
+        budgetEntries = [];
+      let tests = [],
+        testSubmissions = {};
+      let currentUser = null,
+        expandedRows = {},
+        currentSlide = 0,
+        presentationSlides = [];
+      let tempTaskFiles = [],
+        gradingTaskId = null,
+        gradingStudentId = null;
+      let currentMonth = new Date().getMonth(),
+        currentYear = new Date().getFullYear();
+      let questionCounter = 0;
+
+      // ============================================================
+      //  TRANSLATION SYSTEM
+      // ============================================================
+      const translations = {
+        'Dashboard': 'Главная',
+        'Timetable': 'Расписание',
+        'My courses': 'Мои курсы',
+        'Assignments': 'Задания',
+        'Announcements': 'Объявления',
+        'Account': 'Аккаунт',
+        'My profile': 'Мой профиль',
+        'Need help?': 'Нужна помощь?',
+        'Contact the NOKJ Academy support team for assistance.': 'Свяжитесь со службой поддержки NOKJ Academy.',
+        'Student Portal': 'Портал ученика',
+        'Management': 'Управление',
+        'Students': 'Ученики',
+        'Budget': 'Бюджет',
+        'Courses': 'Курсы',
+        'Grades': 'Оценки',
+        'Calendar': 'Календарь',
+        'Good afternoon, Alex 👋': 'Добрый день, Алекс 👋',
+        'Here is everything you need to stay on track today.': 'Здесь всё, что нужно, чтобы быть в курсе дел сегодня.',
+        'Classroom': 'Виртуальный класс',
+        'Tasks': 'Задания',
+        'View and complete your assignments.': 'Просмотр и выполнение заданий.',
+        'Logout': 'Выйти',
+        'Sign In': 'Войти',
+        'Join Academy': 'Присоединиться',
+        'Welcome back': 'С возвращением',
+        'Sign in to your account': 'Войдите в свой аккаунт',
+        'Create Account': 'Создать аккаунт',
+        'Start your learning journey today': 'Начните свой путь обучения сегодня',
+        'Full Name': 'Полное имя',
+        'Email address': 'Адрес электронной почты',
+        'I am a...': 'Я...',
+        'Password': 'Пароль',
+        'Already have an account?': 'Уже есть аккаунт?',
+        "Don't have an account?": 'Нет аккаунта?',
+        'Class Calendar': 'Календарь занятий',
+        'Schedule and manage your classes.': 'Планирование и управление занятиями.',
+        '+ Schedule Class': '+ Запланировать занятие',
+        'Upcoming Classes': 'Предстоящие занятия',
+        'No upcoming classes scheduled.': 'Нет запланированных занятий.',
+        'Join': 'Присоединиться',
+        'Schedule Class': 'Запланировать занятие',
+        'Set up your live class session.': 'Настройте ваше живое занятие.',
+        'Class Title': 'Название занятия',
+        'Teacher': 'Преподаватель',
+        'Date': 'Дата',
+        'Time': 'Время',
+        'Duration (minutes)': 'Продолжительность (минуты)',
+        'Meeting Link': 'Ссылка на встречу',
+        'Save': 'Сохранить',
+        'Cancel': 'Отмена',
+        'Create Task': 'Создать задание',
+        'Fill in the task details below.': 'Заполните детали задания ниже.',
+        'Task Title': 'Название задания',
+        'Task Type': 'Тип задания',
+        'Priority': 'Приоритет',
+        'Description': 'Описание',
+        'Deadline': 'Срок',
+        'Attach Files': 'Прикрепить файлы',
+        'Choose Files': 'Выбрать файлы',
+        'Assign to': 'Назначить',
+        'All Students': 'Всем ученикам',
+        'Specific Course': 'Конкретному курсу',
+        'Specific Student': 'Конкретному ученику',
+        'Select Courses': 'Выберите курсы',
+        'Select Students': 'Выберите учеников',
+        'Total Tasks': 'Всего заданий',
+        'Pending': 'Ожидает',
+        'Submitted': 'Отправлено',
+        'Graded': 'Проверено',
+        'Search tasks...': 'Поиск заданий...',
+        'All Types': 'Все типы',
+        'Homework': 'Домашнее задание',
+        'Test': 'Тест',
+        'Assignment': 'Задание',
+        'All Status': 'Все статусы',
+        '+ Add Task': '+ Добавить задание',
+        'No tasks found.': 'Заданий не найдено.',
+        'View Submissions': 'Просмотр ответов',
+        'Delete': 'Удалить',
+        'No tasks assigned to you yet.': 'У вас пока нет заданий.',
+        'Enter your answer...': 'Введите ваш ответ...',
+        'Upload Files': 'Загрузить файлы',
+        'Submit': 'Отправить',
+        'Waiting for grading...': 'Ожидает проверки...',
+        'No files chosen': 'Файлы не выбраны',
+        'Grade Submission': 'Оценить ответ',
+        'Enter grade and feedback for this submission.': 'Введите оценку и отзыв для этого ответа.',
+        'Student': 'Ученик',
+        'Submission': 'Ответ',
+        'Grade (%)': 'Оценка (%)',
+        'Feedback': 'Отзыв',
+        'Save Grade': 'Сохранить оценку',
+        'Grade saved successfully!': 'Оценка успешно сохранена!',
+        'Task created successfully!': 'Задание успешно создано!',
+        'Task submitted!': 'Задание отправлено!',
+        'Class scheduled successfully!': 'Занятие успешно запланировано!',
+        'Tests': 'Тесты',
+        'Tests & Quizzes': 'Тесты и викторины',
+        'Create and take tests with questions.': 'Создавайте и проходите тесты с вопросами.',
+        '+ Create Test': '+ Создать тест',
+        'Create Test': 'Создать тест',
+        'Build your test with multiple choice questions.': 'Создайте тест с вопросами с выбором ответа.',
+        'Test Title': 'Название теста',
+        'Course': 'Курс',
+        'Questions': 'Вопросы',
+        '+ Add Question': '+ Добавить вопрос',
+        'Question': 'Вопрос',
+        'Options': 'Варианты',
+        'Correct Answer': 'Правильный ответ',
+        'Take Test': 'Пройти тест',
+        'Answer all questions and submit.': 'Ответьте на все вопросы и отправьте.',
+        'Submit Test': 'Отправить тест',
+        'Test submitted successfully!': 'Тест успешно отправлен!',
+        'Test created successfully!': 'Тест успешно создан!',
+        'No tests available.': 'Нет доступных тестов.',
+        'No tests assigned to you yet.': 'Вам пока не назначены тесты.',
+        'Your Score': 'Ваш результат',
+        'Correct': 'Правильно',
+        'Incorrect': 'Неправильно',
+        'View Results': 'Посмотреть результаты'
+      };
+
+      let currentLang = localStorage.getItem('nokj-language') || 'en';
+      const originalTextMap = new WeakMap();
+
+      function applyTranslation(lang) {
+        const walker = document.createTreeWalker(
+          document.body,
+          NodeFilter.SHOW_TEXT, {
+            acceptNode: function(node) {
+              const parent = node.parentElement;
+              if (!parent) return NodeFilter.FILTER_REJECT;
+              const tag = parent.tagName;
+              if (tag === 'SCRIPT' || tag === 'STYLE') return NodeFilter.FILTER_REJECT;
+              if (node.nodeValue.trim() === '') return NodeFilter.FILTER_REJECT;
+              return NodeFilter.FILTER_ACCEPT;
+            }
+          }
+        );
+
+        let nodes = [];
+        let node;
+        while (node = walker.nextNode()) {
+          nodes.push(node);
+        }
+
+        nodes.forEach(function(textNode) {
+          if (!originalTextMap.has(textNode)) {
+            originalTextMap.set(textNode, textNode.nodeValue);
+          }
+          const original = originalTextMap.get(textNode);
+          const trimmed = original.trim();
+          if (lang === 'ru' && translations[trimmed] !== undefined) {
+            textNode.nodeValue = original.replace(trimmed, translations[trimmed]);
+          } else if (lang === 'en') {
+            textNode.nodeValue = original;
+          }
+        });
+
+        document.querySelectorAll('[placeholder]').forEach(function(el) {
+          const placeholder = el.placeholder;
+          if (lang === 'ru' && translations[placeholder] !== undefined) {
+            el.placeholder = translations[placeholder];
+          }
+        });
+      }
+
+      function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('nokj-language', lang);
+
+        const ukFlags = document.querySelectorAll('#flag-uk, #login-flag-uk, #register-flag-uk');
+        const ruFlags = document.querySelectorAll('#flag-ru, #login-flag-ru, #register-flag-ru');
+
+        if (lang === 'en') {
+          ukFlags.forEach(el => el.style.display = 'block');
+          ruFlags.forEach(el => el.style.display = 'none');
+        } else {
+          ukFlags.forEach(el => el.style.display = 'none');
+          ruFlags.forEach(el => el.style.display = 'block');
+        }
+
+        applyTranslation(lang);
+        document.documentElement.lang = lang;
+      }
+
+      function toggleLanguage() {
+        setLanguage(currentLang === 'en' ? 'ru' : 'en');
+      }
+
+      // ============================================================
+      //  DATA MANAGEMENT
+      // ============================================================
+      function loadData() {
+        const savedStudents = localStorage.getItem('nokj-students');
+        const savedTeachers = localStorage.getItem('nokj-teachers');
+        const savedAdmins = localStorage.getItem('nokj-admins');
+        const savedCourses = localStorage.getItem('nokj-courses');
+        const savedEnrollments = localStorage.getItem('nokj-enrollments');
+        const savedMeetings = localStorage.getItem('nokj-meetings');
+        const savedGrades = localStorage.getItem('nokj-grades');
+        const savedTasks = localStorage.getItem('nokj-tasks');
+        const savedSubmissions = localStorage.getItem('nokj-submissions');
+        const savedBudget = localStorage.getItem('nokj-budget');
+        const savedTests = localStorage.getItem('nokj-tests');
+        const savedTestSubmissions = localStorage.getItem('nokj-test-submissions');
+
+        if (savedStudents) { try { students = JSON.parse(savedStudents); } catch (e) { students = DEFAULT_STUDENTS.slice(); } } else { students =
+            DEFAULT_STUDENTS.slice(); }
+        if (savedTeachers) { try { teachers = JSON.parse(savedTeachers); } catch (e) { teachers = DEFAULT_TEACHERS.slice(); } } else { teachers =
+            DEFAULT_TEACHERS.slice(); }
+        if (savedAdmins) { try { admins = JSON.parse(savedAdmins); } catch (e) { admins = DEFAULT_ADMINS.slice(); } } else { admins =
+            DEFAULT_ADMINS.slice(); }
+        if (savedCourses) { try { courses = JSON.parse(savedCourses); } catch (e) { courses = DEFAULT_COURSES.slice(); } } else { courses =
+            DEFAULT_COURSES.slice(); }
+        if (savedEnrollments) { try { enrollments = JSON.parse(savedEnrollments); } catch (e) { enrollments = DEFAULT_ENROLLMENTS.slice(); } } else { enrollments =
+            DEFAULT_ENROLLMENTS.slice(); }
+        if (savedMeetings) { try { meetings = JSON.parse(savedMeetings); } catch (e) { meetings = DEFAULT_MEETINGS.slice(); } } else { meetings =
+            DEFAULT_MEETINGS.slice(); }
+        if (savedGrades) { try { gradeData = JSON.parse(savedGrades); } catch (e) { gradeData = DEFAULT_GRADES; } } else { gradeData =
+            DEFAULT_GRADES; }
+        if (savedTasks) { try { tasks = JSON.parse(savedTasks); } catch (e) { tasks = DEFAULT_TASKS.slice(); } } else { tasks =
+            DEFAULT_TASKS.slice(); }
+        if (savedSubmissions) { try { taskSubmissions = JSON.parse(savedSubmissions); } catch (e) { taskSubmissions =
+              DEFAULT_TASK_SUBMISSIONS; } } else { taskSubmissions = DEFAULT_TASK_SUBMISSIONS; }
+        if (savedBudget) { try { budgetEntries = JSON.parse(savedBudget); } catch (e) { budgetEntries = DEFAULT_BUDGET.slice(); } } else { budgetEntries =
+            DEFAULT_BUDGET.slice(); }
+        if (savedTests) { try { tests = JSON.parse(savedTests); } catch (e) { tests = []; } } else { tests = []; }
+        if (savedTestSubmissions) { try { testSubmissions = JSON.parse(savedTestSubmissions); } catch (e) { testSubmissions =
+              {}; } } else { testSubmissions = {}; }
+      }
+
+      function saveData() {
+        localStorage.setItem('nokj-students', JSON.stringify(students));
+        localStorage.setItem('nokj-teachers', JSON.stringify(teachers));
+        localStorage.setItem('nokj-admins', JSON.stringify(admins));
+        localStorage.setItem('nokj-courses', JSON.stringify(courses));
+        localStorage.setItem('nokj-enrollments', JSON.stringify(enrollments));
+        localStorage.setItem('nokj-meetings', JSON.stringify(meetings));
+        localStorage.setItem('nokj-grades', JSON.stringify(gradeData));
+        localStorage.setItem('nokj-tasks', JSON.stringify(tasks));
+        localStorage.setItem('nokj-submissions', JSON.stringify(taskSubmissions));
+        localStorage.setItem('nokj-budget', JSON.stringify(budgetEntries));
+        localStorage.setItem('nokj-tests', JSON.stringify(tests));
+        localStorage.setItem('nokj-test-submissions', JSON.stringify(testSubmissions));
+      }
+
+      // ============================================================
+      //  HELPER FUNCTIONS
+      // ============================================================
+      function getTeacherName(id) {
+        var t = teachers.find(function(tc) { return tc.id === id; });
+        return t ? t.name : 'Unknown';
+      }
+
+      function getStudentName(id) {
+        var s = students.find(function(st) { return st.id === id; });
+        return s ? s.name : 'Unknown';
+      }
+
+      function getCourseName(id) {
+        var c = courses.find(function(co) { return co.id === id; });
+        return c ? c.name : 'Unknown';
+      }
+
+      function getEnrolledCourseIds(studentId) {
+        return enrollments.filter(function(e) { return e.studentId === studentId; }).map(function(e) { return e.courseId; });
+      }
+
+      function getEnrolledStudentIds(courseId) {
+        return enrollments.filter(function(e) { return e.courseId === courseId; }).map(function(e) { return e.studentId; });
+      }
+
+      function getCourseStudentCount(courseId) {
+        return enrollments.filter(function(e) { return e.courseId === courseId; }).length;
+      }
+
+      function getUserByEmail(email) {
+        var user = students.find(function(s) { return s.email === email; });
+        if (user) return user;
+        user = teachers.find(function(t) { return t.email === email; });
+        if (user) return user;
+        user = admins.find(function(a) { return a.email === email; });
+        return user || null;
+      }
+
+      function getAllUsers() {
+        return [].concat(students, teachers, admins);
+      }
+
+      function generateId() {
+        var maxId = 1;
+        getAllUsers().forEach(function(u) {
+          if (u.id > maxId) maxId = u.id;
+        });
+        return maxId + 1;
+      }
+
+      // ============================================================
+      //  NAVIGATION
+      // ============================================================
+      function showLanding() {
+        landingPage.classList.remove('hidden');
+        loginScreen.classList.remove('open');
+        loginScreen.classList.add('hidden');
+        registerScreen.classList.remove('open');
+        registerScreen.classList.add('hidden');
+        app.classList.remove('logged-in');
+        setLanguage(currentLang);
+      }
+
+      function showLoginScreen() {
+        landingPage.classList.add('hidden');
+        loginScreen.classList.remove('hidden');
+        loginScreen.classList.add('open');
+        registerScreen.classList.remove('open');
+        registerScreen.classList.add('hidden');
+        app.classList.remove('logged-in');
+        loginError.textContent = '';
+        loginEmail.value = '';
+        loginPassword.value = '';
+        setLanguage(currentLang);
+      }
+
+      function showRegisterScreen() {
+        landingPage.classList.add('hidden');
+        registerScreen.classList.remove('hidden');
+        registerScreen.classList.add('open');
+        loginScreen.classList.remove('open');
+        loginScreen.classList.add('hidden');
+        app.classList.remove('logged-in');
+        registerError.textContent = '';
+        registerName.value = '';
+        registerEmail.value = '';
+        registerPassword.value = '';
+        registerRole.value = 'Student';
+        setLanguage(currentLang);
+      }
+
+      function openPage(pageName) {
+        pages.forEach(function(page) { page.classList.toggle('active', page.id === pageName); });
+        navButtons.forEach(function(btn) { btn.classList.toggle('active', btn.dataset.page === pageName); });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (pageName === 'calendar') renderCalendar();
+        if (pageName === 'classroom') renderMeetings();
+        if (pageName === 'tests') renderTests();
+        setLanguage(currentLang);
+      }
+
+      // ============================================================
+      //  LOGIN / REGISTER
+      // ============================================================
+      function login(email, password) {
+        var user = getUserByEmail(email);
+        if (user && user.password === password) {
+          currentUser = user;
+          localStorage.setItem('nokj-user', JSON.stringify(user));
+          showApp(user);
+          loginError.textContent = '';
+          return true;
+        } else {
+          loginError.textContent = 'Invalid email or password. Please try again.';
+          return false;
+        }
+      }
+
+      function register(name, email, password, role) {
+        if (getUserByEmail(email)) {
+          registerError.textContent = 'Email already registered. Please sign in.';
+          return false;
+        }
+        if (password.length < 6) {
+          registerError.textContent = 'Password must be at least 6 characters.';
+          return false;
+        }
+        var newUser = {
+          id: generateId(),
+          name: name,
+          email: email,
+          password: password,
+          role: role,
+          createdAt: new Date().toISOString().split('T')[0],
+          status: 'Active'
+        };
+        if (role === 'Student') {
+          students.push(newUser);
+        } else if (role === 'Teacher') {
+          teachers.push(newUser);
+        } else {
+          admins.push(newUser);
+        }
+        saveData();
+        registerError.textContent = '';
+        showLoginScreen();
+        alert('Account created! Please sign in.');
+        return true;
+      }
+
+      function showApp(user) {
+        loginScreen.classList.remove('open');
+        loginScreen.classList.add('hidden');
+        registerScreen.classList.remove('open');
+        registerScreen.classList.add('hidden');
+        landingPage.classList.add('hidden');
+        app.classList.add('logged-in');
+
+        var initials = user.name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
+        userAvatar.textContent = initials;
+        userAvatar.className = 'avatar' + (user.role === 'Admin' ? ' admin-avatar' : user.role === 'Teacher' ?
+          ' teacher-avatar' : '');
+        userDisplayName.textContent = user.name;
+        userRole.textContent = user.role;
+        sidebarRole.textContent = user.role + ' Portal';
+        profileAvatar.textContent = initials;
+        profileAvatar.className = 'avatar' + (user.role === 'Admin' ? ' admin-avatar' : user.role === 'Teacher' ?
+          ' teacher-avatar' : '');
+        profileName.textContent = user.name;
+        profileRoleText.textContent = user.role + ' · NOKJ Academy';
+        profileEmail.textContent = user.email;
+        profileId.textContent = 'NOKJ-' + String(user.id).padStart(4, '0');
+        profileRole.textContent = user.role;
+        profileSince.textContent = user.createdAt || '2026';
+
+        var time = new Date().getHours();
+        var greetingText = (time < 12) ? 'Good morning' : (time < 17) ? 'Good afternoon' : 'Good evening';
+        greeting.textContent = greetingText + ', ' + user.name + ' 👋';
+
+        if (user.role === 'Admin') {
+          adminNavLabel.style.display = 'block';
+          adminStudentsBtn.style.display = 'flex';
+          adminBudgetBtn.style.display = 'flex';
+          adminCoursesBtn.style.display = 'flex';
+          adminGradesBtn.style.display = 'flex';
+          adminCalendarBtn.style.display = 'flex';
+          adminStatsContainer.style.display = 'block';
+          renderStudents();
+          renderBudget();
+          renderCourses();
+          renderGrades();
+          updateAdminStats();
+        } else {
+          adminNavLabel.style.display = 'none';
+          adminStudentsBtn.style.display = 'none';
+          adminBudgetBtn.style.display = 'none';
+          adminCoursesBtn.style.display = 'none';
+          adminGradesBtn.style.display = 'none';
+          adminCalendarBtn.style.display = 'none';
+          adminStatsContainer.style.display = 'none';
+        }
+
+        renderStudentCourses();
+        renderMeetings();
+        renderTasks();
+        renderTests();
+        renderCalendar();
+        renderUpcomingClasses();
+        setLanguage(currentLang);
+      }
+
+      function logout() {
+        localStorage.removeItem('nokj-user');
+        currentUser = null;
+        app.classList.remove('logged-in');
+        showLanding();
+        loginPassword.value = '';
+        loginError.textContent = '';
+        expandedRows = {};
+        setLanguage(currentLang);
+      }
+
+      function checkSession() {
+        var saved = localStorage.getItem('nokj-user');
+        if (saved) {
+          try {
+            var user = JSON.parse(saved);
+            if (user && getUserByEmail(user.email)) {
+              currentUser = user;
+              showApp(user);
+              return;
+            }
+          } catch (e) {}
+        }
+        showLanding();
+      }
+
+      // ============================================================
+      //  RENDER FUNCTIONS
+      // ============================================================
+      function renderStudents() {
+        var search = studentSearch.value.toLowerCase();
+        var filter = studentFilter.value;
+        var filtered = students.filter(function(s) {
+          return (s.name.toLowerCase().includes(search) || s.email.toLowerCase().includes(search)) &&
+            (filter === 'all' || s.status === filter);
+        });
+        filtered.sort(function(a, b) { return a.name.localeCompare(b.name); });
+        studentTableBody.innerHTML = '';
+        filtered.forEach(function(s) {
+          var isExpanded = expandedRows['student-' + s.id] || false;
+          var icon = isExpanded ? '▼' : '▶';
+          var tr = document.createElement('tr');
+          tr.className = 'expandable-row';
+          tr.dataset.expandId = 'student-' + s.id;
+          tr.innerHTML = '<td style="cursor:pointer;"><span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon +
+            '</span> <strong>' + s.name + '</strong></td><td>' + s.email + '</td><td><span class="status-badge ' + s.status
+            .toLowerCase() + '">' + s.status + '</span></td><td><button class="action-btn edit" data-id="' + s.id +
+            '" data-type="student">✏️</button><button class="action-btn delete" data-id="' + s.id +
+            '" data-type="student">🗑️</button><button class="action-btn enroll" data-id="' + s.id +
+            '" data-type="enroll">📚 Enroll</button></td>';
+          studentTableBody.appendChild(tr);
+          var detailTr = document.createElement('tr');
+          detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
+          detailTr.dataset.parentId = 'student-' + s.id;
+          var courseIds = getEnrolledCourseIds(s.id);
+          var detailHtml = '<div class="detail-content"><strong>Enrolled Courses:</strong> ';
+          if (courseIds.length === 0) detailHtml += '<span class="empty-msg">Not enrolled in any courses.</span>';
+          else {
+            courseIds.forEach(function(cid) {
+              var c = courses.find(function(co) { return co.id === cid; });
+              if (c) detailHtml += '<span class="item-tag">📚 ' + c.name + ' <span style="color:var(--muted);font-size:11px;">(' +
+                c.teacherId + ')</span></span>';
+            });
+          }
+          detailHtml += '</div>';
+          detailTr.innerHTML = '<td colspan="4">' + detailHtml + '</td>';
+          studentTableBody.appendChild(detailTr);
+        });
+        studentCount.textContent = filtered.length + ' students';
+        studentTotal.textContent = students.length;
+        updateAdminStats();
+        setLanguage(currentLang);
+      }
+
+      function renderCourses() {
+        var search = document.getElementById('course-search').value.toLowerCase();
+        var filtered = courses.filter(function(c) { return c.name.toLowerCase().includes(search); });
+        filtered.sort(function(a, b) { return a.name.localeCompare(b.name); });
+        document.getElementById('course-table-body').innerHTML = '';
+        filtered.forEach(function(c) {
+          var studentCount = getCourseStudentCount(c.id);
+          var isExpanded = expandedRows['course-' + c.id] || false;
+          var icon = isExpanded ? '▼' : '▶';
+          var tr = document.createElement('tr');
+          tr.className = 'expandable-row';
+          tr.dataset.expandId = 'course-' + c.id;
+          tr.innerHTML = '<td style="cursor:pointer;"><span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon +
+            '</span> <strong>' + c.name + '</strong><br><span style="font-size:12px;color:var(--muted);">' + c.description +
+            '</span></td><td>' + getTeacherName(c.teacherId) + '</td><td>' + studentCount +
+            ' students</td><td><button class="action-btn edit" data-id="' + c.id +
+            '" data-type="course">✏️</button><button class="action-btn delete" data-id="' + c.id +
+            '" data-type="course">🗑️</button></td>';
+          document.getElementById('course-table-body').appendChild(tr);
+          var detailTr = document.createElement('tr');
+          detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
+          detailTr.dataset.parentId = 'course-' + c.id;
+          var studentIds = getEnrolledStudentIds(c.id);
+          var detailHtml = '<div class="detail-content"><strong>Enrolled Students:</strong> ';
+          if (studentIds.length === 0) detailHtml += '<span class="empty-msg">No students enrolled.</span>';
+          else {
+            studentIds.forEach(function(sid) {
+              var s = students.find(function(st) { return st.id === sid; });
+              if (s) detailHtml += '<span class="item-tag">👤 ' + s.name + ' <span class="status-badge ' + s.status
+                .toLowerCase() + '">' + s.status + '</span></span>';
+            });
+          }
+          detailHtml += '</div>';
+          detailTr.innerHTML = '<td colspan="4">' + detailHtml + '</td>';
+          document.getElementById('course-table-body').appendChild(detailTr);
+        });
+        document.getElementById('course-count').textContent = filtered.length + ' courses';
+        document.getElementById('course-total').textContent = courses.length;
+        document.getElementById('course-enrollments-total').textContent = enrollments.length;
+        updateAdminStats();
+        setLanguage(currentLang);
+      }
+
+      function renderBudget() {
+        var search = document.getElementById('budget-search').value.toLowerCase();
+        var filter = document.getElementById('budget-filter').value;
+        var filtered = budgetEntries.filter(function(b) {
+          return b.category.toLowerCase().includes(search) && (filter === 'all' || b.type === filter);
+        });
+        filtered.sort(function(a, b) { return b.date.localeCompare(a.date); });
+        document.getElementById('budget-table-body').innerHTML = '';
+        filtered.forEach(function(b) {
+          var isIncome = b.type === 'Income';
+          var amountDisplay = isIncome ? '+' + b.amount : '-' + Math.abs(b.amount);
+          var amountClass = isIncome ? 'income' : 'expense';
+          var tr = document.createElement('tr');
+          tr.innerHTML = '<td><strong>' + b.category + '</strong></td><td>' + b.type + '</td><td class="' + amountClass +
+            '" style="font-weight:700;">$' + amountDisplay + '</td><td>' + b.date + '</td><td><span class="status-badge ' +
+            b.status.toLowerCase() + '">' + b.status + '</span></td><td><button class="action-btn edit" data-id="' + b.id +
+            '" data-type="budget">✏️</button><button class="action-btn delete" data-id="' + b.id +
+            '" data-type="budget">🗑️</button></td>';
+          document.getElementById('budget-table-body').appendChild(tr);
+        });
+        var total = budgetEntries.length;
+        document.getElementById('budget-count').textContent = filtered.length + ' entries';
+        var totalIncome = budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(sum, b) { return sum +
+            b.amount; }, 0);
+        var totalExpense = budgetEntries.filter(function(b) { return b.type === 'Expense'; }).reduce(function(sum, b) { return sum +
+            Math.abs(b.amount); }, 0);
+        document.getElementById('budget-total-income').textContent = '$' + totalIncome.toLocaleString();
+        document.getElementById('budget-total-expense').textContent = '$' + totalExpense.toLocaleString();
+        document.getElementById('budget-net').textContent = '$' + (totalIncome - totalExpense).toLocaleString();
+        document.getElementById('budget-net').style.color = (totalIncome - totalExpense) >= 0 ? 'var(--success)' :
+          'var(--danger)';
+        updateAdminStats();
+        setLanguage(currentLang);
+      }
+
+      function renderStudentCourses() {
+        if (!currentUser || currentUser.role !== 'Student') return;
+        var studentId = currentUser.id;
+        var enrolledIds = getEnrolledCourseIds(studentId);
+        var enrolledCourses = courses.filter(function(c) { return enrolledIds.includes(c.id); });
+        if (enrolledCourses.length === 0) {
+          document.getElementById('student-courses-container').innerHTML =
+            '<p style="color:var(--muted);">You are not enrolled in any courses yet.</p>';
+          return;
+        }
+        var html = '<div class="course-grid">';
+        enrolledCourses.forEach(function(c) {
+          var colors = ['', 'orange-cover', 'green-cover'];
+          var colorClass = colors[c.id % 3];
+          var progress = Math.floor(Math.random() * 30) + 60;
+          html += '<article class="course"><div class="course-cover ' + colorClass + '">' + c.name +
+            '</div><div class="course-body"><h3>' + c.name + '</h3><p>Teacher: ' + getTeacherName(c.teacherId) +
+            '</p><div class="track"><div class="fill" style="width:' + progress +
+            '%"></div></div><div class="course-footer"><span>' + progress +
+            '% complete</span><button class="link-button">Open course</button></div></div></article>';
+        });
+        html += '</div>';
+        document.getElementById('student-courses-container').innerHTML = html;
+        setLanguage(currentLang);
+      }
+
+      function renderGrades() {
+        if (!currentUser) return;
+        var isAdmin = currentUser.role === 'Admin';
+        var adminView = document.getElementById('admin-grades-view');
+        var studentView = document.getElementById('student-grades-view');
+        if (isAdmin) {
+          adminView.style.display = 'block';
+          studentView.style.display = 'none';
+          var courseFilter = document.getElementById('grade-course-filter');
+          var currentCourseFilter = courseFilter.value;
+          courseFilter.innerHTML = '<option value="all">All Courses</option>';
+          courses.forEach(function(c) {
+            courseFilter.innerHTML += '<option value="' + c.id + '" ' + (currentCourseFilter === String(c.id) ?
+              'selected' : '') + '>' + c.name + '</option>';
+          });
+          var studentFilter = document.getElementById('grade-student-filter');
+          var currentStudentFilter = studentFilter.value;
+          studentFilter.innerHTML = '<option value="all">All Students</option>';
+          students.forEach(function(s) {
+            studentFilter.innerHTML += '<option value="' + s.id + '" ' + (currentStudentFilter === String(s.id) ?
+              'selected' : '') + '>' + s.name + '</option>';
+          });
+          renderGradeTable();
+        } else {
+          adminView.style.display = 'none';
+          studentView.style.display = 'block';
+          renderStudentGrades();
+        }
+        setLanguage(currentLang);
+      }
+
+      function renderGradeTable() {
+        var courseFilter = document.getElementById('grade-course-filter').value;
+        var studentFilter = document.getElementById('grade-student-filter').value;
+        var filtered = [];
+        enrollments.forEach(function(e) {
+          var student = students.find(function(s) { return s.id === e.studentId; });
+          var course = courses.find(function(c) { return c.id === e.courseId; });
+          if (!student || !course) return;
+          var courseMatch = courseFilter === 'all' || e.courseId === parseInt(courseFilter);
+          var studentMatch = studentFilter === 'all' || e.studentId === parseInt(studentFilter);
+          if (courseMatch && studentMatch) filtered.push({ studentId: e.studentId, studentName: student.name,
+            courseId: e.courseId, courseName: course.name });
+        });
+        filtered.sort(function(a, b) { return a.studentName.localeCompare(b.studentName); });
+        var tbody = document.getElementById('grade-table-body');
+        tbody.innerHTML = '';
+        var totalGrades = 0,
+          passingCount = 0,
+          failingCount = 0;
+        filtered.forEach(function(item) {
+          var grade = gradeData[item.studentId + '-' + item.courseId] || null;
+          totalGrades++;
+          var tr = document.createElement('tr');
+          var gradeDisplay = grade !== null ? grade : '-';
+          var statusClass = grade !== null ? (grade >= 60 ? 'grade-pass' : 'grade-fail') : '';
+          var statusText = grade !== null ? (grade >= 60 ? '✅ Pass' : '❌ Fail') : 'Not graded';
+          if (grade !== null) { if (grade >= 60) passingCount++;
+            else failingCount++; }
+          tr.innerHTML = '<td><strong>' + item.studentName + '</strong></td><td>' + item.courseName +
+            '</td><td class="grade-cell"><input type="number" class="grade-input" id="grade-input-' + item.studentId +
+            '-' + item.courseId + '" value="' + (grade !== null ? grade : '') +
+            '" min="0" max="100" placeholder="-" /><button class="save-grade-btn" data-student="' + item.studentId +
+            '" data-course="' + item.courseId + '">Save</button></td><td class="' + statusClass + '">' + statusText +
+            '</td><td><button class="action-btn delete" data-student="' + item.studentId + '" data-course="' + item
+            .courseId + '" data-type="grade">🗑️</button></td>';
+          tbody.appendChild(tr);
+        });
+        document.getElementById('grade-total').textContent = totalGrades;
+        document.getElementById('grade-passing-count').textContent = passingCount;
+        document.getElementById('grade-failing-count').textContent = failingCount;
+        document.getElementById('grade-count').textContent = filtered.length + ' entries';
+        var allGrades = [];
+        enrollments.forEach(function(e) {
+          var g = gradeData[e.studentId + '-' + e.courseId] || null;
+          if (g !== null) allGrades.push(g);
+        });
+        var avgAll = allGrades.length > 0 ? Math.round(allGrades.reduce(function(a, b) { return a + b; }, 0) / allGrades
+          .length) : 0;
+        document.getElementById('avg-grade-all').textContent = avgAll + '%';
+        var passing = allGrades.filter(function(g) { return g >= 60; }).length;
+        var failing = allGrades.filter(function(g) { return g < 60; }).length;
+        document.getElementById('passing-students').textContent = passing;
+        document.getElementById('failing-students').textContent = failing;
+        setLanguage(currentLang);
+      }
+
+      function renderStudentGrades() {
+        if (!currentUser || currentUser.role !== 'Student') return;
+        var studentId = currentUser.id;
+        var enrolled = getEnrolledCourseIds(studentId);
+        var tbody = document.getElementById('student-grade-table-body');
+        tbody.innerHTML = '';
+        var gradesList = [];
+        enrolled.forEach(function(courseId) {
+          var course = courses.find(function(c) { return c.id === courseId; });
+          if (!course) return;
+          var grade = gradeData[studentId + '-' + courseId] || null;
+          var tr = document.createElement('tr');
+          var gradeDisplay = grade !== null ? grade : '-';
+          var statusClass = grade !== null ? (grade >= 60 ? 'grade-pass' : 'grade-fail') : '';
+          var statusText = grade !== null ? (grade >= 60 ? '✅ Pass' : '❌ Fail') : 'Not graded';
+          if (grade !== null) gradesList.push(grade);
+          tr.innerHTML = '<td><strong>' + course.name + '</strong><br><span style="font-size:12px;color:var(--muted);">' +
+            getTeacherName(course.teacherId) + '</span></td><td class="' + statusClass +
+            '" style="font-size:18px;font-weight:700;">' + gradeDisplay + '%</td><td>' + statusText + '</td>';
+          tbody.appendChild(tr);
+        });
+        var avg = gradesList.length > 0 ? Math.round(gradesList.reduce(function(a, b) { return a + b; }, 0) / gradesList
+          .length) : 0;
+        document.getElementById('student-avg-grade-display').textContent = avg + '%';
+        var passed = gradesList.filter(function(g) { return g >= 60; }).length;
+        var failed = gradesList.filter(function(g) { return g < 60; }).length;
+        document.getElementById('student-courses-passed').textContent = passed;
+        document.getElementById('student-courses-failed').textContent = failed;
+        setLanguage(currentLang);
+      }
+
+      function renderMeetings() {
+        meetingGrid.innerHTML = '';
+        var userMeetings = meetings.filter(function(m) {
+          if (!currentUser) return false;
+          if (currentUser.role === 'Admin') return true;
+          if (currentUser.role === 'Teacher') return m.teacherId === currentUser.id;
+          if (currentUser.role === 'Student') return true;
+          return false;
+        });
+        if (userMeetings.length === 0) {
+          meetingGrid.innerHTML =
+            '<p style="color:var(--muted);text-align:center;padding:40px;">No upcoming classes. Check back later!</p>';
+          return;
+        }
+        userMeetings.forEach(function(meeting) {
+          var card = document.createElement('div');
+          card.className = 'meeting-card';
+          var isTeacher = currentUser && currentUser.role === 'Teacher' && meeting.teacherId === currentUser.id;
+          card.innerHTML = '<div class="meeting-header"><h3>' + meeting.title + '</h3><div class="teacher">👨‍🏫 ' +
+            getTeacherName(meeting.teacherId) + '</div></div><div class="meeting-body"><div class="time">📅 ' + meeting
+            .date + ' • 🕐 ' + meeting.time + ' (' + meeting.duration + ' min)</div>' + (isTeacher ?
+            '<div style="font-size:11px;color:var(--muted);margin-top:4px;">📋 You are teaching this class</div>' :
+            '') + '<button class="join-btn" data-meeting="' + meeting.id + '">Join Meeting</button></div>';
+          meetingGrid.appendChild(card);
+        });
+        if (currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Teacher')) {
+          var addCard = document.createElement('div');
+          addCard.className = 'meeting-card';
+          addCard.style.border = '2px dashed var(--line)';
+          addCard.style.display = 'flex';
+          addCard.style.alignItems = 'center';
+          addCard.style.justifyContent = 'center';
+          addCard.style.minHeight = '180px';
+          addCard.innerHTML =
+            '<div style="text-align:center;padding:20px;"><div style="font-size:40px;margin-bottom:10px;">➕</div><button class="primary-button" id="open-schedule-modal-btn">Schedule New Class</button></div>';
+          meetingGrid.appendChild(addCard);
+        }
+        setLanguage(currentLang);
+      }
+
+      function openPresentation(meetingId) {
+        var meeting = meetings.find(function(m) { return m.id === meetingId; });
+        if (!meeting) return;
+        presentationSlides = DEFAULT_PRESENTATION;
+        currentSlide = 0;
+        document.getElementById('presentation-title').textContent = meeting.title + ' - Presentation';
+        document.getElementById('presentation-overlay').classList.add('open');
+        updateSlide();
+      }
+
+      function updateSlide() {
+        var slide = presentationSlides[currentSlide];
+        document.getElementById('presentation-slide-title').textContent = slide.title;
+        document.getElementById('presentation-slide-text').textContent = slide.content;
+        document.getElementById('presentation-slide-counter').textContent = 'Slide ' + (currentSlide + 1) + ' of ' +
+          presentationSlides.length;
+      }
+
+      function closePresentation() {
+        document.getElementById('presentation-overlay').classList.remove('open');
+      }
+
+      function nextSlide() {
+        if (currentSlide < presentationSlides.length - 1) { currentSlide++;
+          updateSlide(); }
+      }
+
+      function prevSlide() {
+        if (currentSlide > 0) { currentSlide--;
+          updateSlide(); }
+      }
+
+      function renderCalendar() {
+        var firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        var daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        var today = new Date();
+        var todayStr = today.toISOString().split('T')[0];
+
+        calendarMonthLabel.textContent = new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long',
+          year: 'numeric' });
+        calendarGrid.innerHTML = '';
+
+        var dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        dayLabels.forEach(function(label) {
+          var div = document.createElement('div');
+          div.className = 'day-label';
+          div.textContent = label;
+          calendarGrid.appendChild(div);
+        });
+
+        for (var i = 0; i < firstDay; i++) {
+          var div = document.createElement('div');
+          div.className = 'day-cell empty';
+          calendarGrid.appendChild(div);
+        }
+
+        for (var day = 1; day <= daysInMonth; day++) {
+          var dateStr = currentYear + '-' + String(currentMonth + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+          var div = document.createElement('div');
+          div.className = 'day-cell' + (dateStr === todayStr ? ' today' : '');
+          div.dataset.date = dateStr;
+
+          var number = document.createElement('div');
+          number.className = 'day-number';
+          number.textContent = day;
+          div.appendChild(number);
+
+          var dayMeetings = meetings.filter(function(m) { return m.date === dateStr; });
+          if (dayMeetings.length > 0) {
+            var eventsDiv = document.createElement('div');
+            eventsDiv.className = 'day-events';
+            dayMeetings.forEach(function(m) {
+              var dot = document.createElement('div');
+              dot.className = 'event-dot' + (m.teacherId === (currentUser ? currentUser.id : null) ? ' teacher' :
+                '');
+              dot.textContent = '• ' + m.title + ' (' + m.time + ')';
+              eventsDiv.appendChild(dot);
+            });
+            div.appendChild(eventsDiv);
+          }
+
+          div.addEventListener('click', function() {
+            var date = this.dataset.date;
+            if (currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Teacher')) {
+              scheduleDate.value = date;
+              openScheduleModal();
+            } else {
+              var dayMeetings = meetings.filter(function(m) { return m.date === date; });
+              alert('Classes on ' + date + ': ' + (dayMeetings.length > 0 ? dayMeetings.map(function(m) { return m
+                  .title; }).join(', ') : 'No classes scheduled.'));
+            }
+          });
+
+          calendarGrid.appendChild(div);
+        }
+
+        renderUpcomingClasses();
+        setLanguage(currentLang);
+      }
+
+      function renderUpcomingClasses() {
+        var today = new Date().toISOString().split('T')[0];
+        var upcoming = meetings.filter(function(m) { return m.date >= today; }).sort(function(a, b) { return a.date
+            .localeCompare(b.date) || a.time.localeCompare(b.time); });
+
+        if (upcoming.length === 0) {
+          upcomingClassesList.innerHTML = '<p style="color:var(--muted);">No upcoming classes scheduled.</p>';
+          return;
+        }
+
+        var html = '';
+        upcoming.slice(0, 10).forEach(function(m) {
+          var isTeacher = currentUser && currentUser.role === 'Teacher' && m.teacherId === currentUser.id;
+          html +=
+            '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border:1px solid var(--line);border-radius:8px;background:white;">' +
+            '<div><strong>' + m.title + '</strong><br><span style="font-size:12px;color:var(--muted);">📅 ' + m.date +
+            ' at ' + m.time + ' · ' + getTeacherName(m.teacherId) + (isTeacher ? ' (You)' : '') + '</span></div>' +
+            '<button class="join-btn" data-meeting="' + m.id +
+            '" style="padding:6px 16px;border:0;border-radius:6px;background:var(--primary);color:white;font-weight:600;">Join</button>' +
+            '</div>';
+        });
+        upcomingClassesList.innerHTML = html;
+
+        upcomingClassesList.querySelectorAll('.join-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var meetingId = parseInt(this.dataset.meeting);
+            openPresentation(meetingId);
+          });
+        });
+        setLanguage(currentLang);
+      }
+
+      function openScheduleModal() {
+        if (!currentUser || (currentUser.role !== 'Admin' && currentUser.role !== 'Teacher')) {
+          alert('Only Admins and Teachers can schedule classes.');
+          return;
+        }
+
+        scheduleTeacher.innerHTML = '';
+        if (currentUser.role === 'Admin') {
+          teachers.forEach(function(t) {
+            var opt = document.createElement('option');
+            opt.value = t.id;
+            opt.textContent = t.name;
+            scheduleTeacher.appendChild(opt);
+          });
+        } else {
+          var opt = document.createElement('option');
+          opt.value = currentUser.id;
+          opt.textContent = currentUser.name;
+          scheduleTeacher.appendChild(opt);
+        }
+
+        if (scheduleTeacher.options.length === 0) {
+          alert('No teachers available. Please create a teacher account first.');
+          return;
+        }
+
+        if (!scheduleDate.value) {
+          var tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          scheduleDate.value = tomorrow.toISOString().split('T')[0];
+        }
+        if (!scheduleTime.value) scheduleTime.value = '09:00';
+
+        scheduleTitle.value = '';
+        scheduleLink.value = '';
+
+        scheduleModalOverlay.classList.add('open');
+        setLanguage(currentLang);
+      }
+
+      function scheduleClass(title, teacherId, date, time, duration, link) {
+        meetings.push({
+          id: meetings.length + 1,
+          title: title,
+          teacherId: parseInt(teacherId),
+          date: date,
+          time: time,
+          duration: parseInt(duration),
+          link: link || '#'
+        });
+        saveData();
+        renderMeetings();
+        renderCalendar();
+        renderUpcomingClasses();
+        alert('Class scheduled successfully!');
+        setLanguage(currentLang);
+      }
+
+      // ============================================================
+      //  TASKS
+      // ============================================================
+      function renderTasks() {
+        if (!currentUser) return;
+        var isAdmin = currentUser.role === 'Admin';
+        var isTeacher = currentUser.role === 'Teacher';
+        var adminView = document.getElementById('admin-tasks-view');
+        var studentView = document.getElementById('student-tasks-view');
+
+        if (isAdmin || isTeacher) {
+          adminView.style.display = 'block';
+          studentView.style.display = 'none';
+          renderAdminTasks();
+        } else {
+          adminView.style.display = 'none';
+          studentView.style.display = 'block';
+          renderStudentTasks();
+        }
+        setLanguage(currentLang);
+      }
+
+      function renderAdminTasks() {
+        var search = document.getElementById('task-search').value.toLowerCase();
+        var typeFilter = document.getElementById('task-type-filter').value;
+
+        var filtered = tasks.filter(function(t) {
+          var matchesSearch = t.title.toLowerCase().includes(search) || t.description.toLowerCase().includes(search);
+          var matchesType = typeFilter === 'all' || t.type === typeFilter;
+          return matchesSearch && matchesType;
+        });
+
+        var container = document.getElementById('admin-task-list');
+        container.innerHTML = '';
+
+        if (filtered.length === 0) {
+          container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">No tasks found.</p>';
+          return;
+        }
+
+        var totalTasks = tasks.length;
+        var pendingCount = 0,
+          submittedCount = 0,
+          gradedCount = 0;
+        tasks.forEach(function(task) {
+          var submissions = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id +
+            '-'); });
+          var graded = submissions.filter(function(key) {
+            return taskSubmissions[key] && taskSubmissions[key].grade !== null && taskSubmissions[key].grade !==
+            undefined;
+          });
+          if (graded.length === submissions.length && submissions.length > 0) { gradedCount++; } else if (submissions
+            .length > 0) { submittedCount++; } else { pendingCount++; }
+        });
+        document.getElementById('task-total').textContent = totalTasks;
+        document.getElementById('task-pending').textContent = pendingCount;
+        document.getElementById('task-submitted').textContent = submittedCount;
+        document.getElementById('task-graded').textContent = gradedCount;
+
+        filtered.forEach(function(task) {
+          var submissionKeys = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id +
+            '-'); });
+          var totalStudents = students.length;
+          var submittedCount = submissionKeys.length;
+
+          var card = document.createElement('div');
+          card.className = 'task-card';
+          var deadlineClass = task.deadline < new Date().toISOString().split('T')[0] ? 'overdue' : 'on-time';
+          var priorityLabel = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' } [task.priority] || 'Medium';
+          var priorityClass = task.priority || 'medium';
+
+          var filesHtml = '';
+          if (task.files && task.files.length > 0) {
+            filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
+            task.files.forEach(function(file) {
+              var fileData = file.data || '';
+              var escapedData = fileData.replace(/'/g, "\\'");
+              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="window.openFilePreview(\'' +
+                file.name + '\', \'' + escapedData + '\')">' + file.name + '</span></div>';
+            });
+            filesHtml += '</div>';
+          }
+
+          card.innerHTML =
+            '<div class="task-header"><div><h3>' + task.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">Assigned to: ' +
+            (task.assignedTo === 'all' ? 'All Students' : 'Specific') +
+            '</div></div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="task-priority ' +
+            priorityClass + '">' + priorityLabel + '</span><span class="task-type ' + task.type + '">' + task.type
+            .charAt(0).toUpperCase() + task.type.slice(1) + '</span></div></div>' +
+            '<div class="task-body"><div class="task-description">' + task.description + '</div><div class="task-deadline ' +
+            deadlineClass + '">⏰ Due: ' + task.deadline + (deadlineClass === 'overdue' ? ' (Overdue!)' : '') +
+            '</div>' + filesHtml +
+            '<div style="margin-top:8px;font-size:12px;color:var(--muted);">📊 ' + submittedCount + ' / ' +
+            totalStudents + ' students submitted</div></div>' +
+            '<div class="task-footer"><button class="secondary-button view-submissions-btn" data-task="' + task.id +
+            '">📋 View Submissions (' + submittedCount + ')</button><button class="action-btn delete" data-id="' +
+            task.id + '" data-type="task">🗑️ Delete</button></div>';
+          container.appendChild(card);
+        });
+        setLanguage(currentLang);
+      }
+
+      function renderStudentTasks() {
+        var studentId = currentUser.id;
+        var container = document.getElementById('student-task-list');
+        var assignedTasks = tasks.filter(function(task) {
+          if (task.assignedTo === 'all') return true;
+          if (task.assignedTo === 'student') return task.assignedIds && task.assignedIds.includes(studentId);
+          if (task.assignedTo === 'course') {
+            var studentCourses = getEnrolledCourseIds(studentId);
+            return task.assignedIds && task.assignedIds.some(function(cid) { return studentCourses.includes(cid); });
+          }
+          return false;
+        });
+
+        var pendingCount = 0,
+          submittedCount = 0,
+          gradedCount = 0;
+        assignedTasks.forEach(function(task) {
+          var key = task.id + '-' + studentId;
+          var sub = taskSubmissions[key];
+          if (sub && sub.grade !== null && sub.grade !== undefined) gradedCount++;
+          else if (sub) submittedCount++;
+          else pendingCount++;
+        });
+
+        document.getElementById('student-task-total').textContent = assignedTasks.length;
+        document.getElementById('student-task-pending').textContent = pendingCount;
+        document.getElementById('student-task-submitted').textContent = submittedCount;
+        document.getElementById('student-task-graded').textContent = gradedCount;
+
+        container.innerHTML = '';
+
+        if (assignedTasks.length === 0) {
+          container.innerHTML =
+            '<p style="color:var(--muted);text-align:center;padding:40px;">No tasks assigned to you yet.</p>';
+          return;
+        }
+
+        assignedTasks.sort(function(a, b) {
+          var aOverdue = a.deadline < new Date().toISOString().split('T')[0];
+          var bOverdue = b.deadline < new Date().toISOString().split('T')[0];
+          if (aOverdue && !bOverdue) return -1;
+          if (!aOverdue && bOverdue) return 1;
+          return a.deadline.localeCompare(b.deadline);
+        });
+
+        assignedTasks.forEach(function(task) {
+          var key = task.id + '-' + studentId;
+          var submission = taskSubmissions[key];
+          var status = submission ? (submission.grade !== null && submission.grade !== undefined ? 'graded' :
+            'submitted') : 'pending';
+          var deadlineClass = task.deadline < new Date().toISOString().split('T')[0] ? 'overdue' : 'on-time';
+          var priorityLabel = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' } [task.priority] || 'Medium';
+          var priorityClass = task.priority || 'medium';
+
+          var filesHtml = '';
+          if (task.files && task.files.length > 0) {
+            filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
+            task.files.forEach(function(file) {
+              var fileData = file.data || '';
+              var escapedData = fileData.replace(/'/g, "\\'");
+              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="window.openFilePreview(\'' +
+                file.name + '\', \'' + escapedData + '\')">' + file.name + '</span></div>';
+            });
+            filesHtml += '</div>';
+          }
+
+          var card = document.createElement('div');
+          card.className = 'task-card';
+
+          var statusDisplay = '';
+          var footerHtml = '';
+
+          if (status === 'graded') {
+            statusDisplay = '<span class="graded-status">✅ Graded: ' + submission.grade + '%</span>';
+            footerHtml = '<div class="graded-status">✅ Graded: ' + submission.grade + '%</div>' + (submission
+              .feedback ? '<div style="font-size:12px;color:var(--muted);">📝 ' + submission.feedback + '</div>' :
+              '');
+          } else if (status === 'submitted') {
+            statusDisplay = '<span class="submitted-status">⏳ Submitted</span>';
+            footerHtml =
+              '<div class="submitted-status">⏳ Submitted</div><div style="font-size:12px;color:var(--muted);">Waiting for grading...</div>';
+            if (submission.files && submission.files.length > 0) {
+              var fileLinks = '';
+              submission.files.forEach(function(file) {
+                var fileData = file.data || '';
+                var escapedData = fileData.replace(/'/g, "\\'");
+                fileLinks += '<span class="item-tag" style="cursor:pointer;color:var(--primary);text-decoration:underline;margin-right:6px;" onclick="window.openFilePreview(\'' +
+                  file.name + '\', \'' + escapedData + '\')">📄 ' + file.name + '</span>';
+              });
+              footerHtml += '<div style="font-size:12px;color:var(--muted);margin-top:4px;">📎 ' + fileLinks +
+                '</div>';
+            }
+          } else {
+            statusDisplay = '<span class="pill danger">⚠️ Pending</span>';
+            footerHtml =
+              '<input type="text" class="answer-input" id="answer-' + task.id + '" placeholder="Enter your answer..." />' +
+              '<input type="file" id="file-' + task.id + '" style="display:none;" multiple />' +
+              '<button class="file-upload-btn" onclick="document.getElementById(\'file-' + task.id +
+              '\').click()">📎 Upload Files</button>' +
+              '<span id="file-name-' + task.id + '" class="file-name">No files chosen</span>' +
+              '<button class="submit-btn" data-task="' + task.id + '">Submit</button>';
+          }
+
+          card.innerHTML =
+            '<div class="task-header"><div><h3>' + task.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">' +
+            task.type.charAt(0).toUpperCase() + task.type.slice(1) +
+            '</div></div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="task-priority ' +
+            priorityClass + '">' + priorityLabel + '</span>' + statusDisplay + '</div></div>' +
+            '<div class="task-body"><div class="task-description">' + task.description + '</div><div class="task-deadline ' +
+            deadlineClass + '">⏰ Due: ' + task.deadline + (deadlineClass === 'overdue' ? ' ⚠️ Overdue!' : '') +
+            '</div>' + filesHtml + '</div>' +
+            '<div class="task-footer">' + footerHtml + '</div>';
+          container.appendChild(card);
+
+          var fileInput = document.getElementById('file-' + task.id);
+          if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+              var fileNameSpan = document.getElementById('file-name-' + task.id);
+              if (e.target.files && e.target.files.length > 0) {
+                var names = Array.from(e.target.files).map(function(f) { return f.name; }).join(', ');
+                fileNameSpan.textContent = names;
+                var key = task.id + '-' + studentId;
+                if (!taskSubmissions[key]) {
+                  taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null,
+                    files: [] };
+                }
+                var filesData = [];
+                var completed = 0;
+                Array.from(e.target.files).forEach(function(file, index) {
+                  var reader = new FileReader();
+                  reader.onload = function(event) {
+                    filesData[index] = { name: file.name, size: file.size, type: file.type,
+                      data: event.target.result };
+                    completed++;
+                    if (completed === e.target.files.length) {
+                      taskSubmissions[key].files = filesData;
+                      saveData();
+                    }
+                  };
+                  reader.readAsDataURL(file);
+                });
+              } else {
+                fileNameSpan.textContent = 'No files chosen';
+              }
+            });
+          }
+        });
+        setLanguage(currentLang);
+      }
+
+      // ============================================================
+      //  TESTS
+      // ============================================================
+      function renderTests() {
+        if (!currentUser) return;
+        var isAdmin = currentUser.role === 'Admin';
+        var isTeacher = currentUser.role === 'Teacher';
+        var adminView = document.getElementById('admin-tests-view');
+        var studentView = document.getElementById('student-tests-view');
+
+        if (isAdmin || isTeacher) {
+          adminView.style.display = 'block';
+          studentView.style.display = 'none';
+          renderAdminTests();
+        } else {
+          adminView.style.display = 'none';
+          studentView.style.display = 'block';
+          renderStudentTests();
+        }
+        setLanguage(currentLang);
+      }
+
+      function renderAdminTests() {
+        var container = document.getElementById('admin-test-list');
+        container.innerHTML = '';
+
+        if (tests.length === 0) {
+          container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">No tests created yet.</p>';
+          return;
+        }
+
+        tests.forEach(function(test) {
+          var card = document.createElement('div');
+          card.className = 'task-card';
+          var subCount = Object.keys(testSubmissions).filter(function(key) { return key.startsWith(test.id + '-'); })
+            .length;
+
+          card.innerHTML =
+            '<div class="task-header"><div><h3>' + test.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">' +
+            getCourseName(test.courseId) + ' · ' + test.questions.length + ' questions</div></div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="task-type test">Test</span></div></div>' +
+            '<div class="task-body"><div class="task-description">' + test.description + '</div><div class="task-deadline on-time">⏰ Due: ' +
+            test.deadline + '</div><div style="margin-top:8px;font-size:12px;color:var(--muted);">📊 ' + subCount +
+            ' submissions</div></div>' +
+            '<div class="task-footer"><button class="secondary-button view-test-results" data-test="' + test.id +
+            '">📊 View Results</button><button class="action-btn delete" data-id="' + test.id +
+            '" data-type="test">🗑️ Delete</button></div>';
+          container.appendChild(card);
+        });
+
+        container.querySelectorAll('.view-test-results').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var testId = parseInt(this.dataset.test);
+            viewTestResults(testId);
+          });
+        });
+
+        container.querySelectorAll('.delete[data-type="test"]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var testId = parseInt(this.dataset.id);
+            if (confirm('Delete this test?')) {
+              tests = tests.filter(function(t) { return t.id !== testId; });
+              Object.keys(testSubmissions).forEach(function(key) {
+                if (key.startsWith(testId + '-')) delete testSubmissions[key];
+              });
+              saveData();
+              renderTests();
+            }
+          });
+        });
+        setLanguage(currentLang);
+      }
+
+      function renderStudentTests() {
+        var studentId = currentUser.id;
+        var container = document.getElementById('student-test-list');
+        var enrolledCourses = getEnrolledCourseIds(studentId);
+
+        var assignedTests = tests.filter(function(test) {
+          return enrolledCourses.includes(test.courseId);
+        });
+
+        container.innerHTML = '';
+
+        if (assignedTests.length === 0) {
+          container.innerHTML =
+            '<p style="color:var(--muted);text-align:center;padding:40px;">No tests assigned to you yet.</p>';
+          return;
+        }
+
+        assignedTests.forEach(function(test) {
+          var key = test.id + '-' + studentId;
+          var submission = testSubmissions[key];
+          var status = submission ? 'submitted' : 'pending';
+          var score = submission ? submission.score : null;
+
+          var card = document.createElement('div');
+          card.className = 'task-card';
+          var deadlineClass = test.deadline < new Date().toISOString().split('T')[0] ? 'overdue' : 'on-time';
+
+          var actionHtml = '';
+          if (status === 'submitted') {
+            actionHtml = '<div><span class="submitted-status">✅ Submitted</span>' +
+              (score !== null ? ' · Score: ' + score + '%' : '') +
+              '</div><button class="secondary-button view-test-results-btn" data-test="' + test.id +
+              '" style="margin-top:8px;">📊 View Results</button>';
+          } else {
+            actionHtml = '<button class="primary-button take-test-btn" data-test="' + test.id +
+              '" style="padding:8px 20px;">Take Test</button>';
+          }
+
+          card.innerHTML =
+            '<div class="task-header"><div><h3>' + test.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">' +
+            getCourseName(test.courseId) + ' · ' + test.questions.length + ' questions</div></div><span class="task-type test">Test</span></div>' +
+            '<div class="task-body"><div class="task-description">' + test.description + '</div><div class="task-deadline ' +
+            deadlineClass + '">⏰ Due: ' + test.deadline + (deadlineClass === 'overdue' ? ' ⚠️ Overdue!' : '') +
+            '</div></div>' +
+            '<div class="task-footer">' + actionHtml + '</div>';
+          container.appendChild(card);
+        });
+
+        container.querySelectorAll('.take-test-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var testId = parseInt(this.dataset.test);
+            openTakeTestModal(testId);
+          });
+        });
+
+        container.querySelectorAll('.view-test-results-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var testId = parseInt(this.dataset.test);
+            viewStudentTestResults(testId);
+          });
+        });
+        setLanguage(currentLang);
+      }
+
+      function openTakeTestModal(testId) {
+        var test = tests.find(function(t) { return t.id === testId; });
+        if (!test) return;
+
+        document.getElementById('take-test-title').textContent = test.title;
+        document.getElementById('take-test-sub').textContent = test.description + ' · ' + test.questions.length +
+          ' questions';
+
+        var container = document.getElementById('take-test-questions');
+        container.innerHTML = '';
+
+        test.questions.forEach(function(q, index) {
+          var div = document.createElement('div');
+          div.className = 'test-question';
+          div.innerHTML = '<div class="q-text">' + (index + 1) + '. ' + q.question + '</div><div class="q-options">';
+          q.options.forEach(function(option, optIndex) {
+            var letter = String.fromCharCode(65 + optIndex);
+            div.innerHTML +=
+              '<label><input type="radio" name="q-' + index + '" value="' + optIndex + '" /> ' + letter +
+              '. ' + option + '</label>';
+          });
+          div.innerHTML += '</div>';
+          container.appendChild(div);
+        });
+
+        document.getElementById('take-test-modal-overlay').classList.add('open');
+        document.getElementById('take-test-form').dataset.testId = testId;
+        setLanguage(currentLang);
+      }
+
+      function submitTest(testId) {
+        var test = tests.find(function(t) { return t.id === testId; });
+        if (!test) return;
+
+        var studentId = currentUser.id;
+        var answers = {};
+        var allAnswered = true;
+
+        test.questions.forEach(function(q, index) {
+          var selected = document.querySelector('input[name="q-' + index + '"]:checked');
+          if (selected) {
+            answers[index] = parseInt(selected.value);
+          } else {
+            allAnswered = false;
+          }
+        });
+
+        if (!allAnswered) {
+          alert('Please answer all questions before submitting.');
+          return;
+        }
+
+        // Calculate score
+        var correct = 0;
+        test.questions.forEach(function(q, index) {
+          if (answers[index] === q.correctAnswer) correct++;
+        });
+        var score = Math.round((correct / test.questions.length) * 100);
+
+        var key = testId + '-' + studentId;
+        testSubmissions[key] = {
+          answers: answers,
+          score: score,
+          correct: correct,
+          total: test.questions.length,
+          submittedAt: new Date().toISOString()
+        };
+
+        saveData();
+        document.getElementById('take-test-modal-overlay').classList.remove('open');
+        alert('Test submitted successfully! Your score: ' + score + '%');
+        renderTests();
+        setLanguage(currentLang);
+      }
+
+      function viewStudentTestResults(testId) {
+        var studentId = currentUser.id;
+        var key = testId + '-' + studentId;
+        var submission = testSubmissions[key];
+        if (!submission) {
+          alert('No submission found.');
+          return;
+        }
+
+        var test = tests.find(function(t) { return t.id === testId; });
+        if (!test) return;
+
+        var msg = '📊 Test Results: ' + test.title + '\n\n';
+        msg += 'Score: ' + submission.score + '% (' + submission.correct + '/' + submission.total + ')\n\n';
+        msg += 'Question Details:\n';
+        test.questions.forEach(function(q, index) {
+          var userAnswer = submission.answers[index];
+          var isCorrect = userAnswer === q.correctAnswer;
+          var letter = String.fromCharCode(65 + (userAnswer !== undefined ? userAnswer : 0));
+          msg += (index + 1) + '. ' + (isCorrect ? '✅' : '❌') + ' ' + q.question + '\n';
+          msg += '   Your answer: ' + letter + '. ' + (userAnswer !== undefined ? q.options[userAnswer] : 'Not answered') +
+            '\n';
+          msg += '   Correct: ' + String.fromCharCode(65 + q.correctAnswer) + '. ' + q.options[q.correctAnswer] + '\n\n';
+        });
+
+        alert(msg);
+        setLanguage(currentLang);
+      }
+
+      function viewTestResults(testId) {
+        var test = tests.find(function(t) { return t.id === testId; });
+        if (!test) return;
+
+        var submissions = Object.keys(testSubmissions).filter(function(key) { return key.startsWith(testId + '-'); });
+
+        if (submissions.length === 0) {
+          alert('No submissions for this test yet.');
+          return;
+        }
+
+        var msg = '📊 Test Results: ' + test.title + '\n\n';
+        submissions.forEach(function(key) {
+          var studentId = parseInt(key.split('-')[1]);
+          var student = students.find(function(s) { return s.id === studentId; });
+          var sub = testSubmissions[key];
+          if (student) {
+            msg += '👤 ' + student.name + ': ' + sub.score + '% (' + sub.correct + '/' + sub.total + ')\n';
+          }
+        });
+
+        // Calculate average
+        var scores = submissions.map(function(key) { return testSubmissions[key].score; });
+        var avg = scores.length > 0 ? Math.round(scores.reduce(function(a, b) { return a + b; }, 0) / scores.length) : 0;
+        msg += '\n📊 Average Score: ' + avg + '%';
+
+        alert(msg);
+        setLanguage(currentLang);
+      }
+
+      function createTest(title, courseId, description, deadline, questions) {
+        tests.push({
+          id: tests.length + 1,
+          title: title,
+          courseId: parseInt(courseId),
+          description: description,
+          deadline: deadline,
+          questions: questions,
+          createdAt: new Date().toISOString().split('T')[0]
+        });
+        saveData();
+        renderTests();
+        alert('Test created successfully!');
+        setLanguage(currentLang);
+      }
+
+      // ============================================================
+      //  FILE PREVIEW
+      // ============================================================
+      function openFilePreview(fileName, fileData) {
+        var body = document.getElementById('file-preview-body');
+        body.innerHTML = '';
+
+        if (!fileData || fileData === '' || fileData === 'dummy-pdf-data' || fileData === 'dummy-doc-data') {
+          body.innerHTML =
+            '<div class="file-preview-fallback">📄 ' + fileName +
+            '<br><br>File content not available. This could be because the file was not uploaded with content in demo mode.</div>';
+          document.getElementById('file-preview-overlay').classList.add('open');
+          return;
+        }
+
+        var ext = fileName.split('.').pop().toLowerCase();
+        var isImage = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp'].includes(ext);
+        var isPDF = ext === 'pdf';
+        var isText = ['txt', 'md', 'csv', 'json', 'xml', 'html', 'css', 'js', 'log'].includes(ext);
+
+        var content = '';
+
+        if (isImage) {
+          content = '<img src="' + fileData + '" class="file-preview-image" alt="' + fileName + '" />';
+        } else if (isPDF) {
+          content = '<iframe src="' + fileData + '" class="file-preview-iframe" title="' + fileName +
+            '"></iframe>';
+        } else if (isText) {
+          try {
+            var base64Data = fileData.split(',')[1] || fileData;
+            var decoded = atob(base64Data);
+            content = '<pre class="file-preview-text">' + decoded + '</pre>';
+          } catch (e) {
+            content = '<div class="file-preview-fallback">📄 ' + fileName +
+              '<br><br>Text preview not available.<br><a href="' + fileData + '" download="' + fileName +
+              '" style="color:var(--primary);">⬇️ Download file</a></div>';
+          }
+        } else {
+          content = '<div class="file-preview-fallback">📄 ' + fileName +
+            '<br><br>This file type may not be previewed directly.<br><a href="' + fileData + '" download="' +
+            fileName + '" style="color:var(--primary);">⬇️ Download file</a></div>';
+        }
+
+        body.innerHTML = content;
+        document.getElementById('file-preview-overlay').classList.add('open');
+      }
+
+      window.openFilePreview = openFilePreview;
+
+      function closeFilePreview() {
+        document.getElementById('file-preview-overlay').classList.remove('open');
+        document.getElementById('file-preview-body').innerHTML = '';
+      }
+
+      // ============================================================
+      //  GRADE TASK MODAL
+      // ============================================================
+      function openGradeModal(taskId, studentId) {
+        gradingTaskId = taskId;
+        gradingStudentId = studentId;
+        var key = taskId + '-' + studentId;
+        var submission = taskSubmissions[key];
+        if (!submission) return;
+
+        var task = tasks.find(function(t) { return t.id === taskId; });
+        var student = students.find(function(s) { return s.id === studentId; });
+        if (!task || !student) return;
+
+        document.getElementById('grade-task-student-name').value = student.name;
+        document.getElementById('grade-task-task-title').value = task.title;
+        document.getElementById('grade-task-submission-text').value = submission.answer || 'No answer provided.';
+        document.getElementById('grade-task-grade').value = submission.grade || '';
+        document.getElementById('grade-task-feedback').value = submission.feedback || '';
+
+        var fileContainer = document.getElementById('grade-task-submission-file');
+        if (submission.files && submission.files.length > 0) {
+          var html = '<strong>📎 Submission Files:</strong><div style="margin-top:4px;">';
+          submission.files.forEach(function(file) {
+            var fileData = file.data || '';
+            var escapedData = fileData.replace(/'/g, "\\'");
+            html += '<span class="item-tag" style="display:inline-block;padding:2px 8px;margin:2px;background:#f3f4f6;border-radius:4px;font-size:12px;cursor:pointer;color:var(--primary);text-decoration:underline;" onclick="window.openFilePreview(\'' +
+              file.name + '\', \'' + escapedData + '\')">📄 ' + file.name + '</span>';
+          });
+          html += '</div>';
+          fileContainer.innerHTML = html;
+        } else {
+          fileContainer.innerHTML = '<span style="color:var(--muted);font-size:12px;">No files uploaded.</span>';
+        }
+
+        document.getElementById('grade-task-modal-overlay').classList.add('open');
+        setLanguage(currentLang);
+      }
+
+      function gradeSubmission(taskId, studentId, grade, feedback) {
+        var key = taskId + '-' + studentId;
+        if (taskSubmissions[key]) {
+          taskSubmissions[key].grade = Math.min(100, Math.max(0, Math.round(parseFloat(grade))));
+          taskSubmissions[key].feedback = feedback || '';
+          saveData();
+          renderTasks();
+          alert('Grade saved successfully!');
+          setLanguage(currentLang);
+        }
+      }
+
+      function createTask(title, type, description, deadline, priority, assignedTo, assignedIds, files) {
+        tasks.push({
+          id: tasks.length + 1,
+          title: title,
+          type: type,
+          description: description,
+          deadline: deadline,
+          priority: priority || 'medium',
+          assignedTo: assignedTo || 'all',
+          assignedIds: assignedIds || [],
+          files: files || [],
+          createdAt: new Date().toISOString().split('T')[0]
+        });
+        saveData();
+        renderTasks();
+        alert('Task created successfully!');
+        setLanguage(currentLang);
+      }
+
+      function deleteTask(taskId) {
+        tasks = tasks.filter(function(t) { return t.id !== taskId; });
+        Object.keys(taskSubmissions).forEach(function(key) {
+          if (key.startsWith(taskId + '-')) delete taskSubmissions[key];
+        });
+        saveData();
+        renderTasks();
+        setLanguage(currentLang);
+      }
+
+      function submitTaskAnswer(taskId, studentId, answer, files) {
+        var key = taskId + '-' + studentId;
+        if (!taskSubmissions[key]) {
+          taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null, files: [] };
+        }
+        taskSubmissions[key].answer = answer;
+        taskSubmissions[key].submittedAt = new Date().toISOString();
+        if (files && files.length > 0) {
+          taskSubmissions[key].files = files;
+        }
+        saveData();
+        renderTasks();
+        alert('Task submitted!');
+        setLanguage(currentLang);
+      }
+
+      function updateAdminStats() {
+        if (!currentUser || currentUser.role !== 'Admin') return;
+        totalStudentsEl.textContent = students.length;
+        totalCoursesEl.textContent = courses.length;
+        totalEnrollmentsEl.textContent = enrollments.length;
+        var totalIncome = budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(sum, b) { return sum +
+            b.amount; }, 0);
+        totalRevenueEl.textContent = '$' + totalIncome.toLocaleString();
+      }
+
+      function toggleExpand(expandId) {
+        expandedRows[expandId] = !expandedRows[expandId];
+        var activePage = document.querySelector('.page.active');
+        if (activePage) {
+          if (activePage.id === 'students') renderStudents();
+          else if (activePage.id === 'courses-admin') renderCourses();
+        }
+        setLanguage(currentLang);
+      }
+
+      // ============================================================
+      //  MODAL HELPERS
+      // ============================================================
+      var modalType, modalMode, editingId, enrollStudentId;
+
+      function openModal(type, mode, data) {
+        modalType = type;
+        modalMode = mode;
+        if (mode === 'add') {
+          if (type === 'student') {
+            document.getElementById('modal-title').textContent = 'Add Student';
+            document.getElementById('modal-sub').textContent = 'Enter student details';
+            document.getElementById('modal-fields').innerHTML =
+              '<label>Name</label><input type="text" id="modal-name" placeholder="Full name" />' +
+              '<label>Email</label><input type="email" id="modal-email" placeholder="student@example.com" />' +
+              '<label>Password</label><input type="password" id="modal-password" placeholder="Min 6 characters" />' +
+              '<label>Status</label><select id="modal-status"><option value="Active">Active</option><option value="Warning">Warning</option><option value="Inactive">Inactive</option></select>';
+            editingId = null;
+          } else if (type === 'course') {
+            document.getElementById('modal-title').textContent = 'Add Course';
+            document.getElementById('modal-sub').textContent = 'Enter course details';
+            document.getElementById('modal-fields').innerHTML =
+              '<label>Course Name</label><input type="text" id="modal-course-name" placeholder="e.g. Physics" />' +
+              '<label>Teacher</label><select id="modal-course-teacher">' + teachers.map(function(t) {
+                return '<option value="' + t.id + '">' + t.name + '</option>';
+              }).join('') + '</select>' +
+              '<label>Description</label><input type="text" id="modal-course-description" placeholder="e.g. Year 10 Physics" />';
+            editingId = null;
+          } else {
+            document.getElementById('modal-title').textContent = 'Add Budget Entry';
+            document.getElementById('modal-sub').textContent = 'Enter budget details';
+            document.getElementById('modal-fields').innerHTML =
+              '<label>Category</label><input type="text" id="modal-category" placeholder="e.g. Student Fees" />' +
+              '<label>Type</label><select id="modal-type"><option value="Income">Income</option><option value="Expense">Expense</option></select>' +
+              '<label>Amount ($)</label><input type="number" id="modal-amount" placeholder="Enter amount" min="0" step="1" />' +
+              '<label>Date</label><input type="date" id="modal-date" />' +
+              '<label>Status</label><select id="modal-status"><option value="Paid">Paid</option><option value="Pending">Pending</option><option value="Unpaid">Unpaid</option></select>';
+            editingId = null;
+          }
+        } else {
+          if (type === 'student') {
+            var s = students.find(function(st) { return st.id === data.id; });
+            if (s) {
+              editingId = s.id;
+              document.getElementById('modal-fields').innerHTML =
+                '<label>Name</label><input type="text" id="modal-name" value="' + s.name + '" />' +
+                '<label>Email</label><input type="email" id="modal-email" value="' + s.email + '" />' +
+                '<label>Password</label><input type="password" id="modal-password" placeholder="Leave blank to keep current" />' +
+                '<label>Status</label><select id="modal-status"><option value="Active"' + (s.status === 'Active' ?
+                  ' selected' : '') + '>Active</option><option value="Warning"' + (s.status === 'Warning' ?
+                  ' selected' : '') + '>Warning</option><option value="Inactive"' + (s.status === 'Inactive' ?
+                  ' selected' : '') + '>Inactive</option></select>';
+            }
+          } else if (type === 'course') {
+            var c = courses.find(function(co) { return co.id === data.id; });
+            if (c) {
+              editingId = c.id;
+              document.getElementById('modal-fields').innerHTML =
+                '<label>Course Name</label><input type="text" id="modal-course-name" value="' + c.name + '" />' +
+                '<label>Teacher</label><select id="modal-course-teacher">' + teachers.map(function(t) {
+                  return '<option value="' + t.id + '"' + (t.id === c.teacherId ? ' selected' : '') + '>' + t
+                    .name + '</option>';
+                }).join('') + '</select>' +
+                '<label>Description</label><input type="text" id="modal-course-description" value="' + c
+                .description + '" />';
+            }
+          } else {
+            var b = budgetEntries.find(function(bg) { return bg.id === data.id; });
+            if (b) {
+              editingId = b.id;
+              var isIncome = b.type === 'Income';
+              document.getElementById('modal-fields').innerHTML =
+                '<label>Category</label><input type="text" id="modal-category" value="' + b.category + '" />' +
+                '<label>Type</label><select id="modal-type"><option value="Income"' + (isIncome ? ' selected' :
+                  '') + '>Income</option><option value="Expense"' + (!isIncome ? ' selected' : '') +
+                '>Expense</option></select>' +
+                '<label>Amount ($)</label><input type="number" id="modal-amount" value="' + Math.abs(b.amount) +
+                '" min="0" step="1" />' +
+                '<label>Date</label><input type="date" id="modal-date" value="' + b.date + '" />' +
+                '<label>Status</label><select id="modal-status"><option value="Paid"' + (b.status === 'Paid' ?
+                  ' selected' : '') + '>Paid</option><option value="Pending"' + (b.status === 'Pending' ?
+                  ' selected' : '') + '>Pending</option><option value="Unpaid"' + (b.status === 'Unpaid' ?
+                  ' selected' : '') + '>Unpaid</option></select>';
+            }
+          }
+        }
+        document.getElementById('modal-overlay').classList.add('open');
+        setLanguage(currentLang);
+      }
+
+      function closeModal() {
+        document.getElementById('modal-overlay').classList.remove('open');
+        document.getElementById('modal-form').reset();
+      }
+
+      function handleModalSubmit(e) {
+        e.preventDefault();
+        var type = modalType;
+        if (type === 'student') {
+          var name = document.getElementById('modal-name').value.trim();
+          var email = document.getElementById('modal-email').value.trim();
+          var password = document.getElementById('modal-password').value.trim();
+          var status = document.getElementById('modal-status').value;
+          if (!name || !email) { alert('Please fill in all fields'); return; }
+          if (modalMode === 'add') {
+            if (getUserByEmail(email)) { alert('Email already exists.'); return; }
+            students.push({ id: generateId(), name: name, email: email, password: password || 'password123',
+              role: 'Student', status: status, createdAt: new Date().toISOString().split('T')[0] });
+          } else {
+            var index = students.findIndex(function(s) { return s.id === editingId; });
+            if (index !== -1) {
+              students[index].name = name;
+              students[index].email = email;
+              if (password) students[index].password = password;
+              students[index].status = status;
+            }
+          }
+          saveData();
+          renderStudents();
+          closeModal();
+        } else if (type === 'course') {
+          var name = document.getElementById('modal-course-name').value.trim();
+          var teacherId = parseInt(document.getElementById('modal-course-teacher').value);
+          var description = document.getElementById('modal-course-description').value.trim();
+          if (!name || !teacherId) { alert('Please fill in all fields'); return; }
+          if (modalMode === 'add') {
+            courses.push({ id: courses.length + 1, name: name, teacherId: teacherId, description: description });
+          } else {
+            var index = courses.findIndex(function(c) { return c.id === editingId; });
+            if (index !== -1) { courses[index] = { id: editingId, name: name, teacherId: teacherId,
+              description: description }; }
+          }
+          saveData();
+          renderCourses();
+          renderStudentCourses();
+          closeModal();
+        } else {
+          var category = document.getElementById('modal-category').value.trim();
+          var type = document.getElementById('modal-type').value;
+          var amount = parseFloat(document.getElementById('modal-amount').value);
+          var date = document.getElementById('modal-date').value;
+          var status = document.getElementById('modal-status').value;
+          if (!category || isNaN(amount) || !date) { alert('Please fill in all fields'); return; }
+          var finalAmount = type === 'Income' ? amount : -amount;
+          if (modalMode === 'add') {
+            budgetEntries.push({ id: budgetEntries.length + 1, category: category, type: type, amount: finalAmount,
+              date: date, status: status });
+          } else {
+            var index = budgetEntries.findIndex(function(b) { return b.id === editingId; });
+            if (index !== -1) { budgetEntries[index] = { id: editingId, category: category, type: type,
+                amount: finalAmount, date: date, status: status }; }
+          }
+          saveData();
+          renderBudget();
+          closeModal();
+        }
+        setLanguage(currentLang);
+      }
+
+      function deleteEntry(type, id) {
+        if (!confirm('Are you sure you want to delete this entry?')) return;
+        if (type === 'student') {
+          enrollments = enrollments.filter(function(e) { return e.studentId !== id; });
+          students = students.filter(function(s) { return s.id !== id; });
+          renderStudents();
+          renderStudentCourses();
+        } else if (type === 'course') {
+          enrollments = enrollments.filter(function(e) { return e.courseId !== id; });
+          courses = courses.filter(function(c) { return c.id !== id; });
+          renderCourses();
+          renderStudentCourses();
+        } else if (type === 'budget') {
+          budgetEntries = budgetEntries.filter(function(b) { return b.id !== id; });
+          renderBudget();
+        }
+        saveData();
+        updateAdminStats();
+        setLanguage(currentLang);
+      }
+
+      function openEnrollModal(studentId) {
+        enrollStudentId = studentId;
+        var student = students.find(function(s) { return s.id === studentId; });
+        if (!student) return;
+        document.getElementById('enroll-modal-title').textContent = 'Enroll Student';
+        document.getElementById('enroll-modal-sub').textContent = 'Select courses for ' + student.name;
+        var enrolledIds = getEnrolledCourseIds(studentId);
+        var html = '';
+        if (courses.length === 0) html = '<p style="color:var(--muted);padding:20px;text-align:center;">No courses available.</p>';
+        else courses.forEach(function(c) {
+          var checked = enrolledIds.includes(c.id) ? 'checked' : '';
+          html += '<div class="enrollment-item"><input type="checkbox" id="enroll-course-' + c.id + '" value="' + c
+            .id + '" ' + checked + ' /><label for="enroll-course-' + c.id + '"><strong>' + c.name +
+            '</strong></label><span class="course-teacher">' + getTeacherName(c.teacherId) + '</span></div>';
+        });
+        document.getElementById('enrollment-list').innerHTML = html;
+        document.getElementById('enroll-modal-overlay').classList.add('open');
+        setLanguage(currentLang);
+      }
+
+      function closeEnrollModal() {
+        document.getElementById('enroll-modal-overlay').classList.remove('open');
+        enrollStudentId = null;
+      }
+
+      function saveEnrollments() {
+        if (enrollStudentId === null) return;
+        var checkboxes = document.getElementById('enrollment-list').querySelectorAll('input[type="checkbox"]');
+        var selectedIds = [];
+        checkboxes.forEach(function(cb) { if (cb.checked) selectedIds.push(parseInt(cb.value)); });
+        enrollments = enrollments.filter(function(e) { return e.studentId !== enrollStudentId; });
+        selectedIds.forEach(function(courseId) { enrollments.push({ studentId: enrollStudentId, courseId: courseId }); });
+        saveData();
+        renderStudents();
+        renderCourses();
+        renderStudentCourses();
+        closeEnrollModal();
+        setLanguage(currentLang);
+      }
+
+      // ============================================================
+      //  DOM REFS
+      // ============================================================
+      const landingPage = document.getElementById('landing-page');
+      const loginScreen = document.getElementById('login-screen');
+      const registerScreen = document.getElementById('register-screen');
+      const app = document.getElementById('app');
+      const loginForm = document.getElementById('login-form');
+      const loginEmail = document.getElementById('login-email');
+      const loginPassword = document.getElementById('login-password');
+      const loginError = document.getElementById('login-error');
+      const registerForm = document.getElementById('register-form');
+      const registerName = document.getElementById('register-name');
+      const registerEmail = document.getElementById('register-email');
+      const registerPassword = document.getElementById('register-password');
+      const registerRole = document.getElementById('register-role');
+      const registerError = document.getElementById('register-error');
+
+      const userAvatar = document.getElementById('user-avatar');
+      const userDisplayName = document.getElementById('user-display-name');
+      const userRole = document.getElementById('user-role');
+      const profileAvatar = document.getElementById('profile-avatar');
+      const profileName = document.getElementById('profile-name');
+      const profileRoleText = document.getElementById('profile-role-text');
+      const profileEmail = document.getElementById('profile-email');
+      const profileId = document.getElementById('profile-id');
+      const profileRole = document.getElementById('profile-role');
+      const profileSince = document.getElementById('profile-since');
+      const greeting = document.getElementById('greeting');
+      const logoutBtn = document.getElementById('logout-btn');
+      const sidebarRole = document.getElementById('sidebar-role');
+
+      const pages = document.querySelectorAll('.page');
+      const navButtons = document.querySelectorAll('[data-page]');
+      const langToggle = document.getElementById('language-toggle');
+      const loginLangToggle = document.getElementById('login-lang-toggle');
+      const registerLangToggle = document.getElementById('register-lang-toggle');
+
+      const adminNavLabel = document.getElementById('admin-nav-label');
+      const adminStudentsBtn = document.getElementById('admin-students-btn');
+      const adminBudgetBtn = document.getElementById('admin-budget-btn');
+      const adminCoursesBtn = document.getElementById('admin-courses-btn');
+      const adminGradesBtn = document.getElementById('admin-grades-btn');
+      const adminCalendarBtn = document.getElementById('admin-calendar-btn');
+      const adminStatsContainer = document.getElementById('admin-stats-container');
+
+      const studentTableBody = document.getElementById('student-table-body');
+      const studentSearch = document.getElementById('student-search');
+      const studentFilter = document.getElementById('student-filter');
+      const studentCount = document.getElementById('student-count');
+      const studentTotal = document.getElementById('student-total');
+      const addStudentBtn = document.getElementById('add-student-btn');
+      const exportStudentsBtn = document.getElementById('export-students-btn');
+
+      const meetingGrid = document.getElementById('meeting-grid');
+      const calendarGrid = document.getElementById('calendar-grid');
+      const calendarMonthLabel = document.getElementById('calendar-month-label');
+      const upcomingClassesList = document.getElementById('upcoming-classes-list');
+      const addClassBtn = document.getElementById('add-class-btn');
+      const scheduleModalOverlay = document.getElementById('schedule-modal-overlay');
+      const scheduleModalForm = document.getElementById('schedule-modal-form');
+      const scheduleModalCancel = document.getElementById('schedule-modal-cancel');
+      const scheduleModalSave = document.getElementById('schedule-modal-save');
+      const scheduleTitle = document.getElementById('schedule-title');
+      const scheduleTeacher = document.getElementById('schedule-teacher');
+      const scheduleDate = document.getElementById('schedule-date');
+      const scheduleTime = document.getElementById('schedule-time');
+      const scheduleDuration = document.getElementById('schedule-duration');
+      const scheduleLink = document.getElementById('schedule-link');
+
+      const totalStudentsEl = document.getElementById('total-students');
+      const totalCoursesEl = document.getElementById('total-courses');
+      const totalEnrollmentsEl = document.getElementById('total-enrollments');
+      const totalRevenueEl = document.getElementById('total-revenue');
+
+      // ============================================================
+      //  EVENT LISTENERS
+      // ============================================================
+      document.getElementById('landing-login-btn').addEventListener('click', showLoginScreen);
+      document.getElementById('landing-register-btn').addEventListener('click', showRegisterScreen);
+      document.getElementById('landing-start-btn').addEventListener('click', showRegisterScreen);
+      document.getElementById('landing-signin-btn').addEventListener('click', showLoginScreen);
+      document.getElementById('login-to-register').addEventListener('click', showRegisterScreen);
+      document.getElementById('register-to-login').addEventListener('click', showLoginScreen);
+
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        login(loginEmail.value.trim(), loginPassword.value.trim());
+      });
+
+      registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        register(registerName.value.trim(), registerEmail.value.trim(), registerPassword.value.trim(), registerRole
+          .value);
+      });
+
+      logoutBtn.addEventListener('click', logout);
+
+      navButtons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          openPage(btn.dataset.page);
+        });
+      });
+
+      langToggle.addEventListener('click', toggleLanguage);
+      loginLangToggle.addEventListener('click', toggleLanguage);
+      registerLangToggle.addEventListener('click', toggleLanguage);
+
+      document.addEventListener('click', function(e) {
+        var target = e.target.closest('.expandable-row');
+        if (target && target.dataset.expandId) toggleExpand(target.dataset.expandId);
+      });
+
+      document.getElementById('notification-button').addEventListener('click', function() {
+        alert('You have 2 new announcements and 1 assignment due tomorrow.');
+      });
+
+      document.querySelectorAll('.assignment-button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          alert('Assignment details and submissions will be added in the next development step.');
+        });
+      });
+
+      document.getElementById('file-preview-close').addEventListener('click', closeFilePreview);
+      document.getElementById('file-preview-overlay').addEventListener('click', function(e) {
+        if (e.target === this) closeFilePreview();
+      });
+
+      studentTableBody.addEventListener('click', function(e) {
+        var target = e.target.closest('button');
+        if (!target) return;
+        var id = parseInt(target.dataset.id);
+        if (target.classList.contains('delete')) deleteEntry('student', id);
+        else if (target.classList.contains('edit')) {
+          var s = students.find(function(st) { return st.id === id; });
+          if (s) openModal('student', 'edit', s);
+        } else if (target.classList.contains('enroll')) openEnrollModal(id);
+      });
+
+      document.getElementById('budget-table-body').addEventListener('click', function(e) {
+        var target = e.target.closest('button');
+        if (!target) return;
+        var id = parseInt(target.dataset.id);
+        if (target.classList.contains('delete')) deleteEntry('budget', id);
+        else if (target.classList.contains('edit')) {
+          var b = budgetEntries.find(function(bg) { return bg.id === id; });
+          if (b) openModal('budget', 'edit', b);
+        }
+      });
+
+      document.getElementById('course-table-body').addEventListener('click', function(e) {
+        var target = e.target.closest('button');
+        if (!target) return;
+        var id = parseInt(target.dataset.id);
+        if (target.classList.contains('delete')) deleteEntry('course', id);
+        else if (target.classList.contains('edit')) {
+          var c = courses.find(function(co) { return co.id === id; });
+          if (c) openModal('course', 'edit', c);
+        }
+      });
+
+      document.getElementById('grade-table-body').addEventListener('click', function(e) {
+        var target = e.target.closest('button');
+        if (!target) return;
+        if (target.classList.contains('save-grade-btn')) {
+          var studentId = parseInt(target.dataset.student);
+          var courseId = parseInt(target.dataset.course);
+          var input = document.getElementById('grade-input-' + studentId + '-' + courseId);
+          if (input) {
+            var value = input.value.trim();
+            if (value === '') { delete gradeData[studentId + '-' + courseId]; } else {
+              var grade = parseFloat(value);
+              if (!isNaN(grade) && grade >= 0 && grade <= 100) { gradeData[studentId + '-' + courseId] = grade; } else {
+                alert('Please enter a grade between 0 and 100.');
+                return;
+              }
+            }
+            saveData();
+            renderGrades();
+            renderStudentCourses();
+          }
+        }
+        if (target.classList.contains('delete') && target.dataset.type === 'grade') {
+          var studentId = parseInt(target.dataset.student);
+          var courseId = parseInt(target.dataset.course);
+          if (confirm('Remove this grade?')) {
+            delete gradeData[studentId + '-' + courseId];
+            saveData();
+            renderGrades();
+            renderStudentCourses();
+          }
+        }
+      });
+
+      document.getElementById('grade-course-filter').addEventListener('change', renderGrades);
+      document.getElementById('grade-student-filter').addEventListener('change', renderGrades);
+
+      meetingGrid.addEventListener('click', function(e) {
+        var target = e.target.closest('.join-btn');
+        if (target) {
+          var meetingId = parseInt(target.dataset.meeting);
+          openPresentation(meetingId);
+        }
+        if (e.target.id === 'open-schedule-modal-btn' || e.target.closest('#open-schedule-modal-btn')) {
+          openScheduleModal();
+        }
+      });
+
+      document.getElementById('presentation-close').addEventListener('click', closePresentation);
+      document.getElementById('presentation-next').addEventListener('click', nextSlide);
+      document.getElementById('presentation-prev').addEventListener('click', prevSlide);
+      document.getElementById('presentation-fullscreen').addEventListener('click', function() {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else document.body.requestFullscreen();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (document.getElementById('presentation-overlay').classList.contains('open')) {
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault();
+            nextSlide(); } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault();
+            prevSlide(); } else if (e.key === 'Escape') closePresentation();
+        }
+      });
+
+      document.getElementById('calendar-prev').addEventListener('click', function() {
+        if (currentMonth === 0) { currentMonth = 11;
+          currentYear--; } else { currentMonth--; }
+        renderCalendar();
+      });
+      document.getElementById('calendar-next').addEventListener('click', function() {
+        if (currentMonth === 11) { currentMonth = 0;
+          currentYear++; } else { currentMonth++; }
+        renderCalendar();
+      });
+
+      addClassBtn.addEventListener('click', openScheduleModal);
+      scheduleModalCancel.addEventListener('click', function() { scheduleModalOverlay.classList.remove('open'); });
+      scheduleModalOverlay.addEventListener('click', function(e) {
+        if (e.target === this) scheduleModalOverlay.classList.remove('open');
+      });
+
+      scheduleModalForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var title = scheduleTitle.value.trim();
+        var teacherId = parseInt(scheduleTeacher.value);
+        var date = scheduleDate.value;
+        var time = scheduleTime.value;
+        var duration = parseInt(scheduleDuration.value);
+        var link = scheduleLink.value.trim();
+
+        if (!title || !date || !time) {
+          alert('Please fill in all required fields.');
+          return;
+        }
+
+        scheduleClass(title, teacherId, date, time, duration, link);
+        scheduleModalOverlay.classList.remove('open');
+      });
+
+      upcomingClassesList.addEventListener('click', function(e) {
+        var target = e.target.closest('.join-btn');
+        if (target) {
+          var meetingId = parseInt(target.dataset.meeting);
+          openPresentation(meetingId);
+        }
+      });
+
+      // ----- TASK EVENTS -----
+      document.getElementById('add-task-btn').addEventListener('click', function() {
+        document.getElementById('task-modal-title').textContent = 'Create Task';
+        document.getElementById('task-modal-sub').textContent = 'Fill in the task details below.';
+        document.getElementById('task-modal-title-input').value = '';
+        document.getElementById('task-modal-type').value = 'homework';
+        document.getElementById('task-modal-priority').value = 'medium';
+        document.getElementById('task-modal-description').value = '';
+        document.getElementById('task-modal-deadline').value = '';
+        document.getElementById('task-modal-assign').value = 'all';
+        document.getElementById('task-modal-assign-options').style.display = 'none';
+        document.getElementById('task-file-list').innerHTML = '';
+        tempTaskFiles = [];
+        document.getElementById('task-modal-save').textContent = 'Create Task';
+        document.getElementById('task-modal-overlay').classList.add('open');
+        setLanguage(currentLang);
+      });
+
+      document.getElementById('task-modal-cancel').addEventListener('click', function() {
+        document.getElementById('task-modal-overlay').classList.remove('open');
+      });
+      document.getElementById('task-modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) document.getElementById('task-modal-overlay').classList.remove('open');
+      });
+
+      document.getElementById('task-file-input').addEventListener('change', function(e) {
+        var files = Array.from(e.target.files);
+        files.forEach(function(file) {
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            tempTaskFiles.push({ name: file.name, data: event.target.result });
+            updateTaskFileList();
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+
+      function updateTaskFileList() {
+        var list = document.getElementById('task-file-list');
+        list.innerHTML = '';
+        tempTaskFiles.forEach(function(file, index) {
+          var tag = document.createElement('span');
+          tag.className = 'file-tag';
+          tag.innerHTML = '📄 ' + file.name + ' <span class="remove-file" data-index="' + index + '">✕</span>';
+          list.appendChild(tag);
+        });
+        list.querySelectorAll('.remove-file').forEach(function(el) {
+          el.addEventListener('click', function() {
+            var index = parseInt(this.dataset.index);
+            tempTaskFiles.splice(index, 1);
+            updateTaskFileList();
+          });
+        });
+      }
+
+      document.getElementById('task-modal-assign').addEventListener('change', function() {
+        var val = this.value;
+        var optionsContainer = document.getElementById('task-modal-assign-options');
+        if (val === 'all') { optionsContainer.style.display = 'none'; return; }
+        optionsContainer.style.display = 'block';
+        var html = '<label>Select ' + (val === 'course' ? 'Courses' : 'Students') + '</label>';
+        if (val === 'course') {
+          courses.forEach(function(c) {
+            html += '<div class="enrollment-item"><input type="checkbox" class="task-assign-checkbox" value="' +
+              c.id + '" /><label>' + c.name + '</label></div>';
+          });
+        } else {
+          students.forEach(function(s) {
+            html += '<div class="enrollment-item"><input type="checkbox" class="task-assign-checkbox" value="' +
+              s.id + '" /><label>' + s.name + '</label></div>';
+          });
+        }
+        optionsContainer.innerHTML = html;
+      });
+
+      document.getElementById('task-modal-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var title = document.getElementById('task-modal-title-input').value.trim();
+        var type = document.getElementById('task-modal-type').value;
+        var priority = document.getElementById('task-modal-priority').value;
+        var description = document.getElementById('task-modal-description').value.trim();
+        var deadline = document.getElementById('task-modal-deadline').value;
+        var assignTo = document.getElementById('task-modal-assign').value;
+
+        if (!title || !description || !deadline) { alert('Please fill in all required fields.'); return; }
+
+        var assignedIds = [];
+        if (assignTo !== 'all') {
+          var checkboxes = document.getElementById('task-modal-assign-options').querySelectorAll(
+            '.task-assign-checkbox:checked');
+          checkboxes.forEach(function(cb) { assignedIds.push(parseInt(cb.value)); });
+          if (assignedIds.length === 0) { alert('Please select at least one ' + (assignTo === 'course' ?
+              'course' : 'student') + '.'); return; }
+        }
+
+        var files = tempTaskFiles.map(function(f) { return { name: f.name, data: f.data }; });
+        createTask(title, type, description, deadline, priority, assignTo, assignedIds, files);
+        tempTaskFiles = [];
+        document.getElementById('task-modal-overlay').classList.remove('open');
+      });
+
+      document.getElementById('task-search').addEventListener('input', renderTasks);
+      document.getElementById('task-type-filter').addEventListener('change', renderTasks);
+      document.getElementById('task-status-filter').addEventListener('change', renderTasks);
+
+      document.getElementById('student-task-list').addEventListener('click', function(e) {
+        var target = e.target.closest('.submit-btn');
+        if (target) {
+          var taskId = parseInt(target.dataset.task);
+          var input = document.getElementById('answer-' + taskId);
+          var fileInput = document.getElementById('file-' + taskId);
+          var studentId = currentUser.id;
+
+          var files = [];
+          if (fileInput && fileInput.files && fileInput.files.length > 0) {
+            files = Array.from(fileInput.files).map(function(f) {
+              return { name: f.name, size: f.size, type: f.type };
+            });
+          }
+
+          var answer = input ? input.value.trim() : '';
+          if (!answer && files.length === 0) { alert('Please enter your answer or upload a file.'); return; }
+
+          submitTaskAnswer(taskId, studentId, answer, files);
+        }
+      });
+
+      document.getElementById('admin-task-list').addEventListener('click', function(e) {
+        var target = e.target.closest('.view-submissions-btn');
+        if (target) {
+          var taskId = parseInt(target.dataset.task);
+          var task = tasks.find(function(t) { return t.id === taskId; });
+          if (!task) return;
+
+          var submissionKeys = Object.keys(taskSubmissions).filter(function(key) {
+            return key.startsWith(taskId + '-');
+          });
+
+          if (submissionKeys.length === 0) {
+            alert('No submissions yet for this task.');
+            return;
+          }
+
+          var studentList = [];
+          submissionKeys.forEach(function(key) {
+            var studentId = parseInt(key.split('-')[1]);
+            var student = students.find(function(s) { return s.id === studentId; });
+            var submission = taskSubmissions[key];
+            if (student) {
+              studentList.push({
+                id: studentId,
+                name: student.name,
+                status: submission.grade !== null && submission.grade !== undefined ? '✅ Graded: ' +
+                  submission.grade + '%' : '⏳ Pending',
+                submission: submission
+              });
+            }
+          });
+
+          studentList.sort(function(a, b) {
+            var aGraded = a.submission.grade !== null && a.submission.grade !== undefined;
+            var bGraded = b.submission.grade !== null && b.submission.grade !== undefined;
+            if (!aGraded && bGraded) return -1;
+            if (aGraded && !bGraded) return 1;
+            return a.name.localeCompare(b.name);
+          });
+
+          var overlay = document.createElement('div');
+          overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:20px;';
+
+          var modal = document.createElement('div');
+          modal.style.cssText = 'max-width:750px;width:100%;max-height:90vh;background:white;border-radius:18px;padding:24px;overflow:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);';
+
+          var title = document.createElement('h2');
+          title.textContent = '📋 Submissions: ' + task.title;
+          title.style.marginTop = '0';
+          title.style.marginBottom = '8px';
+
+          var sub = document.createElement('p');
+          sub.textContent = 'Total: ' + studentList.length + ' submissions';
+          sub.style.color = '#6b7280';
+          sub.style.marginBottom = '16px';
+
+          modal.appendChild(title);
+          modal.appendChild(sub);
+
+          studentList.forEach(function(item) {
+            var section = document.createElement('div');
+            section.style.cssText = 'padding:12px;margin-bottom:12px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;';
+
+            var nameRow = document.createElement('div');
+            nameRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;';
+            nameRow.innerHTML = '<strong>' + item.name + '</strong> <span>' + item.status + '</span>';
+            section.appendChild(nameRow);
+
+            var answerRow = document.createElement('div');
+            answerRow.style.cssText = 'margin-top:6px;font-size:13px;color:#4b5563;';
+            answerRow.textContent = '📝 ' + (item.submission.answer || 'No answer provided.');
+            section.appendChild(answerRow);
+
+            if (item.submission.files && item.submission.files.length > 0) {
+              var filesRow = document.createElement('div');
+              filesRow.style.cssText = 'margin-top:4px;font-size:12px;';
+              filesRow.innerHTML = '<strong>📎 Files:</strong> ';
+              item.submission.files.forEach(function(file) {
+                var fileData = file.data || '';
+                var escapedData = fileData.replace(/'/g, "\\'");
+                var link = document.createElement('span');
+                link.style.cssText =
+                  'color:#4f46e5;text-decoration:underline;cursor:pointer;margin-right:8px;';
+                link.textContent = file.name;
+                link.onclick = function() { window.openFilePreview(file.name, fileData); };
+                filesRow.appendChild(link);
+              });
+              section.appendChild(filesRow);
+            }
+
+            if (item.submission.grade === null || item.submission.grade === undefined) {
+              var gradeBtn = document.createElement('button');
+              gradeBtn.textContent = '⭐ Grade';
+              gradeBtn.style.cssText = 'margin-top:8px;padding:4px 16px;background:#4f46e5;color:white;border:0;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px;';
+              gradeBtn.onclick = function() {
+                openGradeModal(taskId, item.id);
+                document.body.removeChild(overlay);
+              };
+              section.appendChild(gradeBtn);
+            } else if (item.submission.feedback) {
+              var feedbackRow = document.createElement('div');
+              feedbackRow.style.cssText = 'margin-top:4px;font-size:12px;color:#6b7280;';
+              feedbackRow.textContent = '💬 Feedback: ' + item.submission.feedback;
+              section.appendChild(feedbackRow);
+            }
+
+            modal.appendChild(section);
+          });
+
+          var closeBtn = document.createElement('button');
+          closeBtn.textContent = 'Close';
+          closeBtn.style.cssText = 'padding:10px 24px;background:#4f46e5;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer;margin-top:8px;';
+          closeBtn.addEventListener('click', function() {
+            document.body.removeChild(overlay);
+          });
+
+          var btnWrapper = document.createElement('div');
+          btnWrapper.style.display = 'flex';
+          btnWrapper.style.justifyContent = 'flex-end';
+          btnWrapper.appendChild(closeBtn);
+          modal.appendChild(btnWrapper);
+
+          overlay.appendChild(modal);
+          document.body.appendChild(overlay);
+
+          overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+              document.body.removeChild(overlay);
+            }
+          });
+        }
+      });
+
+      document.getElementById('admin-task-list').addEventListener('click', function(e) {
+        var target = e.target.closest('.delete');
+        if (target && target.dataset.type === 'task') {
+          var taskId = parseInt(target.dataset.id);
+          if (confirm('Delete this task?')) deleteTask(taskId);
+        }
+      });
+
+      document.getElementById('grade-task-modal-cancel').addEventListener('click', function() {
+        document.getElementById('grade-task-modal-overlay').classList.remove('open');
+      });
+      document.getElementById('grade-task-modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) document.getElementById('grade-task-modal-overlay').classList.remove('open');
+      });
+
+      document.getElementById('grade-task-modal-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (gradingTaskId === null || gradingStudentId === null) return;
+
+        var grade = parseFloat(document.getElementById('grade-task-grade').value);
+        if (isNaN(grade) || grade < 0 || grade > 100) {
+          alert('Please enter a valid grade between 0 and 100.');
+          return;
+        }
+
+        var feedback = document.getElementById('grade-task-feedback').value.trim();
+        gradeSubmission(gradingTaskId, gradingStudentId, grade, feedback);
+        document.getElementById('grade-task-modal-overlay').classList.remove('open');
+        renderTasks();
+      });
+
+      addStudentBtn.addEventListener('click', function() { openModal('student', 'add'); });
+      document.getElementById('add-budget-btn').addEventListener('click', function() { openModal('budget', 'add'); });
+      document.getElementById('add-course-btn').addEventListener('click', function() { openModal('course', 'add'); });
+
+      exportStudentsBtn.addEventListener('click', function() {
+        var headers = ['Name', 'Email', 'Status', 'Enrolled Courses'];
+        var data = students.map(function(s) {
+          var enrolledIds = getEnrolledCourseIds(s.id);
+          var courseNames = enrolledIds.map(function(id) { return getCourseName(id); }).join('; ');
+          return [s.name, s.email, s.status, courseNames];
+        });
+        var csv = headers.join(',') + '\n';
+        data.forEach(function(row) { csv += row.join(',') + '\n'; });
+        var blob = new Blob([csv], { type: 'text/csv' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'students.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      document.getElementById('export-budget-btn').addEventListener('click', function() {
+        var headers = ['Category', 'Type', 'Amount', 'Date', 'Status'];
+        var data = budgetEntries.map(function(b) {
+          var amountDisplay = b.type === 'Income' ? '+' + b.amount : '-' + Math.abs(b.amount);
+          return [b.category, b.type, '$' + amountDisplay, b.date, b.status];
+        });
+        var csv = headers.join(',') + '\n';
+        data.forEach(function(row) { csv += row.join(',') + '\n'; });
+        var blob = new Blob([csv], { type: 'text/csv' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'budget.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      studentSearch.addEventListener('input', renderStudents);
+      studentFilter.addEventListener('change', renderStudents);
+      document.getElementById('budget-search').addEventListener('input', renderBudget);
+      document.getElementById('budget-filter').addEventListener('change', renderBudget);
+      document.getElementById('course-search').addEventListener('input', renderCourses);
+
+      document.getElementById('modal-cancel').addEventListener('click', closeModal);
+      document.getElementById('modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+      });
+      document.getElementById('modal-form').addEventListener('submit', handleModalSubmit);
+
+      document.getElementById('enroll-modal-cancel').addEventListener('click', closeEnrollModal);
+      document.getElementById('enroll-modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) closeEnrollModal();
+      });
+      document.getElementById('enroll-modal-save').addEventListener('click', saveEnrollments);
+
+      loginPassword.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') loginForm.dispatchEvent(new Event('submit'));
+      });
+      registerPassword.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') registerForm.dispatchEvent(new Event('submit'));
+      });
+
+      // ----- TEST EVENTS -----
+      document.getElementById('create-test-btn').addEventListener('click', function() {
+        document.getElementById('test-modal-title').textContent = 'Create Test';
+        document.getElementById('test-modal-sub').textContent = 'Build your test with multiple choice questions.';
+        document.getElementById('test-modal-title-input').value = '';
+        document.getElementById('test-modal-description').value = '';
+        document.getElementById('test-modal-deadline').value = '';
+
+        var courseSelect = document.getElementById('test-modal-course');
+        courseSelect.innerHTML = '';
+        courses.forEach(function(c) {
+          var opt = document.createElement('option');
+          opt.value = c.id;
+          opt.textContent = c.name;
+          courseSelect.appendChild(opt);
+        });
+
+        document.getElementById('questions-container').innerHTML = '';
+        questionCounter = 0;
+        document.getElementById('test-modal-overlay').classList.add('open');
+        setLanguage(currentLang);
+      });
+
+      document.getElementById('add-question-btn').addEventListener('click', function() {
+        var container = document.getElementById('questions-container');
+        var qNum = questionCounter + 1;
+        var div = document.createElement('div');
+        div.className = 'question-builder';
+        div.dataset.qIndex = questionCounter;
+
+        // Create unique name for radio group
+        var radioName = 'correct-' + questionCounter + '-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+
+        div.innerHTML =
+          '<div class="question-header"><span class="q-number">Question ' + qNum +
+          '</span><button type="button" class="remove-question" data-qindex="' + questionCounter +
+          '">✕ Remove</button></div>' +
+          '<input type="text" class="q-text-input" placeholder="Enter question text..." style="width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:6px;font-size:14px;" />' +
+          '<div class="options-group">' +
+          '<div class="option-item"><input type="radio" name="' + radioName +
+          '" value="0" checked /><input type="text" class="option-input" placeholder="Option A" style="flex:1;padding:6px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;" /></div>' +
+          '<div class="option-item"><input type="radio" name="' + radioName +
+          '" value="1" /><input type="text" class="option-input" placeholder="Option B" style="flex:1;padding:6px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;" /></div>' +
+          '<div class="option-item"><input type="radio" name="' + radioName +
+          '" value="2" /><input type="text" class="option-input" placeholder="Option C" style="flex:1;padding:6px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;" /></div>' +
+          '<div class="option-item"><input type="radio" name="' + radioName +
+          '" value="3" /><input type="text" class="option-input" placeholder="Option D" style="flex:1;padding:6px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;" /></div>' +
+          '</div>';
+
+        container.appendChild(div);
+
+        div.querySelector('.remove-question').addEventListener('click', function() {
+          div.remove();
+          // Renumber remaining questions
+          var questions = container.querySelectorAll('.question-builder');
+          questions.forEach(function(q, idx) {
+            q.querySelector('.q-number').textContent = 'Question ' + (idx + 1);
+          });
+        });
+
+        questionCounter++;
+        setLanguage(currentLang);
+      });
+
+      document.getElementById('test-modal-cancel').addEventListener('click', function() {
+        document.getElementById('test-modal-overlay').classList.remove('open');
+      });
+      document.getElementById('test-modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) document.getElementById('test-modal-overlay').classList.remove('open');
+      });
+
+      document.getElementById('test-modal-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var title = document.getElementById('test-modal-title-input').value.trim();
+        var courseId = document.getElementById('test-modal-course').value;
+        var description = document.getElementById('test-modal-description').value.trim();
+        var deadline = document.getElementById('test-modal-deadline').value;
+
+        if (!title || !courseId || !deadline) {
+          alert('Please fill in all required fields.');
+          return;
+        }
+
+        var questionDivs = document.querySelectorAll('.question-builder');
+        if (questionDivs.length === 0) {
+          alert('Please add at least one question.');
+          return;
+        }
+
+        var questions = [];
+        var valid = true;
+        questionDivs.forEach(function(qDiv, index) {
+          var qText = qDiv.querySelector('.q-text-input').value.trim();
+          var options = qDiv.querySelectorAll('.option-input');
+          var optionTexts = [];
+          options.forEach(function(opt) { optionTexts.push(opt.value.trim()); });
+          var correctRadio = qDiv.querySelector('input[type="radio"]:checked');
+          var correctAnswer = correctRadio ? parseInt(correctRadio.value) : 0;
+
+          if (!qText) { alert('Please enter text for question ' + (index + 1) + '.'); valid = false; return; }
+          if (optionTexts.some(function(opt) { return opt === ''; })) {
+            alert('Please fill in all options for question ' + (index + 1) + '.');
+            valid = false;
+            return;
+          }
+
+          questions.push({
+            question: qText,
+            options: optionTexts,
+            correctAnswer: correctAnswer
+          });
+        });
+
+        if (!valid) return;
+
+        createTest(title, courseId, description, deadline, questions);
+        document.getElementById('test-modal-overlay').classList.remove('open');
+      });
+
+      document.getElementById('take-test-cancel').addEventListener('click', function() {
+        document.getElementById('take-test-modal-overlay').classList.remove('open');
+      });
+      document.getElementById('take-test-modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) document.getElementById('take-test-modal-overlay').classList.remove('open');
+      });
+
+      document.getElementById('take-test-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var testId = parseInt(this.dataset.testId);
+        submitTest(testId);
+      });
+
+      // ----- Init -----
+      loadData();
+      setLanguage(currentLang);
+      checkSession();
+
+    })();
   </script>
+
 </body>
 </html>

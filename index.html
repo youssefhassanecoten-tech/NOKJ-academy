@@ -1921,6 +1921,7 @@
     }
 
     /* === TEST CONSTRUCTOR === */
+      /* === TEST CONSTRUCTOR === */
     .question-builder {
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -1956,6 +1957,7 @@
       border-radius: 6px;
       font-size: 14px;
       background: white;
+      box-sizing: border-box;
     }
     .question-builder input[type="text"]:focus,
     .question-builder textarea:focus {
@@ -1977,7 +1979,15 @@
       flex: 1;
       margin-bottom: 0;
       padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
       font-size: 13px;
+      background: white;
+      min-width: 0;
+    }
+    .question-builder .options-group .option-item input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary);
     }
     .question-builder .options-group .option-item input[type="radio"] {
       margin: 0;

@@ -1,4 +1,2841 @@
-<script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>NOKJ Academy</title>
+
+  <style>
+    /* === RESET & VARIABLES === */
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --primary-light: #eef2ff;
+      --ink: #182033;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --bg: #f6f7fb;
+      --white: #ffffff;
+      --success: #059669;
+      --warning: #b45309;
+      --danger: #dc2626;
+      --radius: 18px;
+      --shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: Inter, Arial, Helvetica, sans-serif;
+    }
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    /* === LANDING PAGE === */
+    #landing-page {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f0f4ff 0%, #e8edff 100%);
+    }
+    #landing-page.hidden {
+      display: none;
+    }
+
+    .landing-header {
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .landing-header .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .landing-header .brand .brand-mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      background: var(--primary);
+      color: white;
+      border-radius: 12px;
+      font-size: 18px;
+    }
+    .landing-header .auth-buttons {
+      display: flex;
+      gap: 12px;
+    }
+    .landing-header .auth-buttons .btn-outline {
+      padding: 10px 24px;
+      border: 2px solid var(--primary);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .landing-header .auth-buttons .btn-primary {
+      padding: 10px 24px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .landing-header .auth-buttons .btn-outline:hover {
+      background: var(--primary-light);
+    }
+    .landing-header .auth-buttons .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .landing-hero {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+      gap: 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .landing-hero .hero-content {
+      flex: 1;
+    }
+    .landing-hero .hero-content h1 {
+      font-size: 48px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin: 0 0 16px 0;
+    }
+    .landing-hero .hero-content h1 span {
+      color: var(--primary);
+    }
+    .landing-hero .hero-content p {
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 0 30px 0;
+    }
+    .landing-hero .hero-content .hero-buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .landing-hero .hero-content .hero-buttons .btn-large {
+      padding: 14px 36px;
+      border: 0;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .landing-hero .hero-content .hero-buttons .btn-large.primary {
+      background: var(--primary);
+      color: white;
+    }
+    .landing-hero .hero-content .hero-buttons .btn-large.primary:hover {
+      background: var(--primary-dark);
+    }
+    .landing-hero .hero-content .hero-buttons .btn-large.outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+    .landing-hero .hero-content .hero-buttons .btn-large.outline:hover {
+      background: var(--primary-light);
+    }
+    .landing-hero .hero-image {
+      flex: 1;
+      text-align: center;
+    }
+    .landing-hero .hero-image .image-placeholder {
+      width: 100%;
+      max-width: 500px;
+      aspect-ratio: 1.2;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--primary-light), #dbeafe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+    }
+
+    .landing-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+    .landing-features .feature-card {
+      padding: 30px;
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .landing-features .feature-card .icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+    .landing-features .feature-card h3 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+    }
+    .landing-features .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .landing-footer {
+      padding: 30px 40px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    /* === LOGIN & REGISTER === */
+    #login-screen,
+    #register-screen {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: linear-gradient(135deg, #312e81, #4f46e5, #7c3aed);
+      position: relative;
+    }
+    #login-screen.open,
+    #register-screen.open {
+      display: flex;
+    }
+    #login-screen.hidden,
+    #register-screen.hidden {
+      display: none;
+    }
+
+    .login-lang-toggle {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      padding: 0;
+    }
+    .login-lang-toggle:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    .login-lang-toggle svg {
+      width: 28px;
+      height: 19px;
+    }
+
+    .login-box,
+    .register-box {
+      width: 100%;
+      max-width: 420px;
+      padding: 40px 32px;
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+    .login-box .brand,
+    .register-box .brand {
+      justify-content: center;
+      padding: 0 0 24px 0;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+    .login-box .brand strong,
+    .register-box .brand strong {
+      font-size: 20px;
+      color: var(--ink);
+    }
+    .login-box .brand small,
+    .register-box .brand small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .login-box .login-header,
+    .register-box .register-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .login-box .login-header h2,
+    .register-box .register-header h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .login-box .login-header p,
+    .register-box .register-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .login-box label,
+    .register-box label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .login-box input,
+    .register-box input,
+    .register-box select {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 14px;
+      background: #fafafa;
+      transition: border-color 0.2s;
+    }
+    .login-box input:focus,
+    .register-box input:focus,
+    .register-box select:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: white;
+    }
+    .login-box .login-btn,
+    .register-box .register-btn {
+      width: 100%;
+      padding: 14px;
+      color: white;
+      font-size: 15px;
+      font-weight: 800;
+      border: 0;
+      border-radius: 10px;
+      background: var(--primary);
+      transition: background 0.2s;
+    }
+    .login-box .login-btn:hover,
+    .register-box .register-btn:hover {
+      background: var(--primary-dark);
+    }
+    .login-error,
+    .register-error {
+      margin: 12px 0 0 0;
+      color: var(--danger);
+      font-size: 13px;
+      text-align: center;
+      min-height: 20px;
+    }
+    .login-box .login-footer,
+    .register-box .register-footer {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .login-box .login-footer a,
+    .register-box .register-footer a {
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .login-box .login-footer a:hover,
+    .register-box .register-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* === MAIN APP === */
+    #app {
+      display: none;
+    }
+    #app.logged-in {
+      display: block;
+    }
+
+    /* === SIDEBAR === */
+    .sidebar {
+      width: 245px;
+      min-height: 100vh;
+      padding: 26px 15px;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      inset: 0 auto 0 0;
+      color: white;
+      background: linear-gradient(180deg, #312e81, #4f46e5 60%, #3730a3);
+    }
+    .brand {
+      padding: 0 12px 30px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      color: var(--primary-dark);
+      font-size: 18px;
+      font-weight: 900;
+      border-radius: 13px;
+      background: white;
+    }
+    .brand strong,
+    .brand small {
+      display: block;
+    }
+    .brand strong {
+      font-size: 16px;
+    }
+    .brand small {
+      margin-top: 2px;
+      color: #c7d2fe;
+      font-size: 11px;
+    }
+    .nav-label {
+      padding: 0 12px;
+      margin: 8px 0 9px;
+      color: #c7d2fe;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .nav-button {
+      width: 100%;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #e0e7ff;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: left;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+    }
+    .nav-button:hover,
+    .nav-button.active {
+      color: white;
+      background: rgba(255, 255, 255, 0.16);
+    }
+    .nav-icon {
+      width: 20px;
+      font-size: 17px;
+      text-align: center;
+    }
+    .help-card {
+      padding: 15px;
+      margin: auto 8px 0;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .help-card strong,
+    .help-card span {
+      display: block;
+    }
+    .help-card strong {
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+    .help-card span {
+      color: #e0e7ff;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    /* === TOPBAR === */
+    main {
+      min-height: 100vh;
+      margin-left: 245px;
+    }
+    .topbar {
+      min-height: 76px;
+      padding: 15px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+    }
+    .search {
+      width: min(410px, 100%);
+      padding: 10px 13px;
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fafafa;
+    }
+    .search input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+    }
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .notification {
+      width: 40px;
+      height: 40px;
+      font-size: 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: white;
+    }
+    .avatar {
+      width: 39px;
+      height: 39px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 850;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f97316, #db2777);
+    }
+    .avatar.admin-avatar {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    }
+    .avatar.teacher-avatar {
+      background: linear-gradient(135deg, #059669, #34d399);
+    }
+    .user-name strong,
+    .user-name span {
+      display: block;
+    }
+    .user-name strong {
+      font-size: 12px;
+    }
+    .user-name span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+    .logout-btn {
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--danger);
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      background: #fef2f2;
+    }
+    .logout-btn:hover {
+      background: #fee2e2;
+    }
+
+    /* === PAGES === */
+    .page {
+      display: none;
+      max-width: 1380px;
+      padding: 35px 36px 100px;
+      margin: 0 auto;
+    }
+    .page.active {
+      display: block;
+      animation: appear 0.2s ease;
+    }
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .heading {
+      margin-bottom: 25px;
+    }
+    .heading h1 {
+      margin: 0;
+      font-size: clamp(25px, 4vw, 31px);
+      letter-spacing: -1px;
+    }
+    .heading p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* === HERO === */
+    .hero {
+      min-height: 190px;
+      padding: 28px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      overflow: hidden;
+      position: relative;
+      color: white;
+      border-radius: var(--radius);
+      background: linear-gradient(120deg, #3730a3, #4f46e5, #7c3aed);
+      box-shadow: var(--shadow);
+    }
+    .hero::after {
+      width: 260px;
+      height: 260px;
+      content: "";
+      position: absolute;
+      right: -95px;
+      top: -145px;
+      border: 30px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+    .eyebrow {
+      margin: 0 0 10px;
+      color: #c7d2fe;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .hero h2 {
+      max-width: 610px;
+      margin: 0;
+      font-size: clamp(22px, 3vw, 30px);
+      letter-spacing: -0.7px;
+    }
+    .hero p:not(.eyebrow) {
+      margin: 10px 0 0;
+      color: #e0e7ff;
+      font-size: 13px;
+    }
+    .primary-button,
+    .secondary-button {
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 10px;
+    }
+    .primary-button {
+      color: white;
+      border: 0;
+      background: var(--primary);
+    }
+    .hero .primary-button {
+      min-width: 125px;
+      color: var(--primary-dark);
+      background: white;
+      z-index: 1;
+    }
+    .secondary-button {
+      color: var(--primary);
+      border: 1px solid #c7d2fe;
+      background: white;
+    }
+
+    /* === STATS & CARDS === */
+    .stats {
+      margin: 23px 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+    .stat-card,
+    .panel,
+    .course,
+    .assignment-card,
+    .announcement-card,
+    .profile-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.025);
+    }
+    .stat-card {
+      padding: 17px;
+    }
+    .stat-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .stat-head span:last-child {
+      width: 33px;
+      height: 33px;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      border-radius: 10px;
+      background: var(--primary-light);
+    }
+    .stat-number {
+      margin: 15px 0 4px;
+      font-size: 26px;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
+    .stat-note {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .admin-stat-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+    .admin-stat-card .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .admin-stat-card .number {
+      margin-top: 8px;
+      font-size: 28px;
+      font-weight: 850;
+    }
+    .admin-stat-card .change {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--success);
+    }
+
+    /* === TABLES === */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+    .table-toolbar {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--line);
+    }
+    .table-toolbar .left {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .table-toolbar .right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .table-toolbar input[type="text"],
+    .table-toolbar select {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 13px;
+      background: white;
+    }
+    .table-toolbar input[type="text"]:focus,
+    .table-toolbar select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .add-btn {
+      padding: 8px 16px;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      border: 0;
+      border-radius: 8px;
+      background: var(--primary);
+    }
+    .add-btn:hover {
+      background: var(--primary-dark);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    table th {
+      padding: 14px 16px;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 2px solid var(--line);
+      background: #fafafa;
+    }
+    table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0f1f4;
+    }
+    table tr:hover td {
+      background: #fafafa;
+    }
+
+    .expandable-row {
+      cursor: pointer;
+    }
+    .expandable-row .expand-icon {
+      display: inline-block;
+      transition: transform 0.2s;
+      font-size: 12px;
+      margin-right: 6px;
+    }
+    .expandable-row .expand-icon.open {
+      transform: rotate(90deg);
+    }
+    .expandable-detail {
+      display: none;
+      background: #f8fafc;
+    }
+    .expandable-detail.open {
+      display: table-row;
+    }
+    .expandable-detail td {
+      padding: 0;
+      border-bottom: none;
+    }
+    .expandable-detail .detail-content {
+      padding: 16px 20px 16px 48px;
+      font-size: 13px;
+    }
+    .expandable-detail .detail-content .empty-msg {
+      color: var(--muted);
+      font-style: italic;
+    }
+    .expandable-detail .detail-content .item-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      margin: 3px 6px 3px 0;
+      border-radius: 6px;
+      background: white;
+      border: 1px solid var(--line);
+      font-size: 12px;
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 6px;
+    }
+    .status-badge.active {
+      color: #047857;
+      background: #d1fae5;
+    }
+    .status-badge.warning {
+      color: #92400e;
+      background: #fef3c7;
+    }
+    .status-badge.inactive {
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+    .status-badge.paid {
+      color: #047857;
+      background: #d1fae5;
+    }
+    .status-badge.unpaid {
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+    .status-badge.pending {
+      color: #92400e;
+      background: #fef3c7;
+    }
+
+    .action-btn {
+      padding: 4px 10px;
+      font-size: 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      margin-right: 4px;
+    }
+    .action-btn.edit {
+      color: var(--primary);
+      border-color: #c7d2fe;
+    }
+    .action-btn.edit:hover {
+      background: var(--primary-light);
+    }
+    .action-btn.delete {
+      color: var(--danger);
+      border-color: #fecaca;
+    }
+    .action-btn.delete:hover {
+      background: #fee2e2;
+    }
+    .action-btn.enroll {
+      color: var(--success);
+      border-color: #a7f3d0;
+    }
+    .action-btn.enroll:hover {
+      background: #d1fae5;
+    }
+
+    .table-summary {
+      padding: 14px 20px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+      background: #fafafa;
+    }
+    .table-summary strong {
+      color: var(--primary);
+    }
+    .table-summary .total {
+      font-weight: 700;
+    }
+    .table-summary .total.income {
+      color: var(--success);
+    }
+    .table-summary .total.expense {
+      color: var(--danger);
+    }
+
+    /* === GRADES === */
+    .grade-pass {
+      color: var(--success);
+      font-weight: 700;
+    }
+    .grade-fail {
+      color: var(--danger);
+      font-weight: 700;
+    }
+    .grade-input {
+      width: 60px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 13px;
+      text-align: center;
+    }
+    .grade-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .grade-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .grade-cell .save-grade-btn {
+      padding: 2px 10px;
+      font-size: 11px;
+      border: 1px solid var(--primary);
+      border-radius: 4px;
+      background: var(--primary-light);
+      color: var(--primary);
+      cursor: pointer;
+    }
+    .grade-cell .save-grade-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .grade-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .grade-summary-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+    .grade-summary-card .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .grade-summary-card .value {
+      margin-top: 6px;
+      font-size: 24px;
+      font-weight: 850;
+    }
+    .grade-summary-card .sub {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* === CLASSROOM === */
+    .meeting-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 17px;
+      margin-top: 20px;
+    }
+    .meeting-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .meeting-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+    .meeting-card .meeting-header {
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+    }
+    .meeting-card .meeting-header h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+    .meeting-card .meeting-header .teacher {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+    .meeting-card .meeting-body {
+      padding: 16px 20px;
+    }
+    .meeting-card .meeting-body .time {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .meeting-card .meeting-body .join-btn {
+      margin-top: 12px;
+      width: 100%;
+      padding: 10px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+    }
+    .meeting-card .meeting-body .join-btn:hover {
+      background: var(--primary-dark);
+    }
+    .meeting-card .meeting-body .meeting-code {
+      display: inline-block;
+      padding: 2px 10px;
+      margin-top: 6px;
+      background: #f3f4f6;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: monospace;
+    }
+
+    /* === CALENDAR === */
+    .calendar-container {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    .calendar-header {
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .calendar-header .month-label {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .calendar-header .nav-btn {
+      padding: 6px 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      font-size: 14px;
+    }
+    .calendar-header .nav-btn:hover {
+      background: var(--primary-light);
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      border-collapse: collapse;
+    }
+    .calendar-grid .day-label {
+      padding: 12px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+    }
+    .calendar-grid .day-cell {
+      padding: 8px;
+      min-height: 80px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .calendar-grid .day-cell:nth-child(7n) {
+      border-right: none;
+    }
+    .calendar-grid .day-cell:hover {
+      background: var(--primary-light);
+    }
+    .calendar-grid .day-cell .day-number {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--ink);
+    }
+    .calendar-grid .day-cell .day-events {
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .calendar-grid .day-cell .day-events .event-dot {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      background: var(--primary-light);
+      color: var(--primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .calendar-grid .day-cell .day-events .event-dot.teacher {
+      background: #d1fae5;
+      color: #047857;
+    }
+    .calendar-grid .day-cell.empty {
+      cursor: default;
+      background: #fafafa;
+    }
+    .calendar-grid .day-cell.today {
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+    .calendar-grid .day-cell.today .day-number {
+      color: var(--primary);
+    }
+
+    /* === PRESENTATION === */
+    .presentation-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: #1a1a2e;
+      color: white;
+      flex-direction: column;
+    }
+    .presentation-overlay.open {
+      display: flex;
+    }
+    .presentation-overlay .presentation-toolbar {
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .presentation-overlay .presentation-toolbar button {
+      padding: 6px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      background: transparent;
+      color: white;
+      cursor: pointer;
+    }
+    .presentation-overlay .presentation-toolbar button:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .presentation-overlay .presentation-slide {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      padding: 40px;
+      text-align: center;
+    }
+    .presentation-overlay .presentation-slide .slide-content {
+      max-width: 800px;
+    }
+    .presentation-overlay .presentation-slide .slide-content h2 {
+      font-size: 42px;
+      margin-bottom: 20px;
+    }
+    .presentation-overlay .presentation-slide .slide-content p {
+      font-size: 20px;
+      color: #aaa;
+      white-space: pre-wrap;
+    }
+
+    /* === TASKS === */
+    .task-grid {
+      display: grid;
+      gap: 17px;
+      margin-top: 20px;
+    }
+    .task-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      padding: 20px;
+      transition: box-shadow 0.2s;
+    }
+    .task-card:hover {
+      box-shadow: var(--shadow);
+    }
+    .task-card .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .task-card .task-header h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+    .task-card .task-header .task-type {
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .task-card .task-header .task-type.homework {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+    .task-card .task-header .task-type.test {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .task-card .task-header .task-type.assignment {
+      background: #d1fae5;
+      color: #047857;
+    }
+
+    .task-card .task-body {
+      margin-top: 12px;
+    }
+    .task-card .task-body .task-description {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .task-card .task-body .task-deadline {
+      margin-top: 8px;
+      font-size: 12px;
+    }
+    .task-card .task-body .task-deadline.overdue {
+      color: var(--danger);
+    }
+    .task-card .task-body .task-deadline.upcoming {
+      color: var(--warning);
+    }
+    .task-card .task-body .task-deadline.on-time {
+      color: var(--success);
+    }
+
+    .task-card .task-body .task-files {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f8fafc;
+      border-radius: 8px;
+    }
+    .task-card .task-body .task-files .file-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+    }
+    .task-card .task-body .task-files .file-item .file-icon {
+      font-size: 18px;
+    }
+    .task-card .task-body .task-files .file-item .file-link {
+      color: var(--primary);
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .task-card .task-footer {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .task-card .task-footer .answer-input {
+      flex: 1;
+      min-width: 150px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .task-card .task-footer .submit-btn {
+      padding: 8px 20px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+    }
+    .task-card .task-footer .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+    .task-card .task-footer .submitted-status {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #d1fae5;
+      color: #047857;
+      font-weight: 700;
+    }
+    .task-card .task-footer .graded-status {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #fef3c7;
+      color: #92400e;
+      font-weight: 700;
+    }
+    .task-card .task-footer .file-upload-btn {
+      padding: 6px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .task-card .task-footer .file-upload-btn:hover {
+      background: #f3f4f6;
+    }
+    .task-card .task-footer .file-name {
+      font-size: 12px;
+      color: var(--muted);
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .task-card .task-priority {
+      padding: 2px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .task-card .task-priority.high {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .task-card .task-priority.medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .task-card .task-priority.low {
+      background: #d1fae5;
+      color: #047857;
+    }
+
+    .task-admin-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+    .task-admin-actions select,
+    .task-admin-actions input {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 13px;
+      background: white;
+    }
+    .task-admin-actions select:focus,
+    .task-admin-actions input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .task-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .task-stat-card {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      text-align: center;
+    }
+    .task-stat-card .number {
+      font-size: 28px;
+      font-weight: 850;
+    }
+    .task-stat-card .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* === FILE PREVIEW === */
+    .file-preview-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.85);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .file-preview-overlay.open {
+      display: flex;
+    }
+    .file-preview-content {
+      max-width: 95%;
+      max-height: 95%;
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      overflow: auto;
+      position: relative;
+      min-width: 300px;
+      min-height: 200px;
+    }
+    .file-preview-content .preview-close {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 30px;
+      cursor: pointer;
+      color: var(--muted);
+      z-index: 10;
+    }
+    .file-preview-content .preview-close:hover {
+      color: var(--danger);
+    }
+    .file-preview-content .file-preview-iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+      border-radius: 8px;
+    }
+    .file-preview-content .file-preview-text {
+      white-space: pre-wrap;
+      font-family: monospace;
+      padding: 20px;
+      max-height: 600px;
+      overflow: auto;
+    }
+    .file-preview-content .file-preview-image {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 8px;
+      display: block;
+      margin: 0 auto;
+    }
+    .file-preview-content .file-preview-fallback {
+      padding: 40px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    /* === MODALS === */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal {
+      max-width: 600px;
+      width: 100%;
+      padding: 30px;
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h2 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
+    }
+    .modal p.sub {
+      margin: 0 0 20px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .modal label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .modal input,
+    .modal select,
+    .modal textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fafafa;
+    }
+    .modal input:focus,
+    .modal select:focus,
+    .modal textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: white;
+    }
+    .modal textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    .modal .file-input-wrapper {
+      margin-bottom: 16px;
+    }
+    .modal .file-input-wrapper label {
+      display: inline-block;
+      padding: 8px 16px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .modal .file-input-wrapper label:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .modal .file-input-wrapper input[type="file"] {
+      display: none;
+    }
+    .modal .file-list {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .modal .file-list .file-tag {
+      padding: 4px 10px;
+      background: #f3f4f6;
+      border-radius: 4px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .modal .file-list .file-tag .remove-file {
+      cursor: pointer;
+      color: var(--danger);
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+    .modal-actions button {
+      padding: 10px 20px;
+      font-weight: 700;
+      border: 0;
+      border-radius: 8px;
+    }
+    .modal-actions .cancel-btn {
+      color: var(--muted);
+      background: #f3f4f6;
+    }
+    .modal-actions .cancel-btn:hover {
+      background: #e5e7eb;
+    }
+    .modal-actions .save-btn {
+      color: white;
+      background: var(--primary);
+    }
+    .modal-actions .save-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .enrollment-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+    .enrollment-item {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #f0f1f4;
+    }
+    .enrollment-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      cursor: pointer;
+    }
+    .enrollment-item label {
+      margin: 0;
+      cursor: pointer;
+      font-weight: 400;
+    }
+    .enrollment-item .course-teacher {
+      color: var(--muted);
+      font-size: 12px;
+      margin-left: auto;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.45fr 0.85fr;
+      gap: 21px;
+    }
+    .stack {
+      display: grid;
+      gap: 21px;
+    }
+    .panel {
+      padding: 20px;
+    }
+    .panel-title {
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+    .panel-title h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+    .link-button {
+      padding: 0;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
+      border: 0;
+      background: transparent;
+    }
+
+    .lesson-row,
+    .simple-row {
+      padding: 13px 0;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      border-top: 1px solid #f0f1f4;
+    }
+    .lesson-row:first-of-type,
+    .simple-row:first-of-type {
+      padding-top: 0;
+      border-top: 0;
+    }
+    .time {
+      width: 44px;
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 850;
+    }
+    .color-bar {
+      width: 4px;
+      height: 38px;
+      border-radius: 5px;
+      background: #6366f1;
+    }
+    .orange {
+      background: #f97316;
+    }
+    .green {
+      background: #10b981;
+    }
+    .row-main {
+      min-width: 0;
+      flex: 1;
+    }
+    .row-main strong,
+    .row-main span {
+      display: block;
+    }
+    .row-main strong {
+      overflow: hidden;
+      font-size: 13px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .row-main span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .pill {
+      padding: 5px 8px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+      border-radius: 8px;
+      background: #f3f4f6;
+    }
+    .pill.danger {
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+    .pill.warning {
+      color: #92400e;
+      background: #fef3c7;
+    }
+    .pill.success {
+      color: #047857;
+      background: #d1fae5;
+    }
+
+    .round-icon {
+      width: 39px;
+      height: 39px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      font-size: 17px;
+      border-radius: 12px;
+      background: #ede9fe;
+    }
+    .round-icon.yellow {
+      background: #fef3c7;
+    }
+    .round-icon.blue {
+      background: #dbeafe;
+    }
+    .progress-item+.progress-item {
+      margin-top: 17px;
+    }
+    .progress-top {
+      margin-bottom: 7px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .progress-top span:last-child {
+      color: var(--muted);
+    }
+    .track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #eef0f4;
+    }
+    .fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #4f46e5, #818cf8);
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 17px;
+    }
+    .course {
+      overflow: hidden;
+    }
+    .course-cover {
+      height: 110px;
+      padding: 18px;
+      display: flex;
+      align-items: flex-end;
+      color: white;
+      font-size: 20px;
+      font-weight: 850;
+      background: linear-gradient(135deg, #4f46e5, #818cf8);
+    }
+    .course-cover.orange-cover {
+      background: linear-gradient(135deg, #ea580c, #fb923c);
+    }
+    .course-cover.green-cover {
+      background: linear-gradient(135deg, #047857, #34d399);
+    }
+    .course-body {
+      padding: 17px;
+    }
+    .course-body h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+    .course-body p {
+      margin: 6px 0 15px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .course-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .assignment-list,
+    .announcement-list {
+      display: grid;
+      gap: 13px;
+    }
+    .assignment-card,
+    .announcement-card {
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .assignment-card h3,
+    .announcement-card h3 {
+      margin: 0;
+      font-size: 14px;
+    }
+    .assignment-card p,
+    .announcement-card p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .assignment-card .secondary-button {
+      margin-left: auto;
+    }
+    .announcement-card {
+      align-items: flex-start;
+    }
+
+    .profile-card {
+      max-width: 760px;
+      padding: 25px;
+    }
+    .profile-top {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .profile-top .avatar {
+      width: 64px;
+      height: 64px;
+      font-size: 19px;
+    }
+    .profile-top h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+    .profile-top p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .details {
+      margin-top: 24px;
+      padding-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 19px;
+      border-top: 1px solid var(--line);
+    }
+    .details small,
+    .details strong {
+      display: block;
+    }
+    .details small {
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+    }
+    .details strong {
+      font-size: 13px;
+    }
+
+    .mobile-nav {
+      display: none;
+    }
+
+    /* === TEST CONSTRUCTOR === */
+      /* === TEST CONSTRUCTOR === */
+    .question-builder {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      background: #fafafa;
+    }
+    .question-builder .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .question-builder .question-header .q-number {
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .question-builder .remove-question {
+      color: var(--danger);
+      background: none;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    .question-builder input[type="text"],
+    .question-builder textarea,
+    .question-builder select {
+      width: 100%;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 14px;
+      background: white;
+      box-sizing: border-box;
+    }
+    .question-builder input[type="text"]:focus,
+    .question-builder textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .question-builder .options-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .question-builder .options-group .option-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .question-builder .options-group .option-item input[type="text"] {
+      flex: 1;
+      margin-bottom: 0;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 13px;
+      background: white;
+      min-width: 0;
+    }
+    .question-builder .options-group .option-item input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .question-builder .options-group .option-item input[type="radio"] {
+      margin: 0;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .question-builder .options-group .option-item input[type="radio"]:checked {
+      accent-color: var(--primary);
+    }
+
+    .test-preview {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      background: white;
+      margin-top: 20px;
+    }
+    .test-preview .test-question {
+      padding: 12px;
+      border-bottom: 1px solid #f0f1f4;
+    }
+    .test-preview .test-question:last-child {
+      border-bottom: none;
+    }
+    .test-preview .test-question .q-text {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .test-preview .test-question .q-options label {
+      display: block;
+      padding: 4px 0;
+      font-weight: 400;
+      font-size: 13px;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 1030px) {
+      .stats,
+      .admin-stats,
+      .grade-summary-grid,
+      .task-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .course-grid,
+      .meeting-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .landing-hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 20px;
+      }
+      .landing-hero .hero-content p {
+        max-width: 100%;
+      }
+      .landing-hero .hero-content .hero-buttons {
+        justify-content: center;
+      }
+      .landing-features {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 790px) {
+      .sidebar {
+        display: none;
+      }
+      main {
+        margin-left: 0;
+      }
+      .topbar {
+        min-height: 64px;
+        padding: 12px 16px;
+      }
+      .search,
+      .user-name {
+        display: none;
+      }
+      .page {
+        padding: 25px 16px 90px;
+      }
+      .hero {
+        min-height: 210px;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+      .mobile-nav {
+        padding: 7px 7px calc(7px + env(safe-area-inset-bottom));
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 20;
+        border-top: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(10px);
+      }
+      .mobile-nav .nav-button {
+        padding: 5px 1px;
+        display: grid;
+        justify-items: center;
+        gap: 3px;
+        color: var(--muted);
+        font-size: 9px;
+        text-align: center;
+        border-radius: 9px;
+      }
+      .mobile-nav .nav-button.active {
+        color: var(--primary);
+        background: var(--primary-light);
+      }
+      .mobile-nav .nav-icon {
+        font-size: 16px;
+      }
+      .mobile-nav .nav-button span:last-child {
+        display: block;
+      }
+      .table-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .table-toolbar .left,
+      .table-toolbar .right {
+        flex-wrap: wrap;
+      }
+      .admin-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .grade-summary-grid,
+      .task-stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .meeting-grid {
+        grid-template-columns: 1fr;
+      }
+      .expandable-detail .detail-content {
+        padding: 12px 16px 12px 32px;
+        font-size: 12px;
+      }
+      .landing-header {
+        padding: 16px 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .landing-header .auth-buttons .btn-outline,
+      .landing-header .auth-buttons .btn-primary {
+        padding: 8px 16px;
+        font-size: 13px;
+      }
+      .landing-hero .hero-content h1 {
+        font-size: 32px;
+      }
+      .landing-features {
+        grid-template-columns: 1fr;
+      }
+      .calendar-grid .day-cell {
+        min-height: 50px;
+        padding: 4px;
+      }
+      .calendar-grid .day-cell .day-number {
+        font-size: 12px;
+      }
+      .file-preview-content .file-preview-iframe {
+        height: 300px;
+      }
+      .modal {
+        max-width: 100%;
+      }
+    }
+    @media (max-width: 480px) {
+      .stats,
+      .admin-stats,
+      .grade-summary-grid,
+      .task-stats-grid {
+        gap: 10px;
+        grid-template-columns: 1fr;
+      }
+      .stat-card {
+        padding: 14px;
+      }
+      .stat-number {
+        font-size: 22px;
+      }
+      .panel {
+        padding: 17px;
+      }
+      .course-grid,
+      .details,
+      .meeting-grid {
+        grid-template-columns: 1fr;
+      }
+      .assignment-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+      .assignment-card .secondary-button {
+        width: 100%;
+        margin-left: 0;
+      }
+      .login-box,
+      .register-box {
+        padding: 28px 20px;
+      }
+      .modal {
+        padding: 20px;
+      }
+      table {
+        font-size: 12px;
+      }
+      table th,
+      table td {
+        padding: 8px 10px;
+      }
+      .grade-cell {
+        flex-wrap: wrap;
+      }
+      .landing-hero .hero-content h1 {
+        font-size: 26px;
+      }
+      .file-preview-content .file-preview-iframe {
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== LANDING PAGE ===== -->
+  <div id="landing-page">
+    <header class="landing-header">
+      <div class="brand"><div class="brand-mark">N</div><span>NOKJ Academy</span></div>
+      <div class="auth-buttons">
+        <button class="btn-outline" id="landing-login-btn">Sign In</button>
+        <button class="btn-primary" id="landing-register-btn">Join Academy</button>
+      </div>
+    </header>
+
+    <section class="landing-hero">
+      <div class="hero-content">
+        <h1>Learn Anything, <span>Anytime</span></h1>
+        <p>NOKJ Academy is your all-in-one learning platform. Join live classes, complete assignments, track your progress, and connect with teachers — all in one place.</p>
+        <div class="hero-buttons">
+          <button class="btn-large primary" id="landing-start-btn">Start Learning Free</button>
+          <button class="btn-large outline" id="landing-signin-btn">Sign In</button>
+        </div>
+      </div>
+      <div class="hero-image"><div class="image-placeholder">🎓</div></div>
+    </section>
+
+    <section class="landing-features">
+      <div class="feature-card"><div class="icon">🎥</div><h3>Live Classes</h3><p>Join interactive live sessions with your teachers. Share your screen, ask questions, and learn in real-time.</p></div>
+      <div class="feature-card"><div class="icon">📝</div><h3>Smart Tasks</h3><p>Submit homework, take tests, and get instant feedback. Track your progress across all your courses.</p></div>
+      <div class="feature-card"><div class="icon">📊</div><h3>Track Progress</h3><p>View your grades, attendance, and course progress at a glance. Stay on top of your learning journey.</p></div>
+    </section>
+
+    <footer class="landing-footer">© 2026 NOKJ Academy — Empowering learners worldwide.</footer>
+  </div>
+
+  <!-- ===== LOGIN SCREEN ===== -->
+  <div id="login-screen">
+    <button id="login-lang-toggle" type="button" title="Change language" class="login-lang-toggle">
+      <svg id="login-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
+        <rect width="60" height="40" fill="#012169"/>
+        <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
+        <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
+        <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
+        <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
+      </svg>
+      <svg id="login-flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
+        <rect width="60" height="13.33" fill="#FFFFFF"/>
+        <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
+        <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
+      </svg>
+    </button>
+
+    <div class="login-box">
+      <div class="brand"><div class="brand-mark">N</div><div><strong style="font-size:20px;color:#182033;">NOKJ Academy</strong><small style="color:#6b7280;font-size:13px;">Student Portal</small></div></div>
+      <div class="login-header"><h2>Welcome back</h2><p>Sign in to your account</p></div>
+      <form id="login-form" autocomplete="off">
+        <label for="login-email">Email address</label>
+        <input type="email" id="login-email" placeholder="you@example.com" />
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" />
+        <button type="submit" class="login-btn">Sign In</button>
+        <div id="login-error" class="login-error"></div>
+      </form>
+      <div class="login-footer">Don't have an account? <a id="login-to-register">Join Academy</a></div>
+    </div>
+  </div>
+
+  <!-- ===== REGISTER SCREEN ===== -->
+  <div id="register-screen">
+    <button id="register-lang-toggle" type="button" title="Change language" class="login-lang-toggle">
+      <svg id="register-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
+        <rect width="60" height="40" fill="#012169"/>
+        <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
+        <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
+        <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
+        <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
+      </svg>
+      <svg id="register-flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
+        <rect width="60" height="13.33" fill="#FFFFFF"/>
+        <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
+        <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
+      </svg>
+    </button>
+
+    <div class="register-box">
+      <div class="brand"><div class="brand-mark">N</div><div><strong style="font-size:20px;color:#182033;">NOKJ Academy</strong><small style="color:#6b7280;font-size:13px;">Join the community</small></div></div>
+      <div class="register-header"><h2>Create Account</h2><p>Start your learning journey today</p></div>
+      <form id="register-form" autocomplete="off">
+        <label for="register-name">Full Name</label>
+        <input type="text" id="register-name" placeholder="Alex Student" />
+        <label for="register-email">Email address</label>
+        <input type="email" id="register-email" placeholder="you@example.com" />
+        <label for="register-role">I am a...</label>
+        <select id="register-role"><option value="Student">Student</option><option value="Teacher">Teacher</option></select>
+        <label for="register-password">Password</label>
+        <input type="password" id="register-password" placeholder="Min 6 characters" />
+        <button type="submit" class="register-btn">Create Account</button>
+        <div id="register-error" class="register-error"></div>
+      </form>
+      <div class="register-footer">Already have an account? <a id="register-to-login">Sign In</a></div>
+    </div>
+  </div>
+
+  <!-- ===== MAIN APP ===== -->
+  <div id="app">
+
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">N</div><div><strong>NOKJ Academy</strong><small id="sidebar-role">Student Portal</small></div></div>
+      <p class="nav-label">Menu</p>
+      <button class="nav-button active" data-page="dashboard"><span class="nav-icon">⌂</span> <span class="nav-text">Dashboard</span></button>
+      <button class="nav-button" data-page="timetable"><span class="nav-icon">▦</span> <span class="nav-text">Timetable</span></button>
+      <button class="nav-button" data-page="courses"><span class="nav-icon">▣</span> <span class="nav-text">My courses</span></button>
+      <button class="nav-button" data-page="assignments"><span class="nav-icon">✓</span> <span class="nav-text">Assignments</span></button>
+      <button class="nav-button" data-page="announcements"><span class="nav-icon">◉</span> <span class="nav-text">Announcements</span></button>
+      <button class="nav-button" data-page="classroom"><span class="nav-icon">🎥</span> <span class="nav-text">Classroom</span></button>
+      <button class="nav-button" data-page="tasks"><span class="nav-icon">📝</span> <span class="nav-text">Tasks</span></button>
+      <button class="nav-button" data-page="tests"><span class="nav-icon">📋</span> <span class="nav-text">Tests</span></button>
+      <p class="nav-label">Account</p>
+      <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span> <span class="nav-text">My profile</span></button>
+
+      <p class="nav-label" id="admin-nav-label" style="display:none;">Management</p>
+      <button class="nav-button" data-page="students" id="admin-students-btn" style="display:none;"><span class="nav-icon">👥</span> <span class="nav-text">Students</span></button>
+      <button class="nav-button" data-page="budget" id="admin-budget-btn" style="display:none;"><span class="nav-icon">💰</span> <span class="nav-text">Budget</span></button>
+      <button class="nav-button" data-page="courses-admin" id="admin-courses-btn" style="display:none;"><span class="nav-icon">📚</span> <span class="nav-text">Courses</span></button>
+      <button class="nav-button" data-page="grades" id="admin-grades-btn" style="display:none;"><span class="nav-icon">📊</span> <span class="nav-text">Grades</span></button>
+      <button class="nav-button" data-page="calendar" id="admin-calendar-btn" style="display:none;"><span class="nav-icon">📅</span> <span class="nav-text">Calendar</span></button>
+
+      <div class="help-card"><strong>Need help?</strong><span>Contact the NOKJ Academy support team for assistance.</span></div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <label class="search"><span>⌕</span><input type="search" placeholder="Search courses, lessons or assignments" /></label>
+        <div class="user-area">
+          <button id="language-toggle" type="button" title="Change language" style="width:42px;height:40px;display:grid;place-items:center;border:1px solid #e5e7eb;border-radius:12px;background:white;cursor:pointer;padding:0;">
+            <svg id="flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
+              <rect width="60" height="40" fill="#012169"/>
+              <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
+              <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
+              <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
+              <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
+            </svg>
+            <svg id="flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
+              <rect width="60" height="13.33" fill="#FFFFFF"/>
+              <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
+              <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
+            </svg>
+          </button>
+          <button class="notification" id="notification-button" aria-label="Notifications">🔔</button>
+          <span class="avatar" id="user-avatar">AS</span>
+          <span class="user-name"><strong id="user-display-name">Alex Student</strong><span id="user-role">Student</span></span>
+          <button class="logout-btn" id="logout-btn">Logout</button>
+        </div>
+      </header>
+
+      <!-- ===== DASHBOARD ===== -->
+      <section class="page active" id="dashboard">
+        <div class="heading"><h1 id="greeting">Good afternoon, Alex 👋</h1><p>Here is everything you need to stay on track today.</p></div>
+        <div id="admin-stats-container" style="display:none;">
+          <div class="admin-stats">
+            <div class="admin-stat-card"><div class="label">Total Students</div><div class="number" id="total-students">0</div><div class="change">Active this term</div></div>
+            <div class="admin-stat-card"><div class="label">Total Courses</div><div class="number" id="total-courses">0</div><div class="change">Active this term</div></div>
+            <div class="admin-stat-card"><div class="label">Total Enrollments</div><div class="number" id="total-enrollments">0</div><div class="change">Across all courses</div></div>
+            <div class="admin-stat-card"><div class="label">Revenue</div><div class="number" id="total-revenue">$0</div><div class="change">This month</div></div>
+          </div>
+        </div>
+        <div class="hero">
+          <div><p class="eyebrow">Thursday, 27 August</p><h2>Your next class is Mathematics at 15:30.</h2><p>Topic: Quadratic equations and graphical interpretation. Room B-12.</p></div>
+          <button class="primary-button" data-page="timetable">View timetable</button>
+        </div>
+        <div class="stats">
+          <article class="stat-card"><div class="stat-head"><span>Lessons today</span><span>▦</span></div><div class="stat-number">3</div><div class="stat-note">1 lesson remaining</div></article>
+          <article class="stat-card"><div class="stat-head"><span>Pending work</span><span>✓</span></div><div class="stat-number">4</div><div class="stat-note">2 due this week</div></article>
+          <article class="stat-card"><div class="stat-head"><span>Average grade</span><span>★</span></div><div class="stat-number">86%</div><div class="stat-note">Up 4% this term</div></article>
+          <article class="stat-card"><div class="stat-head"><span>Course progress</span><span>↗</span></div><div class="stat-number">72%</div><div class="stat-note">Across all courses</div></article>
+        </div>
+        <div class="dashboard-grid">
+          <div class="stack">
+            <article class="panel">
+              <div class="panel-title"><h3>Today's timetable</h3><button class="link-button" data-page="timetable">Full timetable</button></div>
+              <div class="lesson-row"><span class="time">09:00</span><span class="color-bar"></span><div class="row-main"><strong>English Literature</strong><span>Ms. Evans · Room A-04</span></div><span class="pill">Completed</span></div>
+              <div class="lesson-row"><span class="time">12:00</span><span class="color-bar orange"></span><div class="row-main"><strong>Biology</strong><span>Mr. Carter · Science Lab 2</span></div><span class="pill">Completed</span></div>
+              <div class="lesson-row"><span class="time">15:30</span><span class="color-bar green"></span><div class="row-main"><strong>Mathematics</strong><span>Dr. Wilson · Room B-12</span></div><span class="pill">Next</span></div>
+            </article>
+            <article class="panel">
+              <div class="panel-title"><h3>Upcoming assignments</h3><button class="link-button" data-page="assignments">All assignments</button></div>
+              <div class="simple-row"><span class="round-icon yellow">✎</span><div class="row-main"><strong>Essay: Themes in Macbeth</strong><span>English Literature · Due tomorrow at 23:59</span></div><span class="pill danger">Due soon</span></div>
+              <div class="simple-row"><span class="round-icon blue">∑</span><div class="row-main"><strong>Algebra practice set</strong><span>Mathematics · Due 30 August</span></div><span class="pill warning">In progress</span></div>
+              <div class="simple-row"><span class="round-icon">⌬</span><div class="row-main"><strong>Cell structure quiz</strong><span>Biology · Due 2 September</span></div><span class="pill">Not started</span></div>
+            </article>
+          </div>
+          <div class="stack">
+            <article class="panel">
+              <div class="panel-title"><h3>Your progress</h3><button class="link-button" data-page="courses">My courses</button></div>
+              <div class="progress-item"><div class="progress-top"><span>Mathematics</span><span>82%</span></div><div class="track"><div class="fill" style="width:82%"></div></div></div>
+              <div class="progress-item"><div class="progress-top"><span>English Literature</span><span>71%</span></div><div class="track"><div class="fill" style="width:71%"></div></div></div>
+              <div class="progress-item"><div class="progress-top"><span>Biology</span><span>64%</span></div><div class="track"><div class="fill" style="width:64%"></div></div></div>
+            </article>
+            <article class="panel">
+              <div class="panel-title"><h3>Latest updates</h3><button class="link-button" data-page="announcements">See all</button></div>
+              <div class="simple-row"><span class="round-icon">📌</span><div class="row-main"><strong>Mid-term timetable published</strong><span>The assessment timetable is now available.</span></div></div>
+              <div class="simple-row"><span class="round-icon yellow">📚</span><div class="row-main"><strong>Extended library hours</strong><span>The library is open until 18:00 this week.</span></div></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TIMETABLE ===== -->
+      <section class="page" id="timetable">
+        <div class="heading"><h1>My timetable</h1><p>Your weekly lesson schedule will appear here.</p></div>
+        <article class="panel">
+          <div class="panel-title"><h3>Thursday, 27 August</h3><button class="secondary-button">Today</button></div>
+          <div class="lesson-row"><span class="time">09:00</span><span class="color-bar"></span><div class="row-main"><strong>English Literature</strong><span>Ms. Evans · Room A-04</span></div><span class="pill">Completed</span></div>
+          <div class="lesson-row"><span class="time">12:00</span><span class="color-bar orange"></span><div class="row-main"><strong>Biology</strong><span>Mr. Carter · Science Lab 2</span></div><span class="pill">Completed</span></div>
+          <div class="lesson-row"><span class="time">15:30</span><span class="color-bar green"></span><div class="row-main"><strong>Mathematics</strong><span>Dr. Wilson · Room B-12</span></div><span class="pill">Next</span></div>
+        </article>
+      </section>
+
+      <!-- ===== MY COURSES ===== -->
+      <section class="page" id="courses">
+        <div class="heading"><h1>My courses</h1><p>Continue learning and track your progress in every course.</p></div>
+        <div id="student-courses-container"></div>
+      </section>
+
+      <!-- ===== ASSIGNMENTS ===== -->
+      <section class="page" id="assignments">
+        <div class="heading"><h1>Assignments</h1><p>Keep track of your work, deadlines, and teacher feedback.</p></div>
+        <div class="assignment-list">
+          <article class="assignment-card"><span class="round-icon yellow">✎</span><div class="row-main"><h3>Essay: Themes in Macbeth</h3><p>English Literature · 800–1,000 words · Due 28 August at 23:59</p></div><span class="pill danger">Due soon</span><button class="secondary-button assignment-button">Open assignment</button></article>
+          <article class="assignment-card"><span class="round-icon blue">∑</span><div class="row-main"><h3>Algebra practice set</h3><p>Mathematics · Questions 1–25 · Due 30 August</p></div><span class="pill warning">In progress</span><button class="secondary-button assignment-button">Open assignment</button></article>
+          <article class="assignment-card"><span class="round-icon">⌬</span><div class="row-main"><h3>Cell structure quiz</h3><p>Biology · Online quiz · Due 2 September</p></div><span class="pill">Not started</span><button class="secondary-button assignment-button">Open assignment</button></article>
+        </div>
+      </section>
+
+      <!-- ===== ANNOUNCEMENTS ===== -->
+      <section class="page" id="announcements">
+        <div class="heading"><h1>Announcements</h1><p>Important news and updates from NOKJ Academy.</p></div>
+        <div class="announcement-list">
+          <article class="announcement-card"><span class="round-icon">📌</span><div><h3>Mid-term assessment timetable published</h3><p>The timetable for mid-term assessments is now available. Check your course pages and speak with your teacher if you have any questions.</p><p><strong>Posted today</strong></p></div></article>
+          <article class="announcement-card"><span class="round-icon yellow">📚</span><div><h3>Extended library opening hours</h3><p>The school library will remain open until 18:00 from Monday to Thursday during assessment week.</p><p><strong>Posted yesterday</strong></p></div></article>
+          <article class="announcement-card"><span class="round-icon blue">🏆</span><div><h3>Student science fair registration</h3><p>Registration for the annual student science fair is open until 5 September. Speak with your science teacher to take part.</p><p><strong>Posted 25 August</strong></p></div></article>
+        </div>
+      </section>
+
+      <!-- ===== CLASSROOM ===== -->
+      <section class="page" id="classroom">
+        <div class="heading"><h1>Virtual Classroom</h1><p>Join your live lessons and meetings.</p></div>
+        <div class="meeting-grid" id="meeting-grid"></div>
+      </section>
+
+      <!-- ===== TASKS ===== -->
+      <section class="page" id="tasks">
+        <div class="heading"><h1>Tasks</h1><p id="tasks-subheading">View and complete your assignments.</p></div>
+
+        <div id="admin-tasks-view" style="display:none;">
+          <div class="task-stats-grid">
+            <div class="task-stat-card"><div class="number" id="task-total">0</div><div class="label">Total Tasks</div></div>
+            <div class="task-stat-card"><div class="number" id="task-pending">0</div><div class="label">Pending</div></div>
+            <div class="task-stat-card"><div class="number" id="task-submitted">0</div><div class="label">Submitted</div></div>
+            <div class="task-stat-card"><div class="number" id="task-graded">0</div><div class="label">Graded</div></div>
+          </div>
+
+          <div class="task-admin-actions">
+            <input type="text" id="task-search" placeholder="Search tasks..." />
+            <select id="task-type-filter"><option value="all">All Types</option><option value="homework">Homework</option><option value="test">Test</option><option value="assignment">Assignment</option></select>
+            <select id="task-status-filter"><option value="all">All Status</option><option value="pending">Pending</option><option value="submitted">Submitted</option><option value="graded">Graded</option></select>
+            <button class="primary-button" id="add-task-btn">+ Add Task</button>
+          </div>
+          <div class="task-grid" id="admin-task-list"></div>
+        </div>
+
+        <div id="student-tasks-view" style="display:none;">
+          <div class="task-stats-grid">
+            <div class="task-stat-card"><div class="number" id="student-task-total">0</div><div class="label">Total Tasks</div></div>
+            <div class="task-stat-card"><div class="number" id="student-task-pending" style="color:var(--danger);">0</div><div class="label">Pending</div></div>
+            <div class="task-stat-card"><div class="number" id="student-task-submitted" style="color:var(--warning);">0</div><div class="label">Submitted</div></div>
+            <div class="task-stat-card"><div class="number" id="student-task-graded" style="color:var(--success);">0</div><div class="label">Graded</div></div>
+          </div>
+
+          <div class="task-grid" id="student-task-list"></div>
+        </div>
+      </section>
+
+      <!-- ===== TESTS ===== -->
+      <section class="page" id="tests">
+        <div class="heading"><h1>Tests &amp; Quizzes</h1><p id="tests-subheading">Create and take tests with questions.</p></div>
+
+        <div id="admin-tests-view" style="display:none;">
+          <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="primary-button" id="create-test-btn">+ Create Test</button>
+          </div>
+          <div id="admin-test-list" class="task-grid"></div>
+        </div>
+
+        <div id="student-tests-view" style="display:none;">
+          <div id="student-test-list" class="task-grid"></div>
+        </div>
+      </section>
+
+      <!-- ===== PROFILE ===== -->
+      <section class="page" id="profile">
+        <div class="heading"><h1>My profile</h1><p>View your account information.</p></div>
+        <article class="profile-card">
+          <div class="profile-top"><span class="avatar" id="profile-avatar">AS</span><div><h2 id="profile-name">Alex Student</h2><p id="profile-role-text">Student · NOKJ Academy</p></div></div>
+          <div class="details">
+            <div><small>Student ID</small><strong id="profile-id">NOKJ-2026-1048</strong></div>
+            <div><small>Email address</small><strong id="profile-email">alex.student@example.com</strong></div>
+            <div><small>Role</small><strong id="profile-role">Student</strong></div>
+            <div><small>Member since</small><strong id="profile-since">2026</strong></div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ===== STUDENT RECORDS ===== -->
+      <section class="page" id="students">
+        <div class="heading"><h1>Student Records</h1><p>Manage all student information, grades, and attendance.</p></div>
+        <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="primary-button" id="add-student-btn">+ Add Student</button>
+          <button class="secondary-button" id="export-students-btn">📥 Export CSV</button>
+        </div>
+        <div class="table-container">
+          <div class="table-toolbar">
+            <div class="left"><input type="text" id="student-search" placeholder="Search students..." /><select id="student-filter"><option value="all">All Status</option><option value="Active">Active</option><option value="Warning">Warning</option><option value="Inactive">Inactive</option></select></div>
+            <div class="right"><span id="student-count" style="font-size:13px;color:var(--muted);">0 students</span></div>
+          </div>
+          <table><thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody id="student-table-body"></tbody></table>
+          <div class="table-summary"><span>Total Students: <strong id="student-total">0</strong></span></div>
+        </div>
+      </section>
+
+      <!-- ===== BUDGET ===== -->
+      <section class="page" id="budget">
+        <div class="heading"><h1>Budget &amp; Finance</h1><p>Track income, expenses, and financial health of NOKJ Academy.</p></div>
+        <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="primary-button" id="add-budget-btn">+ Add Entry</button>
+          <button class="secondary-button" id="export-budget-btn">📥 Export CSV</button>
+        </div>
+        <div class="table-container">
+          <div class="table-toolbar">
+            <div class="left"><input type="text" id="budget-search" placeholder="Search entries..." /><select id="budget-filter"><option value="all">All Types</option><option value="Income">Income</option><option value="Expense">Expense</option></select></div>
+            <div class="right"><span id="budget-count" style="font-size:13px;color:var(--muted);">0 entries</span></div>
+          </div>
+          <table><thead><tr><th>Category</th><th>Type</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="budget-table-body"></tbody></table>
+          <div class="table-summary"><span>Total Income: <strong class="total income" id="budget-total-income">$0</strong></span><span>Total Expenses: <strong class="total expense" id="budget-total-expense">$0</strong></span><span>Net: <strong class="total" id="budget-net">$0</strong></span></div>
+        </div>
+      </section>
+
+      <!-- ===== COURSE MANAGEMENT ===== -->
+      <section class="page" id="courses-admin">
+        <div class="heading"><h1>Course Management</h1><p>Create and manage courses, and enroll students.</p></div>
+        <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="primary-button" id="add-course-btn">+ Add Course</button>
+        </div>
+        <div class="table-container">
+          <div class="table-toolbar">
+            <div class="left"><input type="text" id="course-search" placeholder="Search courses..." /></div>
+            <div class="right"><span id="course-count" style="font-size:13px;color:var(--muted);">0 courses</span></div>
+          </div>
+          <table><thead><tr><th>Course Name</th><th>Teacher</th><th>Students</th><th>Actions</th></tr></thead><tbody id="course-table-body"></tbody></table>
+          <div class="table-summary"><span>Total Courses: <strong id="course-total">0</strong></span><span>Total Enrollments: <strong id="course-enrollments-total">0</strong></span></div>
+        </div>
+      </section>
+
+      <!-- ===== GRADES ===== -->
+      <section class="page" id="grades">
+        <div class="heading"><h1>Grades</h1><p>View and manage student grades across all courses.</p></div>
+        <div id="admin-grades-view" style="display:none;">
+          <div class="grade-summary-grid">
+            <div class="grade-summary-card"><div class="label">Average Grade (All Students)</div><div class="value" id="avg-grade-all">0%</div><div class="sub">Across all courses</div></div>
+            <div class="grade-summary-card"><div class="label">Passing Students</div><div class="value" id="passing-students">0</div><div class="sub">Grade ≥ 60%</div></div>
+            <div class="grade-summary-card"><div class="label">Failing Students</div><div class="value" id="failing-students" style="color:var(--danger);">0</div><div class="sub">Grade &lt; 60%</div></div>
+          </div>
+          <div class="table-container">
+            <div class="table-toolbar">
+              <div class="left"><select id="grade-course-filter"><option value="all">All Courses</option></select><select id="grade-student-filter"><option value="all">All Students</option></select></div>
+              <div class="right"><span id="grade-count" style="font-size:13px;color:var(--muted);">0 entries</span></div>
+            </div>
+            <table><thead><tr><th>Student</th><th>Course</th><th>Grade</th><th>Status</th><th>Action</th></tr></thead><tbody id="grade-table-body"></tbody></table>
+            <div class="table-summary"><span>Total Grades: <strong id="grade-total">0</strong></span><span>Passing: <strong class="total income" id="grade-passing-count">0</strong></span><span>Failing: <strong class="total expense" id="grade-failing-count">0</strong></span></div>
+          </div>
+        </div>
+        <div id="student-grades-view" style="display:none;">
+          <div class="grade-summary-grid">
+            <div class="grade-summary-card"><div class="label">Your Average Grade</div><div class="value" id="student-avg-grade-display">0%</div><div class="sub">Across all courses</div></div>
+            <div class="grade-summary-card"><div class="label">Courses Passed</div><div class="value" id="student-courses-passed">0</div><div class="sub">Grade ≥ 60%</div></div>
+            <div class="grade-summary-card"><div class="label">Courses Failed</div><div class="value" id="student-courses-failed" style="color:var(--danger);">0</div><div class="sub">Grade &lt; 60%</div></div>
+          </div>
+          <div class="table-container">
+            <table><thead><tr><th>Course</th><th>Grade</th><th>Status</th></tr></thead><tbody id="student-grade-table-body"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CALENDAR ===== -->
+      <section class="page" id="calendar">
+        <div class="heading"><h1>Class Calendar</h1><p>Schedule and manage your classes.</p></div>
+
+        <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="primary-button" id="add-class-btn">+ Schedule Class</button>
+        </div>
+
+        <div class="calendar-container">
+          <div class="calendar-header">
+            <button class="nav-btn" id="calendar-prev">◀</button>
+            <span class="month-label" id="calendar-month-label">August 2026</span>
+            <button class="nav-btn" id="calendar-next">▶</button>
+          </div>
+          <div class="calendar-grid" id="calendar-grid">
+            <!-- Rendered by JavaScript -->
+          </div>
+        </div>
+
+        <div style="margin-top:20px;">
+          <h3>Upcoming Classes</h3>
+          <div id="upcoming-classes-list" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+            <!-- Rendered by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <nav class="mobile-nav">
+      <button class="nav-button active" data-page="dashboard"><span class="nav-icon">⌂</span><span>Home</span></button>
+      <button class="nav-button" data-page="timetable"><span class="nav-icon">▦</span><span>Schedule</span></button>
+      <button class="nav-button" data-page="courses"><span class="nav-icon">▣</span><span>Courses</span></button>
+      <button class="nav-button" data-page="tasks"><span class="nav-icon">✓</span><span>Tasks</span></button>
+      <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span><span>Profile</span></button>
+    </nav>
+  </div>
+
+  <!-- ===== OVERLAYS & MODALS ===== -->
+  <div class="presentation-overlay" id="presentation-overlay">
+    <div class="presentation-toolbar">
+      <span id="presentation-title">Presentation</span>
+      <div>
+        <button id="presentation-fullscreen">⛶ Fullscreen</button>
+        <button id="presentation-close">✕ Close</button>
+      </div>
+    </div>
+    <div class="presentation-slide" id="presentation-slide">
+      <div class="slide-content">
+        <h2 id="presentation-slide-title">Welcome!</h2>
+        <p id="presentation-slide-text">Press the arrow keys to navigate slides.</p>
+      </div>
+    </div>
+    <div style="padding:12px 24px;background:rgba(0,0,0,0.3);display:flex;justify-content:space-between;align-items:center;">
+      <span id="presentation-slide-counter">Slide 1 of 5</span>
+      <div>
+        <button id="presentation-prev" style="padding:8px 20px;border:1px solid rgba(255,255,255,0.2);border-radius:6px;background:transparent;color:white;cursor:pointer;">◀ Previous</button>
+        <button id="presentation-next" style="padding:8px 20px;margin-left:8px;border:1px solid rgba(255,255,255,0.2);border-radius:6px;background:transparent;color:white;cursor:pointer;">Next ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="file-preview-overlay" id="file-preview-overlay">
+    <div class="file-preview-content">
+      <span class="preview-close" id="file-preview-close">&times;</span>
+      <div id="file-preview-body"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <h2 id="modal-title">Add Entry</h2>
+      <p class="sub" id="modal-sub">Fill in the details below.</p>
+      <form id="modal-form"><div id="modal-fields"></div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="modal-cancel">Cancel</button>
+          <button type="submit" class="save-btn" id="modal-save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="enroll-modal-overlay">
+    <div class="modal">
+      <h2 id="enroll-modal-title">Enroll Student</h2>
+      <p class="sub" id="enroll-modal-sub">Select courses for this student.</p>
+      <div id="enroll-modal-fields"><div class="enrollment-list" id="enrollment-list"></div></div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" id="enroll-modal-cancel">Cancel</button>
+        <button type="button" class="save-btn" id="enroll-modal-save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="task-modal-overlay">
+    <div class="modal">
+      <h2 id="task-modal-title">Create Task</h2>
+      <p class="sub" id="task-modal-sub">Fill in the task details below.</p>
+      <form id="task-modal-form">
+        <label>Task Title</label>
+        <input type="text" id="task-modal-title-input" placeholder="Enter task title" />
+        <label>Task Type</label>
+        <select id="task-modal-type"><option value="homework">Homework</option><option value="test">Test</option><option value="assignment">Assignment</option></select>
+        <label>Priority</label>
+        <select id="task-modal-priority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select>
+        <label>Description</label>
+        <textarea id="task-modal-description" placeholder="Describe the task..."></textarea>
+        <label>Deadline</label>
+        <input type="date" id="task-modal-deadline" />
+        <label>Attach Files</label>
+        <div class="file-input-wrapper">
+          <label for="task-file-input">📎 Choose Files</label>
+          <input type="file" id="task-file-input" multiple />
+        </div>
+        <div class="file-list" id="task-file-list"></div>
+        <label>Assign to</label>
+        <select id="task-modal-assign"><option value="all">All Students</option><option value="course">Specific Course</option><option value="student">Specific Student</option></select>
+        <div id="task-modal-assign-options" style="display:none;"></div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="task-modal-cancel">Cancel</button>
+          <button type="submit" class="save-btn" id="task-modal-save">Create Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="grade-task-modal-overlay">
+    <div class="modal">
+      <h2 id="grade-task-modal-title">Grade Submission</h2>
+      <p class="sub" id="grade-task-modal-sub">Enter grade and feedback for this submission.</p>
+      <form id="grade-task-modal-form">
+        <label>Student</label><input type="text" id="grade-task-student-name" disabled />
+        <label>Task</label><input type="text" id="grade-task-task-title" disabled />
+        <label>Submission</label>
+        <textarea id="grade-task-submission-text" disabled style="background:#f3f4f6;min-height:60px;"></textarea>
+        <div id="grade-task-submission-file" style="margin-bottom:12px;"></div>
+        <label>Grade (%)</label>
+        <input type="number" id="grade-task-grade" placeholder="0-100" min="0" max="100" />
+        <label>Feedback</label>
+        <textarea id="grade-task-feedback" placeholder="Enter feedback for the student..."></textarea>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="grade-task-modal-cancel">Cancel</button>
+          <button type="submit" class="save-btn" id="grade-task-modal-save">Save Grade</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="schedule-modal-overlay">
+    <div class="modal">
+      <h2 id="schedule-modal-title">Schedule Class</h2>
+      <p class="sub" id="schedule-modal-sub">Set up your live class session.</p>
+      <form id="schedule-modal-form">
+        <label>Class Title</label>
+        <input type="text" id="schedule-title" placeholder="e.g. Mathematics: Quadratic Equations" />
+        <label>Teacher</label>
+        <select id="schedule-teacher"></select>
+        <label>Date</label>
+        <input type="date" id="schedule-date" />
+        <label>Time</label>
+        <input type="time" id="schedule-time" />
+        <label>Duration (minutes)</label>
+        <select id="schedule-duration">
+          <option value="30">30 min</option>
+          <option value="45">45 min</option>
+          <option value="60" selected>60 min</option>
+          <option value="90">90 min</option>
+          <option value="120">120 min</option>
+        </select>
+        <label>Meeting Link</label>
+        <input type="url" id="schedule-link" placeholder="https://meet.google.com/..." />
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="schedule-modal-cancel">Cancel</button>
+          <button type="submit" class="save-btn" id="schedule-modal-save">Schedule Class</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== TEST MODAL ===== -->
+  <div class="modal-overlay" id="test-modal-overlay">
+    <div class="modal" style="max-width:800px;">
+      <h2 id="test-modal-title">Create Test</h2>
+      <p class="sub" id="test-modal-sub">Build your test with multiple choice questions.</p>
+      <form id="test-modal-form">
+        <label>Test Title</label>
+        <input type="text" id="test-modal-title-input" placeholder="e.g. Algebra Quiz 1" />
+        <label>Course</label>
+        <select id="test-modal-course"></select>
+        <label>Description</label>
+        <textarea id="test-modal-description" placeholder="Describe the test..."></textarea>
+        <label>Deadline</label>
+        <input type="date" id="test-modal-deadline" />
+
+        <div style="margin:16px 0 8px 0;display:flex;justify-content:space-between;align-items:center;">
+          <strong>Questions</strong>
+          <button type="button" class="primary-button" id="add-question-btn" style="padding:4px 12px;font-size:12px;">+ Add Question</button>
+        </div>
+        <div id="questions-container"></div>
+
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="test-modal-cancel">Cancel</button>
+          <button type="submit" class="save-btn" id="test-modal-save">Create Test</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== TAKE TEST MODAL ===== -->
+  <div class="modal-overlay" id="take-test-modal-overlay">
+    <div class="modal" style="max-width:800px;">
+      <h2 id="take-test-title">Take Test</h2>
+      <p class="sub" id="take-test-sub">Answer all questions and submit.</p>
+      <form id="take-test-form">
+        <div id="take-test-questions"></div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="take-test-cancel">Close</button>
+          <button type="submit" class="save-btn" id="take-test-submit">Submit Test</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
     (function() {
 
       // ----- DEMO ACCOUNTS -----
@@ -1553,6 +4390,7 @@
           return;
         }
 
+        // Calculate score
         var correct = 0;
         test.questions.forEach(function(q, index) {
           if (answers[index] === q.correctAnswer) correct++;
@@ -1625,6 +4463,7 @@
           }
         });
 
+        // Calculate average
         var scores = submissions.map(function(key) { return testSubmissions[key].score; });
         var avg = scores.length > 0 ? Math.round(scores.reduce(function(a, b) { return a + b; }, 0) / scores.length) : 0;
         msg += '\n📊 Average Score: ' + avg + '%';
@@ -2690,6 +5529,7 @@
         div.className = 'question-builder';
         div.dataset.qIndex = questionCounter;
 
+        // Create unique name for radio group
         var radioName = 'correct-' + questionCounter + '-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
 
         div.innerHTML =
@@ -2712,6 +5552,7 @@
 
         div.querySelector('.remove-question').addEventListener('click', function() {
           div.remove();
+          // Renumber remaining questions
           var questions = container.querySelectorAll('.question-builder');
           questions.forEach(function(q, idx) {
             q.querySelector('.q-number').textContent = 'Question ' + (idx + 1);
@@ -2797,5 +5638,6 @@
 
     })();
   </script>
+
 </body>
 </html>

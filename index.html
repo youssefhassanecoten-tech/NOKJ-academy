@@ -1,9 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>NOKJ Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* Full CSS from project - see original for complete styles */
+    :root {
+      --primary: #4f46e5; --primary-dark: #3730a3; --primary-light: #eef2ff;
+      --ink: #182033; --muted: #6b7280; --line: #e5e7eb; --bg: #f6f7fb;
+      --white: #ffffff; --success: #059669; --warning: #b45309; --danger: #dc2626;
+      --radius: 18px; --shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; color: var(--ink); background: var(--bg); font-family: Inter, Arial, Helvetica, sans-serif; line-height: 1.5; }
+    button { font: inherit; cursor: pointer; }
+    #landing-page { display: flex; flex-direction: column; min-height: 100vh; background: linear-gradient(135deg, #f0f4ff 0%, #e8edff 100%); }
+    #landing-page.hidden { display: none; }
+    .landing-header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 10; flex-wrap: wrap; gap: 12px; }
+    .landing-header .brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; color: var(--primary); }
+    .landing-header .brand .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; background: var(--primary); color: white; border-radius: 12px; font-size: 18px; }
+    .landing-header .auth-buttons { display: flex; gap: 12px; }
+    .landing-header .auth-buttons .btn-outline { padding: 10px 24px; border: 2px solid var(--primary); border-radius: 10px; background: transparent; color: var(--primary); font-weight: 700; }
+    .landing-header .auth-buttons .btn-primary { padding: 10px 24px; border: 0; border-radius: 10px; background: var(--primary); color: white; font-weight: 700; }
+    .landing-hero { flex: 1; display: flex; align-items: center; justify-content: center; padding: 60px 40px; gap: 60px; max-width: 1200px; margin: 0 auto; flex-wrap: wrap; }
+    .landing-hero .hero-content { flex: 1; min-width: 280px; }
+    .landing-hero .hero-content h1 { font-size: 48px; font-weight: 900; line-height: 1.1; margin: 0 0 16px; }
+    .landing-hero .hero-content h1 span { color: var(--primary); }
+    .landing-hero .hero-content p { font-size: 18px; color: var(--muted); max-width: 480px; margin: 0 0 30px; }
+    .landing-hero .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-large { padding: 14px 36px; border-radius: 12px; font-size: 16px; font-weight: 700; }
+    .btn-large.primary { background: var(--primary); color: white; border: 0; }
+    .btn-large.outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+    .landing-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-width: 1200px; margin: 0 auto; padding: 40px; }
+    .feature-card { padding: 30px; border-radius: var(--radius); background: white; box-shadow: var(--shadow); text-align: center; }
+    .landing-footer { padding: 30px 40px; text-align: center; color: var(--muted); font-size: 13px; }
+    #login-screen, #register-screen { display: none; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; background: linear-gradient(135deg, #312e81, #4f46e5, #7c3aed); position: relative; }
+    #login-screen.open, #register-screen.open { display: flex; }
+    #login-screen.hidden, #register-screen.hidden { display: none; }
+    .login-lang-toggle { position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; display: grid; place-items: center; border: 2px solid rgba(255,255,255,0.3); border-radius: 12px; background: rgba(255,255,255,0.15); padding: 0; }
+    .login-box, .register-box { width: 100%; max-width: 420px; padding: 40px 32px; border-radius: var(--radius); background: white; box-shadow: 0 25px 60px rgba(0,0,0,0.3); }
+    .login-box label, .register-box label { display: block; margin-bottom: 4px; font-size: 13px; font-weight: 700; }
+    .login-box input, .register-box input, .register-box select { width: 100%; padding: 12px 14px; margin-bottom: 16px; border: 1px solid var(--line); border-radius: 10px; font-size: 14px; background: #fafafa; }
+    .login-btn, .register-btn { width: 100%; padding: 14px; color: white; font-weight: 800; border: 0; border-radius: 10px; background: var(--primary); }
+    .login-error, .register-error { margin-top: 12px; color: var(--danger); font-size: 13px; text-align: center; min-height: 20px; }
+    #app { display: none; } #app.logged-in { display: block; }
+    .sidebar { width: 245px; min-height: 100vh; padding: 26px 15px; display: flex; flex-direction: column; position: fixed; inset: 0 auto 0 0; color: white; background: linear-gradient(180deg, #312e81, #4f46e5 60%, #3730a3); z-index: 30; overflow-y: auto; }
+    .brand { padding: 0 12px 30px; display: flex; align-items: center; gap: 11px; }
+    .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; color: var(--primary-dark); font-size: 18px; font-weight: 900; border-radius: 13px; background: white; }
+    .nav-label { padding: 0 12px; margin: 8px 0 9px; color: #c7d2fe; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+    .nav-button { width: 100%; padding: 12px; display: flex; align-items: center; gap: 12px; color: #e0e7ff; font-size: 14px; font-weight: 700; text-align: left; border: 0; border-radius: 12px; background: transparent; }
+    .nav-button:hover, .nav-button.active { color: white; background: rgba(255,255,255,0.16); }
+    .nav-icon { width: 20px; font-size: 17px; text-align: center; }
+    .help-card { padding: 15px; margin: auto 8px 0; border: 1px solid rgba(255,255,255,0.16); border-radius: 15px; background: rgba(255,255,255,0.1); font-size: 11px; }
+    main { min-height: 100vh; margin-left: 245px; }
+    .topbar { min-height: 76px; padding: 15px 36px; display: flex; align-items: center; justify-content: space-between; gap: 16px; position: sticky; top: 0; z-index: 20; border-bottom: 1px solid var(--line); background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); }
+    .search { width: min(410px, 100%); padding: 10px 13px; display: flex; gap: 9px; align-items: center; border: 1px solid var(--line); border-radius: 12px; background: #fafafa; }
+    .search input { width: 100%; border: 0; outline: 0; background: transparent; }
+    .user-area { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .notification { width: 40px; height: 40px; font-size: 17px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+    .avatar { width: 39px; height: 39px; display: grid; place-items: center; color: white; font-size: 12px; font-weight: 850; border-radius: 50%; background: linear-gradient(135deg, #f97316, #db2777); }
+    .avatar.admin-avatar { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
+    .avatar.teacher-avatar { background: linear-gradient(135deg, #059669, #34d399); }
+    .logout-btn { padding: 6px 14px; font-size: 11px; font-weight: 700; color: var(--danger); border: 1px solid #fecaca; border-radius: 8px; background: #fef2f2; }
+    .page { display: none; max-width: 1380px; padding: 35px 36px 100px; margin: 0 auto; }
+    .page.active { display: block; animation: appear 0.2s ease; }
+    @keyframes appear { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .heading h1 { margin: 0; font-size: clamp(25px, 4vw, 31px); }
+    .heading p { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+    .hero { min-height: 190px; padding: 28px; display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; position: relative; color: white; border-radius: var(--radius); background: linear-gradient(120deg, #3730a3, #4f46e5, #7c3aed); box-shadow: var(--shadow); }
+    .eyebrow { margin: 0 0 10px; color: #c7d2fe; font-size: 11px; font-weight: 850; letter-spacing: 1px; text-transform: uppercase; }
+    .primary-button, .secondary-button { padding: 10px 14px; font-size: 12px; font-weight: 800; border-radius: 10px; }
+    .primary-button { color: white; border: 0; background: var(--primary); }
+    .secondary-button { color: var(--primary); border: 1px solid #c7d2fe; background: white; }
+    .hero .primary-button { min-width: 125px; color: var(--primary-dark); background: white; z-index: 1; }
+    .stats { margin: 23px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+    .stat-card, .panel, .course, .assignment-card, .announcement-card, .profile-card { border: 1px solid var(--line); border-radius: var(--radius); background: white; box-shadow: 0 3px 12px rgba(15,23,42,0.025); }
+    .stat-card { padding: 17px; }
+    .stat-head { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .stat-number { margin: 15px 0 4px; font-size: 26px; font-weight: 850; }
+    .stat-note { color: var(--muted); font-size: 11px; }
+    .admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+    .admin-stat-card { padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: white; }
+    .admin-stat-card .label { color: var(--muted); font-size: 12px; font-weight: 700; }
+    .admin-stat-card .number { margin-top: 8px; font-size: 28px; font-weight: 850; }
+    .table-container { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: white; }
+    .table-toolbar { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+    .add-btn { padding: 8px 16px; color: white; font-size: 13px; font-weight: 700; border: 0; border-radius: 8px; background: var(--primary); }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    table th { padding: 14px 16px; text-align: left; font-weight: 700; border-bottom: 2px solid var(--line); background: #fafafa; }
+    table td { padding: 12px 16px; border-bottom: 1px solid #f0f1f4; }
+    .status-badge { padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 6px; }
+    .status-badge.active { color: #047857; background: #d1fae5; }
+    .status-badge.warning { color: #92400e; background: #fef3c7; }
+    .status-badge.inactive { color: #b91c1c; background: #fee2e2; }
+    .action-btn { padding: 4px 10px; font-size: 12px; border: 1px solid var(--line); border-radius: 6px; background: white; margin-right: 4px; }
+    .action-btn.edit { color: var(--primary); border-color: #c7d2fe; }
+    .action-btn.delete { color: var(--danger); border-color: #fecaca; }
+    .action-btn.enroll { color: var(--success); border-color: #a7f3d0; }
+    .table-summary { padding: 14px 20px; display: flex; gap: 24px; flex-wrap: wrap; border-top: 1px solid var(--line); font-size: 13px; background: #fafafa; }
+    .grade-pass { color: var(--success); font-weight: 700; }
+    .grade-fail { color: var(--danger); font-weight: 700; }
+    .grade-input { width: 60px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 13px; text-align: center; }
+    .grade-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+    .grade-summary-card { padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: white; }
+    .meeting-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; margin-top: 20px; }
+    .meeting-card { border: 1px solid var(--line); border-radius: var(--radius); background: white; overflow: hidden; }
+    .meeting-card .meeting-header { padding: 16px 20px; background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; }
+    .meeting-card .join-btn { margin-top: 12px; width: 100%; padding: 10px; border: 0; border-radius: 8px; background: var(--primary); color: white; font-weight: 700; }
+    .calendar-container { background: white; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-top: 20px; }
+    .calendar-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+    .calendar-grid .day-label { padding: 12px; text-align: center; font-weight: 700; font-size: 12px; color: var(--muted); border-bottom: 1px solid var(--line); }
+    .calendar-grid .day-cell { padding: 8px; min-height: 80px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); cursor: pointer; }
+    .calendar-grid .day-cell.today { background: var(--primary-light); }
+    .calendar-grid .day-cell.empty { cursor: default; background: #fafafa; }
+    .presentation-overlay { display: none; position: fixed; inset: 0; z-index: 1000; background: #1a1a2e; color: white; flex-direction: column; }
+    .presentation-overlay.open { display: flex; }
+    .task-grid { display: grid; gap: 17px; margin-top: 20px; }
+    .task-card { border: 1px solid var(--line); border-radius: var(--radius); background: white; padding: 20px; }
+    .task-card .task-type { padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+    .task-card .task-type.homework { background: #dbeafe; color: #1e40af; }
+    .task-card .task-type.assignment { background: #d1fae5; color: #047857; }
+    .task-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+    .task-stat-card { padding: 16px; border: 1px solid var(--line); border-radius: var(--radius); background: white; text-align: center; }
+    .task-stat-card .number { font-size: 28px; font-weight: 850; }
+    .file-preview-overlay { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; }
+    .file-preview-overlay.open { display: flex; }
+    .file-preview-content { max-width: 95%; max-height: 95%; background: white; border-radius: var(--radius); padding: 20px; overflow: auto; position: relative; min-width: 300px; }
+    .file-preview-content .preview-close { position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer; color: var(--muted); z-index: 10; }
+    .file-preview-iframe { width: 100%; height: 600px; border: none; border-radius: 8px; }
+    .file-preview-text { white-space: pre-wrap; font-family: monospace; padding: 20px; max-height: 600px; overflow: auto; }
+    .file-preview-image { max-width: 100%; max-height: 80vh; border-radius: 8px; display: block; margin: 0 auto; }
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.open { display: flex; }
+    .modal { max-width: 600px; width: 100%; padding: 30px; border-radius: var(--radius); background: white; box-shadow: 0 25px 60px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
+    .modal label { display: block; margin-bottom: 4px; font-size: 13px; font-weight: 700; }
+    .modal input, .modal select, .modal textarea { width: 100%; padding: 10px 12px; margin-bottom: 16px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; background: #fafafa; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+    .modal-actions .cancel-btn { padding: 10px 20px; font-weight: 700; border: 0; border-radius: 8px; color: var(--muted); background: #f3f4f6; }
+    .modal-actions .save-btn { padding: 10px 20px; font-weight: 700; border: 0; border-radius: 8px; color: white; background: var(--primary); }
+    .dashboard-grid { display: grid; grid-template-columns: 1.45fr 0.85fr; gap: 21px; }
+    .stack { display: grid; gap: 21px; }
+    .panel { padding: 20px; }
+    .panel-title { margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; }
+    .link-button { padding: 0; color: var(--primary); font-size: 12px; font-weight: 800; border: 0; background: transparent; }
+    .lesson-row, .simple-row { padding: 13px 0; display: flex; gap: 12px; align-items: center; border-top: 1px solid #f0f1f4; }
+    .lesson-row:first-of-type, .simple-row:first-of-type { padding-top: 0; border-top: 0; }
+    .time { width: 44px; color: var(--primary); font-size: 11px; font-weight: 850; }
+    .color-bar { width: 4px; height: 38px; border-radius: 5px; background: #6366f1; }
+    .row-main { min-width: 0; flex: 1; }
+    .pill { padding: 5px 8px; font-size: 10px; font-weight: 800; border-radius: 8px; background: #f3f4f6; color: var(--muted); }
+    .pill.danger { color: #b91c1c; background: #fee2e2; }
+    .pill.warning { color: #92400e; background: #fef3c7; }
+    .pill.success { color: #047857; background: #d1fae5; }
+    .round-icon { width: 39px; height: 39px; display: grid; place-items: center; font-size: 17px; border-radius: 12px; background: #ede9fe; }
+    .progress-item + .progress-item { margin-top: 17px; }
+    .progress-top { margin-bottom: 7px; display: flex; justify-content: space-between; font-size: 12px; font-weight: 750; }
+    .track { height: 8px; overflow: hidden; border-radius: 20px; background: #eef0f4; }
+    .fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #4f46e5, #818cf8); }
+    .course-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
+    .course-cover { height: 110px; padding: 18px; display: flex; align-items: flex-end; color: white; font-size: 20px; font-weight: 850; background: linear-gradient(135deg, #4f46e5, #818cf8); }
+    .course-body { padding: 17px; }
+    .assignment-list, .announcement-list { display: grid; gap: 13px; }
+    .assignment-card, .announcement-card { padding: 18px; display: flex; align-items: center; gap: 15px; }
+    .profile-card { max-width: 760px; padding: 25px; }
+    .details { margin-top: 24px; padding-top: 22px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 19px; border-top: 1px solid var(--line); }
+    .mobile-nav { display: none; }
+    .question-builder { border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; background: #fafafa; }
+    .submission-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 12px; background: white; }
+    .announcement-form { background: white; padding: 20px; border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 20px; }
+    .toast { position: fixed; bottom: 24px; right: 24px; padding: 14px 20px; background: var(--ink); color: white; border-radius: 10px; font-size: 14px; font-weight: 600; z-index: 2000; opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .assignment-detail-meta { display: grid; gap: 8px; margin: 16px 0; font-size: 14px; }
+    .assignment-detail-meta span { color: var(--muted); }
+    @media (max-width: 1030px) { .stats, .admin-stats, .grade-summary-grid, .task-stats-grid { grid-template-columns: repeat(2, 1fr); } .course-grid, .meeting-grid { grid-template-columns: repeat(2, 1fr); } .landing-features { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 790px) { .sidebar { display: none; } main { margin-left: 0; } .search, .user-name { display: none; } .page { padding: 25px 16px 90px; } .dashboard-grid { grid-template-columns: 1fr; } .mobile-nav { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; right: 0; bottom: 0; left: 0; z-index: 20; border-top: 1px solid var(--line); background: rgba(255,255,255,0.96); padding: 7px; } .mobile-nav .nav-button { padding: 5px 1px; display: grid; justify-items: center; gap: 3px; color: var(--muted); font-size: 9px; border-radius: 9px; background: transparent; } .mobile-nav .nav-button.active { color: var(--primary); background: var(--primary-light); } }
+    @media (max-width: 480px) { .stats, .admin-stats { grid-template-columns: 1fr; } .course-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div id="landing-page">
+    <header class="landing-header">
+      <div class="brand"><div class="brand-mark">N</div><span>NOKJ Academy</span></div>
+      <div class="auth-buttons">
+        <button class="btn-outline" id="landing-login-btn">Sign In</button>
+        <button class="btn-primary" id="landing-register-btn">Join Academy</button>
+      </div>
+    </header>
+    <section class="landing-hero">
+      <div class="hero-content">
+        <h1>Learn Anything, <span>Anytime</span></h1>
+        <p>NOKJ Academy is your all-in-one learning platform.</p>
+        <div class="hero-buttons">
+          <button class="btn-large primary" id="landing-start-btn">Start Learning Free</button>
+          <button class="btn-large outline" id="landing-signin-btn">Sign In</button>
+        </div>
+      </div>
+    </section>
+    <section class="landing-features">
+      <div class="feature-card"><div class="icon">🎥</div><h3>Live Classes</h3><p>Join interactive live sessions with your teachers.</p></div>
+      <div class="feature-card"><div class="icon">📝</div><h3>Smart Tasks</h3><p>Submit homework and get instant feedback.</p></div>
+      <div class="feature-card"><div class="icon">📊</div><h3>Track Progress</h3><p>View grades and course progress at a glance.</p></div>
+    </section>
+    <footer class="landing-footer">© 2026 NOKJ Academy</footer>
+  </div>
+
+  <div id="login-screen" class="hidden">
+    <button id="login-lang-toggle" type="button" class="login-lang-toggle" title="Change language">🌐</button>
+    <div class="login-box">
+      <div class="login-header"><h2>Welcome back</h2><p>Sign in to your account</p></div>
+      <form id="login-form">
+        <label for="login-email">Email address</label>
+        <input type="email" id="login-email" placeholder="you@example.com" />
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" />
+        <button type="submit" class="login-btn">Sign In</button>
+        <div id="login-error" class="login-error"></div>
+      </form>
+      <p style="text-align:center;margin-top:16px;font-size:14px;color:var(--muted);">Don't have an account? <a id="login-to-register" style="color:var(--primary);font-weight:700;cursor:pointer;">Join Academy</a></p>
+    </div>
+  </div>
+
+  <div id="register-screen" class="hidden">
+    <button id="register-lang-toggle" type="button" class="login-lang-toggle" title="Change language">🌐</button>
+    <div class="register-box">
+      <div class="register-header"><h2>Create Account</h2><p>Start your learning journey today</p></div>
+      <form id="register-form">
+        <label for="register-name">Full Name</label>
+        <input type="text" id="register-name" placeholder="Alex Student" />
+        <label for="register-email">Email address</label>
+        <input type="email" id="register-email" placeholder="you@example.com" />
+        <label for="register-role">I am a...</label>
+        <select id="register-role"><option value="Student">Student</option><option value="Teacher">Teacher</option></select>
+        <label for="register-password">Password</label>
+        <input type="password" id="register-password" placeholder="Min 6 characters" />
+        <button type="submit" class="register-btn">Create Account</button>
+        <div id="register-error" class="register-error"></div>
+      </form>
+      <p style="text-align:center;margin-top:16px;font-size:14px;color:var(--muted);">Already have an account? <a id="register-to-login" style="color:var(--primary);font-weight:700;cursor:pointer;">Sign In</a></p>
+    </div>
+  </div>
+
+  <div id="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">N</div><div><strong>NOKJ Academy</strong><small id="sidebar-role">Student Portal</small></div></div>
+      <p class="nav-label">Menu</p>
+      <button class="nav-button active" data-page="dashboard"><span class="nav-icon">⌂</span> <span>Dashboard</span></button>
+      <button class="nav-button" data-page="timetable"><span class="nav-icon">▦</span> <span>Timetable</span></button>
+      <button class="nav-button" data-page="courses"><span class="nav-icon">▣</span> <span>My courses</span></button>
+      <button class="nav-button" data-page="assignments"><span class="nav-icon">✓</span> <span>Assignments</span></button>
+      <button class="nav-button" data-page="announcements"><span class="nav-icon">◉</span> <span>Announcements</span></button>
+      <button class="nav-button" data-page="classroom"><span class="nav-icon">🎥</span> <span>Classroom</span></button>
+      <button class="nav-button" data-page="tasks"><span class="nav-icon">📝</span> <span>Tasks</span></button>
+      <button class="nav-button" data-page="tests"><span class="nav-icon">📋</span> <span>Tests</span></button>
+      <p class="nav-label">Account</p>
+      <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span> <span>My profile</span></button>
+      <p class="nav-label" id="admin-nav-label" style="display:none;">Management</p>
+      <button class="nav-button" data-page="students" id="admin-students-btn" style="display:none;"><span class="nav-icon">👥</span> <span>Students</span></button>
+      <button class="nav-button" data-page="budget" id="admin-budget-btn" style="display:none;"><span class="nav-icon">💰</span> <span>Budget</span></button>
+      <button class="nav-button" data-page="courses-admin" id="admin-courses-btn" style="display:none;"><span class="nav-icon">📚</span> <span>Courses</span></button>
+      <button class="nav-button" data-page="grades" id="admin-grades-btn" style="display:none;"><span class="nav-icon">📊</span> <span>Grades</span></button>
+      <button class="nav-button" data-page="calendar" id="admin-calendar-btn" style="display:none;"><span class="nav-icon">📅</span> <span>Calendar</span></button>
+      <div class="help-card"><strong>Need help?</strong><span>Contact the NOKJ Academy support team.</span></div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <label class="search"><span>⌕</span><input type="search" id="global-search" placeholder="Search courses, lessons or assignments" /></label>
+        <div class="user-area">
+          <button id="language-toggle" type="button" title="Change language" style="width:42px;height:40px;border:1px solid var(--line);border-radius:12px;background:white;">🌐</button>
+          <button class="notification" id="notification-button">🔔</button>
+          <span class="avatar" id="user-avatar">AS</span>
+          <span class="user-name"><strong id="user-display-name">Alex Student</strong><span id="user-role">Student</span></span>
+          <button class="logout-btn" id="logout-btn">Logout</button>
+        </div>
+      </header>
+
+      <section class="page active" id="dashboard">
+        <div class="heading"><h1 id="greeting">Good afternoon 👋</h1><p id="dashboard-sub">Here is everything you need to stay on track today.</p></div>
+        <div id="admin-stats-container" style="display:none;">
+          <div class="admin-stats">
+            <div class="admin-stat-card"><div class="label">Total Students</div><div class="number" id="total-students">0</div></div>
+            <div class="admin-stat-card"><div class="label">Total Courses</div><div class="number" id="total-courses">0</div></div>
+            <div class="admin-stat-card"><div class="label">Total Enrollments</div><div class="number" id="total-enrollments">0</div></div>
+            <div class="admin-stat-card"><div class="label">Revenue</div><div class="number" id="total-revenue">$0</div></div>
+          </div>
+        </div>
+        <div class="hero" id="dashboard-hero">
+          <div><p class="eyebrow" id="hero-date">Today</p><h2 id="hero-title">Welcome to NOKJ Academy</h2><p id="hero-desc">Your learning journey starts here.</p></div>
+          <button class="primary-button" data-page="courses">View Courses</button>
+        </div>
+        <div class="stats" id="dashboard-stats">
+          <article class="stat-card"><div class="stat-head"><span>Courses</span><span>▣</span></div><div class="stat-number" id="stat-courses">0</div><div class="stat-note">Enrolled</div></article>
+          <article class="stat-card"><div class="stat-head"><span>Tasks</span><span>📝</span></div><div class="stat-number" id="stat-tasks">0</div><div class="stat-note">Pending</div></article>
+          <article class="stat-card"><div class="stat-head"><span>Average Grade</span><span>★</span></div><div class="stat-number" id="stat-grade">—</div><div class="stat-note">Across all courses</div></article>
+          <article class="stat-card"><div class="stat-head"><span>Tests</span><span>📋</span></div><div class="stat-number" id="stat-tests">0</div><div class="stat-note">Available</div></article>
+        </div>
+        <div class="dashboard-grid">
+          <div class="stack">
+            <article class="panel"><div class="panel-title"><h3>Today's Schedule</h3><button class="link-button" data-page="timetable">View all</button></div><div id="today-schedule"></div></article>
+            <article class="panel"><div class="panel-title"><h3>Recent Announcements</h3><button class="link-button" data-page="announcements">See all</button></div><div id="recent-announcements"></div></article>
+          </div>
+          <div class="stack">
+            <article class="panel"><div class="panel-title"><h3>Your Progress</h3><button class="link-button" data-page="courses">My courses</button></div><div id="progress-container"></div></article>
+            <article class="panel"><div class="panel-title"><h3>Upcoming Tasks</h3><button class="link-button" data-page="tasks">All tasks</button></div><div id="upcoming-tasks"></div></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="timetable">
+        <div class="heading"><h1>My timetable</h1><p>Your weekly lesson schedule.</p></div>
+        <article class="panel"><div class="panel-title"><h3 id="timetable-date">Today</h3></div><div id="timetable-content"></div></article>
+      </section>
+
+      <section class="page" id="courses">
+        <div class="heading"><h1>My courses</h1><p>Continue learning and track your progress.</p></div>
+        <div id="student-courses-container"></div>
+      </section>
+
+      <section class="page" id="assignments">
+        <div class="heading"><h1>Assignments</h1><p>Keep track of your work and deadlines.</p></div>
+        <div id="assignments-container" class="assignment-list"></div>
+      </section>
+
+      <section class="page" id="announcements">
+        <div class="heading"><h1>Announcements</h1><p>Important news and updates.</p></div>
+        <div id="announcements-container">
+          <div class="announcement-form" id="announcement-form" style="display:none;">
+            <h3>Post Announcement</h3>
+            <textarea id="announcement-input" placeholder="Write your announcement here..."></textarea>
+            <button class="primary-button" id="post-announcement-btn" style="margin-top:12px;">Post Announcement</button>
+          </div>
+          <div id="announcements-list" class="announcement-list"></div>
+        </div>
+      </section>
+
+      <section class="page" id="classroom">
+        <div class="heading"><h1>Virtual Classroom</h1><p>Join your live lessons and meetings.</p></div>
+        <div class="meeting-grid" id="meeting-grid"></div>
+      </section>
+
+      <section class="page" id="tasks">
+        <div class="heading"><h1>Tasks</h1><p id="tasks-subheading">View and complete your assignments.</p></div>
+        <div id="admin-tasks-view" style="display:none;">
+          <div class="task-stats-grid">
+            <div class="task-stat-card"><div class="number" id="task-total">0</div><div class="label">Total Tasks</div></div>
+            <div class="task-stat-card"><div class="number" id="task-pending">0</div><div class="label">Pending</div></div>
+            <div class="task-stat-card"><div class="number" id="task-submitted">0</div><div class="label">Submitted</div></div>
+            <div class="task-stat-card"><div class="number" id="task-graded">0</div><div class="label">Graded</div></div>
+          </div>
+          <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
+            <input type="text" id="task-search" placeholder="Search tasks..." style="padding:8px 12px;border:1px solid var(--line);border-radius:8px;" />
+            <select id="task-type-filter"><option value="all">All Types</option><option value="homework">Homework</option><option value="assignment">Assignment</option></select>
+            <button class="primary-button" id="add-task-btn">+ Add Task</button>
+          </div>
+          <div class="task-grid" id="admin-task-list"></div>
+        </div>
+        <div id="student-tasks-view" style="display:none;">
+          <div class="task-stats-grid">
+            <div class="task-stat-card"><div class="number" id="student-task-total">0</div><div class="label">Total Tasks</div></div>
+            <div class="task-stat-card"><div class="number" id="student-task-pending">0</div><div class="label">Pending</div></div>
+            <div class="task-stat-card"><div class="number" id="student-task-submitted">0</div><div class="label">Submitted</div></div>
+            <div class="task-stat-card"><div class="number" id="student-task-graded">0</div><div class="label">Graded</div></div>
+          </div>
+          <div class="task-grid" id="student-task-list"></div>
+        </div>
+      </section>
+
+      <section class="page" id="tests">
+        <div class="heading"><h1>Tests &amp; Quizzes</h1><p id="tests-subheading">Create and take tests.</p></div>
+        <div id="admin-tests-view" style="display:none;">
+          <button class="primary-button" id="create-test-btn" style="margin-bottom:20px;">+ Create Test</button>
+          <div id="admin-test-list" class="task-grid"></div>
+        </div>
+        <div id="student-tests-view" style="display:none;"><div id="student-test-list" class="task-grid"></div></div>
+      </section>
+
+      <section class="page" id="profile">
+        <div class="heading"><h1>My profile</h1><p>View your account information.</p></div>
+        <article class="profile-card">
+          <div style="display:flex;gap:16px;align-items:center;">
+            <span class="avatar" id="profile-avatar">AS</span>
+            <div><h2 id="profile-name" style="margin:0;">Alex Student</h2><p id="profile-role-text" style="margin:5px 0 0;color:var(--muted);">Student</p></div>
+          </div>
+          <div class="details">
+            <div><small>Student ID</small><strong id="profile-id">NOKJ-0001</strong></div>
+            <div><small>Email</small><strong id="profile-email">student@nokj.com</strong></div>
+            <div><small>Role</small><strong id="profile-role">Student</strong></div>
+            <div><small>Member since</small><strong id="profile-since">2026</strong></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="page" id="students">
+        <div class="heading"><h1>Student Records</h1><p>Manage all student information.</p></div>
+        <div style="margin-bottom:20px;display:flex;gap:10px;">
+          <button class="primary-button" id="add-student-btn">+ Add Student</button>
+          <button class="secondary-button" id="export-students-btn">Export CSV</button>
+        </div>
+        <div class="table-container">
+          <div class="table-toolbar">
+            <input type="text" id="student-search" placeholder="Search students..." />
+            <select id="student-filter"><option value="all">All Status</option><option value="Active">Active</option><option value="Warning">Warning</option><option value="Inactive">Inactive</option></select>
+          </div>
+          <table><thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody id="student-table-body"></tbody></table>
+          <div class="table-summary">Total: <strong id="student-total">0</strong></div>
+        </div>
+      </section>
+
+      <section class="page" id="budget">
+        <div class="heading"><h1>Budget &amp; Finance</h1><p>Track income and expenses.</p></div>
+        <div style="margin-bottom:20px;display:flex;gap:10px;">
+          <button class="primary-button" id="add-budget-btn">+ Add Entry</button>
+          <button class="secondary-button" id="export-budget-btn">Export CSV</button>
+        </div>
+        <div class="table-container">
+          <div class="table-toolbar">
+            <input type="text" id="budget-search" placeholder="Search entries..." />
+            <select id="budget-filter"><option value="all">All Types</option><option value="Income">Income</option><option value="Expense">Expense</option></select>
+          </div>
+          <table><thead><tr><th>Category</th><th>Type</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="budget-table-body"></tbody></table>
+          <div class="table-summary">
+            Income: <strong id="budget-total-income" style="color:var(--success);">$0</strong>
+            Expenses: <strong id="budget-total-expense" style="color:var(--danger);">$0</strong>
+            Net: <strong id="budget-net">$0</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="courses-admin">
+        <div class="heading"><h1>Course Management</h1><p>Create and manage courses.</p></div>
+        <button class="primary-button" id="add-course-btn" style="margin-bottom:20px;">+ Add Course</button>
+        <div class="table-container">
+          <input type="text" id="course-search" placeholder="Search courses..." style="margin:16px;width:calc(100% - 32px);padding:8px 12px;border:1px solid var(--line);border-radius:8px;" />
+          <table><thead><tr><th>Course Name</th><th>Teacher</th><th>Students</th><th>Actions</th></tr></thead><tbody id="course-table-body"></tbody></table>
+          <div class="table-summary">Courses: <strong id="course-total">0</strong> · Enrollments: <strong id="course-enrollments-total">0</strong></div>
+        </div>
+      </section>
+
+      <section class="page" id="grades">
+        <div class="heading"><h1>Grades</h1><p>View and manage student grades.</p></div>
+        <div id="admin-grades-view" style="display:none;">
+          <div class="grade-summary-grid">
+            <div class="grade-summary-card"><div class="label">Average Grade</div><div class="value" id="avg-grade-all">0%</div></div>
+            <div class="grade-summary-card"><div class="label">Passing Students</div><div class="value" id="passing-students">0</div></div>
+            <div class="grade-summary-card"><div class="label">Failing Students</div><div class="value" id="failing-students" style="color:var(--danger);">0</div></div>
+          </div>
+          <div class="table-container">
+            <div class="table-toolbar">
+              <select id="grade-course-filter"><option value="all">All Courses</option></select>
+              <select id="grade-student-filter"><option value="all">All Students</option></select>
+            </div>
+            <table><thead><tr><th>Student</th><th>Course</th><th>Grade</th><th>Status</th><th>Action</th></tr></thead><tbody id="grade-table-body"></tbody></table>
+          </div>
+        </div>
+        <div id="student-grades-view" style="display:none;">
+          <div class="grade-summary-grid">
+            <div class="grade-summary-card"><div class="label">Your Average</div><div class="value" id="student-avg-grade-display">—</div></div>
             <div class="grade-summary-card"><div class="label">Courses Passed</div><div class="value" id="student-courses-passed">0</div></div>
             <div class="grade-summary-card"><div class="label">Courses Failed</div><div class="value" id="student-courses-failed" style="color:var(--danger);">0</div></div>
           </div>
           <div class="table-container"><table><thead><tr><th>Course</th><th>Grade</th><th>Status</th></tr></thead><tbody id="student-grade-table-body"></tbody></table></div>
         </div>
       </section>
+
       <section class="page" id="calendar">
         <div class="heading"><h1>Class Calendar</h1><p>Schedule and manage classes.</p></div>
         <button class="primary-button" id="add-class-btn" style="margin-bottom:20px;">+ Schedule Class</button>
@@ -18,6 +483,7 @@
         <div style="margin-top:20px;"><h3>Upcoming Classes</h3><div id="upcoming-classes-list"></div></div>
       </section>
     </main>
+
     <nav class="mobile-nav">
       <button class="nav-button active" data-page="dashboard"><span class="nav-icon">⌂</span><span>Home</span></button>
       <button class="nav-button" data-page="timetable"><span class="nav-icon">▦</span><span>Schedule</span></button>
@@ -26,6 +492,7 @@
       <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span><span>Profile</span></button>
     </nav>
   </div>
+
   <div class="presentation-overlay" id="presentation-overlay">
     <div style="padding:12px 24px;display:flex;justify-content:space-between;background:rgba(0,0,0,0.5);">
       <span id="presentation-title">Presentation</span>
@@ -42,12 +509,14 @@
       </div>
     </div>
   </div>
+
   <div class="file-preview-overlay" id="file-preview-overlay">
     <div class="file-preview-content">
       <span class="preview-close" id="file-preview-close">&times;</span>
       <div id="file-preview-body"></div>
     </div>
   </div>
+
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal">
       <h2 id="modal-title">Add Entry</h2>
@@ -57,6 +526,7 @@
       </form>
     </div>
   </div>
+
   <div class="modal-overlay" id="enroll-modal-overlay">
     <div class="modal">
       <h2 id="enroll-modal-title">Enroll Student</h2>
@@ -64,6 +534,7 @@
       <div class="modal-actions"><button type="button" class="cancel-btn" id="enroll-modal-cancel">Cancel</button><button type="button" class="save-btn" id="enroll-modal-save">Save</button></div>
     </div>
   </div>
+
   <div class="modal-overlay" id="task-modal-overlay">
     <div class="modal">
       <h2 id="task-modal-title">Create Task</h2>
@@ -82,6 +553,7 @@
       </form>
     </div>
   </div>
+
   <div class="modal-overlay" id="grade-task-modal-overlay">
     <div class="modal">
       <h2>Grade Submission</h2>
@@ -96,6 +568,7 @@
       </form>
     </div>
   </div>
+
   <div class="modal-overlay" id="schedule-modal-overlay">
     <div class="modal">
       <h2>Schedule Class</h2>
@@ -110,6 +583,7 @@
       </form>
     </div>
   </div>
+
   <div class="modal-overlay" id="test-modal-overlay">
     <div class="modal" style="max-width:800px;">
       <h2>Create Test</h2>
@@ -124,6 +598,7 @@
       </form>
     </div>
   </div>
+
   <div class="modal-overlay" id="take-test-modal-overlay">
     <div class="modal" style="max-width:800px;">
       <h2 id="take-test-title">Take Test</h2>
@@ -133,6 +608,7 @@
       </form>
     </div>
   </div>
+
   <div class="modal-overlay" id="assignment-detail-overlay">
     <div class="modal">
       <h2 id="assignment-detail-title">Assignment</h2>
@@ -147,8 +623,1210 @@
       <div class="modal-actions"><button type="button" class="cancel-btn" id="assignment-detail-close">Close</button><button type="button" class="save-btn" id="assignment-detail-goto">Go to Tasks</button></div>
     </div>
   </div>
+
   <div class="toast" id="toast"></div>
-  <script src="app.js"></script>
+
+  <script>
+(function () {
+  'use strict';
+
+  function makeDefaultMeetings() {
+    var today = new Date().toISOString().split('T')[0];
+    var tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+    return [
+      { id: 1, title: 'Mathematics: Algebra Review', teacherId: 1, date: today, time: '09:00', duration: 60, link: '#' },
+      { id: 2, title: 'Biology: Cell Structure', teacherId: 1, date: today, time: '11:00', duration: 45, link: '#' },
+      { id: 3, title: 'English Literature Discussion', teacherId: 2, date: tomorrow, time: '14:00', duration: 60, link: '#' }
+    ];
+  }
+
+  var DEFAULT_STUDENTS = [
+    { id: 1, name: 'Alex Student', email: 'student@nokj.com', password: 'password123', role: 'Student', status: 'Active', createdAt: '2026-01-15' },
+    { id: 2, name: 'Sarah Chen', email: 'sarah@example.com', password: 'password123', role: 'Student', status: 'Active', createdAt: '2026-01-20' },
+    { id: 3, name: 'Marcus Webb', email: 'marcus@example.com', password: 'password123', role: 'Student', status: 'Warning', createdAt: '2026-02-01' }
+  ];
+  var DEFAULT_TEACHERS = [
+    { id: 1, name: 'Dr. Wilson', email: 'wilson@nokj.com', password: 'password123', role: 'Teacher', createdAt: '2026-01-01' },
+    { id: 2, name: 'Ms. Evans', email: 'evans@nokj.com', password: 'password123', role: 'Teacher', createdAt: '2026-01-01' }
+  ];
+  var DEFAULT_ADMINS = [
+    { id: 1, name: 'Admin User', email: 'admin@nokj.com', password: 'admin123', role: 'Admin', createdAt: '2026-01-01' }
+  ];
+  var DEFAULT_COURSES = [
+    { id: 1, name: 'Mathematics', teacherId: 1, description: 'Year 10 Mathematics' },
+    { id: 2, name: 'Biology', teacherId: 1, description: 'Year 10 Biology' },
+    { id: 3, name: 'English Literature', teacherId: 2, description: 'Year 10 English Literature' }
+  ];
+  var DEFAULT_ENROLLMENTS = [
+    { studentId: 1, courseId: 1 }, { studentId: 1, courseId: 2 }, { studentId: 1, courseId: 3 },
+    { studentId: 2, courseId: 1 }, { studentId: 2, courseId: 3 },
+    { studentId: 3, courseId: 2 }
+  ];
+  var DEFAULT_ANNOUNCEMENTS = [
+    { id: 1, title: 'Welcome to NOKJ Academy', content: 'We are excited to have you here. Start exploring your courses and tasks today!', authorId: 1, createdAt: new Date().toISOString() }
+  ];
+  var DEFAULT_BUDGET = [
+    { id: 1, category: 'Tuition Fees', type: 'Income', amount: 5000, date: '2026-08-01', status: 'Paid' },
+    { id: 2, category: 'Office Supplies', type: 'Expense', amount: 250, date: '2026-08-05', status: 'Paid' }
+  ];
+  var DEFAULT_GRADES = { '1-1': 88, '1-2': 76, '1-3': 92, '2-1': 85, '2-3': 78 };
+
+  var students = [], teachers = [], admins = [], courses = [], enrollments = [], meetings = [];
+  var gradeData = {}, tasks = [], taskSubmissions = {}, budgetEntries = [];
+  var tests = [], testSubmissions = {}, announcements = [];
+  var currentUser = null, currentMonth = new Date().getMonth(), currentYear = new Date().getFullYear();
+  var tempTaskFiles = [], gradingTaskId = null, gradingStudentId = null, enrollStudentId = null;
+  var questionCounter = 0, currentSlide = 0, presentationSlides = [], takingTestId = null;
+  var modalType = null, modalMode = 'add', editingId = null;
+
+  function $(id) { return document.getElementById(id); }
+
+  function loadData() {
+    students = JSON.parse(localStorage.getItem('nokj-students') || 'null') || DEFAULT_STUDENTS.slice();
+    teachers = JSON.parse(localStorage.getItem('nokj-teachers') || 'null') || DEFAULT_TEACHERS.slice();
+    admins = JSON.parse(localStorage.getItem('nokj-admins') || 'null') || DEFAULT_ADMINS.slice();
+    courses = JSON.parse(localStorage.getItem('nokj-courses') || 'null') || DEFAULT_COURSES.slice();
+    enrollments = JSON.parse(localStorage.getItem('nokj-enrollments') || 'null') || DEFAULT_ENROLLMENTS.slice();
+    meetings = JSON.parse(localStorage.getItem('nokj-meetings') || 'null') || makeDefaultMeetings();
+    gradeData = JSON.parse(localStorage.getItem('nokj-grades') || 'null') || Object.assign({}, DEFAULT_GRADES);
+    tasks = JSON.parse(localStorage.getItem('nokj-tasks') || 'null') || [];
+    taskSubmissions = JSON.parse(localStorage.getItem('nokj-submissions') || 'null') || {};
+    budgetEntries = JSON.parse(localStorage.getItem('nokj-budget') || 'null') || DEFAULT_BUDGET.slice();
+    tests = JSON.parse(localStorage.getItem('nokj-tests') || 'null') || [];
+    testSubmissions = JSON.parse(localStorage.getItem('nokj-test-submissions') || 'null') || {};
+    announcements = JSON.parse(localStorage.getItem('nokj-announcements') || 'null') || DEFAULT_ANNOUNCEMENTS.slice();
+  }
+
+  function saveData() {
+    localStorage.setItem('nokj-students', JSON.stringify(students));
+    localStorage.setItem('nokj-teachers', JSON.stringify(teachers));
+    localStorage.setItem('nokj-admins', JSON.stringify(admins));
+    localStorage.setItem('nokj-courses', JSON.stringify(courses));
+    localStorage.setItem('nokj-enrollments', JSON.stringify(enrollments));
+    localStorage.setItem('nokj-meetings', JSON.stringify(meetings));
+    localStorage.setItem('nokj-grades', JSON.stringify(gradeData));
+    localStorage.setItem('nokj-tasks', JSON.stringify(tasks));
+    localStorage.setItem('nokj-submissions', JSON.stringify(taskSubmissions));
+    localStorage.setItem('nokj-budget', JSON.stringify(budgetEntries));
+    localStorage.setItem('nokj-tests', JSON.stringify(tests));
+    localStorage.setItem('nokj-test-submissions', JSON.stringify(testSubmissions));
+    localStorage.setItem('nokj-announcements', JSON.stringify(announcements));
+  }
+
+  function showToast(msg) {
+    var t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function () { t.classList.remove('show'); }, 2500);
+  }
+
+  function getTeacherName(id) { var t = teachers.find(function (x) { return x.id === id; }); return t ? t.name : 'Unknown'; }
+  function getStudentName(id) { var s = students.find(function (x) { return x.id === id; }); return s ? s.name : 'Unknown'; }
+  function getCourseName(id) { var c = courses.find(function (x) { return x.id === id; }); return c ? c.name : 'Unknown'; }
+  function getEnrolledCourseIds(studentId) { return enrollments.filter(function (e) { return e.studentId === studentId; }).map(function (e) { return e.courseId; }); }
+  function getEnrolledStudentIds(courseId) { return enrollments.filter(function (e) { return e.courseId === courseId; }).map(function (e) { return e.studentId; }); }
+  function getCourseStudentCount(courseId) { return getEnrolledStudentIds(courseId).length; }
+
+  function getUserByEmail(email) {
+    return students.find(function (s) { return s.email === email; }) ||
+      teachers.find(function (t) { return t.email === email; }) ||
+      admins.find(function (a) { return a.email === email; }) || null;
+  }
+
+  function getAllUsers() { return students.concat(teachers, admins); }
+
+  function generateId() {
+    var maxId = 0;
+    getAllUsers().concat(tasks, meetings, announcements, tests, budgetEntries).forEach(function (item) {
+      if (item && item.id > maxId) maxId = item.id;
+    });
+    return maxId + 1;
+  }
+
+  function getTodayStr() { return new Date().toISOString().split('T')[0]; }
+
+  function formatDate(dateStr) {
+    return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function getTimeAgo(dateStr) {
+    var diff = Date.now() - new Date(dateStr).getTime();
+    var mins = Math.floor(diff / 60000);
+    if (mins < 60) return mins + 'm ago';
+    var hours = Math.floor(mins / 60);
+    if (hours < 24) return hours + 'h ago';
+    return Math.floor(hours / 24) + 'd ago';
+  }
+
+  function taskAssignedToUser(task, userId) {
+    if (!task || !userId) return false;
+    if (currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Teacher')) return true;
+    if (task.assignedTo === 'all') return true;
+    if (task.assignedTo === 'student') return task.assignedIds && task.assignedIds.indexOf(userId) !== -1;
+    if (task.assignedTo === 'course') {
+      var enrolled = getEnrolledCourseIds(userId);
+      return task.assignedIds && task.assignedIds.some(function (cid) { return enrolled.indexOf(cid) !== -1; });
+    }
+    return false;
+  }
+
+  function getTasksForUser(userId) {
+    return tasks.filter(function (t) { return taskAssignedToUser(t, userId); });
+  }
+
+  function getSubmissionStatus(taskId, studentId) {
+    var sub = taskSubmissions[taskId + '-' + studentId];
+    if (!sub) return 'pending';
+    if (sub.grade !== null && sub.grade !== undefined) return 'graded';
+    return 'submitted';
+  }
+
+  function getStudentAverageGrade(studentId) {
+    var grades = [];
+    getEnrolledCourseIds(studentId).forEach(function (cid) {
+      var g = gradeData[studentId + '-' + cid];
+      if (g !== undefined && g !== null) grades.push(g);
+    });
+    Object.keys(taskSubmissions).forEach(function (key) {
+      var parts = key.split('-');
+      if (parseInt(parts[1], 10) === studentId) {
+        var sub = taskSubmissions[key];
+        if (sub.grade !== null && sub.grade !== undefined) grades.push(sub.grade);
+      }
+    });
+    if (grades.length === 0) return null;
+    return Math.round(grades.reduce(function (a, b) { return a + b; }, 0) / grades.length);
+  }
+
+  function getCourseProgress(studentId, courseId) {
+    var courseTasks = tasks.filter(function (t) {
+      if (t.assignedTo === 'all') return true;
+      if (t.assignedTo === 'course') return t.assignedIds && t.assignedIds.indexOf(courseId) !== -1;
+      if (t.assignedTo === 'student') return t.assignedIds && t.assignedIds.indexOf(studentId) !== -1;
+      return false;
+    });
+    if (courseTasks.length === 0) {
+      var g = gradeData[studentId + '-' + courseId];
+      return g !== undefined ? g : 0;
+    }
+    var completed = courseTasks.filter(function (t) {
+      var st = getSubmissionStatus(t.id, studentId);
+      return st === 'submitted' || st === 'graded';
+    }).length;
+    return Math.round((completed / courseTasks.length) * 100);
+  }
+
+  function readFileAsDataURL(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve({ name: file.name, type: file.type, data: reader.result }); };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function previewFile(fileObj) {
+    var body = $('file-preview-body');
+    body.innerHTML = '';
+    var name = fileObj.name || 'file';
+    var type = fileObj.type || '';
+    var data = fileObj.data || fileObj;
+
+    if (type.indexOf('image/') === 0) {
+      var img = document.createElement('img');
+      img.className = 'file-preview-image';
+      img.src = data;
+      img.alt = name;
+      body.appendChild(img);
+    } else if (type === 'application/pdf' || name.toLowerCase().endsWith('.pdf')) {
+      var iframe = document.createElement('iframe');
+      iframe.className = 'file-preview-iframe';
+      iframe.src = data;
+      iframe.title = name;
+      body.appendChild(iframe);
+    } else if (type.indexOf('text/') === 0 || /\.(txt|csv|json|js|html|css|md)$/i.test(name)) {
+      if (data.indexOf('base64,') !== -1) {
+        var base64 = data.split('base64,')[1];
+        var text = atob(base64);
+        var pre = document.createElement('pre');
+        pre.className = 'file-preview-text';
+        pre.textContent = text;
+        body.appendChild(pre);
+      } else {
+        var pre2 = document.createElement('pre');
+        pre2.className = 'file-preview-text';
+        pre2.textContent = data;
+        body.appendChild(pre2);
+      }
+    } else {
+      body.innerHTML = '<div style="padding:40px;text-align:center;"><p style="color:var(--muted);">Preview not available for this file type.</p><a href="' + data + '" download="' + name + '" class="primary-button" style="display:inline-block;margin-top:12px;text-decoration:none;">Download ' + name + '</a></div>';
+    }
+    $('file-preview-overlay').classList.add('open');
+  }
+
+  function showLanding() {
+    $('landing-page').classList.remove('hidden');
+    $('login-screen').classList.remove('open');
+    $('register-screen').classList.remove('open');
+    $('app').classList.remove('logged-in');
+  }
+
+  function showLoginScreen() {
+    $('landing-page').classList.add('hidden');
+    $('login-screen').classList.add('open');
+    $('register-screen').classList.remove('open');
+    $('app').classList.remove('logged-in');
+    $('login-error').textContent = '';
+  }
+
+  function showRegisterScreen() {
+    $('landing-page').classList.add('hidden');
+    $('register-screen').classList.add('open');
+    $('login-screen').classList.remove('open');
+    $('app').classList.remove('logged-in');
+    $('register-error').textContent = '';
+  }
+
+  function openPage(pageName) {
+    document.querySelectorAll('.page').forEach(function (p) { p.classList.toggle('active', p.id === pageName); });
+    document.querySelectorAll('.nav-button[data-page]').forEach(function (b) { b.classList.toggle('active', b.dataset.page === pageName); });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    var renders = { calendar: renderCalendar, classroom: renderMeetings, tests: renderTests, dashboard: renderDashboard, announcements: renderAnnouncements, assignments: renderAssignments, courses: renderStudentCourses, timetable: renderTimetable, tasks: renderTasks, students: renderStudents, budget: renderBudget, 'courses-admin': renderCourses, grades: renderGrades };
+    if (renders[pageName]) renders[pageName]();
+  }
+
+  function login(email, password) {
+    var user = getUserByEmail(email.trim());
+    if (user && user.password === password) {
+      currentUser = user;
+      localStorage.setItem('nokj-user', JSON.stringify(user));
+      showApp(user);
+      return true;
+    }
+    $('login-error').textContent = 'Invalid email or password.';
+    return false;
+  }
+
+  function register(name, email, password, role) {
+    if (getUserByEmail(email)) { $('register-error').textContent = 'Email already registered.'; return false; }
+    if (password.length < 6) { $('register-error').textContent = 'Password must be at least 6 characters.'; return false; }
+    var newUser = { id: generateId(), name: name, email: email, password: password, role: role, createdAt: getTodayStr(), status: 'Active' };
+    if (role === 'Student') students.push(newUser);
+    else if (role === 'Teacher') teachers.push(newUser);
+    saveData();
+    showToast('Account created! Please sign in.');
+    showLoginScreen();
+    return true;
+  }
+
+  function showApp(user) {
+    $('login-screen').classList.remove('open');
+    $('register-screen').classList.remove('open');
+    $('landing-page').classList.add('hidden');
+    $('app').classList.add('logged-in');
+
+    var initials = user.name.split(' ').map(function (w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
+    var avatarClass = 'avatar' + (user.role === 'Admin' ? ' admin-avatar' : user.role === 'Teacher' ? ' teacher-avatar' : '');
+    $('user-avatar').textContent = initials;
+    $('user-avatar').className = avatarClass;
+    $('user-display-name').textContent = user.name;
+    $('user-role').textContent = user.role;
+    $('sidebar-role').textContent = user.role + ' Portal';
+    $('profile-avatar').textContent = initials;
+    $('profile-avatar').className = avatarClass;
+    $('profile-name').textContent = user.name;
+    $('profile-role-text').textContent = user.role + ' · NOKJ Academy';
+    $('profile-email').textContent = user.email;
+    $('profile-id').textContent = 'NOKJ-' + String(user.id).padStart(4, '0');
+    $('profile-role').textContent = user.role;
+    $('profile-since').textContent = user.createdAt || '2026';
+
+    var hour = new Date().getHours();
+    var greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    $('greeting').textContent = greet + ', ' + user.name.split(' ')[0] + ' 👋';
+
+    var isAdmin = user.role === 'Admin';
+    var isTeacher = user.role === 'Teacher';
+    $('admin-nav-label').style.display = isAdmin ? 'block' : 'none';
+    ['admin-students-btn', 'admin-budget-btn', 'admin-courses-btn', 'admin-grades-btn', 'admin-calendar-btn'].forEach(function (id) {
+      $(id).style.display = isAdmin ? 'flex' : 'none';
+    });
+    $('admin-stats-container').style.display = isAdmin ? 'block' : 'none';
+    $('announcement-form').style.display = isAdmin ? 'block' : 'none';
+
+    if (isAdmin) { updateAdminStats(); renderStudents(); renderBudget(); renderCourses(); }
+    if (isAdmin || user.role === 'Student') {
+      $('admin-grades-view').style.display = isAdmin ? 'block' : 'none';
+      $('student-grades-view').style.display = user.role === 'Student' ? 'block' : 'none';
+      renderGrades();
+    }
+
+    renderDashboard();
+    renderAnnouncements();
+    renderStudentCourses();
+    renderAssignments();
+    renderTimetable();
+    renderMeetings();
+    renderTasks();
+    renderTests();
+    renderCalendar();
+    renderUpcomingClasses();
+  }
+
+  function logout() {
+    localStorage.removeItem('nokj-user');
+    currentUser = null;
+    showLanding();
+  }
+
+  function checkSession() {
+    var saved = localStorage.getItem('nokj-user');
+    if (saved) {
+      try {
+        var user = JSON.parse(saved);
+        if (user && getUserByEmail(user.email)) { currentUser = user; showApp(user); return; }
+      } catch (e) {}
+    }
+    showLanding();
+  }
+
+  function renderDashboard() {
+    if (!currentUser) return;
+    var isAdmin = currentUser.role === 'Admin';
+    var today = new Date();
+    $('hero-date').textContent = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    $('hero-title').textContent = isAdmin ? 'Welcome back, Admin' : 'Your learning journey continues';
+    $('hero-desc').textContent = isAdmin ? 'Manage students, courses, and academy performance.' : 'Check your courses, tasks, and stay on top of your studies.';
+
+    var enrolledIds = currentUser.role === 'Student' ? getEnrolledCourseIds(currentUser.id) : [];
+    var userTasks = currentUser.role === 'Student' ? getTasksForUser(currentUser.id) : tasks;
+    var pending = userTasks.filter(function (t) { return getSubmissionStatus(t.id, currentUser.id) === 'pending'; }).length;
+    var avg = currentUser.role === 'Student' ? getStudentAverageGrade(currentUser.id) : null;
+    var availableTests = tests.filter(function (t) { return enrolledIds.indexOf(t.courseId) !== -1; }).length;
+
+    $('stat-courses').textContent = enrolledIds.length;
+    $('stat-tasks').textContent = pending;
+    $('stat-grade').textContent = avg !== null ? avg + '%' : '—';
+    $('stat-tests').textContent = availableTests;
+
+    var todayStr = getTodayStr();
+    var todayMeetings = meetings.filter(function (m) { return m.date === todayStr; });
+    $('today-schedule').innerHTML = todayMeetings.length ? todayMeetings.map(function (m) {
+      return '<div class="lesson-row"><span class="time">' + m.time + '</span><span class="color-bar"></span><div class="row-main"><strong>' + m.title + '</strong><span>' + getTeacherName(m.teacherId) + '</span></div></div>';
+    }).join('') : '<p style="color:var(--muted);padding:12px 0;">No classes scheduled for today.</p>';
+
+    var recent = announcements.slice(-3).reverse();
+    $('recent-announcements').innerHTML = recent.length ? recent.map(function (a) {
+      return '<div class="simple-row"><span class="round-icon">📌</span><div class="row-main"><strong>' + a.title + '</strong><span>' + a.content.substring(0, 60) + '</span></div></div>';
+    }).join('') : '<p style="color:var(--muted);padding:12px 0;">No announcements yet.</p>';
+
+    if (enrolledIds.length) {
+      $('progress-container').innerHTML = enrolledIds.map(function (cid) {
+        var c = courses.find(function (co) { return co.id === cid; });
+        if (!c) return '';
+        var prog = getCourseProgress(currentUser.id, cid);
+        return '<div class="progress-item"><div class="progress-top"><span>' + c.name + '</span><span>' + prog + '%</span></div><div class="track"><div class="fill" style="width:' + prog + '%"></div></div></div>';
+      }).join('');
+    } else {
+      $('progress-container').innerHTML = '<p style="color:var(--muted);padding:12px 0;">No courses enrolled.</p>';
+    }
+
+    var upcoming = getTasksForUser(currentUser.id).slice(0, 3);
+    $('upcoming-tasks').innerHTML = upcoming.length ? upcoming.map(function (task) {
+      var cls = task.deadline < getTodayStr() ? 'danger' : 'warning';
+      return '<div class="simple-row"><span class="round-icon yellow">📝</span><div class="row-main"><strong>' + task.title + '</strong><span>Due: ' + formatDate(task.deadline) + '</span></div><span class="pill ' + cls + '">' + (cls === 'danger' ? 'Overdue' : 'Upcoming') + '</span></div>';
+    }).join('') : '<p style="color:var(--muted);padding:12px 0;">No upcoming tasks.</p>';
+  }
+
+  function renderTimetable() {
+    var today = new Date();
+    $('timetable-date').textContent = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    var todayMeetings = meetings.filter(function (m) { return m.date === getTodayStr(); });
+    $('timetable-content').innerHTML = todayMeetings.length ? todayMeetings.map(function (m) {
+      return '<div class="lesson-row"><span class="time">' + m.time + '</span><span class="color-bar"></span><div class="row-main"><strong>' + m.title + '</strong><span>' + getTeacherName(m.teacherId) + '</span></div></div>';
+    }).join('') : '<p style="color:var(--muted);padding:12px 0;">No classes scheduled for today.</p>';
+  }
+
+  function renderStudentCourses() {
+    if (!currentUser || currentUser.role !== 'Student') return;
+    var enrolledCourses = courses.filter(function (c) { return getEnrolledCourseIds(currentUser.id).indexOf(c.id) !== -1; });
+    var container = $('student-courses-container');
+    if (!enrolledCourses.length) {
+      container.innerHTML = '<p style="color:var(--muted);padding:20px;text-align:center;">You are not enrolled in any courses yet.</p>';
+      return;
+    }
+    var colors = ['', 'orange-cover', 'green-cover'];
+    container.innerHTML = '<div class="course-grid">' + enrolledCourses.map(function (c, i) {
+      var prog = getCourseProgress(currentUser.id, c.id);
+      return '<article class="course"><div class="course-cover" style="background:linear-gradient(135deg,#4f46e5,#818cf8);">' + c.name + '</div><div class="course-body"><h3>' + c.name + '</h3><p>Teacher: ' + getTeacherName(c.teacherId) + '</p><div class="track"><div class="fill" style="width:' + prog + '%"></div></div><div style="margin-top:10px;font-size:11px;color:var(--muted);">' + prog + '% complete</div></div></article>';
+    }).join('') + '</div>';
+  }
+
+  function openAssignmentDetail(taskId) {
+    var task = tasks.find(function (t) { return t.id === taskId; });
+    if (!task || !currentUser) return;
+    var status = getSubmissionStatus(task.id, currentUser.id);
+    $('assignment-detail-title').textContent = task.title;
+    $('assignment-detail-desc').textContent = task.description || 'No description provided.';
+    $('assignment-detail-deadline').textContent = formatDate(task.deadline);
+    $('assignment-detail-priority').textContent = (task.priority || 'medium').charAt(0).toUpperCase() + (task.priority || 'medium').slice(1);
+    $('assignment-detail-status').textContent = status.charAt(0).toUpperCase() + status.slice(1);
+
+    var filesHtml = '';
+    if (task.files && task.files.length) {
+      filesHtml = '<p><strong>Attachments:</strong></p>' + task.files.map(function (f, i) {
+        return '<button type="button" class="link-button" data-file-idx="' + i + '">' + f.name + '</button>';
+      }).join(' ');
+    }
+    $('assignment-detail-files').innerHTML = filesHtml;
+    $('assignment-detail-files').querySelectorAll('[data-file-idx]').forEach(function (btn) {
+      btn.addEventListener('click', function () { previewFile(task.files[parseInt(btn.dataset.fileIdx, 10)]); });
+    });
+
+    var sub = taskSubmissions[task.id + '-' + currentUser.id];
+    var subHtml = '';
+    if (sub) {
+      subHtml = '<p><strong>Your submission:</strong></p><p style="background:#f8fafc;padding:10px;border-radius:6px;">' + (sub.answer || 'No text answer') + '</p>';
+      if (sub.grade !== null && sub.grade !== undefined) subHtml += '<p><strong>Grade:</strong> ' + sub.grade + '%</p>';
+      if (sub.feedback) subHtml += '<p><em>' + sub.feedback + '</em></p>';
+    }
+    $('assignment-detail-submission').innerHTML = subHtml;
+    $('assignment-detail-goto').onclick = function () { $('assignment-detail-overlay').classList.remove('open'); openPage('tasks'); };
+    $('assignment-detail-overlay').classList.add('open');
+  }
+
+  function renderAssignments() {
+    if (!currentUser) return;
+    var assignedTasks = getTasksForUser(currentUser.id);
+    var container = $('assignments-container');
+    if (!assignedTasks.length) {
+      container.innerHTML = '<p style="color:var(--muted);padding:20px;text-align:center;">No assignments available.</p>';
+      return;
+    }
+    container.innerHTML = assignedTasks.map(function (task) {
+      var status = getSubmissionStatus(task.id, currentUser.id);
+      var statusLabel = status === 'graded' ? '✅ Graded' : status === 'submitted' ? '⏳ Submitted' : '⚠️ Pending';
+      var statusClass = status === 'graded' ? 'success' : status === 'submitted' ? 'warning' : 'danger';
+      return '<article class="assignment-card"><span class="round-icon yellow">✎</span><div class="row-main"><h3 style="margin:0;">' + task.title + '</h3><p style="margin:5px 0 0;color:var(--muted);font-size:12px;">' + (task.description || '') + ' · Due ' + formatDate(task.deadline) + '</p></div><span class="pill ' + statusClass + '">' + statusLabel + '</span><button class="secondary-button open-assignment-btn" data-task-id="' + task.id + '">Open</button></article>';
+    }).join('');
+    container.querySelectorAll('.open-assignment-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { openAssignmentDetail(parseInt(btn.dataset.taskId, 10)); });
+    });
+  }
+
+  function renderAnnouncements() {
+    var container = $('announcements-list');
+    if (!announcements.length) {
+      container.innerHTML = '<p style="color:var(--muted);padding:20px;text-align:center;">No announcements yet.</p>';
+      return;
+    }
+    container.innerHTML = announcements.slice().reverse().map(function (a) {
+      var author = getUserByEmail(a.authorId) ? getStudentName(a.authorId) || getTeacherName(a.authorId) || 'Admin' : 'Admin';
+      var u = students.find(function (s) { return s.id === a.authorId; }) || teachers.find(function (t) { return t.id === a.authorId; }) || admins.find(function (x) { return x.id === a.authorId; });
+      if (u) author = u.name;
+      return '<article class="announcement-card"><span class="round-icon">📌</span><div><h3 style="margin:0;">' + a.title + '</h3><p style="margin:5px 0;color:var(--muted);font-size:12px;">' + a.content + '</p><p style="font-size:11px;"><strong>Posted ' + getTimeAgo(a.createdAt) + ' by ' + author + '</strong></p></div></article>';
+    }).join('');
+  }
+
+  function renderMeetings() {
+    var grid = $('meeting-grid');
+    var userMeetings = meetings.filter(function (m) {
+      if (!currentUser) return false;
+      if (currentUser.role === 'Admin' || currentUser.role === 'Student') return true;
+      if (currentUser.role === 'Teacher') return m.teacherId === currentUser.id;
+      return false;
+    });
+    if (!userMeetings.length) {
+      grid.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;grid-column:1/-1;">No upcoming classes.</p>';
+      return;
+    }
+    grid.innerHTML = userMeetings.map(function (m) {
+      return '<div class="meeting-card"><div class="meeting-header"><h3 style="margin:0;">' + m.title + '</h3><div style="font-size:12px;opacity:0.8;margin-top:4px;">' + getTeacherName(m.teacherId) + '</div></div><div style="padding:16px 20px;"><div style="color:var(--muted);font-size:13px;">📅 ' + formatDate(m.date) + ' • ' + m.time + ' (' + m.duration + ' min)</div><button class="join-btn" data-meeting="' + m.id + '" style="margin-top:12px;width:100%;padding:10px;border:0;border-radius:8px;background:var(--primary);color:white;font-weight:700;">Join Meeting</button></div></div>';
+    }).join('');
+    grid.querySelectorAll('.join-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { openPresentation(parseInt(btn.dataset.meeting, 10)); });
+    });
+  }
+
+  function openPresentation(meetingId) {
+    var meeting = meetings.find(function (m) { return m.id === meetingId; });
+    if (!meeting) return;
+    presentationSlides = [
+      { title: meeting.title, text: 'Teacher: ' + getTeacherName(meeting.teacherId) + '\nDate: ' + formatDate(meeting.date) + ' at ' + meeting.time },
+      { title: 'Agenda', text: '1. Introduction\n2. Main lesson content\n3. Q&A session\n4. Summary' },
+      { title: 'Key Points', text: 'Take notes during the session.\nParticipate actively in discussions.' },
+      { title: 'Resources', text: 'Check your course materials for related readings.' },
+      { title: 'Thank You', text: 'Great session! See you next class.' }
+    ];
+    currentSlide = 0;
+    $('presentation-title').textContent = meeting.title;
+    updatePresentationSlide();
+    $('presentation-overlay').classList.add('open');
+  }
+
+  function updatePresentationSlide() {
+    var slide = presentationSlides[currentSlide];
+    $('presentation-slide-title').textContent = slide.title;
+    $('presentation-slide-text').textContent = slide.text;
+    $('presentation-slide-counter').textContent = 'Slide ' + (currentSlide + 1) + ' of ' + presentationSlides.length;
+  }
+
+  function renderStudents() {
+    var search = ($('student-search').value || '').toLowerCase();
+    var filter = $('student-filter').value;
+    var filtered = students.filter(function (s) {
+      var matchSearch = s.name.toLowerCase().indexOf(search) !== -1 || s.email.toLowerCase().indexOf(search) !== -1;
+      var matchFilter = filter === 'all' || s.status === filter;
+      return matchSearch && matchFilter;
+    });
+    $('student-table-body').innerHTML = filtered.map(function (s) {
+      return '<tr><td>' + s.name + '</td><td>' + s.email + '</td><td><span class="status-badge ' + s.status.toLowerCase() + '">' + s.status + '</span></td><td><button class="action-btn edit" data-id="' + s.id + '">Edit</button><button class="action-btn enroll" data-id="' + s.id + '">Enroll</button><button class="action-btn delete" data-id="' + s.id + '">Delete</button></td></tr>';
+    }).join('');
+    $('student-total').textContent = filtered.length;
+    $('student-count') && ($('student-count').textContent = filtered.length + ' students');
+  }
+
+  function renderBudget() {
+    var search = ($('budget-search').value || '').toLowerCase();
+    var filter = $('budget-filter').value;
+    var filtered = budgetEntries.filter(function (b) {
+      return (filter === 'all' || b.type === filter) && b.category.toLowerCase().indexOf(search) !== -1;
+    });
+    var income = 0, expense = 0;
+    filtered.forEach(function (b) {
+      if (b.type === 'Income') income += b.amount;
+      else expense += Math.abs(b.amount);
+    });
+    $('budget-table-body').innerHTML = filtered.map(function (b) {
+      return '<tr><td>' + b.category + '</td><td>' + b.type + '</td><td>$' + b.amount + '</td><td>' + formatDate(b.date) + '</td><td><span class="status-badge paid">' + b.status + '</span></td><td><button class="action-btn edit" data-id="' + b.id + '">Edit</button><button class="action-btn delete" data-id="' + b.id + '">Delete</button></td></tr>';
+    }).join('');
+    $('budget-total-income').textContent = '$' + income;
+    $('budget-total-expense').textContent = '$' + expense;
+    $('budget-net').textContent = '$' + (income - expense);
+  }
+
+  function renderCourses() {
+    var search = ($('course-search').value || '').toLowerCase();
+    var filtered = courses.filter(function (c) { return c.name.toLowerCase().indexOf(search) !== -1; });
+    $('course-table-body').innerHTML = filtered.map(function (c) {
+      return '<tr><td>' + c.name + '</td><td>' + getTeacherName(c.teacherId) + '</td><td>' + getCourseStudentCount(c.id) + '</td><td><button class="action-btn edit" data-id="' + c.id + '">Edit</button><button class="action-btn delete" data-id="' + c.id + '">Delete</button></td></tr>';
+    }).join('');
+    $('course-total').textContent = filtered.length;
+    $('course-enrollments-total').textContent = enrollments.length;
+  }
+
+  function renderGrades() {
+    if (!currentUser) return;
+    if (currentUser.role === 'Admin') {
+      $('admin-grades-view').style.display = 'block';
+      $('student-grades-view').style.display = 'none';
+      var courseFilter = $('grade-course-filter');
+      if (courseFilter.options.length <= 1) {
+        courses.forEach(function (c) {
+          var opt = document.createElement('option');
+          opt.value = c.id;
+          opt.textContent = c.name;
+          courseFilter.appendChild(opt);
+        });
+        students.forEach(function (s) {
+          var opt2 = document.createElement('option');
+          opt2.value = s.id;
+          opt2.textContent = s.name;
+          $('grade-student-filter').appendChild(opt2);
+        });
+      }
+      var cf = $('grade-course-filter').value;
+      var sf = $('grade-student-filter').value;
+      var rows = [];
+      students.forEach(function (s) {
+        if (sf !== 'all' && parseInt(sf, 10) !== s.id) return;
+        getEnrolledCourseIds(s.id).forEach(function (cid) {
+          if (cf !== 'all' && parseInt(cf, 10) !== cid) return;
+          rows.push({ studentId: s.id, courseId: cid, grade: gradeData[s.id + '-' + cid] });
+        });
+      });
+      var allGrades = rows.filter(function (r) { return r.grade !== undefined; }).map(function (r) { return r.grade; });
+      var avg = allGrades.length ? Math.round(allGrades.reduce(function (a, b) { return a + b; }, 0) / allGrades.length) : 0;
+      $('avg-grade-all').textContent = avg + '%';
+      var studentAvgs = students.map(function (s) { return getStudentAverageGrade(s.id); }).filter(function (g) { return g !== null; });
+      $('passing-students').textContent = studentAvgs.filter(function (g) { return g >= 60; }).length;
+      $('failing-students').textContent = studentAvgs.filter(function (g) { return g < 60; }).length;
+      $('grade-table-body').innerHTML = rows.map(function (r) {
+        var g = r.grade !== undefined ? r.grade : '';
+        var pass = g !== '' && g >= 60;
+        return '<tr><td>' + getStudentName(r.studentId) + '</td><td>' + getCourseName(r.courseId) + '</td><td><input type="number" class="grade-input" id="grade-input-' + r.studentId + '-' + r.courseId + '" value="' + g + '" min="0" max="100" /></td><td class="' + (g === '' ? '' : pass ? 'grade-pass' : 'grade-fail') + '">' + (g === '' ? '—' : pass ? 'Pass' : 'Fail') + '</td><td><button class="action-btn edit save-grade-btn" data-student="' + r.studentId + '" data-course="' + r.courseId + '">Save</button><button class="action-btn delete" data-type="grade" data-student="' + r.studentId + '" data-course="' + r.courseId + '">Remove</button></td></tr>';
+      }).join('');
+    } else if (currentUser.role === 'Student') {
+      $('admin-grades-view').style.display = 'none';
+      $('student-grades-view').style.display = 'block';
+      var avg2 = getStudentAverageGrade(currentUser.id);
+      $('student-avg-grade-display').textContent = avg2 !== null ? avg2 + '%' : '—';
+      var enrolled = getEnrolledCourseIds(currentUser.id);
+      var passed = 0, failed = 0;
+      $('student-grade-table-body').innerHTML = enrolled.map(function (cid) {
+        var g = gradeData[currentUser.id + '-' + cid];
+        if (g !== undefined) { if (g >= 60) passed++; else failed++; }
+        var pass = g !== undefined && g >= 60;
+        return '<tr><td>' + getCourseName(cid) + '</td><td>' + (g !== undefined ? g + '%' : '—') + '</td><td class="' + (g === undefined ? '' : pass ? 'grade-pass' : 'grade-fail') + '">' + (g === undefined ? 'Pending' : pass ? 'Pass' : 'Fail') + '</td></tr>';
+      }).join('');
+      $('student-courses-passed').textContent = passed;
+      $('student-courses-failed').textContent = failed;
+    }
+  }
+
+  function updateAdminStats() {
+    $('total-students').textContent = students.length;
+    $('total-courses').textContent = courses.length;
+    $('total-enrollments').textContent = enrollments.length;
+    var revenue = budgetEntries.filter(function (b) { return b.type === 'Income'; }).reduce(function (a, b) { return a + b.amount; }, 0);
+    $('total-revenue').textContent = '$' + revenue.toLocaleString();
+  }
+
+  function renderCalendar() {
+    var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    $('calendar-month-label').textContent = monthNames[currentMonth] + ' ' + currentYear;
+    var firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    var daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    var todayStr = getTodayStr();
+    var html = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(function (d) { return '<div class="day-label">' + d + '</div>'; }).join('');
+    for (var i = 0; i < firstDay; i++) html += '<div class="day-cell empty"></div>';
+    for (var day = 1; day <= daysInMonth; day++) {
+      var dateStr = currentYear + '-' + String(currentMonth + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+      var dayMeetings = meetings.filter(function (m) { return m.date === dateStr; });
+      var isToday = dateStr === todayStr;
+      html += '<div class="day-cell' + (isToday ? ' today' : '') + '"><div style="font-weight:700;font-size:14px;">' + day + '</div>';
+      dayMeetings.forEach(function (m) {
+        html += '<div style="font-size:9px;background:var(--primary-light);color:var(--primary);padding:2px 4px;border-radius:4px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + m.title + '</div>';
+      });
+      html += '</div>';
+    }
+    $('calendar-grid').innerHTML = html;
+  }
+
+  function renderUpcomingClasses() {
+    var upcoming = meetings.filter(function (m) { return m.date >= getTodayStr(); }).sort(function (a, b) { return a.date.localeCompare(b.date) || a.time.localeCompare(b.time); }).slice(0, 5);
+    $('upcoming-classes-list').innerHTML = upcoming.length ? upcoming.map(function (m) {
+      return '<div class="lesson-row"><span class="time">' + m.time + '</span><div class="row-main"><strong>' + m.title + '</strong><span>' + formatDate(m.date) + ' · ' + getTeacherName(m.teacherId) + '</span></div></div>';
+    }).join('') : '<p style="color:var(--muted);">No upcoming classes.</p>';
+  }
+
+  function renderTasks() {
+    if (!currentUser) return;
+    var isStaff = currentUser.role === 'Admin' || currentUser.role === 'Teacher';
+    $('admin-tasks-view').style.display = isStaff ? 'block' : 'none';
+    $('student-tasks-view').style.display = isStaff ? 'none' : 'block';
+
+    if (isStaff) {
+      var search = ($('task-search').value || '').toLowerCase();
+      var typeFilter = $('task-type-filter').value;
+      var filtered = tasks.filter(function (t) {
+        return t.title.toLowerCase().indexOf(search) !== -1 && (typeFilter === 'all' || t.type === typeFilter);
+      });
+      var totalSubs = 0, pending = 0, submitted = 0, graded = 0;
+      filtered.forEach(function (t) {
+        students.forEach(function (s) {
+          if (!taskAssignedToUser(t, s.id)) return;
+          totalSubs++;
+          var st = getSubmissionStatus(t.id, s.id);
+          if (st === 'pending') pending++;
+          else if (st === 'submitted') submitted++;
+          else graded++;
+        });
+      });
+      $('task-total').textContent = filtered.length;
+      $('task-pending').textContent = pending;
+      $('task-submitted').textContent = submitted;
+      $('task-graded').textContent = graded;
+      $('admin-task-list').innerHTML = filtered.map(function (t) { return renderTaskCard(t, true); }).join('');
+      bindTaskCardEvents($('admin-task-list'), true);
+    } else {
+      var userTasks = getTasksForUser(currentUser.id);
+      var p = 0, s = 0, g = 0;
+      userTasks.forEach(function (t) {
+        var st = getSubmissionStatus(t.id, currentUser.id);
+        if (st === 'pending') p++; else if (st === 'submitted') s++; else g++;
+      });
+      $('student-task-total').textContent = userTasks.length;
+      $('student-task-pending').textContent = p;
+      $('student-task-submitted').textContent = s;
+      $('student-task-graded').textContent = g;
+      $('student-task-list').innerHTML = userTasks.map(function (t) { return renderTaskCard(t, false); }).join('');
+      bindTaskCardEvents($('student-task-list'), false);
+    }
+  }
+
+  function renderTaskCard(task, isAdmin) {
+    var html = '<div class="task-card" data-task-id="' + task.id + '"><div style="display:flex;justify-content:space-between;align-items:start;"><h3 style="margin:0;">' + task.title + '</h3><span class="task-type ' + task.type + '">' + task.type + '</span></div>';
+    html += '<p style="color:var(--muted);font-size:14px;margin:12px 0;">' + (task.description || '') + '</p>';
+    html += '<p style="font-size:12px;color:' + (task.deadline < getTodayStr() ? 'var(--danger)' : 'var(--warning)') + ';">Due: ' + formatDate(task.deadline) + '</p>';
+    if (task.files && task.files.length) {
+      html += '<div style="margin-top:10px;padding:10px;background:#f8fafc;border-radius:8px;">';
+      task.files.forEach(function (f, i) {
+        html += '<button type="button" class="link-button preview-task-file" data-task="' + task.id + '" data-idx="' + i + '">📎 ' + f.name + '</button> ';
+      });
+      html += '</div>';
+    }
+    if (!isAdmin && currentUser) {
+      var status = getSubmissionStatus(task.id, currentUser.id);
+      var sub = taskSubmissions[task.id + '-' + currentUser.id];
+      if (status === 'pending') {
+        html += '<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;"><input type="text" class="answer-input" data-task="' + task.id + '" placeholder="Your answer..." style="flex:1;min-width:150px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;" /><input type="file" class="submit-file-input" data-task="' + task.id + '" style="font-size:12px;" /><button class="primary-button submit-task-btn" data-task="' + task.id + '">Submit</button></div>';
+      } else if (status === 'submitted') {
+        html += '<div style="margin-top:16px;padding:8px 16px;background:#fef3c7;color:#92400e;border-radius:8px;font-weight:700;display:inline-block;">⏳ Submitted — awaiting grade</div>';
+      } else {
+        html += '<div style="margin-top:16px;padding:8px 16px;background:#d1fae5;color:#047857;border-radius:8px;font-weight:700;">✅ Graded: ' + sub.grade + '%</div>';
+        if (sub.feedback) html += '<p style="font-size:13px;color:var(--muted);font-style:italic;margin-top:8px;">' + sub.feedback + '</p>';
+      }
+    }
+    if (isAdmin) {
+      html += '<div style="margin-top:16px;" class="submissions-list" data-task="' + task.id + '">';
+      students.forEach(function (s) {
+        if (!taskAssignedToUser(task, s.id)) return;
+        var sub = taskSubmissions[task.id + '-' + s.id];
+        if (sub) {
+          html += '<div class="submission-card"><div style="display:flex;justify-content:space-between;"><span style="font-weight:700;">' + s.name + '</span><span style="color:var(--muted);font-size:12px;">' + (sub.submittedAt || '') + '</span></div>';
+          html += '<div style="margin:8px 0;padding:10px;background:#f8fafc;border-radius:6px;">' + (sub.answer || 'No text') + '</div>';
+          if (sub.grade !== null && sub.grade !== undefined) html += '<div style="color:var(--success);font-weight:700;">Grade: ' + sub.grade + '%</div>';
+          else html += '<button class="primary-button grade-submission-btn" data-task="' + task.id + '" data-student="' + s.id + '" style="margin-top:8px;padding:6px 16px;font-size:12px;">Grade</button>';
+          html += '</div>';
+        }
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function bindTaskCardEvents(container, isAdmin) {
+    container.querySelectorAll('.preview-task-file').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var task = tasks.find(function (t) { return t.id === parseInt(btn.dataset.task, 10); });
+        if (task && task.files) previewFile(task.files[parseInt(btn.dataset.idx, 10)]);
+      });
+    });
+    container.querySelectorAll('.submit-task-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var taskId = parseInt(btn.dataset.task, 10);
+        var answerInput = container.querySelector('.answer-input[data-task="' + taskId + '"]');
+        var fileInput = container.querySelector('.submit-file-input[data-task="' + taskId + '"]');
+        var answer = answerInput ? answerInput.value.trim() : '';
+        var key = taskId + '-' + currentUser.id;
+        var saveSubmission = function (files) {
+          taskSubmissions[key] = { answer: answer, files: files || [], submittedAt: new Date().toISOString(), grade: null, feedback: null };
+          saveData();
+          showToast('Submission saved!');
+          renderTasks();
+          renderAssignments();
+          renderDashboard();
+        };
+        if (fileInput && fileInput.files.length) {
+          Promise.all(Array.from(fileInput.files).map(readFileAsDataURL)).then(saveSubmission);
+        } else {
+          if (!answer) { showToast('Please enter an answer or attach a file.'); return; }
+          saveSubmission([]);
+        }
+      });
+    });
+    container.querySelectorAll('.grade-submission-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        gradingTaskId = parseInt(btn.dataset.task, 10);
+        gradingStudentId = parseInt(btn.dataset.student, 10);
+        var sub = taskSubmissions[gradingTaskId + '-' + gradingStudentId];
+        var task = tasks.find(function (t) { return t.id === gradingTaskId; });
+        $('grade-task-student-name').value = getStudentName(gradingStudentId);
+        $('grade-task-task-title').value = task ? task.title : '';
+        $('grade-task-submission-text').value = sub ? sub.answer : '';
+        $('grade-task-grade').value = sub && sub.grade !== null ? sub.grade : '';
+        $('grade-task-feedback').value = sub && sub.feedback ? sub.feedback : '';
+        $('grade-task-modal-overlay').classList.add('open');
+      });
+    });
+  }
+
+  function renderTests() {
+    if (!currentUser) return;
+    var isStaff = currentUser.role === 'Admin' || currentUser.role === 'Teacher';
+    $('admin-tests-view').style.display = isStaff ? 'block' : 'none';
+    $('student-tests-view').style.display = isStaff ? 'none' : 'block';
+
+    if (isStaff) {
+      $('admin-test-list').innerHTML = tests.length ? tests.map(function (t) {
+        var subs = Object.keys(testSubmissions).filter(function (k) { return k.startsWith(t.id + '-'); });
+        return '<div class="task-card"><h3 style="margin:0;">' + t.title + '</h3><p style="color:var(--muted);font-size:13px;">' + getCourseName(t.courseId) + ' · ' + (t.questions ? t.questions.length : 0) + ' questions · ' + subs.length + ' submissions</p><p style="font-size:12px;">Deadline: ' + (t.deadline ? formatDate(t.deadline) : 'None') + '</p></div>';
+      }).join('') : '<p style="color:var(--muted);">No tests created yet.</p>';
+    } else {
+      var enrolled = getEnrolledCourseIds(currentUser.id);
+      var available = tests.filter(function (t) { return enrolled.indexOf(t.courseId) !== -1; });
+      $('student-test-list').innerHTML = available.length ? available.map(function (t) {
+        var done = testSubmissions[t.id + '-' + currentUser.id];
+        return '<div class="task-card"><h3 style="margin:0;">' + t.title + '</h3><p style="color:var(--muted);font-size:13px;">' + getCourseName(t.courseId) + '</p>' +
+          (done ? '<p style="color:var(--success);font-weight:700;margin-top:12px;">Score: ' + done.score + '%</p>' : '<button class="primary-button take-test-btn" data-test="' + t.id + '" style="margin-top:12px;">Take Test</button>') + '</div>';
+      }).join('') : '<p style="color:var(--muted);">No tests available.</p>';
+      $('student-test-list').querySelectorAll('.take-test-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () { openTakeTest(parseInt(btn.dataset.test, 10)); });
+      });
+    }
+  }
+
+  function openTakeTest(testId) {
+    var test = tests.find(function (t) { return t.id === testId; });
+    if (!test) return;
+    takingTestId = testId;
+    $('take-test-title').textContent = test.title;
+    $('take-test-questions').innerHTML = (test.questions || []).map(function (q, qi) {
+      return '<div style="margin-bottom:20px;padding:12px;border:1px solid var(--line);border-radius:8px;"><p style="font-weight:600;">' + (qi + 1) + '. ' + q.text + '</p>' +
+        (q.options || []).map(function (opt, oi) {
+          return '<label style="display:block;padding:4px 0;font-size:13px;"><input type="radio" name="q' + qi + '" value="' + oi + '" /> ' + opt + '</label>';
+        }).join('') + '</div>';
+    }).join('');
+    $('take-test-modal-overlay').classList.add('open');
+  }
+
+  function openScheduleModal() {
+    $('schedule-teacher').innerHTML = teachers.map(function (t) {
+      return '<option value="' + t.id + '">' + t.name + '</option>';
+    }).join('');
+    $('schedule-date').value = getTodayStr();
+    $('schedule-modal-overlay').classList.add('open');
+  }
+
+  function openModal(type, mode, data) {
+    modalType = type;
+    modalMode = mode;
+    editingId = data ? data.id : null;
+    var fields = $('modal-fields');
+    fields.innerHTML = '';
+    if (type === 'student') {
+      $('modal-title').textContent = mode === 'add' ? 'Add Student' : 'Edit Student';
+      fields.innerHTML = '<label>Name</label><input name="name" value="' + (data ? data.name : '') + '" required /><label>Email</label><input name="email" type="email" value="' + (data ? data.email : '') + '" required /><label>Password</label><input name="password" type="password" value="' + (data ? data.password : '') + '" ' + (mode === 'add' ? 'required' : '') + ' /><label>Status</label><select name="status"><option' + (data && data.status === 'Active' ? ' selected' : '') + '>Active</option><option' + (data && data.status === 'Warning' ? ' selected' : '') + '>Warning</option><option' + (data && data.status === 'Inactive' ? ' selected' : '') + '>Inactive</option></select>';
+    } else if (type === 'budget') {
+      $('modal-title').textContent = mode === 'add' ? 'Add Budget Entry' : 'Edit Entry';
+      fields.innerHTML = '<label>Category</label><input name="category" value="' + (data ? data.category : '') + '" required /><label>Type</label><select name="type"><option' + (data && data.type === 'Income' ? ' selected' : '') + '>Income</option><option' + (data && data.type === 'Expense' ? ' selected' : '') + '>Expense</option></select><label>Amount</label><input name="amount" type="number" value="' + (data ? data.amount : '') + '" required /><label>Date</label><input name="date" type="date" value="' + (data ? data.date : getTodayStr()) + '" required /><label>Status</label><select name="status"><option>Paid</option><option>Pending</option></select>';
+    } else if (type === 'course') {
+      $('modal-title').textContent = mode === 'add' ? 'Add Course' : 'Edit Course';
+      var teacherOpts = teachers.map(function (t) {
+        return '<option value="' + t.id + '"' + (data && data.teacherId === t.id ? ' selected' : '') + '>' + t.name + '</option>';
+      }).join('');
+      fields.innerHTML = '<label>Course Name</label><input name="name" value="' + (data ? data.name : '') + '" required /><label>Teacher</label><select name="teacherId">' + teacherOpts + '</select><label>Description</label><textarea name="description">' + (data ? data.description : '') + '</textarea>';
+    }
+    $('modal-overlay').classList.add('open');
+  }
+
+  function handleModalSubmit(e) {
+    e.preventDefault();
+    var form = $('modal-form');
+    var fd = new FormData(form);
+    if (modalType === 'student') {
+      var obj = { name: fd.get('name'), email: fd.get('email'), password: fd.get('password'), status: fd.get('status'), role: 'Student' };
+      if (modalMode === 'add') {
+        if (getUserByEmail(obj.email)) { showToast('Email already exists.'); return; }
+        obj.id = generateId();
+        obj.createdAt = getTodayStr();
+        students.push(obj);
+      } else {
+        var s = students.find(function (x) { return x.id === editingId; });
+        Object.assign(s, obj);
+      }
+      renderStudents();
+      updateAdminStats();
+    } else if (modalType === 'budget') {
+      var bobj = { category: fd.get('category'), type: fd.get('type'), amount: parseFloat(fd.get('amount')), date: fd.get('date'), status: fd.get('status') };
+      if (modalMode === 'add') { bobj.id = generateId(); budgetEntries.push(bobj); }
+      else { var b = budgetEntries.find(function (x) { return x.id === editingId; }); Object.assign(b, bobj); }
+      renderBudget();
+      updateAdminStats();
+    } else if (modalType === 'course') {
+      var cobj = { name: fd.get('name'), teacherId: parseInt(fd.get('teacherId'), 10), description: fd.get('description') };
+      if (modalMode === 'add') { cobj.id = generateId(); courses.push(cobj); }
+      else { var c = courses.find(function (x) { return x.id === editingId; }); Object.assign(c, cobj); }
+      renderCourses();
+      updateAdminStats();
+    }
+    saveData();
+    showToast('Saved successfully!');
+    $('modal-overlay').classList.remove('open');
+    form.reset();
+  }
+
+  function deleteEntry(type, id) {
+    if (!confirm('Are you sure you want to delete this?')) return;
+    if (type === 'student') { students = students.filter(function (s) { return s.id !== id; }); renderStudents(); updateAdminStats(); }
+    else if (type === 'budget') { budgetEntries = budgetEntries.filter(function (b) { return b.id !== id; }); renderBudget(); }
+    else if (type === 'course') { courses = courses.filter(function (c) { return c.id !== id; }); enrollments = enrollments.filter(function (e) { return e.courseId !== id; }); renderCourses(); }
+    saveData();
+    showToast('Deleted.');
+  }
+
+  function openEnrollModal(studentId) {
+    enrollStudentId = studentId;
+    var enrolled = getEnrolledCourseIds(studentId);
+    $('enrollment-list').innerHTML = courses.map(function (c) {
+      var checked = enrolled.indexOf(c.id) !== -1 ? ' checked' : '';
+      return '<div style="padding:10px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #f0f1f4;"><input type="checkbox" id="enroll-' + c.id + '" value="' + c.id + '"' + checked + ' /><label for="enroll-' + c.id + '" style="margin:0;flex:1;">' + c.name + '</label><span style="color:var(--muted);font-size:12px;">' + getTeacherName(c.teacherId) + '</span></div>';
+    }).join('');
+    $('enroll-modal-overlay').classList.add('open');
+  }
+
+  function saveEnrollments() {
+    enrollments = enrollments.filter(function (e) { return e.studentId !== enrollStudentId; });
+    $('enrollment-list').querySelectorAll('input:checked').forEach(function (cb) {
+      enrollments.push({ studentId: enrollStudentId, courseId: parseInt(cb.value, 10) });
+    });
+    saveData();
+    showToast('Enrollments updated!');
+    $('enroll-modal-overlay').classList.remove('open');
+    renderStudents();
+    updateAdminStats();
+  }
+
+  function addQuestionBlock() {
+    questionCounter++;
+    var div = document.createElement('div');
+    div.className = 'question-builder';
+    div.dataset.qid = questionCounter;
+    div.innerHTML = '<div style="display:flex;justify-content:space-between;margin-bottom:12px;"><span style="font-weight:700;color:var(--primary);">Question ' + questionCounter + '</span><button type="button" class="remove-question" style="color:var(--danger);background:none;border:none;">Remove</button></div><input type="text" class="q-text" placeholder="Question text" required /><div class="options-group" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;"><div style="display:flex;gap:8px;align-items:center;"><input type="radio" name="correct-' + questionCounter + '" value="0" /><input type="text" class="q-opt" placeholder="Option A" /></div><div style="display:flex;gap:8px;align-items:center;"><input type="radio" name="correct-' + questionCounter + '" value="1" /><input type="text" class="q-opt" placeholder="Option B" /></div><div style="display:flex;gap:8px;align-items:center;"><input type="radio" name="correct-' + questionCounter + '" value="2" /><input type="text" class="q-opt" placeholder="Option C" /></div><div style="display:flex;gap:8px;align-items:center;"><input type="radio" name="correct-' + questionCounter + '" value="3" /><input type="text" class="q-opt" placeholder="Option D" /></div></div>';
+    $('questions-container').appendChild(div);
+    div.querySelector('.remove-question').addEventListener('click', function () { div.remove(); });
+  }
+
+  function downloadCSV(csv, filename) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = filename;
+    a.click();
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    loadData();
+    checkSession();
+
+    $('landing-login-btn').addEventListener('click', showLoginScreen);
+    $('landing-register-btn').addEventListener('click', showRegisterScreen);
+    $('landing-start-btn').addEventListener('click', showRegisterScreen);
+    $('landing-signin-btn').addEventListener('click', showLoginScreen);
+    $('login-to-register').addEventListener('click', showRegisterScreen);
+    $('register-to-login').addEventListener('click', showLoginScreen);
+
+    $('login-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      login($('login-email').value, $('login-password').value);
+    });
+    $('register-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      register($('register-name').value.trim(), $('register-email').value.trim(), $('register-password').value.trim(), $('register-role').value);
+    });
+    $('logout-btn').addEventListener('click', logout);
+
+    document.querySelectorAll('.nav-button[data-page], .link-button[data-page], .primary-button[data-page]').forEach(function (btn) {
+      btn.addEventListener('click', function () { openPage(btn.dataset.page); });
+    });
+
+    $('notification-button').addEventListener('click', function () {
+      if (!currentUser) return;
+      var pending = getTasksForUser(currentUser.id).filter(function (t) { return getSubmissionStatus(t.id, currentUser.id) === 'pending'; }).length;
+      alert('You have ' + pending + ' pending tasks and ' + announcements.length + ' announcements.');
+    });
+
+    $('calendar-prev').addEventListener('click', function () { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); });
+    $('calendar-next').addEventListener('click', function () { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); });
+    $('add-class-btn').addEventListener('click', openScheduleModal);
+    $('schedule-modal-cancel').addEventListener('click', function () { $('schedule-modal-overlay').classList.remove('open'); });
+    $('schedule-modal-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      meetings.push({ id: generateId(), title: $('schedule-title').value.trim(), teacherId: parseInt($('schedule-teacher').value, 10), date: $('schedule-date').value, time: $('schedule-time').value, duration: parseInt($('schedule-duration').value, 10), link: $('schedule-link').value || '#' });
+      saveData();
+      renderMeetings(); renderCalendar(); renderUpcomingClasses(); renderDashboard();
+      showToast('Class scheduled!');
+      $('schedule-modal-overlay').classList.remove('open');
+      $('schedule-modal-form').reset();
+    });
+
+    $('post-announcement-btn').addEventListener('click', function () {
+      var content = $('announcement-input').value.trim();
+      if (!content) return;
+      announcements.push({ id: generateId(), title: content.split('\n')[0].substring(0, 60), content: content, authorId: currentUser.id, createdAt: new Date().toISOString() });
+      saveData();
+      $('announcement-input').value = '';
+      renderAnnouncements(); renderDashboard();
+      showToast('Announcement posted!');
+    });
+
+    $('file-preview-close').addEventListener('click', function () { $('file-preview-overlay').classList.remove('open'); $('file-preview-body').innerHTML = ''; });
+    $('file-preview-overlay').addEventListener('click', function (e) { if (e.target === this) { this.classList.remove('open'); $('file-preview-body').innerHTML = ''; } });
+
+    $('student-table-body').addEventListener('click', function (e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      var id = parseInt(btn.dataset.id, 10);
+      if (btn.classList.contains('delete')) deleteEntry('student', id);
+      else if (btn.classList.contains('edit')) { var s = students.find(function (x) { return x.id === id; }); if (s) openModal('student', 'edit', s); }
+      else if (btn.classList.contains('enroll')) openEnrollModal(id);
+    });
+    $('budget-table-body').addEventListener('click', function (e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      var id = parseInt(btn.dataset.id, 10);
+      if (btn.classList.contains('delete')) deleteEntry('budget', id);
+      else if (btn.classList.contains('edit')) { var b = budgetEntries.find(function (x) { return x.id === id; }); if (b) openModal('budget', 'edit', b); }
+    });
+    $('course-table-body').addEventListener('click', function (e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      var id = parseInt(btn.dataset.id, 10);
+      if (btn.classList.contains('delete')) deleteEntry('course', id);
+      else if (btn.classList.contains('edit')) { var c = courses.find(function (x) { return x.id === id; }); if (c) openModal('course', 'edit', c); }
+    });
+    $('grade-table-body').addEventListener('click', function (e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      if (btn.classList.contains('save-grade-btn')) {
+        var sid = parseInt(btn.dataset.student, 10), cid = parseInt(btn.dataset.course, 10);
+        var input = $('grade-input-' + sid + '-' + cid);
+        var val = input.value.trim();
+        if (val === '') delete gradeData[sid + '-' + cid];
+        else { var g = parseFloat(val); if (isNaN(g) || g < 0 || g > 100) { showToast('Grade must be 0-100.'); return; } gradeData[sid + '-' + cid] = g; }
+        saveData(); renderGrades(); renderDashboard();
+        showToast('Grade saved!');
+      }
+      if (btn.dataset.type === 'grade') {
+        if (confirm('Remove this grade?')) {
+          delete gradeData[btn.dataset.student + '-' + btn.dataset.course];
+          saveData(); renderGrades(); renderDashboard();
+        }
+      }
+    });
+    $('grade-course-filter').addEventListener('change', renderGrades);
+    $('grade-student-filter').addEventListener('change', renderGrades);
+
+    $('modal-cancel').addEventListener('click', function () { $('modal-overlay').classList.remove('open'); });
+    $('modal-form').addEventListener('submit', handleModalSubmit);
+    $('enroll-modal-cancel').addEventListener('click', function () { $('enroll-modal-overlay').classList.remove('open'); });
+    $('enroll-modal-save').addEventListener('click', saveEnrollments);
+    $('add-student-btn').addEventListener('click', function () { openModal('student', 'add'); });
+    $('add-budget-btn').addEventListener('click', function () { openModal('budget', 'add'); });
+    $('add-course-btn').addEventListener('click', function () { openModal('course', 'add'); });
+
+    $('export-students-btn').addEventListener('click', function () {
+      var csv = 'Name,Email,Status\n' + students.map(function (s) { return s.name + ',' + s.email + ',' + s.status; }).join('\n');
+      downloadCSV(csv, 'students.csv');
+    });
+    $('export-budget-btn').addEventListener('click', function () {
+      var csv = 'Category,Type,Amount,Date\n' + budgetEntries.map(function (b) { return b.category + ',' + b.type + ',' + b.amount + ',' + b.date; }).join('\n');
+      downloadCSV(csv, 'budget.csv');
+    });
+
+    $('student-search').addEventListener('input', renderStudents);
+    $('student-filter').addEventListener('change', renderStudents);
+    $('budget-search').addEventListener('input', renderBudget);
+    $('budget-filter').addEventListener('change', renderBudget);
+    $('course-search').addEventListener('input', renderCourses);
+    $('task-search').addEventListener('input', renderTasks);
+    $('task-type-filter').addEventListener('change', renderTasks);
+
+    $('add-task-btn').addEventListener('click', function () {
+      tempTaskFiles = [];
+      $('task-file-list').innerHTML = '';
+      $('task-modal-assign-options').style.display = 'none';
+      $('task-modal-overlay').classList.add('open');
+    });
+    $('task-modal-assign').addEventListener('change', function () {
+      var val = this.value;
+      var opts = $('task-modal-assign-options');
+      if (val === 'course') {
+        opts.style.display = 'block';
+        opts.innerHTML = '<label>Select Course</label><select id="task-assign-course">' + courses.map(function (c) { return '<option value="' + c.id + '">' + c.name + '</option>'; }).join('') + '</select>';
+      } else if (val === 'student') {
+        opts.style.display = 'block';
+        opts.innerHTML = '<label>Select Student</label><select id="task-assign-student">' + students.map(function (s) { return '<option value="' + s.id + '">' + s.name + '</option>'; }).join('') + '</select>';
+      } else opts.style.display = 'none';
+    });
+    $('task-file-input').addEventListener('change', function () {
+      Array.from(this.files).forEach(function (file) {
+        readFileAsDataURL(file).then(function (f) { tempTaskFiles.push(f); $('task-file-list').innerHTML += '<span style="font-size:12px;background:#f3f4f6;padding:4px 8px;border-radius:4px;margin:4px;">' + f.name + '</span>'; });
+      });
+    });
+    $('task-modal-cancel').addEventListener('click', function () { $('task-modal-overlay').classList.remove('open'); });
+    $('task-modal-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var assign = $('task-modal-assign').value;
+      var assignedIds = [];
+      if (assign === 'course') assignedIds = [parseInt($('task-assign-course').value, 10)];
+      else if (assign === 'student') assignedIds = [parseInt($('task-assign-student').value, 10)];
+      tasks.push({ id: generateId(), title: $('task-modal-title-input').value.trim(), type: $('task-modal-type').value, priority: $('task-modal-priority').value, description: $('task-modal-description').value.trim(), deadline: $('task-modal-deadline').value, files: tempTaskFiles.slice(), assignedTo: assign, assignedIds: assignedIds, createdAt: new Date().toISOString() });
+      saveData();
+      tempTaskFiles = [];
+      $('task-modal-form').reset();
+      $('task-modal-overlay').classList.remove('open');
+      renderTasks(); renderAssignments(); renderDashboard();
+      showToast('Task created!');
+    });
+
+    $('grade-task-modal-cancel').addEventListener('click', function () { $('grade-task-modal-overlay').classList.remove('open'); });
+    $('grade-task-modal-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var key = gradingTaskId + '-' + gradingStudentId;
+      var sub = taskSubmissions[key];
+      if (sub) {
+        sub.grade = parseFloat($('grade-task-grade').value);
+        sub.feedback = $('grade-task-feedback').value.trim();
+        saveData();
+        renderTasks(); renderAssignments(); renderDashboard();
+        showToast('Grade saved!');
+      }
+      $('grade-task-modal-overlay').classList.remove('open');
+    });
+
+    $('create-test-btn').addEventListener('click', function () {
+      $('test-modal-course').innerHTML = courses.map(function (c) { return '<option value="' + c.id + '">' + c.name + '</option>'; }).join('');
+      $('questions-container').innerHTML = '';
+      questionCounter = 0;
+      addQuestionBlock();
+      $('test-modal-overlay').classList.add('open');
+    });
+    $('add-question-btn').addEventListener('click', addQuestionBlock);
+    $('test-modal-cancel').addEventListener('click', function () { $('test-modal-overlay').classList.remove('open'); });
+    $('test-modal-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var questions = [];
+      $('questions-container').querySelectorAll('.question-builder').forEach(function (block) {
+        var qid = block.dataset.qid;
+        var text = block.querySelector('.q-text').value.trim();
+        var opts = Array.from(block.querySelectorAll('.q-opt')).map(function (o) { return o.value.trim(); });
+        var correctRadio = block.querySelector('input[name="correct-' + qid + '"]:checked');
+        questions.push({ text: text, options: opts, correct: correctRadio ? parseInt(correctRadio.value, 10) : 0 });
+      });
+      tests.push({ id: generateId(), title: $('test-modal-title-input').value.trim(), courseId: parseInt($('test-modal-course').value, 10), description: $('test-modal-description').value.trim(), deadline: $('test-modal-deadline').value, questions: questions });
+      saveData();
+      $('test-modal-overlay').classList.remove('open');
+      renderTests();
+      showToast('Test created!');
+    });
+
+    $('take-test-cancel').addEventListener('click', function () { $('take-test-modal-overlay').classList.remove('open'); });
+    $('take-test-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var test = tests.find(function (t) { return t.id === takingTestId; });
+      if (!test) return;
+      var correct = 0;
+      (test.questions || []).forEach(function (q, qi) {
+        var selected = document.querySelector('input[name="q' + qi + '"]:checked');
+        if (selected && parseInt(selected.value, 10) === q.correct) correct++;
+      });
+      var score = Math.round((correct / test.questions.length) * 100);
+      testSubmissions[takingTestId + '-' + currentUser.id] = { score: score, answers: [], submittedAt: new Date().toISOString() };
+      saveData();
+      $('take-test-modal-overlay').classList.remove('open');
+      renderTests(); renderDashboard();
+      alert('Test submitted! Your score: ' + score + '%');
+    });
+
+    $('assignment-detail-close').addEventListener('click', function () { $('assignment-detail-overlay').classList.remove('open'); });
+    $('presentation-close').addEventListener('click', function () { $('presentation-overlay').classList.remove('open'); });
+    $('presentation-prev').addEventListener('click', function () { if (currentSlide > 0) { currentSlide--; updatePresentationSlide(); } });
+    $('presentation-next').addEventListener('click', function () { if (currentSlide < presentationSlides.length - 1) { currentSlide++; updatePresentationSlide(); } });
+  });
+})();
+
+  </script>
 </body>
 </html>
-  <script>

@@ -1006,7 +1006,14 @@
     if (user && user.password === password) {
       currentUser = user;
       localStorage.setItem('nokj-user', JSON.stringify(user));
-      showApp(user);
+      try {
+        showApp(user);
+      } catch (err) {
+        console.error('showApp failed during login:', err);
+        $('login-error').textContent = 'Something went wrong loading your dashboard. Please refresh and try again.';
+        localStorage.removeItem('nokj-user');
+        currentUser = null;
+      }
       return true;
     }
     $('login-error').textContent = 'Invalid email or password.';
@@ -1228,8 +1235,13 @@
     if (saved) {
       try {
         var user = JSON.parse(saved);
-        if (user && getUserByEmail(user.email)) { currentUser = user; showApp(user); return; }
-      } catch (e) {}
+        var freshUser = user ? getUserByEmail(user.email) : null;
+        if (freshUser) { currentUser = freshUser; showApp(freshUser); return; }
+      } catch (e) {
+        console.error('Session restore failed, clearing saved session:', e);
+      }
+      // Saved session no longer matches a real account (or is corrupt) - clear it so we don't retry every load.
+      localStorage.removeItem('nokj-user');
     }
     showLanding();
   }
@@ -1859,7 +1871,6 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     loadData();
-    checkSession();
 
     $('landing-login-btn').addEventListener('click', showLoginScreen);
     $('landing-register-btn').addEventListener('click', showRegisterScreen);
@@ -2106,6 +2117,17 @@
       renderReferrals();
       showToast('Code generated: ' + code.code);
     });
+
+    // Restore a previous session last, after every button is already wired up.
+    // If anything here throws (corrupt/stale saved data), the app still falls back
+    // to the landing page instead of leaving the whole UI unresponsive.
+    try {
+      checkSession();
+    } catch (err) {
+      console.error('checkSession failed, falling back to landing page:', err);
+      localStorage.removeItem('nokj-user');
+      try { showLanding(); } catch (err2) { console.error('showLanding also failed:', err2); }
+    }
   });
 })();
 

@@ -237,6 +237,10 @@
         <input type="email" id="register-email" placeholder="you@example.com" />
         <label for="register-role">I am a...</label>
         <select id="register-role"><option value="Student">Student</option><option value="Teacher">Teacher</option></select>
+        <div id="register-referral-wrap" style="display:none;">
+          <label for="register-referral">Teacher Referral Code</label>
+          <input type="text" id="register-referral" placeholder="e.g. AB12CD34" style="text-transform:uppercase;" />
+        </div>
         <label for="register-password">Password</label>
         <input type="password" id="register-password" placeholder="Min 6 characters" />
         <button type="submit" class="register-btn">Create Account</button>
@@ -252,8 +256,8 @@
       <p class="nav-label">Menu</p>
       <button class="nav-button active" data-page="dashboard"><span class="nav-icon">⌂</span> <span>Dashboard</span></button>
       <button class="nav-button" data-page="timetable"><span class="nav-icon">▦</span> <span>Timetable</span></button>
-      <button class="nav-button" data-page="courses"><span class="nav-icon">▣</span> <span>My courses</span></button>
-      <button class="nav-button" data-page="assignments"><span class="nav-icon">✓</span> <span>Assignments</span></button>
+      <button class="nav-button" data-page="courses" id="nav-courses-btn"><span class="nav-icon">▣</span> <span>My courses</span></button>
+      <button class="nav-button" data-page="assignments" id="nav-assignments-btn"><span class="nav-icon">✓</span> <span>Assignments</span></button>
       <button class="nav-button" data-page="announcements"><span class="nav-icon">◉</span> <span>Announcements</span></button>
       <button class="nav-button" data-page="classroom"><span class="nav-icon">🎥</span> <span>Classroom</span></button>
       <button class="nav-button" data-page="tasks"><span class="nav-icon">📝</span> <span>Tasks</span></button>
@@ -262,10 +266,17 @@
       <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span> <span>My profile</span></button>
       <p class="nav-label" id="admin-nav-label" style="display:none;">Management</p>
       <button class="nav-button" data-page="students" id="admin-students-btn" style="display:none;"><span class="nav-icon">👥</span> <span>Students</span></button>
+      <button class="nav-button" data-page="teachers-admin" id="admin-teachers-btn" style="display:none;"><span class="nav-icon">🧑‍🏫</span> <span>Teachers</span></button>
+      <button class="nav-button" data-page="referrals" id="admin-referrals-btn" style="display:none;"><span class="nav-icon">🔑</span> <span>Referral Codes</span></button>
       <button class="nav-button" data-page="budget" id="admin-budget-btn" style="display:none;"><span class="nav-icon">💰</span> <span>Budget</span></button>
       <button class="nav-button" data-page="courses-admin" id="admin-courses-btn" style="display:none;"><span class="nav-icon">📚</span> <span>Courses</span></button>
       <button class="nav-button" data-page="grades" id="admin-grades-btn" style="display:none;"><span class="nav-icon">📊</span> <span>Grades</span></button>
       <button class="nav-button" data-page="calendar" id="admin-calendar-btn" style="display:none;"><span class="nav-icon">📅</span> <span>Calendar</span></button>
+      <p class="nav-label" id="teacher-nav-label" style="display:none;">Teaching</p>
+      <button class="nav-button" data-page="students" id="teacher-students-btn" style="display:none;"><span class="nav-icon">👥</span> <span>My Students</span></button>
+      <button class="nav-button" data-page="courses-admin" id="teacher-courses-btn" style="display:none;"><span class="nav-icon">📚</span> <span>My Courses</span></button>
+      <button class="nav-button" data-page="grades" id="teacher-grades-btn" style="display:none;"><span class="nav-icon">📊</span> <span>Grades</span></button>
+      <button class="nav-button" data-page="calendar" id="teacher-calendar-btn" style="display:none;"><span class="nav-icon">📅</span> <span>Calendar</span></button>
       <div class="help-card"><strong>Need help?</strong><span>Contact the NOKJ Academy support team.</span></div>
     </aside>
 
@@ -398,7 +409,7 @@
       </section>
 
       <section class="page" id="students">
-        <div class="heading"><h1>Student Records</h1><p>Manage all student information.</p></div>
+        <div class="heading"><h1 id="students-page-title">Student Records</h1><p id="students-page-sub">Manage all student information.</p></div>
         <div style="margin-bottom:20px;display:flex;gap:10px;">
           <button class="primary-button" id="add-student-btn">+ Add Student</button>
           <button class="secondary-button" id="export-students-btn">Export CSV</button>
@@ -410,6 +421,37 @@
           </div>
           <table><thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody id="student-table-body"></tbody></table>
           <div class="table-summary">Total: <strong id="student-total">0</strong></div>
+        </div>
+      </section>
+
+      <section class="page" id="teachers-admin">
+        <div class="heading"><h1>Teacher Records</h1><p>Manage all teacher accounts.</p></div>
+        <div class="table-container">
+          <div class="table-toolbar">
+            <input type="text" id="teacher-search" placeholder="Search teachers..." />
+          </div>
+          <table><thead><tr><th>Name</th><th>Email</th><th>Courses</th><th>Joined</th><th>Actions</th></tr></thead><tbody id="teacher-table-body"></tbody></table>
+          <div class="table-summary">Total: <strong id="teacher-total">0</strong></div>
+        </div>
+      </section>
+
+      <section class="page" id="referrals">
+        <div class="heading"><h1>Teacher Referral Codes</h1><p>Generate codes and review teacher applications.</p></div>
+        <div class="grade-summary-grid">
+          <div class="grade-summary-card"><div class="label">Active Codes</div><div class="value" id="referral-active-count">0</div></div>
+          <div class="grade-summary-card"><div class="label">Pending Applications</div><div class="value" id="referral-pending-count">0</div></div>
+          <div class="grade-summary-card"><div class="label">Approved Teachers</div><div class="value" id="referral-approved-count">0</div></div>
+        </div>
+        <div style="margin-bottom:20px;">
+          <button class="primary-button" id="generate-referral-btn">+ Generate Referral Code</button>
+        </div>
+        <div class="table-container" style="margin-bottom:24px;">
+          <div class="table-toolbar"><strong>Referral Codes</strong></div>
+          <table><thead><tr><th>Code</th><th>Uses</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead><tbody id="referral-code-table-body"></tbody></table>
+        </div>
+        <div class="table-container">
+          <div class="table-toolbar"><strong>Pending Applications</strong></div>
+          <table><thead><tr><th>Name</th><th>Email</th><th>Code Used</th><th>Applied</th><th>Actions</th></tr></thead><tbody id="referral-application-table-body"></tbody></table>
         </div>
       </section>
 
@@ -434,7 +476,7 @@
       </section>
 
       <section class="page" id="courses-admin">
-        <div class="heading"><h1>Course Management</h1><p>Create and manage courses.</p></div>
+        <div class="heading"><h1 id="courses-admin-title">Course Management</h1><p id="courses-admin-sub">Create and manage courses.</p></div>
         <button class="primary-button" id="add-course-btn" style="margin-bottom:20px;">+ Add Course</button>
         <div class="table-container">
           <input type="text" id="course-search" placeholder="Search courses..." style="margin:16px;width:calc(100% - 32px);padding:8px 12px;border:1px solid var(--line);border-radius:8px;" />
@@ -624,6 +666,16 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="referral-modal-overlay">
+    <div class="modal">
+      <h2>Generate Referral Code</h2>
+      <form id="referral-modal-form">
+        <label>Max Uses</label><input type="number" id="referral-max-uses" min="1" value="1" required />
+        <div class="modal-actions"><button type="button" class="cancel-btn" id="referral-modal-cancel">Cancel</button><button type="submit" class="save-btn">Generate</button></div>
+      </form>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script>
@@ -674,6 +726,7 @@
   var students = [], teachers = [], admins = [], courses = [], enrollments = [], meetings = [];
   var gradeData = {}, tasks = [], taskSubmissions = {}, budgetEntries = [];
   var tests = [], testSubmissions = {}, announcements = [];
+  var referralCodes = [], teacherApplications = [];
   var currentUser = null, currentMonth = new Date().getMonth(), currentYear = new Date().getFullYear();
   var tempTaskFiles = [], gradingTaskId = null, gradingStudentId = null, enrollStudentId = null;
   var questionCounter = 0, currentSlide = 0, presentationSlides = [], takingTestId = null;
@@ -695,6 +748,8 @@
     tests = JSON.parse(localStorage.getItem('nokj-tests') || 'null') || [];
     testSubmissions = JSON.parse(localStorage.getItem('nokj-test-submissions') || 'null') || {};
     announcements = JSON.parse(localStorage.getItem('nokj-announcements') || 'null') || DEFAULT_ANNOUNCEMENTS.slice();
+    referralCodes = JSON.parse(localStorage.getItem('nokj-referral-codes') || 'null') || [];
+    teacherApplications = JSON.parse(localStorage.getItem('nokj-teacher-applications') || 'null') || [];
   }
 
   function saveData() {
@@ -711,6 +766,8 @@
     localStorage.setItem('nokj-tests', JSON.stringify(tests));
     localStorage.setItem('nokj-test-submissions', JSON.stringify(testSubmissions));
     localStorage.setItem('nokj-announcements', JSON.stringify(announcements));
+    localStorage.setItem('nokj-referral-codes', JSON.stringify(referralCodes));
+    localStorage.setItem('nokj-teacher-applications', JSON.stringify(teacherApplications));
   }
 
   function showToast(msg) {
@@ -726,6 +783,13 @@
   function getEnrolledCourseIds(studentId) { return enrollments.filter(function (e) { return e.studentId === studentId; }).map(function (e) { return e.courseId; }); }
   function getEnrolledStudentIds(courseId) { return enrollments.filter(function (e) { return e.courseId === courseId; }).map(function (e) { return e.studentId; }); }
   function getCourseStudentCount(courseId) { return getEnrolledStudentIds(courseId).length; }
+  function getTeacherCourseIds(teacherId) { return courses.filter(function (c) { return c.teacherId === teacherId; }).map(function (c) { return c.id; }); }
+  function getTeacherStudentIds(teacherId) {
+    var courseIds = getTeacherCourseIds(teacherId);
+    var ids = {};
+    enrollments.forEach(function (e) { if (courseIds.indexOf(e.courseId) !== -1) ids[e.studentId] = true; });
+    return Object.keys(ids).map(function (k) { return parseInt(k, 10); });
+  }
 
   function getUserByEmail(email) {
     return students.find(function (s) { return s.email === email; }) ||
@@ -737,7 +801,7 @@
 
   function generateId() {
     var maxId = 0;
-    getAllUsers().concat(tasks, meetings, announcements, tests, budgetEntries).forEach(function (item) {
+    getAllUsers().concat(tasks, meetings, announcements, tests, budgetEntries, referralCodes, teacherApplications).forEach(function (item) {
       if (item && item.id > maxId) maxId = item.id;
     });
     return maxId + 1;
@@ -758,9 +822,34 @@
     return Math.floor(hours / 24) + 'd ago';
   }
 
+  // ---- Role-based portal configuration ----
+  function getPortalConfig(role) {
+    var configs = {
+      'Admin': {
+        permissions: { manageUsers: true, manageCourses: true, createTasks: true, createTests: true, gradeSubmissions: true, viewAnalytics: true, manageReferrals: true }
+      },
+      'Teacher': {
+        permissions: { manageUsers: false, manageCourses: false, createTasks: true, createTests: true, gradeSubmissions: true, viewAnalytics: false, manageReferrals: false }
+      },
+      'Student': {
+        permissions: { manageUsers: false, manageCourses: false, createTasks: false, createTests: false, gradeSubmissions: false, viewAnalytics: false, manageReferrals: false }
+      }
+    };
+    return configs[role] || configs['Student'];
+  }
+
   function taskAssignedToUser(task, userId) {
     if (!task || !userId) return false;
-    if (currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Teacher')) return true;
+    if (currentUser && currentUser.role === 'Admin') return true;
+    if (currentUser && currentUser.role === 'Teacher') {
+      if (task.createdBy === currentUser.id) return true;
+      if (task.assignedTo === 'course') {
+        var teacherCourseIds = getTeacherCourseIds(currentUser.id);
+        return task.assignedIds && task.assignedIds.some(function (cid) { return teacherCourseIds.indexOf(cid) !== -1; });
+      }
+      if (task.assignedTo === 'all') return true;
+      return false;
+    }
     if (task.assignedTo === 'all') return true;
     if (task.assignedTo === 'student') return task.assignedIds && task.assignedIds.indexOf(userId) !== -1;
     if (task.assignedTo === 'course') {
@@ -825,41 +914,58 @@
     });
   }
 
+  function showFallbackPreview(body, name, data) {
+    body.innerHTML = '<div style="padding:40px;text-align:center;">' +
+      '<p style="color:var(--muted);">Preview not available for this file type.</p>' +
+      '<a href="' + data + '" download="' + name + '" class="primary-button" style="display:inline-block;margin-top:12px;text-decoration:none;">Download ' + name + '</a>' +
+      '</div>';
+  }
+
   function previewFile(fileObj) {
     var body = $('file-preview-body');
     body.innerHTML = '';
     var name = fileObj.name || 'file';
     var type = fileObj.type || '';
     var data = fileObj.data || fileObj;
+    var ext = name.split('.').pop().toLowerCase();
 
-    if (type.indexOf('image/') === 0) {
+    if (type.indexOf('image/') === 0 || ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp'].indexOf(ext) !== -1) {
       var img = document.createElement('img');
       img.className = 'file-preview-image';
       img.src = data;
       img.alt = name;
       body.appendChild(img);
-    } else if (type === 'application/pdf' || name.toLowerCase().endsWith('.pdf')) {
+    } else if (type === 'application/pdf' || ext === 'pdf') {
       var iframe = document.createElement('iframe');
       iframe.className = 'file-preview-iframe';
       iframe.src = data;
       iframe.title = name;
       body.appendChild(iframe);
-    } else if (type.indexOf('text/') === 0 || /\.(txt|csv|json|js|html|css|md)$/i.test(name)) {
-      if (data.indexOf('base64,') !== -1) {
-        var base64 = data.split('base64,')[1];
-        var text = atob(base64);
+    } else if (type.indexOf('video/') === 0 || ['mp4', 'webm', 'ogg', 'mov'].indexOf(ext) !== -1) {
+      var video = document.createElement('video');
+      video.className = 'file-preview-image';
+      video.controls = true;
+      video.src = data;
+      body.appendChild(video);
+    } else if (type.indexOf('audio/') === 0 || ['mp3', 'wav', 'm4a'].indexOf(ext) !== -1) {
+      var audio = document.createElement('audio');
+      audio.controls = true;
+      audio.src = data;
+      audio.style.width = '100%';
+      audio.style.marginTop = '40px';
+      body.appendChild(audio);
+    } else if (type.indexOf('text/') === 0 || ['txt', 'csv', 'json', 'js', 'html', 'css', 'md', 'xml'].indexOf(ext) !== -1) {
+      try {
+        var text = typeof data === 'string' && data.indexOf('base64,') !== -1 ? atob(data.split('base64,')[1]) : data;
         var pre = document.createElement('pre');
         pre.className = 'file-preview-text';
         pre.textContent = text;
         body.appendChild(pre);
-      } else {
-        var pre2 = document.createElement('pre');
-        pre2.className = 'file-preview-text';
-        pre2.textContent = data;
-        body.appendChild(pre2);
+      } catch (e) {
+        showFallbackPreview(body, name, data);
       }
     } else {
-      body.innerHTML = '<div style="padding:40px;text-align:center;"><p style="color:var(--muted);">Preview not available for this file type.</p><a href="' + data + '" download="' + name + '" class="primary-button" style="display:inline-block;margin-top:12px;text-decoration:none;">Download ' + name + '</a></div>';
+      showFallbackPreview(body, name, data);
     }
     $('file-preview-overlay').classList.add('open');
   }
@@ -891,7 +997,7 @@
     document.querySelectorAll('.page').forEach(function (p) { p.classList.toggle('active', p.id === pageName); });
     document.querySelectorAll('.nav-button[data-page]').forEach(function (b) { b.classList.toggle('active', b.dataset.page === pageName); });
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    var renders = { calendar: renderCalendar, classroom: renderMeetings, tests: renderTests, dashboard: renderDashboard, announcements: renderAnnouncements, assignments: renderAssignments, courses: renderStudentCourses, timetable: renderTimetable, tasks: renderTasks, students: renderStudents, budget: renderBudget, 'courses-admin': renderCourses, grades: renderGrades };
+    var renders = { calendar: renderCalendar, classroom: renderMeetings, tests: renderTests, dashboard: renderDashboard, announcements: renderAnnouncements, assignments: renderAssignments, courses: renderStudentCourses, timetable: renderTimetable, tasks: renderTasks, students: renderStudents, budget: renderBudget, 'courses-admin': renderCourses, grades: renderGrades, 'teachers-admin': renderTeachersAdmin, referrals: renderReferrals };
     if (renders[pageName]) renders[pageName]();
   }
 
@@ -907,16 +1013,124 @@
     return false;
   }
 
-  function register(name, email, password, role) {
+  function register(name, email, password, role, referralCode) {
     if (getUserByEmail(email)) { $('register-error').textContent = 'Email already registered.'; return false; }
     if (password.length < 6) { $('register-error').textContent = 'Password must be at least 6 characters.'; return false; }
+    if (role === 'Teacher') {
+      var result = applyAsTeacher(name, email, password, referralCode);
+      if (!result.success) { $('register-error').textContent = result.message; return false; }
+      showToast(result.message);
+      showLoginScreen();
+      return true;
+    }
     var newUser = { id: generateId(), name: name, email: email, password: password, role: role, createdAt: getTodayStr(), status: 'Active' };
-    if (role === 'Student') students.push(newUser);
-    else if (role === 'Teacher') teachers.push(newUser);
+    students.push(newUser);
     saveData();
     showToast('Account created! Please sign in.');
     showLoginScreen();
     return true;
+  }
+
+  // ---- Teacher referral code system ----
+  function generateReferralCode() {
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var code = '';
+    for (var i = 0; i < 8; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+    return code;
+  }
+
+  function createReferralCode(adminId, maxUses) {
+    var code = { id: generateId(), code: generateReferralCode(), createdBy: adminId, maxUses: maxUses || 1, usedCount: 0, active: true, createdAt: new Date().toISOString() };
+    referralCodes.push(code);
+    saveData();
+    return code;
+  }
+
+  function applyAsTeacher(name, email, password, referralCode) {
+    var code = referralCodes.find(function (c) {
+      return c.code === (referralCode || '').trim().toUpperCase() && c.active && c.usedCount < c.maxUses;
+    });
+    if (!code) return { success: false, message: 'Invalid or expired referral code.' };
+    teacherApplications.push({ id: generateId(), name: name, email: email, password: password, referralCode: code.code, status: 'pending', appliedAt: new Date().toISOString() });
+    code.usedCount++;
+    if (code.usedCount >= code.maxUses) code.active = false;
+    saveData();
+    return { success: true, message: 'Application submitted! An admin will review it shortly.' };
+  }
+
+  function approveTeacher(applicationId) {
+    var app = teacherApplications.find(function (a) { return a.id === applicationId; });
+    if (!app) return { success: false };
+    if (getUserByEmail(app.email)) { showToast('Email already registered elsewhere.'); return { success: false }; }
+    teachers.push({ id: generateId(), name: app.name, email: app.email, password: app.password, role: 'Teacher', status: 'Active', createdAt: getTodayStr() });
+    app.status = 'approved';
+    saveData();
+    return { success: true };
+  }
+
+  function rejectTeacher(applicationId) {
+    var app = teacherApplications.find(function (a) { return a.id === applicationId; });
+    if (!app) return;
+    app.status = 'rejected';
+    saveData();
+  }
+
+  function renderReferrals() {
+    if (!currentUser || currentUser.role !== 'Admin') return;
+    var pending = teacherApplications.filter(function (a) { return a.status === 'pending'; });
+    var approved = teacherApplications.filter(function (a) { return a.status === 'approved'; });
+    $('referral-active-count').textContent = referralCodes.filter(function (c) { return c.active; }).length;
+    $('referral-pending-count').textContent = pending.length;
+    $('referral-approved-count').textContent = approved.length;
+
+    $('referral-code-table-body').innerHTML = referralCodes.length ? referralCodes.slice().reverse().map(function (c) {
+      var statusBadge = c.active ? '<span class="status-badge active">Active</span>' : '<span class="status-badge inactive">Exhausted</span>';
+      return '<tr><td><code style="font-weight:800;letter-spacing:1px;">' + c.code + '</code></td><td>' + c.usedCount + ' / ' + c.maxUses + '</td><td>' + statusBadge + '</td><td>' + formatDate(c.createdAt.split('T')[0]) + '</td><td><button class="action-btn delete revoke-code-btn" data-id="' + c.id + '"' + (c.active ? '' : ' disabled') + '>Revoke</button></td></tr>';
+    }).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--muted);">No referral codes yet.</td></tr>';
+
+    $('referral-application-table-body').innerHTML = pending.length ? pending.map(function (a) {
+      return '<tr><td>' + a.name + '</td><td>' + a.email + '</td><td><code>' + a.referralCode + '</code></td><td>' + getTimeAgo(a.appliedAt) + '</td><td><button class="action-btn enroll approve-teacher-btn" data-id="' + a.id + '">Approve</button><button class="action-btn delete reject-teacher-btn" data-id="' + a.id + '">Reject</button></td></tr>';
+    }).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--muted);">No pending applications.</td></tr>';
+
+    $('referral-code-table-body').querySelectorAll('.revoke-code-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var c = referralCodes.find(function (x) { return x.id === parseInt(btn.dataset.id, 10); });
+        if (c) { c.active = false; saveData(); renderReferrals(); showToast('Code revoked.'); }
+      });
+    });
+    $('referral-application-table-body').querySelectorAll('.approve-teacher-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var r = approveTeacher(parseInt(btn.dataset.id, 10));
+        if (r.success) { showToast('Teacher approved!'); renderReferrals(); renderTeachersAdmin(); updateAdminStats(); }
+      });
+    });
+    $('referral-application-table-body').querySelectorAll('.reject-teacher-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (confirm('Reject this application?')) { rejectTeacher(parseInt(btn.dataset.id, 10)); renderReferrals(); showToast('Application rejected.'); }
+      });
+    });
+  }
+
+  function renderTeachersAdmin() {
+    if (!currentUser || currentUser.role !== 'Admin') return;
+    var search = ($('teacher-search').value || '').toLowerCase();
+    var filtered = teachers.filter(function (t) { return t.name.toLowerCase().indexOf(search) !== -1 || t.email.toLowerCase().indexOf(search) !== -1; });
+    $('teacher-table-body').innerHTML = filtered.map(function (t) {
+      var courseCount = getTeacherCourseIds(t.id).length;
+      return '<tr><td>' + t.name + '</td><td>' + t.email + '</td><td>' + courseCount + '</td><td>' + (t.createdAt || '—') + '</td><td><button class="action-btn delete delete-teacher-btn" data-id="' + t.id + '">Remove</button></td></tr>';
+    }).join('');
+    $('teacher-total').textContent = filtered.length;
+    $('teacher-table-body').querySelectorAll('.delete-teacher-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (!confirm('Remove this teacher?')) return;
+        var id = parseInt(btn.dataset.id, 10);
+        teachers = teachers.filter(function (t) { return t.id !== id; });
+        saveData();
+        renderTeachersAdmin();
+        updateAdminStats();
+        showToast('Teacher removed.');
+      });
+    });
   }
 
   function showApp(user) {
@@ -947,17 +1161,46 @@
 
     var isAdmin = user.role === 'Admin';
     var isTeacher = user.role === 'Teacher';
+    var isStudent = user.role === 'Student';
+
+    // Admin-only nav
     $('admin-nav-label').style.display = isAdmin ? 'block' : 'none';
-    ['admin-students-btn', 'admin-budget-btn', 'admin-courses-btn', 'admin-grades-btn', 'admin-calendar-btn'].forEach(function (id) {
+    ['admin-students-btn', 'admin-teachers-btn', 'admin-referrals-btn', 'admin-budget-btn', 'admin-courses-btn', 'admin-grades-btn', 'admin-calendar-btn'].forEach(function (id) {
       $(id).style.display = isAdmin ? 'flex' : 'none';
     });
-    $('admin-stats-container').style.display = isAdmin ? 'block' : 'none';
-    $('announcement-form').style.display = isAdmin ? 'block' : 'none';
+    // Teacher-only nav
+    $('teacher-nav-label').style.display = isTeacher ? 'block' : 'none';
+    ['teacher-students-btn', 'teacher-courses-btn', 'teacher-grades-btn', 'teacher-calendar-btn'].forEach(function (id) {
+      $(id).style.display = isTeacher ? 'flex' : 'none';
+    });
+    // Student-only nav items (courses/assignments as a learner) hidden for staff
+    $('nav-courses-btn').style.display = isStudent ? 'flex' : 'none';
+    $('nav-assignments-btn').style.display = isStudent ? 'flex' : 'none';
 
-    if (isAdmin) { updateAdminStats(); renderStudents(); renderBudget(); renderCourses(); }
-    if (isAdmin || user.role === 'Student') {
+    $('admin-stats-container').style.display = isAdmin ? 'block' : 'none';
+    $('announcement-form').style.display = (isAdmin || isTeacher) ? 'block' : 'none';
+
+    if (isAdmin) {
+      $('students-page-title').textContent = 'Student Records';
+      $('students-page-sub').textContent = 'Manage all student information.';
+      $('courses-admin-title').textContent = 'Course Management';
+      $('courses-admin-sub').textContent = 'Create and manage all courses.';
+      updateAdminStats(); renderStudents(); renderBudget(); renderCourses(); renderTeachersAdmin(); renderReferrals();
+    }
+    if (isTeacher) {
+      $('students-page-title').textContent = 'My Students';
+      $('students-page-sub').textContent = 'Students enrolled in your courses.';
+      $('courses-admin-title').textContent = 'My Courses';
+      $('courses-admin-sub').textContent = 'Courses you teach.';
+      renderStudents(); renderCourses();
+    }
+    if (isAdmin || isStudent) {
       $('admin-grades-view').style.display = isAdmin ? 'block' : 'none';
-      $('student-grades-view').style.display = user.role === 'Student' ? 'block' : 'none';
+      $('student-grades-view').style.display = isStudent ? 'block' : 'none';
+      renderGrades();
+    } else if (isTeacher) {
+      $('admin-grades-view').style.display = 'block';
+      $('student-grades-view').style.display = 'none';
       renderGrades();
     }
 
@@ -971,6 +1214,7 @@
     renderTests();
     renderCalendar();
     renderUpcomingClasses();
+    openPage('dashboard');
   }
 
   function logout() {
@@ -993,16 +1237,17 @@
   function renderDashboard() {
     if (!currentUser) return;
     var isAdmin = currentUser.role === 'Admin';
+    var isTeacher = currentUser.role === 'Teacher';
     var today = new Date();
     $('hero-date').textContent = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-    $('hero-title').textContent = isAdmin ? 'Welcome back, Admin' : 'Your learning journey continues';
-    $('hero-desc').textContent = isAdmin ? 'Manage students, courses, and academy performance.' : 'Check your courses, tasks, and stay on top of your studies.';
+    $('hero-title').textContent = isAdmin ? 'Welcome back, Admin' : isTeacher ? 'Welcome back, ' + currentUser.name.split(' ')[0] : 'Your learning journey continues';
+    $('hero-desc').textContent = isAdmin ? 'Manage students, courses, and academy performance.' : isTeacher ? 'Manage your courses, grade work, and connect with students.' : 'Check your courses, tasks, and stay on top of your studies.';
 
-    var enrolledIds = currentUser.role === 'Student' ? getEnrolledCourseIds(currentUser.id) : [];
-    var userTasks = currentUser.role === 'Student' ? getTasksForUser(currentUser.id) : tasks;
-    var pending = userTasks.filter(function (t) { return getSubmissionStatus(t.id, currentUser.id) === 'pending'; }).length;
+    var enrolledIds = currentUser.role === 'Student' ? getEnrolledCourseIds(currentUser.id) : (isTeacher ? getTeacherCourseIds(currentUser.id) : []);
+    var userTasks = currentUser.role === 'Student' ? getTasksForUser(currentUser.id) : (isTeacher ? getTasksForUser(currentUser.id) : tasks);
+    var pending = currentUser.role === 'Student' ? userTasks.filter(function (t) { return getSubmissionStatus(t.id, currentUser.id) === 'pending'; }).length : userTasks.length;
     var avg = currentUser.role === 'Student' ? getStudentAverageGrade(currentUser.id) : null;
-    var availableTests = tests.filter(function (t) { return enrolledIds.indexOf(t.courseId) !== -1; }).length;
+    var availableTests = currentUser.role === 'Student' ? tests.filter(function (t) { return enrolledIds.indexOf(t.courseId) !== -1; }).length : tests.length;
 
     $('stat-courses').textContent = enrolledIds.length;
     $('stat-tasks').textContent = pending;
@@ -1011,6 +1256,7 @@
 
     var todayStr = getTodayStr();
     var todayMeetings = meetings.filter(function (m) { return m.date === todayStr; });
+    if (isTeacher) todayMeetings = todayMeetings.filter(function (m) { return m.teacherId === currentUser.id; });
     $('today-schedule').innerHTML = todayMeetings.length ? todayMeetings.map(function (m) {
       return '<div class="lesson-row"><span class="time">' + m.time + '</span><span class="color-bar"></span><div class="row-main"><strong>' + m.title + '</strong><span>' + getTeacherName(m.teacherId) + '</span></div></div>';
     }).join('') : '<p style="color:var(--muted);padding:12px 0;">No classes scheduled for today.</p>';
@@ -1020,18 +1266,20 @@
       return '<div class="simple-row"><span class="round-icon">📌</span><div class="row-main"><strong>' + a.title + '</strong><span>' + a.content.substring(0, 60) + '</span></div></div>';
     }).join('') : '<p style="color:var(--muted);padding:12px 0;">No announcements yet.</p>';
 
-    if (enrolledIds.length) {
+    if (currentUser.role === 'Student' && enrolledIds.length) {
       $('progress-container').innerHTML = enrolledIds.map(function (cid) {
         var c = courses.find(function (co) { return co.id === cid; });
         if (!c) return '';
         var prog = getCourseProgress(currentUser.id, cid);
         return '<div class="progress-item"><div class="progress-top"><span>' + c.name + '</span><span>' + prog + '%</span></div><div class="track"><div class="fill" style="width:' + prog + '%"></div></div></div>';
       }).join('');
-    } else {
+    } else if (currentUser.role === 'Student') {
       $('progress-container').innerHTML = '<p style="color:var(--muted);padding:12px 0;">No courses enrolled.</p>';
+    } else {
+      $('progress-container').innerHTML = '<p style="color:var(--muted);padding:12px 0;">Progress tracking is per-student — see the Grades page.</p>';
     }
 
-    var upcoming = getTasksForUser(currentUser.id).slice(0, 3);
+    var upcoming = (currentUser.role === 'Student' ? getTasksForUser(currentUser.id) : userTasks).slice(0, 3);
     $('upcoming-tasks').innerHTML = upcoming.length ? upcoming.map(function (task) {
       var cls = task.deadline < getTodayStr() ? 'danger' : 'warning';
       return '<div class="simple-row"><span class="round-icon yellow">📝</span><div class="row-main"><strong>' + task.title + '</strong><span>Due: ' + formatDate(task.deadline) + '</span></div><span class="pill ' + cls + '">' + (cls === 'danger' ? 'Overdue' : 'Upcoming') + '</span></div>';
@@ -1042,6 +1290,7 @@
     var today = new Date();
     $('timetable-date').textContent = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     var todayMeetings = meetings.filter(function (m) { return m.date === getTodayStr(); });
+    if (currentUser && currentUser.role === 'Teacher') todayMeetings = todayMeetings.filter(function (m) { return m.teacherId === currentUser.id; });
     $('timetable-content').innerHTML = todayMeetings.length ? todayMeetings.map(function (m) {
       return '<div class="lesson-row"><span class="time">' + m.time + '</span><span class="color-bar"></span><div class="row-main"><strong>' + m.title + '</strong><span>' + getTeacherName(m.teacherId) + '</span></div></div>';
     }).join('') : '<p style="color:var(--muted);padding:12px 0;">No classes scheduled for today.</p>';
@@ -1055,8 +1304,7 @@
       container.innerHTML = '<p style="color:var(--muted);padding:20px;text-align:center;">You are not enrolled in any courses yet.</p>';
       return;
     }
-    var colors = ['', 'orange-cover', 'green-cover'];
-    container.innerHTML = '<div class="course-grid">' + enrolledCourses.map(function (c, i) {
+    container.innerHTML = '<div class="course-grid">' + enrolledCourses.map(function (c) {
       var prog = getCourseProgress(currentUser.id, c.id);
       return '<article class="course"><div class="course-cover" style="background:linear-gradient(135deg,#4f46e5,#818cf8);">' + c.name + '</div><div class="course-body"><h3>' + c.name + '</h3><p>Teacher: ' + getTeacherName(c.teacherId) + '</p><div class="track"><div class="fill" style="width:' + prog + '%"></div></div><div style="margin-top:10px;font-size:11px;color:var(--muted);">' + prog + '% complete</div></div></article>';
     }).join('') + '</div>';
@@ -1096,7 +1344,7 @@
   }
 
   function renderAssignments() {
-    if (!currentUser) return;
+    if (!currentUser || currentUser.role !== 'Student') return;
     var assignedTasks = getTasksForUser(currentUser.id);
     var container = $('assignments-container');
     if (!assignedTasks.length) {
@@ -1121,7 +1369,7 @@
       return;
     }
     container.innerHTML = announcements.slice().reverse().map(function (a) {
-      var author = getUserByEmail(a.authorId) ? getStudentName(a.authorId) || getTeacherName(a.authorId) || 'Admin' : 'Admin';
+      var author = 'Admin';
       var u = students.find(function (s) { return s.id === a.authorId; }) || teachers.find(function (t) { return t.id === a.authorId; }) || admins.find(function (x) { return x.id === a.authorId; });
       if (u) author = u.name;
       return '<article class="announcement-card"><span class="round-icon">📌</span><div><h3 style="margin:0;">' + a.title + '</h3><p style="margin:5px 0;color:var(--muted);font-size:12px;">' + a.content + '</p><p style="font-size:11px;"><strong>Posted ' + getTimeAgo(a.createdAt) + ' by ' + author + '</strong></p></div></article>';
@@ -1172,18 +1420,24 @@
   }
 
   function renderStudents() {
+    if (!currentUser) return;
+    var isTeacher = currentUser.role === 'Teacher';
     var search = ($('student-search').value || '').toLowerCase();
     var filter = $('student-filter').value;
+    var scopeIds = isTeacher ? getTeacherStudentIds(currentUser.id) : null;
     var filtered = students.filter(function (s) {
+      if (scopeIds && scopeIds.indexOf(s.id) === -1) return false;
       var matchSearch = s.name.toLowerCase().indexOf(search) !== -1 || s.email.toLowerCase().indexOf(search) !== -1;
       var matchFilter = filter === 'all' || s.status === filter;
       return matchSearch && matchFilter;
     });
     $('student-table-body').innerHTML = filtered.map(function (s) {
-      return '<tr><td>' + s.name + '</td><td>' + s.email + '</td><td><span class="status-badge ' + s.status.toLowerCase() + '">' + s.status + '</span></td><td><button class="action-btn edit" data-id="' + s.id + '">Edit</button><button class="action-btn enroll" data-id="' + s.id + '">Enroll</button><button class="action-btn delete" data-id="' + s.id + '">Delete</button></td></tr>';
+      var actions = isTeacher
+        ? '<button class="action-btn edit" data-id="' + s.id + '" disabled title="Contact an admin to edit student records">View</button>'
+        : '<button class="action-btn edit" data-id="' + s.id + '">Edit</button><button class="action-btn enroll" data-id="' + s.id + '">Enroll</button><button class="action-btn delete" data-id="' + s.id + '">Delete</button>';
+      return '<tr><td>' + s.name + '</td><td>' + s.email + '</td><td><span class="status-badge ' + s.status.toLowerCase() + '">' + s.status + '</span></td><td>' + actions + '</td></tr>';
     }).join('');
     $('student-total').textContent = filtered.length;
-    $('student-count') && ($('student-count').textContent = filtered.length + ' students');
   }
 
   function renderBudget() {
@@ -1206,41 +1460,45 @@
   }
 
   function renderCourses() {
+    if (!currentUser) return;
+    var isTeacher = currentUser.role === 'Teacher';
     var search = ($('course-search').value || '').toLowerCase();
-    var filtered = courses.filter(function (c) { return c.name.toLowerCase().indexOf(search) !== -1; });
+    var scoped = isTeacher ? courses.filter(function (c) { return c.teacherId === currentUser.id; }) : courses;
+    var filtered = scoped.filter(function (c) { return c.name.toLowerCase().indexOf(search) !== -1; });
     $('course-table-body').innerHTML = filtered.map(function (c) {
-      return '<tr><td>' + c.name + '</td><td>' + getTeacherName(c.teacherId) + '</td><td>' + getCourseStudentCount(c.id) + '</td><td><button class="action-btn edit" data-id="' + c.id + '">Edit</button><button class="action-btn delete" data-id="' + c.id + '">Delete</button></td></tr>';
+      var actions = isTeacher
+        ? '<button class="action-btn edit" data-id="' + c.id + '" disabled title="Contact an admin to edit course details">View</button>'
+        : '<button class="action-btn edit" data-id="' + c.id + '">Edit</button><button class="action-btn delete" data-id="' + c.id + '">Delete</button>';
+      return '<tr><td>' + c.name + '</td><td>' + getTeacherName(c.teacherId) + '</td><td>' + getCourseStudentCount(c.id) + '</td><td>' + actions + '</td></tr>';
     }).join('');
     $('course-total').textContent = filtered.length;
-    $('course-enrollments-total').textContent = enrollments.length;
+    $('course-enrollments-total').textContent = isTeacher
+      ? enrollments.filter(function (e) { return scoped.some(function (c) { return c.id === e.courseId; }); }).length
+      : enrollments.length;
   }
 
   function renderGrades() {
     if (!currentUser) return;
-    if (currentUser.role === 'Admin') {
+    var isAdmin = currentUser.role === 'Admin';
+    var isTeacher = currentUser.role === 'Teacher';
+    if (isAdmin || isTeacher) {
       $('admin-grades-view').style.display = 'block';
       $('student-grades-view').style.display = 'none';
       var courseFilter = $('grade-course-filter');
-      if (courseFilter.options.length <= 1) {
-        courses.forEach(function (c) {
-          var opt = document.createElement('option');
-          opt.value = c.id;
-          opt.textContent = c.name;
-          courseFilter.appendChild(opt);
-        });
-        students.forEach(function (s) {
-          var opt2 = document.createElement('option');
-          opt2.value = s.id;
-          opt2.textContent = s.name;
-          $('grade-student-filter').appendChild(opt2);
-        });
-      }
+      var scopedCourses = isTeacher ? courses.filter(function (c) { return c.teacherId === currentUser.id; }) : courses;
+      var scopedStudentIds = isTeacher ? getTeacherStudentIds(currentUser.id) : null;
+      var scopedStudents = isTeacher ? students.filter(function (s) { return scopedStudentIds.indexOf(s.id) !== -1; }) : students;
+
+      courseFilter.innerHTML = '<option value="all">All Courses</option>' + scopedCourses.map(function (c) { return '<option value="' + c.id + '">' + c.name + '</option>'; }).join('');
+      $('grade-student-filter').innerHTML = '<option value="all">All Students</option>' + scopedStudents.map(function (s) { return '<option value="' + s.id + '">' + s.name + '</option>'; }).join('');
+
       var cf = $('grade-course-filter').value;
       var sf = $('grade-student-filter').value;
       var rows = [];
-      students.forEach(function (s) {
+      scopedStudents.forEach(function (s) {
         if (sf !== 'all' && parseInt(sf, 10) !== s.id) return;
         getEnrolledCourseIds(s.id).forEach(function (cid) {
+          if (!scopedCourses.some(function (c) { return c.id === cid; })) return;
           if (cf !== 'all' && parseInt(cf, 10) !== cid) return;
           rows.push({ studentId: s.id, courseId: cid, grade: gradeData[s.id + '-' + cid] });
         });
@@ -1248,7 +1506,7 @@
       var allGrades = rows.filter(function (r) { return r.grade !== undefined; }).map(function (r) { return r.grade; });
       var avg = allGrades.length ? Math.round(allGrades.reduce(function (a, b) { return a + b; }, 0) / allGrades.length) : 0;
       $('avg-grade-all').textContent = avg + '%';
-      var studentAvgs = students.map(function (s) { return getStudentAverageGrade(s.id); }).filter(function (g) { return g !== null; });
+      var studentAvgs = scopedStudents.map(function (s) { return getStudentAverageGrade(s.id); }).filter(function (g) { return g !== null; });
       $('passing-students').textContent = studentAvgs.filter(function (g) { return g >= 60; }).length;
       $('failing-students').textContent = studentAvgs.filter(function (g) { return g < 60; }).length;
       $('grade-table-body').innerHTML = rows.map(function (r) {
@@ -1319,14 +1577,14 @@
     if (isStaff) {
       var search = ($('task-search').value || '').toLowerCase();
       var typeFilter = $('task-type-filter').value;
-      var filtered = tasks.filter(function (t) {
+      var scoped = getTasksForUser(currentUser.id);
+      var filtered = scoped.filter(function (t) {
         return t.title.toLowerCase().indexOf(search) !== -1 && (typeFilter === 'all' || t.type === typeFilter);
       });
-      var totalSubs = 0, pending = 0, submitted = 0, graded = 0;
+      var pending = 0, submitted = 0, graded = 0;
       filtered.forEach(function (t) {
         students.forEach(function (s) {
           if (!taskAssignedToUser(t, s.id)) return;
-          totalSubs++;
           var st = getSubmissionStatus(t.id, s.id);
           if (st === 'pending') pending++;
           else if (st === 'submitted') submitted++;
@@ -1450,7 +1708,9 @@
     $('student-tests-view').style.display = isStaff ? 'none' : 'block';
 
     if (isStaff) {
-      $('admin-test-list').innerHTML = tests.length ? tests.map(function (t) {
+      var isTeacher = currentUser.role === 'Teacher';
+      var scopedTests = isTeacher ? tests.filter(function (t) { return getTeacherCourseIds(currentUser.id).indexOf(t.courseId) !== -1; }) : tests;
+      $('admin-test-list').innerHTML = scopedTests.length ? scopedTests.map(function (t) {
         var subs = Object.keys(testSubmissions).filter(function (k) { return k.startsWith(t.id + '-'); });
         return '<div class="task-card"><h3 style="margin:0;">' + t.title + '</h3><p style="color:var(--muted);font-size:13px;">' + getCourseName(t.courseId) + ' · ' + (t.questions ? t.questions.length : 0) + ' questions · ' + subs.length + ' submissions</p><p style="font-size:12px;">Deadline: ' + (t.deadline ? formatDate(t.deadline) : 'None') + '</p></div>';
       }).join('') : '<p style="color:var(--muted);">No tests created yet.</p>';
@@ -1483,7 +1743,8 @@
   }
 
   function openScheduleModal() {
-    $('schedule-teacher').innerHTML = teachers.map(function (t) {
+    var teacherOptions = currentUser.role === 'Teacher' ? teachers.filter(function (t) { return t.id === currentUser.id; }) : teachers;
+    $('schedule-teacher').innerHTML = teacherOptions.map(function (t) {
       return '<option value="' + t.id + '">' + t.name + '</option>';
     }).join('');
     $('schedule-date').value = getTodayStr();
@@ -1611,9 +1872,12 @@
       e.preventDefault();
       login($('login-email').value, $('login-password').value);
     });
+    $('register-role').addEventListener('change', function () {
+      $('register-referral-wrap').style.display = this.value === 'Teacher' ? 'block' : 'none';
+    });
     $('register-form').addEventListener('submit', function (e) {
       e.preventDefault();
-      register($('register-name').value.trim(), $('register-email').value.trim(), $('register-password').value.trim(), $('register-role').value);
+      register($('register-name').value.trim(), $('register-email').value.trim(), $('register-password').value.trim(), $('register-role').value, $('register-referral').value.trim());
     });
     $('logout-btn').addEventListener('click', logout);
 
@@ -1656,7 +1920,7 @@
 
     $('student-table-body').addEventListener('click', function (e) {
       var btn = e.target.closest('button');
-      if (!btn) return;
+      if (!btn || btn.disabled) return;
       var id = parseInt(btn.dataset.id, 10);
       if (btn.classList.contains('delete')) deleteEntry('student', id);
       else if (btn.classList.contains('edit')) { var s = students.find(function (x) { return x.id === id; }); if (s) openModal('student', 'edit', s); }
@@ -1671,7 +1935,7 @@
     });
     $('course-table-body').addEventListener('click', function (e) {
       var btn = e.target.closest('button');
-      if (!btn) return;
+      if (!btn || btn.disabled) return;
       var id = parseInt(btn.dataset.id, 10);
       if (btn.classList.contains('delete')) deleteEntry('course', id);
       else if (btn.classList.contains('edit')) { var c = courses.find(function (x) { return x.id === id; }); if (c) openModal('course', 'edit', c); }
@@ -1722,6 +1986,7 @@
     $('course-search').addEventListener('input', renderCourses);
     $('task-search').addEventListener('input', renderTasks);
     $('task-type-filter').addEventListener('change', renderTasks);
+    $('teacher-search') && $('teacher-search').addEventListener('input', renderTeachersAdmin);
 
     $('add-task-btn').addEventListener('click', function () {
       tempTaskFiles = [];
@@ -1733,11 +1998,13 @@
       var val = this.value;
       var opts = $('task-modal-assign-options');
       if (val === 'course') {
+        var courseOptions = currentUser.role === 'Teacher' ? courses.filter(function (c) { return c.teacherId === currentUser.id; }) : courses;
         opts.style.display = 'block';
-        opts.innerHTML = '<label>Select Course</label><select id="task-assign-course">' + courses.map(function (c) { return '<option value="' + c.id + '">' + c.name + '</option>'; }).join('') + '</select>';
+        opts.innerHTML = '<label>Select Course</label><select id="task-assign-course">' + courseOptions.map(function (c) { return '<option value="' + c.id + '">' + c.name + '</option>'; }).join('') + '</select>';
       } else if (val === 'student') {
+        var studentOptions = currentUser.role === 'Teacher' ? students.filter(function (s) { return getTeacherStudentIds(currentUser.id).indexOf(s.id) !== -1; }) : students;
         opts.style.display = 'block';
-        opts.innerHTML = '<label>Select Student</label><select id="task-assign-student">' + students.map(function (s) { return '<option value="' + s.id + '">' + s.name + '</option>'; }).join('') + '</select>';
+        opts.innerHTML = '<label>Select Student</label><select id="task-assign-student">' + studentOptions.map(function (s) { return '<option value="' + s.id + '">' + s.name + '</option>'; }).join('') + '</select>';
       } else opts.style.display = 'none';
     });
     $('task-file-input').addEventListener('change', function () {
@@ -1752,7 +2019,7 @@
       var assignedIds = [];
       if (assign === 'course') assignedIds = [parseInt($('task-assign-course').value, 10)];
       else if (assign === 'student') assignedIds = [parseInt($('task-assign-student').value, 10)];
-      tasks.push({ id: generateId(), title: $('task-modal-title-input').value.trim(), type: $('task-modal-type').value, priority: $('task-modal-priority').value, description: $('task-modal-description').value.trim(), deadline: $('task-modal-deadline').value, files: tempTaskFiles.slice(), assignedTo: assign, assignedIds: assignedIds, createdAt: new Date().toISOString() });
+      tasks.push({ id: generateId(), title: $('task-modal-title-input').value.trim(), type: $('task-modal-type').value, priority: $('task-modal-priority').value, description: $('task-modal-description').value.trim(), deadline: $('task-modal-deadline').value, files: tempTaskFiles.slice(), assignedTo: assign, assignedIds: assignedIds, createdBy: currentUser.id, createdAt: new Date().toISOString() });
       saveData();
       tempTaskFiles = [];
       $('task-modal-form').reset();
@@ -1777,7 +2044,8 @@
     });
 
     $('create-test-btn').addEventListener('click', function () {
-      $('test-modal-course').innerHTML = courses.map(function (c) { return '<option value="' + c.id + '">' + c.name + '</option>'; }).join('');
+      var courseOptions = currentUser.role === 'Teacher' ? courses.filter(function (c) { return c.teacherId === currentUser.id; }) : courses;
+      $('test-modal-course').innerHTML = courseOptions.map(function (c) { return '<option value="' + c.id + '">' + c.name + '</option>'; }).join('');
       $('questions-container').innerHTML = '';
       questionCounter = 0;
       addQuestionBlock();
@@ -1824,6 +2092,20 @@
     $('presentation-close').addEventListener('click', function () { $('presentation-overlay').classList.remove('open'); });
     $('presentation-prev').addEventListener('click', function () { if (currentSlide > 0) { currentSlide--; updatePresentationSlide(); } });
     $('presentation-next').addEventListener('click', function () { if (currentSlide < presentationSlides.length - 1) { currentSlide++; updatePresentationSlide(); } });
+
+    $('generate-referral-btn').addEventListener('click', function () {
+      $('referral-max-uses').value = 1;
+      $('referral-modal-overlay').classList.add('open');
+    });
+    $('referral-modal-cancel').addEventListener('click', function () { $('referral-modal-overlay').classList.remove('open'); });
+    $('referral-modal-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var maxUses = parseInt($('referral-max-uses').value, 10) || 1;
+      var code = createReferralCode(currentUser.id, maxUses);
+      $('referral-modal-overlay').classList.remove('open');
+      renderReferrals();
+      showToast('Code generated: ' + code.code);
+    });
   });
 })();
 

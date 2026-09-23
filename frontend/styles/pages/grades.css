@@ -1,0 +1,67 @@
+    /* === GRADES === */
+    .grade-pass {
+      color: var(--success);
+      font-weight: 700;
+    }
+    .grade-fail {
+      color: var(--danger);
+      font-weight: 700;
+    }
+    .grade-input {
+      width: 60px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 13px;
+      text-align: center;
+    }
+    .grade-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .grade-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .grade-cell .save-grade-btn {
+      padding: 2px 10px;
+      font-size: 11px;
+      border: 1px solid var(--primary);
+      border-radius: 4px;
+      background: var(--primary-light);
+      color: var(--primary);
+      cursor: pointer;
+    }
+    .grade-cell .save-grade-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .grade-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .grade-summary-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+    .grade-summary-card .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .grade-summary-card .value {
+      margin-top: 6px;
+      font-size: 24px;
+      font-weight: 850;
+    }
+    .grade-summary-card .sub {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+

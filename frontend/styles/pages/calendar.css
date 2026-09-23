@@ -1,0 +1,94 @@
+    /* === CALENDAR === */
+    .calendar-container {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    .calendar-header {
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .calendar-header .month-label {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .calendar-header .nav-btn {
+      padding: 6px 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      font-size: 14px;
+    }
+    .calendar-header .nav-btn:hover {
+      background: var(--primary-light);
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      border-collapse: collapse;
+    }
+    .calendar-grid .day-label {
+      padding: 12px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+    }
+    .calendar-grid .day-cell {
+      padding: 8px;
+      min-height: 80px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .calendar-grid .day-cell:nth-child(7n) {
+      border-right: none;
+    }
+    .calendar-grid .day-cell:hover {
+      background: var(--primary-light);
+    }
+    .calendar-grid .day-cell .day-number {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--ink);
+    }
+    .calendar-grid .day-cell .day-events {
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .calendar-grid .day-cell .day-events .event-dot {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      background: var(--primary-light);
+      color: var(--primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .calendar-grid .day-cell .day-events .event-dot.teacher {
+      background: #d1fae5;
+      color: #047857;
+    }
+    .calendar-grid .day-cell.empty {
+      cursor: default;
+      background: #fafafa;
+    }
+    .calendar-grid .day-cell.today {
+      background: var(--primary-light);
+      border-color: var(--primary);
+    }
+    .calendar-grid .day-cell.today .day-number {
+      color: var(--primary);
+    }
+

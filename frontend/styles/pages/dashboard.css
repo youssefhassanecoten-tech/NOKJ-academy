@@ -1,0 +1,68 @@
+    /* === HERO === */
+    .hero {
+      min-height: 190px;
+      padding: 28px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      overflow: hidden;
+      position: relative;
+      color: white;
+      border-radius: var(--radius);
+      background: linear-gradient(120deg, #3730a3, #4f46e5, #7c3aed);
+      box-shadow: var(--shadow);
+    }
+    .hero::after {
+      width: 260px;
+      height: 260px;
+      content: "";
+      position: absolute;
+      right: -95px;
+      top: -145px;
+      border: 30px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+    .eyebrow {
+      margin: 0 0 10px;
+      color: #c7d2fe;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .hero h2 {
+      max-width: 610px;
+      margin: 0;
+      font-size: clamp(22px, 3vw, 30px);
+      letter-spacing: -0.7px;
+    }
+    .hero p:not(.eyebrow) {
+      margin: 10px 0 0;
+      color: #e0e7ff;
+      font-size: 13px;
+    }
+    .primary-button,
+    .secondary-button {
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      border-radius: 10px;
+    }
+    .primary-button {
+      color: white;
+      border: 0;
+      background: var(--primary);
+    }
+    .hero .primary-button {
+      min-width: 125px;
+      color: var(--primary-dark);
+      background: white;
+      z-index: 1;
+    }
+    .secondary-button {
+      color: var(--primary);
+      border: 1px solid #c7d2fe;
+      background: white;
+    }
+

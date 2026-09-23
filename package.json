@@ -1,0 +1,24 @@
+{
+  "name": "nokj-academy",
+  "version": "2.0.0",
+  "description": "NOKJ Academy - all-in-one learning platform (live classes, tasks, tests, grades, budget).",
+  "license": "CC0-1.0",
+  "private": true,
+  "workspaces": [
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n web,api -c blue,green \"npm:dev:web\" \"npm:dev:api\"",
+    "dev:web": "npx serve frontend -l 8080",
+    "dev:api": "npm run dev --workspace backend",
+    "start": "npm run start --workspace backend",
+    "test": "node tests/run-tests.cjs",
+    "lint": "node tests/meta/lint.cjs",
+    "build": "npm run build --workspace backend",
+    "db:init": "npm run db:init --workspace backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "serve": "^14.2.3"
+  }
+}

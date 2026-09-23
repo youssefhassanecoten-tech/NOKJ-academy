@@ -1,0 +1,155 @@
+    /* === LOGIN & REGISTER === */
+    #login-screen,
+    #register-screen {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: linear-gradient(135deg, #312e81, #4f46e5, #7c3aed);
+      position: relative;
+    }
+    #login-screen.open,
+    #register-screen.open {
+      display: flex;
+    }
+    #login-screen.hidden,
+    #register-screen.hidden {
+      display: none;
+    }
+
+    .login-lang-toggle {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      padding: 0;
+    }
+    .login-lang-toggle:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    .login-lang-toggle svg {
+      width: 28px;
+      height: 19px;
+    }
+
+    .login-box,
+    .register-box {
+      width: 100%;
+      max-width: 420px;
+      padding: 40px 32px;
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+    .login-box .brand,
+    .register-box .brand {
+      justify-content: center;
+      padding: 0 0 24px 0;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+    .login-box .brand strong,
+    .register-box .brand strong {
+      font-size: 20px;
+      color: var(--ink);
+    }
+    .login-box .brand small,
+    .register-box .brand small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .login-box .login-header,
+    .register-box .register-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .login-box .login-header h2,
+    .register-box .register-header h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .login-box .login-header p,
+    .register-box .register-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .login-box label,
+    .register-box label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .login-box input,
+    .register-box input,
+    .register-box select {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 14px;
+      background: #fafafa;
+      transition: border-color 0.2s;
+    }
+    .login-box input:focus,
+    .register-box input:focus,
+    .register-box select:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: white;
+    }
+    .login-box .login-btn,
+    .register-box .register-btn {
+      width: 100%;
+      padding: 14px;
+      color: white;
+      font-size: 15px;
+      font-weight: 800;
+      border: 0;
+      border-radius: 10px;
+      background: var(--primary);
+      transition: background 0.2s;
+    }
+    .login-box .login-btn:hover,
+    .register-box .register-btn:hover {
+      background: var(--primary-dark);
+    }
+    .login-error,
+    .register-error {
+      margin: 12px 0 0 0;
+      color: var(--danger);
+      font-size: 13px;
+      text-align: center;
+      min-height: 20px;
+    }
+    .login-box .login-footer,
+    .register-box .register-footer {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .login-box .login-footer a,
+    .register-box .register-footer a {
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .login-box .login-footer a:hover,
+    .register-box .register-footer a:hover {
+      text-decoration: underline;
+    }
+

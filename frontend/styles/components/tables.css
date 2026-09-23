@@ -1,0 +1,196 @@
+    /* === TABLES === */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+    .table-toolbar {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--line);
+    }
+    .table-toolbar .left {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .table-toolbar .right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .table-toolbar input[type="text"],
+    .table-toolbar select {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 13px;
+      background: white;
+    }
+    .table-toolbar input[type="text"]:focus,
+    .table-toolbar select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .add-btn {
+      padding: 8px 16px;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      border: 0;
+      border-radius: 8px;
+      background: var(--primary);
+    }
+    .add-btn:hover {
+      background: var(--primary-dark);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    table th {
+      padding: 14px 16px;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 2px solid var(--line);
+      background: #fafafa;
+    }
+    table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0f1f4;
+    }
+    table tr:hover td {
+      background: #fafafa;
+    }
+
+    .expandable-row {
+      cursor: pointer;
+    }
+    .expandable-row .expand-icon {
+      display: inline-block;
+      transition: transform 0.2s;
+      font-size: 12px;
+      margin-right: 6px;
+    }
+    .expandable-row .expand-icon.open {
+      transform: rotate(90deg);
+    }
+    .expandable-detail {
+      display: none;
+      background: #f8fafc;
+    }
+    .expandable-detail.open {
+      display: table-row;
+    }
+    .expandable-detail td {
+      padding: 0;
+      border-bottom: none;
+    }
+    .expandable-detail .detail-content {
+      padding: 16px 20px 16px 48px;
+      font-size: 13px;
+    }
+    .expandable-detail .detail-content .empty-msg {
+      color: var(--muted);
+      font-style: italic;
+    }
+    .expandable-detail .detail-content .item-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      margin: 3px 6px 3px 0;
+      border-radius: 6px;
+      background: white;
+      border: 1px solid var(--line);
+      font-size: 12px;
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 6px;
+    }
+    .status-badge.active {
+      color: #047857;
+      background: #d1fae5;
+    }
+    .status-badge.warning {
+      color: #92400e;
+      background: #fef3c7;
+    }
+    .status-badge.inactive {
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+    .status-badge.paid {
+      color: #047857;
+      background: #d1fae5;
+    }
+    .status-badge.unpaid {
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+    .status-badge.pending {
+      color: #92400e;
+      background: #fef3c7;
+    }
+
+    .action-btn {
+      padding: 4px 10px;
+      font-size: 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      margin-right: 4px;
+    }
+    .action-btn.edit {
+      color: var(--primary);
+      border-color: #c7d2fe;
+    }
+    .action-btn.edit:hover {
+      background: var(--primary-light);
+    }
+    .action-btn.delete {
+      color: var(--danger);
+      border-color: #fecaca;
+    }
+    .action-btn.delete:hover {
+      background: #fee2e2;
+    }
+    .action-btn.enroll {
+      color: var(--success);
+      border-color: #a7f3d0;
+    }
+    .action-btn.enroll:hover {
+      background: #d1fae5;
+    }
+
+    .table-summary {
+      padding: 14px 20px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+      background: #fafafa;
+    }
+    .table-summary strong {
+      color: var(--primary);
+    }
+    .table-summary .total {
+      font-weight: 700;
+    }
+    .table-summary .total.income {
+      color: var(--success);
+    }
+    .table-summary .total.expense {
+      color: var(--danger);
+    }
+

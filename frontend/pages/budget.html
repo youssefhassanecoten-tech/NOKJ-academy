@@ -1,0 +1,15 @@
+      <section class="page" id="budget">
+        <div class="heading"><h1>Budget &amp; Finance</h1><p>Track income, expenses, and financial health of NOKJ Academy.</p></div>
+        <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="primary-button" id="add-budget-btn">+ Add Entry</button>
+          <button class="secondary-button" id="export-budget-btn">📥 Export CSV</button>
+        </div>
+        <div class="table-container">
+          <div class="table-toolbar">
+            <div class="left"><input type="text" id="budget-search" placeholder="Search entries..." /><select id="budget-filter"><option value="all">All Types</option><option value="Income">Income</option><option value="Expense">Expense</option></select></div>
+            <div class="right"><span id="budget-count" style="font-size:13px;color:var(--muted);">0 entries</span></div>
+          </div>
+          <table><thead><tr><th>Category</th><th>Type</th><th>Amount</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="budget-table-body"></tbody></table>
+          <div class="table-summary"><span>Total Income: <strong class="total income" id="budget-total-income">$0</strong></span><span>Total Expenses: <strong class="total expense" id="budget-total-expense">$0</strong></span><span>Net: <strong class="total" id="budget-net">$0</strong></span></div>
+        </div>
+      </section>

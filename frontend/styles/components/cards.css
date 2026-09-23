@@ -1,0 +1,77 @@
+    /* === STATS & CARDS === */
+    .stats {
+      margin: 23px 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+    .stat-card,
+    .panel,
+    .course,
+    .assignment-card,
+    .announcement-card,
+    .profile-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.025);
+    }
+    .stat-card {
+      padding: 17px;
+    }
+    .stat-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .stat-head span:last-child {
+      width: 33px;
+      height: 33px;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      border-radius: 10px;
+      background: var(--primary-light);
+    }
+    .stat-number {
+      margin: 15px 0 4px;
+      font-size: 26px;
+      font-weight: 850;
+      letter-spacing: -1px;
+    }
+    .stat-note {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .admin-stat-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+    .admin-stat-card .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .admin-stat-card .number {
+      margin-top: 8px;
+      font-size: 28px;
+      font-weight: 850;
+    }
+    .admin-stat-card .change {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--success);
+    }
+

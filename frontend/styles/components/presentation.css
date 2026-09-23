@@ -1,0 +1,53 @@
+    /* === PRESENTATION === */
+    .presentation-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: #1a1a2e;
+      color: white;
+      flex-direction: column;
+    }
+    .presentation-overlay.open {
+      display: flex;
+    }
+    .presentation-overlay .presentation-toolbar {
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .presentation-overlay .presentation-toolbar button {
+      padding: 6px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      background: transparent;
+      color: white;
+      cursor: pointer;
+    }
+    .presentation-overlay .presentation-toolbar button:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .presentation-overlay .presentation-slide {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      padding: 40px;
+      text-align: center;
+    }
+    .presentation-overlay .presentation-slide .slide-content {
+      max-width: 800px;
+    }
+    .presentation-overlay .presentation-slide .slide-content h2 {
+      font-size: 42px;
+      margin-bottom: 20px;
+    }
+    .presentation-overlay .presentation-slide .slide-content p {
+      font-size: 20px;
+      color: #aaa;
+      white-space: pre-wrap;
+    }
+

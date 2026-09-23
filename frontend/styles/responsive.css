@@ -1,0 +1,192 @@
+    /* === RESPONSIVE === */
+    @media (max-width: 1030px) {
+      .stats,
+      .admin-stats,
+      .grade-summary-grid,
+      .task-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .course-grid,
+      .meeting-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .landing-hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 20px;
+      }
+      .landing-hero .hero-content p {
+        max-width: 100%;
+      }
+      .landing-hero .hero-content .hero-buttons {
+        justify-content: center;
+      }
+      .landing-features {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 790px) {
+      .sidebar {
+        display: none;
+      }
+      main {
+        margin-left: 0;
+      }
+      .topbar {
+        min-height: 64px;
+        padding: 12px 16px;
+      }
+      .search,
+      .user-name {
+        display: none;
+      }
+      .page {
+        padding: 25px 16px 90px;
+      }
+      .hero {
+        min-height: 210px;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+      .mobile-nav {
+        padding: 7px 7px calc(7px + env(safe-area-inset-bottom));
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 20;
+        border-top: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(10px);
+      }
+      .mobile-nav .nav-button {
+        padding: 5px 1px;
+        display: grid;
+        justify-items: center;
+        gap: 3px;
+        color: var(--muted);
+        font-size: 9px;
+        text-align: center;
+        border-radius: 9px;
+      }
+      .mobile-nav .nav-button.active {
+        color: var(--primary);
+        background: var(--primary-light);
+      }
+      .mobile-nav .nav-icon {
+        font-size: 16px;
+      }
+      .mobile-nav .nav-button span:last-child {
+        display: block;
+      }
+      .table-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .table-toolbar .left,
+      .table-toolbar .right {
+        flex-wrap: wrap;
+      }
+      .admin-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .grade-summary-grid,
+      .task-stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .meeting-grid {
+        grid-template-columns: 1fr;
+      }
+      .expandable-detail .detail-content {
+        padding: 12px 16px 12px 32px;
+        font-size: 12px;
+      }
+      .landing-header {
+        padding: 16px 20px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .landing-header .auth-buttons .btn-outline,
+      .landing-header .auth-buttons .btn-primary {
+        padding: 8px 16px;
+        font-size: 13px;
+      }
+      .landing-hero .hero-content h1 {
+        font-size: 32px;
+      }
+      .landing-features {
+        grid-template-columns: 1fr;
+      }
+      .calendar-grid .day-cell {
+        min-height: 50px;
+        padding: 4px;
+      }
+      .calendar-grid .day-cell .day-number {
+        font-size: 12px;
+      }
+      .file-preview-content .file-preview-iframe {
+        height: 300px;
+      }
+      .modal {
+        max-width: 100%;
+      }
+    }
+    @media (max-width: 480px) {
+      .stats,
+      .admin-stats,
+      .grade-summary-grid,
+      .task-stats-grid {
+        gap: 10px;
+        grid-template-columns: 1fr;
+      }
+      .stat-card {
+        padding: 14px;
+      }
+      .stat-number {
+        font-size: 22px;
+      }
+      .panel {
+        padding: 17px;
+      }
+      .course-grid,
+      .details,
+      .meeting-grid {
+        grid-template-columns: 1fr;
+      }
+      .assignment-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+      .assignment-card .secondary-button {
+        width: 100%;
+        margin-left: 0;
+      }
+      .login-box,
+      .register-box {
+        padding: 28px 20px;
+      }
+      .modal {
+        padding: 20px;
+      }
+      table {
+        font-size: 12px;
+      }
+      table th,
+      table td {
+        padding: 8px 10px;
+      }
+      .grade-cell {
+        flex-wrap: wrap;
+      }
+      .landing-hero .hero-content h1 {
+        font-size: 26px;
+      }
+      .file-preview-content .file-preview-iframe {
+        height: 200px;
+      }
+    }

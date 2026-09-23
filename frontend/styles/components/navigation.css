@@ -1,0 +1,193 @@
+    /* === MAIN APP === */
+    #app {
+      display: none;
+    }
+    #app.logged-in {
+      display: block;
+    }
+
+    /* === SIDEBAR === */
+    .sidebar {
+      width: 245px;
+      min-height: 100vh;
+      padding: 26px 15px;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      inset: 0 auto 0 0;
+      color: white;
+      background: linear-gradient(180deg, #312e81, #4f46e5 60%, #3730a3);
+    }
+    .brand {
+      padding: 0 12px 30px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      color: var(--primary-dark);
+      font-size: 18px;
+      font-weight: 900;
+      border-radius: 13px;
+      background: white;
+    }
+    .brand strong,
+    .brand small {
+      display: block;
+    }
+    .brand strong {
+      font-size: 16px;
+    }
+    .brand small {
+      margin-top: 2px;
+      color: #c7d2fe;
+      font-size: 11px;
+    }
+    .nav-label {
+      padding: 0 12px;
+      margin: 8px 0 9px;
+      color: #c7d2fe;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .nav-button {
+      width: 100%;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #e0e7ff;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: left;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+    }
+    .nav-button:hover,
+    .nav-button.active {
+      color: white;
+      background: rgba(255, 255, 255, 0.16);
+    }
+    .nav-icon {
+      width: 20px;
+      font-size: 17px;
+      text-align: center;
+    }
+    .help-card {
+      padding: 15px;
+      margin: auto 8px 0;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .help-card strong,
+    .help-card span {
+      display: block;
+    }
+    .help-card strong {
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+    .help-card span {
+      color: #e0e7ff;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    /* === TOPBAR === */
+    main {
+      min-height: 100vh;
+      margin-left: 245px;
+    }
+    .topbar {
+      min-height: 76px;
+      padding: 15px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+    }
+    .search {
+      width: min(410px, 100%);
+      padding: 10px 13px;
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fafafa;
+    }
+    .search input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+    }
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .notification {
+      width: 40px;
+      height: 40px;
+      font-size: 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: white;
+    }
+    .avatar {
+      width: 39px;
+      height: 39px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 850;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f97316, #db2777);
+    }
+    .avatar.admin-avatar {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    }
+    .avatar.teacher-avatar {
+      background: linear-gradient(135deg, #059669, #34d399);
+    }
+    .user-name strong,
+    .user-name span {
+      display: block;
+    }
+    .user-name strong {
+      font-size: 12px;
+    }
+    .user-name span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+    .logout-btn {
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--danger);
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      background: #fef2f2;
+    }
+    .logout-btn:hover {
+      background: #fee2e2;
+    }
+

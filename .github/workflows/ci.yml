@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main, v1-legacy]
+  pull_request:
+
+jobs:
+  integrity:
+    name: Integrity & lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Frontend script syntax
+        run: |
+          set -e
+          for f in $(find frontend/scripts -name '*.js'); do node --check "$f"; done
+
+      - name: Integrity tests
+        run: node tests/run-tests.cjs
+
+      - name: Lint
+        run: node tests/meta/lint.cjs
+
+  backend:
+    name: Backend syntax + build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install backend deps
+        working-directory: backend
+        run: npm install
+
+      - name: Syntax check
+        working-directory: backend
+        run: |
+          set -e
+          for f in $(find src scripts -name '*.js' -o -name '*.cjs'); do node --check "$f"; done
+
+      - name: CI smoke (boot, then exit)
+        working-directory: backend
+        env:
+          PORT: 3999
+          NODE_ENV: test
+        run: |
+          node src/server.js &
+          PID=$!
+          sleep 2
+          curl -s http://localhost:3999/api/auth/login \
+            -H 'Content-Type: application/json' \
+            -d '{"email":"admin@nokj.com","password":"admin123"}' || true
+          kill $PID

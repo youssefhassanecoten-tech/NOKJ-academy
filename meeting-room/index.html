@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOKJ Meeting Room</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Meeting Room</h1>
+      <p id="room-occupancy">Room: not joined</p>
+    </header>
+
+    <section class="join-bar">
+      <input type="text" id="room-name" placeholder="Room name, e.g. Biology-Oct-1" />
+      <button id="join-btn">Join</button>
+    </section>
+
+    <section class="stage">
+      <div class="video-box">
+        <video id="local-video" autoplay muted playsinline></video>
+        <div id="local-label">Local preview</div>
+      </div>
+      <div class="video-box">
+        <video id="remote-video" autoplay playsinline></video>
+        <div id="remote-label">Remote peer</div>
+      </div>
+    </section>
+
+    <p id="notice">No active connection yet.</p>
+
+    <section class="controls">
+      <button id="share-btn">Share screen</button>
+      <button id="mute-video-btn">Mute video</button>
+      <button id="mute-mic-btn">Mute mic</button>
+      <button id="leave-btn" class="danger">Leave</button>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

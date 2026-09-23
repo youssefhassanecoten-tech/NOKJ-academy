@@ -1,0 +1,105 @@
+    /* === TEST CONSTRUCTOR === */
+      /* === TEST CONSTRUCTOR === */
+    .question-builder {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      background: #fafafa;
+    }
+    .question-builder .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .question-builder .question-header .q-number {
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .question-builder .remove-question {
+      color: var(--danger);
+      background: none;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    .question-builder input[type="text"],
+    .question-builder textarea,
+    .question-builder select {
+      width: 100%;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 14px;
+      background: white;
+      box-sizing: border-box;
+    }
+    .question-builder input[type="text"]:focus,
+    .question-builder textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .question-builder .options-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .question-builder .options-group .option-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .question-builder .options-group .option-item input[type="text"] {
+      flex: 1;
+      margin-bottom: 0;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 13px;
+      background: white;
+      min-width: 0;
+    }
+    .question-builder .options-group .option-item input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .question-builder .options-group .option-item input[type="radio"] {
+      margin: 0;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .question-builder .options-group .option-item input[type="radio"]:checked {
+      accent-color: var(--primary);
+    }
+
+    .test-preview {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      background: white;
+      margin-top: 20px;
+    }
+    .test-preview .test-question {
+      padding: 12px;
+      border-bottom: 1px solid #f0f1f4;
+    }
+    .test-preview .test-question:last-child {
+      border-bottom: none;
+    }
+    .test-preview .test-question .q-text {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .test-preview .test-question .q-options label {
+      display: block;
+      padding: 4px 0;
+      font-weight: 400;
+      font-size: 13px;
+    }
+

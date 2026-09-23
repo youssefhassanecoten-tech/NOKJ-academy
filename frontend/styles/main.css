@@ -1,0 +1,51 @@
+
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: Inter, Arial, Helvetica, sans-serif;
+    }
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    /* === PAGES === */
+    .page {
+      display: none;
+      max-width: 1380px;
+      padding: 35px 36px 100px;
+      margin: 0 auto;
+    }
+    .page.active {
+      display: block;
+      animation: appear 0.2s ease;
+    }
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .heading {
+      margin-bottom: 25px;
+    }
+    .heading h1 {
+      margin: 0;
+      font-size: clamp(25px, 4vw, 31px);
+      letter-spacing: -1px;
+    }
+    .heading p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+

@@ -1,0 +1,28 @@
+      <section class="page" id="grades">
+        <div class="heading"><h1>Grades</h1><p>View and manage student grades across all courses.</p></div>
+        <div id="admin-grades-view" style="display:none;">
+          <div class="grade-summary-grid">
+            <div class="grade-summary-card"><div class="label">Average Grade (All Students)</div><div class="value" id="avg-grade-all">0%</div><div class="sub">Across all courses</div></div>
+            <div class="grade-summary-card"><div class="label">Passing Students</div><div class="value" id="passing-students">0</div><div class="sub">Grade ≥ 60%</div></div>
+            <div class="grade-summary-card"><div class="label">Failing Students</div><div class="value" id="failing-students" style="color:var(--danger);">0</div><div class="sub">Grade &lt; 60%</div></div>
+          </div>
+          <div class="table-container">
+            <div class="table-toolbar">
+              <div class="left"><select id="grade-course-filter"><option value="all">All Courses</option></select><select id="grade-student-filter"><option value="all">All Students</option></select></div>
+              <div class="right"><span id="grade-count" style="font-size:13px;color:var(--muted);">0 entries</span></div>
+            </div>
+            <table><thead><tr><th>Student</th><th>Course</th><th>Grade</th><th>Status</th><th>Action</th></tr></thead><tbody id="grade-table-body"></tbody></table>
+            <div class="table-summary"><span>Total Grades: <strong id="grade-total">0</strong></span><span>Passing: <strong class="total income" id="grade-passing-count">0</strong></span><span>Failing: <strong class="total expense" id="grade-failing-count">0</strong></span></div>
+          </div>
+        </div>
+        <div id="student-grades-view" style="display:none;">
+          <div class="grade-summary-grid">
+            <div class="grade-summary-card"><div class="label">Your Average Grade</div><div class="value" id="student-avg-grade-display">0%</div><div class="sub">Across all courses</div></div>
+            <div class="grade-summary-card"><div class="label">Courses Passed</div><div class="value" id="student-courses-passed">0</div><div class="sub">Grade ≥ 60%</div></div>
+            <div class="grade-summary-card"><div class="label">Courses Failed</div><div class="value" id="student-courses-failed" style="color:var(--danger);">0</div><div class="sub">Grade &lt; 60%</div></div>
+          </div>
+          <div class="table-container">
+            <table><thead><tr><th>Course</th><th>Grade</th><th>Status</th></tr></thead><tbody id="student-grade-table-body"></tbody></table>
+          </div>
+        </div>
+      </section>

@@ -1,0 +1,31 @@
+      <section class="page" id="tasks">
+        <div class="heading"><h1>Tasks</h1><p id="tasks-subheading">View and complete your assignments.</p></div>
+
+        <div id="admin-tasks-view" style="display:none;">
+          <div class="task-stats-grid">
+            <div class="task-stat-card"><div class="number" id="task-total">0</div><div class="label">Total Tasks</div></div>
+            <div class="task-stat-card"><div class="number" id="task-pending">0</div><div class="label">Pending</div></div>
+            <div class="task-stat-card"><div class="number" id="task-submitted">0</div><div class="label">Submitted</div></div>
+            <div class="task-stat-card"><div class="number" id="task-graded">0</div><div class="label">Graded</div></div>
+          </div>
+
+          <div class="task-admin-actions">
+            <input type="text" id="task-search" placeholder="Search tasks..." />
+            <select id="task-type-filter"><option value="all">All Types</option><option value="homework">Homework</option><option value="test">Test</option><option value="assignment">Assignment</option></select>
+            <select id="task-status-filter"><option value="all">All Status</option><option value="pending">Pending</option><option value="submitted">Submitted</option><option value="graded">Graded</option></select>
+            <button class="primary-button" id="add-task-btn">+ Add Task</button>
+          </div>
+          <div class="task-grid" id="admin-task-list"></div>
+        </div>
+
+        <div id="student-tasks-view" style="display:none;">
+          <div class="task-stats-grid">
+            <div class="task-stat-card"><div class="number" id="student-task-total">0</div><div class="label">Total Tasks</div></div>
+            <div class="task-stat-card"><div class="number" id="student-task-pending" style="color:var(--danger);">0</div><div class="label">Pending</div></div>
+            <div class="task-stat-card"><div class="number" id="student-task-submitted" style="color:var(--warning);">0</div><div class="label">Submitted</div></div>
+            <div class="task-stat-card"><div class="number" id="student-task-graded" style="color:var(--success);">0</div><div class="label">Graded</div></div>
+          </div>
+
+          <div class="task-grid" id="student-task-list"></div>
+        </div>
+      </section>

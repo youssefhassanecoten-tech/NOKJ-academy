@@ -1,0 +1,50 @@
+      <section class="page active" id="dashboard">
+        <div class="heading"><h1 id="greeting">Good afternoon, Alex 👋</h1><p>Here is everything you need to stay on track today.</p></div>
+        <div id="admin-stats-container" style="display:none;">
+          <div class="admin-stats">
+            <div class="admin-stat-card"><div class="label">Total Students</div><div class="number" id="total-students">0</div><div class="change">Active this term</div></div>
+            <div class="admin-stat-card"><div class="label">Total Courses</div><div class="number" id="total-courses">0</div><div class="change">Active this term</div></div>
+            <div class="admin-stat-card"><div class="label">Total Enrollments</div><div class="number" id="total-enrollments">0</div><div class="change">Across all courses</div></div>
+            <div class="admin-stat-card"><div class="label">Revenue</div><div class="number" id="total-revenue">$0</div><div class="change">This month</div></div>
+          </div>
+        </div>
+        <div class="hero">
+          <div><p class="eyebrow">Thursday, 27 August</p><h2>Your next class is Mathematics at 15:30.</h2><p>Topic: Quadratic equations and graphical interpretation. Room B-12.</p></div>
+          <button class="primary-button" data-page="timetable">View timetable</button>
+        </div>
+        <div class="stats">
+          <article class="stat-card"><div class="stat-head"><span>Lessons today</span><span>▦</span></div><div class="stat-number">3</div><div class="stat-note">1 lesson remaining</div></article>
+          <article class="stat-card"><div class="stat-head"><span>Pending work</span><span>✓</span></div><div class="stat-number">4</div><div class="stat-note">2 due this week</div></article>
+          <article class="stat-card"><div class="stat-head"><span>Average grade</span><span>★</span></div><div class="stat-number">86%</div><div class="stat-note">Up 4% this term</div></article>
+          <article class="stat-card"><div class="stat-head"><span>Course progress</span><span>↗</span></div><div class="stat-number">72%</div><div class="stat-note">Across all courses</div></article>
+        </div>
+        <div class="dashboard-grid">
+          <div class="stack">
+            <article class="panel">
+              <div class="panel-title"><h3>Today's timetable</h3><button class="link-button" data-page="timetable">Full timetable</button></div>
+              <div class="lesson-row"><span class="time">09:00</span><span class="color-bar"></span><div class="row-main"><strong>English Literature</strong><span>Ms. Evans · Room A-04</span></div><span class="pill">Completed</span></div>
+              <div class="lesson-row"><span class="time">12:00</span><span class="color-bar orange"></span><div class="row-main"><strong>Biology</strong><span>Mr. Carter · Science Lab 2</span></div><span class="pill">Completed</span></div>
+              <div class="lesson-row"><span class="time">15:30</span><span class="color-bar green"></span><div class="row-main"><strong>Mathematics</strong><span>Dr. Wilson · Room B-12</span></div><span class="pill">Next</span></div>
+            </article>
+            <article class="panel">
+              <div class="panel-title"><h3>Upcoming assignments</h3><button class="link-button" data-page="assignments">All assignments</button></div>
+              <div class="simple-row"><span class="round-icon yellow">✎</span><div class="row-main"><strong>Essay: Themes in Macbeth</strong><span>English Literature · Due tomorrow at 23:59</span></div><span class="pill danger">Due soon</span></div>
+              <div class="simple-row"><span class="round-icon blue">∑</span><div class="row-main"><strong>Algebra practice set</strong><span>Mathematics · Due 30 August</span></div><span class="pill warning">In progress</span></div>
+              <div class="simple-row"><span class="round-icon">⌬</span><div class="row-main"><strong>Cell structure quiz</strong><span>Biology · Due 2 September</span></div><span class="pill">Not started</span></div>
+            </article>
+          </div>
+          <div class="stack">
+            <article class="panel">
+              <div class="panel-title"><h3>Your progress</h3><button class="link-button" data-page="courses">My courses</button></div>
+              <div class="progress-item"><div class="progress-top"><span>Mathematics</span><span>82%</span></div><div class="track"><div class="fill" style="width:82%"></div></div></div>
+              <div class="progress-item"><div class="progress-top"><span>English Literature</span><span>71%</span></div><div class="track"><div class="fill" style="width:71%"></div></div></div>
+              <div class="progress-item"><div class="progress-top"><span>Biology</span><span>64%</span></div><div class="track"><div class="fill" style="width:64%"></div></div></div>
+            </article>
+            <article class="panel">
+              <div class="panel-title"><h3>Latest updates</h3><button class="link-button" data-page="announcements">See all</button></div>
+              <div class="simple-row"><span class="round-icon">📌</span><div class="row-main"><strong>Mid-term timetable published</strong><span>The assessment timetable is now available.</span></div></div>
+              <div class="simple-row"><span class="round-icon yellow">📚</span><div class="row-main"><strong>Extended library hours</strong><span>The library is open until 18:00 this week.</span></div></div>
+            </article>
+          </div>
+        </div>
+      </section>

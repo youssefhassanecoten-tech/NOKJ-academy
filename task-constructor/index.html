@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOKJ Task Constructor</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f4f6f8;
+      color: #1f2933;
+      margin: 0;
+      padding: 24px;
+      line-height: 1.5;
+    }
+    .container { max-width: 760px; margin: 0 auto; }
+    h1 { margin: 0 0 4px; }
+    .subtitle { color: #616e7c; margin: 0 0 24px; font-size: 14px; }
+    .card {
+      background: #fff;
+      border: 1px solid #e4e7eb;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .card h2 { margin: 0 0 16px; font-size: 16px; }
+    label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 4px; }
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #cbd2d9;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    textarea { min-height: 120px; font-family: Consolas, monospace; }
+    .row { display: flex; gap: 12px; }
+    .row > div { flex: 1; }
+    .options { margin-top: 4px; }
+    .buttons { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .primary { background: #1a73e8; color: #fff; }
+    .secondary { background: #e4e7eb; color: #1f2933; }
+    .danger { background: #e3342f; color: #fff; }
+    .question-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    .question-item:last-child { border-bottom: none; }
+    .question-meta { color: #616e7c; font-size: 12px; margin-top: 2px; }
+    .question-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .question-actions button { padding: 6px 12px; font-size: 13px; }
+    #status { font-size: 13px; color: #1a73e8; margin-top: 8px; min-height: 18px; }
+    .empty { color: #8a919c; font-size: 13px; padding: 8px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Task Constructor</h1>
+    <p class="subtitle">Build question sets for NOKJ Academy tests and export them as JSON.</p>
+
+    <div class="card">
+      <h2>Add Question</h2>
+      <label for="q-text">Question text</label>
+      <input type="text" id="q-text" placeholder="e.g. What is 2 + 2?" />
+      <div class="row">
+        <div>
+          <label for="q-type">Type</label>
+          <select id="q-type">
+            <option value="multiple-choice">Multiple choice</option>
+            <option value="true-false">True / False</option>
+            <option value="short-answer">Short answer</option>
+          </select>
+        </div>
+        <div>
+          <label for="q-correct">Correct answer</label>
+          <input type="text" id="q-correct" placeholder="e.g. B or 4" />
+        </div>
+      </div>
+      <div class="options" id="options-area">
+        <label for="q-opt-a">Option A</label>
+        <input type="text" id="q-opt-a" placeholder="Option A" />
+        <label for="q-opt-b">Option B</label>
+        <input type="text" id="q-opt-b" placeholder="Option B" />
+        <label for="q-opt-c">Option C</label>
+        <input type="text" id="q-opt-c" placeholder="Option C" />
+        <label for="q-opt-d">Option D</label>
+        <input type="text" id="q-opt-d" placeholder="Option D" />
+      </div>
+      <div class="buttons">
+        <button class="primary" id="add-btn">Add Question</button>
+        <button class="secondary" id="reset-btn">Reset Form</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Questions (<span id="count">0</span>)</h2>
+      <div id="questions-list"></div>
+    </div>
+
+    <div class="card">
+      <h2>JSON</h2>
+      <label for="json-area">Question JSON</label>
+      <textarea id="json-area" placeholder="Exported JSON appears here. Paste JSON and press Import to load it."></textarea>
+      <div class="buttons">
+        <button class="primary" id="export-btn">Export JSON</button>
+        <button class="secondary" id="import-btn">Import JSON</button>
+      </div>
+      <div id="status"></div>
+    </div>
+  </div>
+
+  <script>
+    var questions = [];
+    var nextId = 1;
+    var editingId = null;
+
+    var qText = document.getElementById("q-text");
+    var qType = document.getElementById("q-type");
+    var qCorrect = document.getElementById("q-correct");
+    var optionsArea = document.getElementById("options-area");
+    var questionsList = document.getElementById("questions-list");
+    var jsonArea = document.getElementById("json-area");
+    var count = document.getElementById("count");
+    var status = document.getElementById("status");
+
+    function optionInputs() {
+      return [qOptA, qOptB, qOptC, qOptD];
+    }
+
+    var qOptA = document.getElementById("q-opt-a");
+    var qOptB = document.getElementById("q-opt-b");
+    var qOptC = document.getElementById("q-opt-c");
+    var qOptD = document.getElementById("q-opt-d");
+
+    function showStatus(message) {
+      status.textContent = message;
+    }
+
+    function currentOptions() {
+      if (qType.value === "true-false") {
+        return ["True", "False"];
+      }
+      return optionInputs().map(function(input) { return input.value.trim(); }).filter(Boolean);
+    }
+
+    function validateForm() {
+      if (!qText.value.trim()) {
+        showStatus("Question text is required.");
+        return false;
+      }
+      if (qType.value === "multiple-choice" && currentOptions().length < 2) {
+        showStatus("Multiple choice needs at least two options.");
+        return false;
+      }
+      return true;
+    }
+
+    function renderList() {
+      count.textContent = questions.length;
+      questionsList.innerHTML = "";
+      if (questions.length === 0) {
+        var empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No questions yet. Add one above.";
+        questionsList.appendChild(empty);
+        return;
+      }
+      questions.forEach(function(question) {
+        var item = document.createElement("div");
+        item.className = "question-item";
+        var meta = "Type: " + question.type + " | Correct: " + (question.correct || "n/a");
+        if (question.type === "multiple-choice") {
+          meta += " | Options: " + question.options.join(" / ");
+        }
+        var info = document.createElement("div");
+        var text = document.createElement("div");
+        text.textContent = question.question;
+        text.style.fontWeight = "600";
+        var metaEl = document.createElement("div");
+        metaEl.className = "question-meta";
+        metaEl.textContent = meta;
+        info.appendChild(text);
+        info.appendChild(metaEl);
+        var actions = document.createElement("div");
+        actions.className = "question-actions";
+        var editBtn = document.createElement("button");
+        editBtn.className = "secondary";
+        editBtn.textContent = "Edit";
+        editBtn.addEventListener("click", function() { editQuestion(question.id); });
+        var delBtn = document.createElement("button");
+        delBtn.className = "danger";
+        delBtn.textContent = "Delete";
+        delBtn.addEventListener("click", function() { deleteQuestion(question.id); });
+        actions.appendChild(editBtn);
+        actions.appendChild(delBtn);
+        item.appendChild(info);
+        item.appendChild(actions);
+        questionsList.appendChild(item);
+      });
+    }
+
+    function addQuestion() {
+      if (!validateForm()) return;
+      var options = currentOptions();
+      var question = {
+        id: editingId !== null ? editingId : nextId++,
+        type: qType.value,
+        question: qText.value.trim(),
+        options: options,
+        correct: qCorrect.value.trim()
+      };
+      if (editingId !== null) {
+        var index = questions.findIndex(function(q) { return q.id === editingId; });
+        questions[index] = question;
+        editingId = null;
+        document.getElementById("add-btn").textContent = "Add Question";
+        showStatus("Question updated.");
+      } else {
+        questions.push(question);
+        showStatus("Question added.");
+      }
+      resetForm();
+      renderList();
+    }
+
+    function editQuestion(id) {
+      var question = questions.find(function(q) { return q.id === id; });
+      if (!question) return;
+      editingId = id;
+      qText.value = question.question;
+      qType.value = question.type;
+      qCorrect.value = question.correct || "";
+      if (question.type === "multiple-choice") {
+        question.options.forEach(function(option, index) {
+          if (index < 4) optionInputs()[index].value = option;
+        });
+      }
+      updateOptionsVisibility();
+      document.getElementById("add-btn").textContent = "Update Question";
+      showStatus("Editing question #" + id + ". Press Update to save.");
+    }
+
+    function deleteQuestion(id) {
+      questions = questions.filter(function(q) { return q.id !== id; });
+      if (editingId === id) {
+        editingId = null;
+        resetForm();
+        document.getElementById("add-btn").textContent = "Add Question";
+      }
+      renderList();
+      showStatus("Question deleted.");
+    }
+
+    function resetForm() {
+      qText.value = "";
+      qCorrect.value = "";
+      optionInputs().forEach(function(input) { input.value = ""; });
+      updateOptionsVisibility();
+    }
+
+    function updateOptionsVisibility() {
+      if (qType.value === "multiple-choice") {
+        optionsArea.style.display = "block";
+      } else {
+        optionsArea.style.display = "none";
+        if (qType.value === "true-false") {
+          qCorrect.placeholder = "e.g. True";
+        } else {
+          qCorrect.placeholder = "e.g. 4";
+        }
+      }
+    }
+
+    function exportJson() {
+      jsonArea.value = JSON.stringify(questions, null, 2);
+      showStatus("Exported " + questions.length + " question(s) to the JSON area.");
+    }
+
+    function importJson() {
+      var raw = jsonArea.value.trim();
+      if (!raw) {
+        showStatus("Paste JSON first.");
+        return;
+      }
+      var parsed;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (error) {
+        showStatus("Invalid JSON: " + error.message);
+        return;
+      }
+      if (!Array.isArray(parsed)) {
+        showStatus("JSON must be an array of questions.");
+        return;
+      }
+      questions = parsed.map(function(q) {
+        return {
+          id: typeof q.id === "number" ? q.id : 0,
+          type: q.type || "multiple-choice",
+          question: q.question || "",
+          options: Array.isArray(q.options) ? q.options : [],
+          correct: q.correct || ""
+        };
+      });
+      nextId = questions.reduce(function(max, q) { return Math.max(max, q.id); }, 0) + 1;
+      editingId = null;
+      document.getElementById("add-btn").textContent = "Add Question";
+      resetForm();
+      renderList();
+      showStatus("Imported " + questions.length + " question(s).");
+    }
+
+    document.getElementById("add-btn").addEventListener("click", addQuestion);
+    document.getElementById("reset-btn").addEventListener("click", function() {
+      resetForm();
+      editingId = null;
+      document.getElementById("add-btn").textContent = "Add Question";
+      showStatus("Form reset.");
+    });
+    document.getElementById("export-btn").addEventListener("click", exportJson);
+    document.getElementById("import-btn").addEventListener("click", importJson);
+    qType.addEventListener("change", updateOptionsVisibility);
+
+    updateOptionsVisibility();
+    renderList();
+  </script>
+</body>
+</html>

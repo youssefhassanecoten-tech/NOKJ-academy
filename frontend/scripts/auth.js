@@ -50,18 +50,21 @@
           loginError.textContent = '';
           return true;
         } else {
-          loginError.textContent = 'Invalid email or password. Please try again.';
+          loginError.textContent = tr('Invalid email or password. Please try again.');
+          setLanguage(currentLang);
           return false;
         }
       }
 
       function register(name, email, password, role) {
         if (getUserByEmail(email)) {
-          registerError.textContent = 'Email already registered. Please sign in.';
+          registerError.textContent = tr('Email already registered. Please sign in.');
+          setLanguage(currentLang);
           return false;
         }
         if (password.length < 6) {
-          registerError.textContent = 'Password must be at least 6 characters.';
+          registerError.textContent = tr('Password must be at least 6 characters.');
+          setLanguage(currentLang);
           return false;
         }
         var newUser = {
@@ -83,7 +86,7 @@
         saveData();
         registerError.textContent = '';
         showLoginScreen();
-        alert('Account created! Please sign in.');
+        alert(tr('Account created! Please sign in.'));
         return true;
       }
 
@@ -94,6 +97,9 @@
         registerScreen.classList.add('hidden');
         landingPage.classList.add('hidden');
         app.classList.add('logged-in');
+
+        document.body.dataset.theme = (user.role === 'Teacher') ? 'teacher' : (user.role === 'Student' ? 'student' :
+          'admin');
 
         var initials = user.name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
         userAvatar.textContent = initials;
@@ -145,12 +151,16 @@
         renderTests();
         renderCalendar();
         renderUpcomingClasses();
+        renderDashboard();
+        renderAnnouncements();
+        renderAssignments();
         setLanguage(currentLang);
       }
 
       function logout() {
         localStorage.removeItem('nokj-user');
         currentUser = null;
+        document.body.removeAttribute('data-theme');
         app.classList.remove('logged-in');
         showLanding();
         loginPassword.value = '';

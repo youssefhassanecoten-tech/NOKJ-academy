@@ -43,12 +43,26 @@ for (const file of jsFiles) {
 
 console.log('== CSS/JS file integrity ==');
 const cssFiles = walk(CSS_DIR, n => /\.css$/.test(n)).sort();
-check('17 css files present', cssFiles.length === 17, cssFiles.length + ' found');
+const html = fs.readFileSync(HTML_FILE, 'utf8');
+const cssRefs = [];
+for (const m of html.matchAll(/href="(styles\/[^"]+\.css)"/g)) cssRefs.push(m[1]);
+const missingCss = cssRefs.filter(ref => !fs.existsSync(path.join(ROOT, 'frontend', ref)));
+check('all css linked in index.html exist', missingCss.length === 0, missingCss.join(', '));
+const unlinkedCss = cssFiles.filter(f => {
+  return !cssRefs.includes(path.relative(path.join(ROOT, 'frontend'), f).replace(/\\/g, '/'));
+});
+check('all css in frontend/styles are linked', unlinkedCss.length === 0, unlinkedCss.map(f => path.relative(ROOT, f).replace(/\\/g, '/')).join(', '));
 const jsCount = jsFiles.length;
-check('17 js scripts present', jsCount === 17, jsCount + ' found');
+const jsRefs = [];
+for (const m of html.matchAll(/src="(scripts\/[^"]+\.js)"/g)) jsRefs.push(m[1]);
+const missingJs = jsRefs.filter(ref => !fs.existsSync(path.join(ROOT, 'frontend', ref)));
+check('all scripts linked in index.html exist', missingJs.length === 0, missingJs.join(', '));
+const unloadedJs = jsFiles.filter(f => {
+  return !jsRefs.includes(path.relative(path.join(ROOT, 'frontend'), f).replace(/\\/g, '/'));
+});
+check('all js in frontend/scripts are loaded', unloadedJs.length === 0, unloadedJs.map(f => path.relative(ROOT, f).replace(/\\/g, '/')).join(', '));
 
 console.log('== DOM id integrity ==');
-const html = fs.readFileSync(HTML_FILE, 'utf8');
 const ids = new Set();
 for (const m of html.matchAll(/\sid="([^"]+)"/g)) ids.add(m[1]);
 

@@ -8,7 +8,7 @@
           year: 'numeric' });
         calendarGrid.innerHTML = '';
 
-        var dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        var dayLabels = [tr('Sun'), tr('Mon'), tr('Tue'), tr('Wed'), tr('Thu'), tr('Fri'), tr('Sat')];
         dayLabels.forEach(function(label) {
           var div = document.createElement('div');
           div.className = 'day-label';
@@ -54,8 +54,8 @@
               openScheduleModal();
             } else {
               var dayMeetings = meetings.filter(function(m) { return m.date === date; });
-              alert('Classes on ' + date + ': ' + (dayMeetings.length > 0 ? dayMeetings.map(function(m) { return m
-                  .title; }).join(', ') : 'No classes scheduled.'));
+              alert(tr('Classes on') + ' ' + date + ': ' + (dayMeetings.length > 0 ? dayMeetings.map(function(m) { return m
+                  .title; }).join(', ') : tr('No classes scheduled.')));
             }
           });
 
@@ -72,7 +72,8 @@
             .localeCompare(b.date) || a.time.localeCompare(b.time); });
 
         if (upcoming.length === 0) {
-          upcomingClassesList.innerHTML = '<p style="color:var(--muted);">No upcoming classes scheduled.</p>';
+          upcomingClassesList.innerHTML = '<p style="color:var(--muted);">' + tr(
+            'No upcoming classes scheduled.') + '</p>';
           return;
         }
 
@@ -82,18 +83,13 @@
           html +=
             '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border:1px solid var(--line);border-radius:8px;background:white;">' +
             '<div><strong>' + m.title + '</strong><br><span style="font-size:12px;color:var(--muted);">📅 ' + m.date +
-            ' at ' + m.time + ' · ' + getTeacherName(m.teacherId) + (isTeacher ? ' (You)' : '') + '</span></div>' +
+            ' at ' + m.time + ' · ' + getTeacherName(m.teacherId) + (isTeacher ? ' (' + tr('You') + ')' : '') +
+            '</span></div>' +
             '<button class="join-btn" data-meeting="' + m.id +
-            '" style="padding:6px 16px;border:0;border-radius:6px;background:var(--primary);color:white;font-weight:600;">Join</button>' +
+            '" style="padding:6px 16px;border:0;border-radius:6px;background:var(--primary);color:white;font-weight:600;">' +
+            tr('Join') + '</button>' +
             '</div>';
         });
         upcomingClassesList.innerHTML = html;
-
-        upcomingClassesList.querySelectorAll('.join-btn').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            var meetingId = parseInt(this.dataset.meeting);
-            openPresentation(meetingId);
-          });
-        });
         setLanguage(currentLang);
       }

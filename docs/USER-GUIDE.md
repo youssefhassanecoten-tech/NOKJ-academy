@@ -22,9 +22,10 @@ also auto-created on first load.
   (`courses-admin`).
 - **Assignments & Tasks** - teachers create tasks (homework/assignment/test),
   students submit answers/files; teachers grade with feedback.
-- **Announcements** - class announcements.
-- **Classroom** - live meetings with a in-app presentation player; teachers can
-  present slides and (stub) share the screen.
+- **Announcements** - class announcements; admins can add/edit/delete them.
+- **Classroom** - live WebRTC meetings (camera, mic, screen share, chat, slide
+  sync) between teachers and students; teachers/admins can additionally
+  schedule new classes here or on the calendar.
 - **Tests** - test builder (multiple question types), taking quizzes, and
   auto-grading.
 - **Students** (admin) - manage student records and status.

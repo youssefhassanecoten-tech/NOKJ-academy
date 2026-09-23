@@ -13,22 +13,23 @@
         filtered.forEach(function(s) {
           var isExpanded = expandedRows['student-' + s.id] || false;
           var icon = isExpanded ? '▼' : '▶';
-          var tr = document.createElement('tr');
-          tr.className = 'expandable-row';
-          tr.dataset.expandId = 'student-' + s.id;
-          tr.innerHTML = '<td style="cursor:pointer;"><span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon +
+          var row = document.createElement('tr');
+          row.className = 'expandable-row';
+          row.dataset.expandId = 'student-' + s.id;
+          row.innerHTML = '<td style="cursor:pointer;"><span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon +
             '</span> <strong>' + s.name + '</strong></td><td>' + s.email + '</td><td><span class="status-badge ' + s.status
-            .toLowerCase() + '">' + s.status + '</span></td><td><button class="action-btn edit" data-id="' + s.id +
+            .toLowerCase() + '">' + tr(s.status) + '</span></td><td><button class="action-btn edit" data-id="' + s.id +
             '" data-type="student">✏️</button><button class="action-btn delete" data-id="' + s.id +
             '" data-type="student">🗑️</button><button class="action-btn enroll" data-id="' + s.id +
-            '" data-type="enroll">📚 Enroll</button></td>';
-          studentTableBody.appendChild(tr);
+            '" data-type="enroll">📚 ' + tr('Enroll') + '</button></td>';
+          studentTableBody.appendChild(row);
           var detailTr = document.createElement('tr');
           detailTr.className = 'expandable-detail' + (isExpanded ? ' open' : '');
           detailTr.dataset.parentId = 'student-' + s.id;
           var courseIds = getEnrolledCourseIds(s.id);
-          var detailHtml = '<div class="detail-content"><strong>Enrolled Courses:</strong> ';
-          if (courseIds.length === 0) detailHtml += '<span class="empty-msg">Not enrolled in any courses.</span>';
+          var detailHtml = '<div class="detail-content"><strong>' + tr('Enrolled Courses:') + '</strong> ';
+          if (courseIds.length === 0) detailHtml += '<span class="empty-msg">' + tr('Not enrolled in any courses.') +
+            '</span>';
           else {
             courseIds.forEach(function(cid) {
               var c = courses.find(function(co) { return co.id === cid; });
@@ -40,7 +41,7 @@
           detailTr.innerHTML = '<td colspan="4">' + detailHtml + '</td>';
           studentTableBody.appendChild(detailTr);
         });
-        studentCount.textContent = filtered.length + ' students';
+        studentCount.textContent = filtered.length + ' ' + tr('students');
         studentTotal.textContent = students.length;
         updateAdminStats();
         setLanguage(currentLang);

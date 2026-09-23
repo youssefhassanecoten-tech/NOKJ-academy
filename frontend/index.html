@@ -11,12 +11,14 @@
   <link rel="stylesheet" href="styles/main.css" />
   <link rel="stylesheet" href="styles/pages/landing.css" />
   <link rel="stylesheet" href="styles/pages/auth.css" />
-  <link rel="stylesheet" href="styles/components/navigation.css" />
+<link rel="stylesheet" href="styles/components/navigation.css" />
+  <link rel="stylesheet" href="styles/components/search.css" />
   <link rel="stylesheet" href="styles/pages/dashboard.css" />
   <link rel="stylesheet" href="styles/components/cards.css" />
   <link rel="stylesheet" href="styles/components/tables.css" />
   <link rel="stylesheet" href="styles/pages/grades.css" />
   <link rel="stylesheet" href="styles/pages/classroom.css" />
+  <link rel="stylesheet" href="styles/components/meeting.css" />
   <link rel="stylesheet" href="styles/pages/calendar.css" />
   <link rel="stylesheet" href="styles/components/presentation.css" />
   <link rel="stylesheet" href="styles/pages/tasks.css" />
@@ -155,7 +157,8 @@
 
     <main>
       <header class="topbar">
-        <label class="search"><span>⌕</span><input type="search" placeholder="Search courses, lessons or assignments" /></label>
+        <label class="search"><span>⌕</span><input type="search" id="global-search" placeholder="Search courses, lessons or assignments" autocomplete="off" /></label>
+        <div class="search-results" id="global-search-results" style="display:none;"></div>
         <div class="user-area">
           <button id="language-toggle" type="button" title="Change language" style="width:42px;height:40px;display:grid;place-items:center;border:1px solid #e5e7eb;border-radius:12px;background:white;cursor:pointer;padding:0;">
             <svg id="flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
@@ -189,56 +192,13 @@
             <div class="admin-stat-card"><div class="label">Revenue</div><div class="number" id="total-revenue">$0</div><div class="change">This month</div></div>
           </div>
         </div>
-        <div class="hero">
-          <div><p class="eyebrow">Thursday, 27 August</p><h2>Your next class is Mathematics at 15:30.</h2><p>Topic: Quadratic equations and graphical interpretation. Room B-12.</p></div>
-          <button class="primary-button" data-page="timetable">View timetable</button>
-        </div>
-        <div class="stats">
-          <article class="stat-card"><div class="stat-head"><span>Lessons today</span><span>▦</span></div><div class="stat-number">3</div><div class="stat-note">1 lesson remaining</div></article>
-          <article class="stat-card"><div class="stat-head"><span>Pending work</span><span>✓</span></div><div class="stat-number">4</div><div class="stat-note">2 due this week</div></article>
-          <article class="stat-card"><div class="stat-head"><span>Average grade</span><span>★</span></div><div class="stat-number">86%</div><div class="stat-note">Up 4% this term</div></article>
-          <article class="stat-card"><div class="stat-head"><span>Course progress</span><span>↗</span></div><div class="stat-number">72%</div><div class="stat-note">Across all courses</div></article>
-        </div>
-        <div class="dashboard-grid">
-          <div class="stack">
-            <article class="panel">
-              <div class="panel-title"><h3>Today's timetable</h3><button class="link-button" data-page="timetable">Full timetable</button></div>
-              <div class="lesson-row"><span class="time">09:00</span><span class="color-bar"></span><div class="row-main"><strong>English Literature</strong><span>Ms. Evans · Room A-04</span></div><span class="pill">Completed</span></div>
-              <div class="lesson-row"><span class="time">12:00</span><span class="color-bar orange"></span><div class="row-main"><strong>Biology</strong><span>Mr. Carter · Science Lab 2</span></div><span class="pill">Completed</span></div>
-              <div class="lesson-row"><span class="time">15:30</span><span class="color-bar green"></span><div class="row-main"><strong>Mathematics</strong><span>Dr. Wilson · Room B-12</span></div><span class="pill">Next</span></div>
-            </article>
-            <article class="panel">
-              <div class="panel-title"><h3>Upcoming assignments</h3><button class="link-button" data-page="assignments">All assignments</button></div>
-              <div class="simple-row"><span class="round-icon yellow">✎</span><div class="row-main"><strong>Essay: Themes in Macbeth</strong><span>English Literature · Due tomorrow at 23:59</span></div><span class="pill danger">Due soon</span></div>
-              <div class="simple-row"><span class="round-icon blue">∑</span><div class="row-main"><strong>Algebra practice set</strong><span>Mathematics · Due 30 August</span></div><span class="pill warning">In progress</span></div>
-              <div class="simple-row"><span class="round-icon">⌬</span><div class="row-main"><strong>Cell structure quiz</strong><span>Biology · Due 2 September</span></div><span class="pill">Not started</span></div>
-            </article>
-          </div>
-          <div class="stack">
-            <article class="panel">
-              <div class="panel-title"><h3>Your progress</h3><button class="link-button" data-page="courses">My courses</button></div>
-              <div class="progress-item"><div class="progress-top"><span>Mathematics</span><span>82%</span></div><div class="track"><div class="fill" style="width:82%"></div></div></div>
-              <div class="progress-item"><div class="progress-top"><span>English Literature</span><span>71%</span></div><div class="track"><div class="fill" style="width:71%"></div></div></div>
-              <div class="progress-item"><div class="progress-top"><span>Biology</span><span>64%</span></div><div class="track"><div class="fill" style="width:64%"></div></div></div>
-            </article>
-            <article class="panel">
-              <div class="panel-title"><h3>Latest updates</h3><button class="link-button" data-page="announcements">See all</button></div>
-              <div class="simple-row"><span class="round-icon">📌</span><div class="row-main"><strong>Mid-term timetable published</strong><span>The assessment timetable is now available.</span></div></div>
-              <div class="simple-row"><span class="round-icon yellow">📚</span><div class="row-main"><strong>Extended library hours</strong><span>The library is open until 18:00 this week.</span></div></div>
-            </article>
-          </div>
-        </div>
+        <div id="dashboard-grid" class="dashboard-grid"></div>
       </section>
 
       <!-- ===== TIMETABLE ===== -->
       <section class="page" id="timetable">
         <div class="heading"><h1>My timetable</h1><p>Your weekly lesson schedule will appear here.</p></div>
-        <article class="panel">
-          <div class="panel-title"><h3>Thursday, 27 August</h3><button class="secondary-button">Today</button></div>
-          <div class="lesson-row"><span class="time">09:00</span><span class="color-bar"></span><div class="row-main"><strong>English Literature</strong><span>Ms. Evans · Room A-04</span></div><span class="pill">Completed</span></div>
-          <div class="lesson-row"><span class="time">12:00</span><span class="color-bar orange"></span><div class="row-main"><strong>Biology</strong><span>Mr. Carter · Science Lab 2</span></div><span class="pill">Completed</span></div>
-          <div class="lesson-row"><span class="time">15:30</span><span class="color-bar green"></span><div class="row-main"><strong>Mathematics</strong><span>Dr. Wilson · Room B-12</span></div><span class="pill">Next</span></div>
-        </article>
+        <div id="timetable-content"></div>
       </section>
 
       <!-- ===== MY COURSES ===== -->
@@ -250,21 +210,14 @@
       <!-- ===== ASSIGNMENTS ===== -->
       <section class="page" id="assignments">
         <div class="heading"><h1>Assignments</h1><p>Keep track of your work, deadlines, and teacher feedback.</p></div>
-        <div class="assignment-list">
-          <article class="assignment-card"><span class="round-icon yellow">✎</span><div class="row-main"><h3>Essay: Themes in Macbeth</h3><p>English Literature · 800–1,000 words · Due 28 August at 23:59</p></div><span class="pill danger">Due soon</span><button class="secondary-button assignment-button">Open assignment</button></article>
-          <article class="assignment-card"><span class="round-icon blue">∑</span><div class="row-main"><h3>Algebra practice set</h3><p>Mathematics · Questions 1–25 · Due 30 August</p></div><span class="pill warning">In progress</span><button class="secondary-button assignment-button">Open assignment</button></article>
-          <article class="assignment-card"><span class="round-icon">⌬</span><div class="row-main"><h3>Cell structure quiz</h3><p>Biology · Online quiz · Due 2 September</p></div><span class="pill">Not started</span><button class="secondary-button assignment-button">Open assignment</button></article>
-        </div>
+        <div class="assignment-list" id="assignment-list"></div>
       </section>
 
       <!-- ===== ANNOUNCEMENTS ===== -->
       <section class="page" id="announcements">
         <div class="heading"><h1>Announcements</h1><p>Important news and updates from NOKJ Academy.</p></div>
-        <div class="announcement-list">
-          <article class="announcement-card"><span class="round-icon">📌</span><div><h3>Mid-term assessment timetable published</h3><p>The timetable for mid-term assessments is now available. Check your course pages and speak with your teacher if you have any questions.</p><p><strong>Posted today</strong></p></div></article>
-          <article class="announcement-card"><span class="round-icon yellow">📚</span><div><h3>Extended library opening hours</h3><p>The school library will remain open until 18:00 from Monday to Thursday during assessment week.</p><p><strong>Posted yesterday</strong></p></div></article>
-          <article class="announcement-card"><span class="round-icon blue">🏆</span><div><h3>Student science fair registration</h3><p>Registration for the annual student science fair is open until 5 September. Speak with your science teacher to take part.</p><p><strong>Posted 25 August</strong></p></div></article>
-        </div>
+        <div id="announcement-add-row" style="display:none;margin-bottom:16px;"></div>
+        <div class="announcement-list" id="announcement-list"></div>
       </section>
 
       <!-- ===== CLASSROOM ===== -->
@@ -478,6 +431,70 @@
     </div>
   </div>
 
+  <!-- ===== MEETING ROOM ===== -->
+  <div class="meeting-overlay" id="meeting-overlay">
+    <div class="meeting-room">
+      <div class="meeting-topbar">
+        <span class="meeting-title" id="meeting-room-title">Meeting Room</span>
+        <div class="meeting-topbar-actions">
+          <button id="meeting-fullscreen" title="Fullscreen">⛶</button>
+          <button id="meeting-leave" title="Leave">✕</button>
+        </div>
+      </div>
+      <div class="meeting-main">
+        <div class="meeting-videos">
+          <div class="video-tile" id="meeting-local-tile">
+            <video id="meeting-local-video" autoplay muted playsinline></video>
+            <div class="video-fallback" id="meeting-local-fallback">Camera off</div>
+            <span class="video-label" id="meeting-local-name">You</span>
+          </div>
+          <div class="video-tile" id="meeting-remote-tile" style="display:none;">
+            <video id="meeting-remote-video" autoplay playsinline></video>
+            <div class="video-fallback" id="meeting-remote-fallback">Waiting for others to join...</div>
+            <span class="video-label" id="meeting-remote-name">Remote video</span>
+          </div>
+          <div class="video-tile" id="meeting-slides-tile">
+            <div class="meeting-slide-view">
+              <div class="meeting-slide-display">
+                <h2 id="meeting-slide-title">Welcome!</h2>
+                <p id="meeting-slide-text">Press the arrow keys to navigate slides.</p>
+              </div>
+              <div class="meeting-slide-controls">
+                <button id="meeting-slide-prev">◀</button>
+                <span id="meeting-slide-counter">1/1</span>
+                <button id="meeting-slide-next">▶</button>
+              </div>
+            </div>
+            <span class="video-label">Slides</span>
+          </div>
+        </div>
+        <aside class="meeting-side">
+          <div class="meeting-tabs">
+            <button class="meeting-tab active" data-tab="chat">Chat</button>
+            <button class="meeting-tab" data-tab="participants">Participants</button>
+          </div>
+          <div class="meeting-panel" id="meeting-chat-panel">
+            <div class="meeting-chat-messages" id="meeting-chat-messages"></div>
+            <div class="meeting-chat-input">
+              <input type="text" id="meeting-chat-input" placeholder="Type a message..." />
+              <button id="meeting-chat-send">Send</button>
+            </div>
+          </div>
+          <div class="meeting-panel" id="meeting-participants-panel" style="display:none;">
+            <div id="meeting-participants-list"></div>
+          </div>
+        </aside>
+      </div>
+      <div class="meeting-controls">
+        <button id="meeting-mic-btn" class="meeting-control">🎤 Mic</button>
+        <button id="meeting-cam-btn" class="meeting-control">📷 Camera</button>
+        <button id="meeting-screen-btn" class="meeting-control">🖥 Share Screen</button>
+        <button id="meeting-chat-btn" class="meeting-control">💬 Chat</button>
+        <button id="meeting-end-btn" class="meeting-control danger">End call</button>
+      </div>
+    </div>
+  </div>
+
   <div class="file-preview-overlay" id="file-preview-overlay">
     <div class="file-preview-content">
       <span class="preview-close" id="file-preview-close">&times;</span>
@@ -654,7 +671,11 @@
   <script src="scripts/modules/grades.js"></script>
   <script src="scripts/modules/tasks.js"></script>
   <script src="scripts/modules/tests.js"></script>
-  <script src="scripts/modules/files.js"></script>
+<script src="scripts/modules/files.js"></script>
+  <script src="scripts/modules/announcements.js"></script>
+  <script src="scripts/modules/assignments.js"></script>
+  <script src="scripts/modules/meeting.js"></script>
+  <script src="scripts/modules/search.js"></script>
   <script src="scripts/modules/modals.js"></script>
   <script src="scripts/app.js"></script>
 </body>

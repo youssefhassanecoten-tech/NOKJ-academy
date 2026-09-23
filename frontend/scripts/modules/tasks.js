@@ -295,7 +295,7 @@
           taskSubmissions[key].feedback = feedback || '';
           saveData();
           renderTasks();
-          alert('Grade saved successfully!');
+          alert(tr('Grade saved successfully!'));
           setLanguage(currentLang);
         }
       }
@@ -315,7 +315,7 @@
         });
         saveData();
         renderTasks();
-        alert('Task created successfully!');
+        alert(tr('Task created successfully!'));
         setLanguage(currentLang);
       }
 
@@ -341,7 +341,7 @@
         }
         saveData();
         renderTasks();
-        alert('Task submitted!');
+        alert(tr('Task submitted!'));
         setLanguage(currentLang);
       }
       function updateTaskFileList() {

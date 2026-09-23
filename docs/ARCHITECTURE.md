@@ -25,7 +25,11 @@ full-stack deployment.
   | `auth.js` | Login/register, session persistence, role checks |
   | `modules/dashboard.js` | Landing, auth screens, role dashboards |
   | `modules/calendar.js` | Timetable and calendar rendering |
-  | `modules/classroom.js` | Meetings, presentation player, screen share |
+  | `modules/classroom.js` | Meetings, join buttons, scheduling |
+  | `modules/meeting.js` | WebRTC virtual classroom (mesh + signalling) |
+  | `modules/search.js` | Global topbar search across app data |
+  | `modules/announcements.js` | Announcement rendering (+ admin CRUD) |
+  | `modules/assignments.js` | Student-facing assignment list |
   | `modules/students.js` | Student administration |
   | `modules/courses.js` | Course and enrollment management |
   | `modules/budget.js` | Budget income/expense tracking |
@@ -34,7 +38,7 @@ full-stack deployment.
   | `modules/tests.js` | Test builder, quiz taking and auto-grading |
   | `modules/files.js` | File preview modal, avatar upload |
   | `modules/modals.js` | Generic modal dialogs, account/profile forms |
-  | `app.js` | Init, view wiring, inline event handlers |
+  | `app.js` | Init, view wiring, delegated `data-page` navigation |
 
 - **Pages** (`frontend/pages/`): extracted HTML fragments for the 14 views
   (dashboard, timetable, courses, assignments, announcements, classroom, tasks,
@@ -59,6 +63,16 @@ presentation slides.
 `backend/` is an Express API scaffold (see [API](API.md)). It mirrors the
 frontend entities: auth, users, courses, enrollments, meetings, tasks,
 submissions, tests, grades, budget.
+
+### Live classroom signalling
+
+`backend/src/ws/signaling.js` attaches a WebSocket hub (`ws`, path `/ws`) to the
+same HTTP server. It relays `join`, `signal` (WebRTC offers/answers/ICE),
+`chat`, `slide`, `mic` and `leave` messages inside ephemeral in-memory rooms.
+The frontend (`modules/meeting.js`) builds a browser-to-browser
+`RTCPeerConnection` mesh over it, falling back to `BroadcastChannel` when the
+server is unreachable. See `meeting-room/README.md` for the full design and
+LiveKit/Stream/Agora migration path.
 
 ## Database
 

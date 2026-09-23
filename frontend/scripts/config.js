@@ -90,6 +90,18 @@
       ];
 
       const DEFAULT_GRADES = { '1-1': 85, '1-2': 78, '1-3': 92, '2-1': 88, '2-3': 95, '3-2': 65 };
+
+      const DEFAULT_ANNOUNCEMENTS = [
+        { id: 1, title: 'Mid-term assessment timetable published',
+          message: 'The timetable for mid-term assessments is now available. Check your course pages and speak with your teacher if you have any questions.',
+          author: 'Admin User', date: '2026-08-27T09:00:00' },
+        { id: 2, title: 'Extended library opening hours',
+          message: 'The school library will remain open until 18:00 from Monday to Thursday during assessment week.',
+          author: 'Admin User', date: '2026-08-26T09:00:00' },
+        { id: 3, title: 'Student science fair registration',
+          message: 'Registration for the annual student science fair is open until 5 September. Speak with your science teacher to take part.',
+          author: 'Admin User', date: '2026-08-25T09:00:00' }
+      ];
       const DEFAULT_PRESENTATION = [
         { title: 'Quadratic Equations', content: 'Introduction to solving quadratic equations.' },
         { title: 'Formula', content: 'x = (-b ± √(b² - 4ac)) / 2a' },
@@ -111,6 +123,7 @@
         budgetEntries = [];
       let tests = [],
         testSubmissions = {};
+      let announcements = [];
       let currentUser = null,
         expandedRows = {},
         currentSlide = 0,

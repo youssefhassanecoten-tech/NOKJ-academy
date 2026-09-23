@@ -9,7 +9,8 @@
         });
         if (userMeetings.length === 0) {
           meetingGrid.innerHTML =
-            '<p style="color:var(--muted);text-align:center;padding:40px;">No upcoming classes. Check back later!</p>';
+            '<p style="color:var(--muted);text-align:center;padding:40px;">' + tr(
+            'No upcoming classes. Check back later!') + '</p>';
           return;
         }
         userMeetings.forEach(function(meeting) {
@@ -19,8 +20,9 @@
           card.innerHTML = '<div class="meeting-header"><h3>' + meeting.title + '</h3><div class="teacher">👨‍🏫 ' +
             getTeacherName(meeting.teacherId) + '</div></div><div class="meeting-body"><div class="time">📅 ' + meeting
             .date + ' • 🕐 ' + meeting.time + ' (' + meeting.duration + ' min)</div>' + (isTeacher ?
-            '<div style="font-size:11px;color:var(--muted);margin-top:4px;">📋 You are teaching this class</div>' :
-            '') + '<button class="join-btn" data-meeting="' + meeting.id + '">Join Meeting</button></div>';
+            '<div style="font-size:11px;color:var(--muted);margin-top:4px;">📋 ' + tr(
+              'You are teaching this class') + '</div>' :
+            '') + '<button class="join-btn" data-meeting="' + meeting.id + '">' + tr('Join Meeting') + '</button></div>';
           meetingGrid.appendChild(card);
         });
         if (currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Teacher')) {
@@ -32,7 +34,8 @@
           addCard.style.justifyContent = 'center';
           addCard.style.minHeight = '180px';
           addCard.innerHTML =
-            '<div style="text-align:center;padding:20px;"><div style="font-size:40px;margin-bottom:10px;">➕</div><button class="primary-button" id="open-schedule-modal-btn">Schedule New Class</button></div>';
+            '<div style="text-align:center;padding:20px;"><div style="font-size:40px;margin-bottom:10px;">➕</div><button class="primary-button" id="open-schedule-modal-btn">' +
+            tr('Schedule New Class') + '</button></div>';
           meetingGrid.appendChild(addCard);
         }
         setLanguage(currentLang);
@@ -71,7 +74,7 @@
       }
       function openScheduleModal() {
         if (!currentUser || (currentUser.role !== 'Admin' && currentUser.role !== 'Teacher')) {
-          alert('Only Admins and Teachers can schedule classes.');
+          alert(tr('Only Admins and Teachers can schedule classes.'));
           return;
         }
 
@@ -91,7 +94,7 @@
         }
 
         if (scheduleTeacher.options.length === 0) {
-          alert('No teachers available. Please create a teacher account first.');
+          alert(tr('No teachers available. Please create a teacher account first.'));
           return;
         }
 
@@ -123,6 +126,6 @@
         renderMeetings();
         renderCalendar();
         renderUpcomingClasses();
-        alert('Class scheduled successfully!');
+        alert(tr('Class scheduled successfully!'));
         setLanguage(currentLang);
       }

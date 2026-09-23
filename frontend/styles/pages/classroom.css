@@ -18,7 +18,7 @@
     }
     .meeting-card .meeting-header {
       padding: 16px 20px;
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
     }
     .meeting-card .meeting-header h3 {

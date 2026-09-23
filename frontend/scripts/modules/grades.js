@@ -8,14 +8,14 @@
           studentView.style.display = 'none';
           var courseFilter = document.getElementById('grade-course-filter');
           var currentCourseFilter = courseFilter.value;
-          courseFilter.innerHTML = '<option value="all">All Courses</option>';
+          courseFilter.innerHTML = '<option value="all">' + tr('All Courses') + '</option>';
           courses.forEach(function(c) {
             courseFilter.innerHTML += '<option value="' + c.id + '" ' + (currentCourseFilter === String(c.id) ?
               'selected' : '') + '>' + c.name + '</option>';
           });
           var studentFilter = document.getElementById('grade-student-filter');
           var currentStudentFilter = studentFilter.value;
-          studentFilter.innerHTML = '<option value="all">All Students</option>';
+          studentFilter.innerHTML = '<option value="all">' + tr('All Students') + '</option>';
           students.forEach(function(s) {
             studentFilter.innerHTML += '<option value="' + s.id + '" ' + (currentStudentFilter === String(s.id) ?
               'selected' : '') + '>' + s.name + '</option>';
@@ -51,25 +51,25 @@
         filtered.forEach(function(item) {
           var grade = gradeData[item.studentId + '-' + item.courseId] || null;
           totalGrades++;
-          var tr = document.createElement('tr');
+          var row = document.createElement('tr');
           var gradeDisplay = grade !== null ? grade : '-';
           var statusClass = grade !== null ? (grade >= 60 ? 'grade-pass' : 'grade-fail') : '';
-          var statusText = grade !== null ? (grade >= 60 ? '✅ Pass' : '❌ Fail') : 'Not graded';
+          var statusText = grade !== null ? (grade >= 60 ? '✅ ' + tr('Pass') : '❌ ' + tr('Fail')) : tr('Not graded');
           if (grade !== null) { if (grade >= 60) passingCount++;
             else failingCount++; }
-          tr.innerHTML = '<td><strong>' + item.studentName + '</strong></td><td>' + item.courseName +
+          row.innerHTML = '<td><strong>' + item.studentName + '</strong></td><td>' + item.courseName +
             '</td><td class="grade-cell"><input type="number" class="grade-input" id="grade-input-' + item.studentId +
             '-' + item.courseId + '" value="' + (grade !== null ? grade : '') +
             '" min="0" max="100" placeholder="-" /><button class="save-grade-btn" data-student="' + item.studentId +
-            '" data-course="' + item.courseId + '">Save</button></td><td class="' + statusClass + '">' + statusText +
+            '" data-course="' + item.courseId + '">' + tr('Save') + '</button></td><td class="' + statusClass + '">' + statusText +
             '</td><td><button class="action-btn delete" data-student="' + item.studentId + '" data-course="' + item
             .courseId + '" data-type="grade">🗑️</button></td>';
-          tbody.appendChild(tr);
+          tbody.appendChild(row);
         });
         document.getElementById('grade-total').textContent = totalGrades;
         document.getElementById('grade-passing-count').textContent = passingCount;
         document.getElementById('grade-failing-count').textContent = failingCount;
-        document.getElementById('grade-count').textContent = filtered.length + ' entries';
+        document.getElementById('grade-count').textContent = filtered.length + ' ' + tr('entries');
         var allGrades = [];
         enrollments.forEach(function(e) {
           var g = gradeData[e.studentId + '-' + e.courseId] || null;
@@ -95,16 +95,17 @@
         enrolled.forEach(function(courseId) {
           var course = courses.find(function(c) { return c.id === courseId; });
           if (!course) return;
-          var grade = gradeData[studentId + '-' + courseId] || null;
-          var tr = document.createElement('tr');
+          var childGrade = gradeData[studentId + '-' + courseId];
+          var grade = childGrade || null;
+          var row = document.createElement('tr');
           var gradeDisplay = grade !== null ? grade : '-';
           var statusClass = grade !== null ? (grade >= 60 ? 'grade-pass' : 'grade-fail') : '';
-          var statusText = grade !== null ? (grade >= 60 ? '✅ Pass' : '❌ Fail') : 'Not graded';
+          var statusText = grade !== null ? (grade >= 60 ? '✅ ' + tr('Pass') : '❌ ' + tr('Fail')) : tr('Not graded');
           if (grade !== null) gradesList.push(grade);
-          tr.innerHTML = '<td><strong>' + course.name + '</strong><br><span style="font-size:12px;color:var(--muted);">' +
+          row.innerHTML = '<td><strong>' + course.name + '</strong><br><span style="font-size:12px;color:var(--muted);">' +
             getTeacherName(course.teacherId) + '</span></td><td class="' + statusClass +
             '" style="font-size:18px;font-weight:700;">' + gradeDisplay + '%</td><td>' + statusText + '</td>';
-          tbody.appendChild(tr);
+          tbody.appendChild(row);
         });
         var avg = gradesList.length > 0 ? Math.round(gradesList.reduce(function(a, b) { return a + b; }, 0) / gradesList
           .length) : 0;

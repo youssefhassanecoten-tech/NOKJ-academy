@@ -1,10 +1,13 @@
 const app = require("./app");
 const config = require("./config");
 const pool = require("./db/pool");
+const { attachSignalingServer } = require("./ws/signaling");
 
 const server = app.listen(config.port, () => {
   console.log(`NOKJ Academy API listening on port ${config.port} (${config.nodeEnv})`);
 });
+
+attachSignalingServer(server);
 
 server.on("error", (err) => {
   console.error(err.message);

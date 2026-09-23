@@ -112,12 +112,12 @@
       });
 
       document.getElementById('notification-button').addEventListener('click', function() {
-        alert('You have 2 new announcements and 1 assignment due tomorrow.');
+        alert(tr('You have 2 new announcements and 1 assignment due tomorrow.'));
       });
 
       document.querySelectorAll('.assignment-button').forEach(function(btn) {
         btn.addEventListener('click', function() {
-          alert('Assignment details and submissions will be added in the next development step.');
+          alert(tr('Assignment details and submissions will be added in the next development step.'));
         });
       });
 
@@ -171,7 +171,7 @@
             if (value === '') { delete gradeData[studentId + '-' + courseId]; } else {
               var grade = parseFloat(value);
               if (!isNaN(grade) && grade >= 0 && grade <= 100) { gradeData[studentId + '-' + courseId] = grade; } else {
-                alert('Please enter a grade between 0 and 100.');
+                alert(tr('Please enter a grade between 0 and 100.'));
                 return;
               }
             }
@@ -183,7 +183,7 @@
         if (target.classList.contains('delete') && target.dataset.type === 'grade') {
           var studentId = parseInt(target.dataset.student);
           var courseId = parseInt(target.dataset.course);
-          if (confirm('Remove this grade?')) {
+          if (confirm(tr('Remove this grade?'))) {
             delete gradeData[studentId + '-' + courseId];
             saveData();
             renderGrades();
@@ -199,10 +199,23 @@
         var target = e.target.closest('.join-btn');
         if (target) {
           var meetingId = parseInt(target.dataset.meeting);
-          openPresentation(meetingId);
+          var m = meetings.find(function(x) { return x.id === meetingId; });
+          if (m) openMeetingRoom(m.title, meetingId);
         }
         if (e.target.id === 'open-schedule-modal-btn' || e.target.closest('#open-schedule-modal-btn')) {
           openScheduleModal();
+        }
+      });
+
+      // Delegate clicks on any element with data-page (covers dynamically rendered buttons).
+      document.addEventListener('click', function(e) {
+        var btn = e.target.closest('[data-page]');
+        if (btn) {
+          var resultsBox = document.getElementById('global-search-results');
+          if (resultsBox) resultsBox.style.display = 'none';
+          var searchInput = document.getElementById('global-search');
+          if (searchInput) searchInput.blur();
+          openPage(btn.dataset.page);
         }
       });
 
@@ -248,7 +261,7 @@
         var link = scheduleLink.value.trim();
 
         if (!title || !date || !time) {
-          alert('Please fill in all required fields.');
+          alert(tr('Please fill in all required fields.'));
           return;
         }
 
@@ -260,7 +273,8 @@
         var target = e.target.closest('.join-btn');
         if (target) {
           var meetingId = parseInt(target.dataset.meeting);
-          openPresentation(meetingId);
+          var m = meetings.find(function(x) { return x.id === meetingId; });
+          if (m) openMeetingRoom(m.title, meetingId);
         }
       });
 
@@ -331,15 +345,15 @@
         var deadline = document.getElementById('task-modal-deadline').value;
         var assignTo = document.getElementById('task-modal-assign').value;
 
-        if (!title || !description || !deadline) { alert('Please fill in all required fields.'); return; }
+        if (!title || !description || !deadline) { alert(tr('Please fill in all required fields.')); return; }
 
         var assignedIds = [];
         if (assignTo !== 'all') {
           var checkboxes = document.getElementById('task-modal-assign-options').querySelectorAll(
             '.task-assign-checkbox:checked');
           checkboxes.forEach(function(cb) { assignedIds.push(parseInt(cb.value)); });
-          if (assignedIds.length === 0) { alert('Please select at least one ' + (assignTo === 'course' ?
-              'course' : 'student') + '.'); return; }
+          if (assignedIds.length === 0) { alert(tr('Please select at least one') + ' ' + (assignTo === 'course' ?
+              tr('Course') : tr('Student')) + '.'); return; }
         }
 
         var files = tempTaskFiles.map(function(f) { return { name: f.name, data: f.data }; });
@@ -368,7 +382,7 @@
           }
 
           var answer = input ? input.value.trim() : '';
-          if (!answer && files.length === 0) { alert('Please enter your answer or upload a file.'); return; }
+          if (!answer && files.length === 0) { alert(tr('Please enter your answer or upload a file.')); return; }
 
           submitTaskAnswer(taskId, studentId, answer, files);
         }
@@ -386,7 +400,7 @@
           });
 
           if (submissionKeys.length === 0) {
-            alert('No submissions yet for this task.');
+            alert(tr('No submissions yet for this task.'));
             return;
           }
 
@@ -511,7 +525,7 @@
         var target = e.target.closest('.delete');
         if (target && target.dataset.type === 'task') {
           var taskId = parseInt(target.dataset.id);
-          if (confirm('Delete this task?')) deleteTask(taskId);
+          if (confirm(tr('Delete this task?'))) deleteTask(taskId);
         }
       });
 
@@ -528,7 +542,7 @@
 
         var grade = parseFloat(document.getElementById('grade-task-grade').value);
         if (isNaN(grade) || grade < 0 || grade > 100) {
-          alert('Please enter a valid grade between 0 and 100.');
+          alert(tr('Please enter a valid grade between 0 and 100.'));
           return;
         }
 
@@ -681,13 +695,13 @@
         var deadline = document.getElementById('test-modal-deadline').value;
 
         if (!title || !courseId || !deadline) {
-          alert('Please fill in all required fields.');
+          alert(tr('Please fill in all required fields.'));
           return;
         }
 
         var questionDivs = document.querySelectorAll('.question-builder');
         if (questionDivs.length === 0) {
-          alert('Please add at least one question.');
+          alert(tr('Please add at least one question.'));
           return;
         }
 
@@ -701,9 +715,9 @@
           var correctRadio = qDiv.querySelector('input[type="radio"]:checked');
           var correctAnswer = correctRadio ? parseInt(correctRadio.value) : 0;
 
-          if (!qText) { alert('Please enter text for question ' + (index + 1) + '.'); valid = false; return; }
+          if (!qText) { alert(tr('Please enter text for question') + ' ' + (index + 1) + '.'); valid = false; return; }
           if (optionTexts.some(function(opt) { return opt === ''; })) {
-            alert('Please fill in all options for question ' + (index + 1) + '.');
+            alert(tr('Please fill in all options for question') + ' ' + (index + 1) + '.');
             valid = false;
             return;
           }

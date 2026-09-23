@@ -36,6 +36,13 @@
               }).join('') + '</select>' +
               '<label>Description</label><input type="text" id="modal-course-description" placeholder="e.g. Year 10 Physics" />';
             editingId = null;
+          } else if (type === 'announcement') {
+            document.getElementById('modal-title').textContent = 'Add Announcement';
+            document.getElementById('modal-sub').textContent = 'Fill in the details below.';
+            document.getElementById('modal-fields').innerHTML =
+              '<label>Title</label><input type="text" id="modal-ann-title" placeholder="Announcement title" />' +
+              '<label>Message</label><textarea id="modal-ann-message" placeholder="Announcement message"></textarea>';
+            editingId = null;
           } else {
             document.getElementById('modal-title').textContent = 'Add Budget Entry';
             document.getElementById('modal-sub').textContent = 'Enter budget details';
@@ -74,6 +81,14 @@
                 '<label>Description</label><input type="text" id="modal-course-description" value="' + c
                 .description + '" />';
             }
+          } else if (type === 'announcement') {
+            var a = announcements.find(function(an) { return an.id === data.id; });
+            if (a) {
+              editingId = a.id;
+              document.getElementById('modal-fields').innerHTML =
+                '<label>Title</label><input type="text" id="modal-ann-title" value="' + a.title + '" />' +
+                '<label>Message</label><textarea id="modal-ann-message">' + a.message + '</textarea>';
+            }
           } else {
             var b = budgetEntries.find(function(bg) { return bg.id === data.id; });
             if (b) {
@@ -111,9 +126,9 @@
           var email = document.getElementById('modal-email').value.trim();
           var password = document.getElementById('modal-password').value.trim();
           var status = document.getElementById('modal-status').value;
-          if (!name || !email) { alert('Please fill in all fields'); return; }
+          if (!name || !email) { alert(tr('Please fill in all fields')); return; }
           if (modalMode === 'add') {
-            if (getUserByEmail(email)) { alert('Email already exists.'); return; }
+            if (getUserByEmail(email)) { alert(tr('Email already exists.')); return; }
             students.push({ id: generateId(), name: name, email: email, password: password || 'password123',
               role: 'Student', status: status, createdAt: new Date().toISOString().split('T')[0] });
           } else {
@@ -128,11 +143,28 @@
           saveData();
           renderStudents();
           closeModal();
+        } else if (type === 'announcement') {
+          var annTitle = document.getElementById('modal-ann-title').value.trim();
+          var annMessage = document.getElementById('modal-ann-message').value.trim();
+          if (!annTitle || !annMessage) { alert(tr('Please fill in all fields')); return; }
+          if (modalMode === 'add') {
+            announcements.unshift({ id: announcements.length ? Math.max.apply(null, announcements.map(function(x) {
+                return x.id; })) + 1 : 1, title: annTitle, message: annMessage,
+              author: currentUser ? currentUser.name : 'Admin', date: new Date().toISOString() });
+          } else {
+            var index = announcements.findIndex(function(an) { return an.id === editingId; });
+            if (index !== -1) { announcements[index].title = annTitle;
+              announcements[index].message = annMessage; }
+          }
+          saveData();
+          renderAnnouncements();
+          updateAdminStats();
+          closeModal();
         } else if (type === 'course') {
           var name = document.getElementById('modal-course-name').value.trim();
           var teacherId = parseInt(document.getElementById('modal-course-teacher').value);
           var description = document.getElementById('modal-course-description').value.trim();
-          if (!name || !teacherId) { alert('Please fill in all fields'); return; }
+          if (!name || !teacherId) { alert(tr('Please fill in all fields')); return; }
           if (modalMode === 'add') {
             courses.push({ id: courses.length + 1, name: name, teacherId: teacherId, description: description });
           } else {
@@ -150,7 +182,7 @@
           var amount = parseFloat(document.getElementById('modal-amount').value);
           var date = document.getElementById('modal-date').value;
           var status = document.getElementById('modal-status').value;
-          if (!category || isNaN(amount) || !date) { alert('Please fill in all fields'); return; }
+          if (!category || isNaN(amount) || !date) { alert(tr('Please fill in all fields')); return; }
           var finalAmount = type === 'Income' ? amount : -amount;
           if (modalMode === 'add') {
             budgetEntries.push({ id: budgetEntries.length + 1, category: category, type: type, amount: finalAmount,
@@ -168,7 +200,7 @@
       }
 
       function deleteEntry(type, id) {
-        if (!confirm('Are you sure you want to delete this entry?')) return;
+        if (!confirm(tr('Are you sure you want to delete this entry?'))) return;
         if (type === 'student') {
           enrollments = enrollments.filter(function(e) { return e.studentId !== id; });
           students = students.filter(function(s) { return s.id !== id; });
@@ -182,6 +214,12 @@
         } else if (type === 'budget') {
           budgetEntries = budgetEntries.filter(function(b) { return b.id !== id; });
           renderBudget();
+        } else if (type === 'announcement') {
+          announcements = announcements.filter(function(a) { return a.id !== id; });
+          saveData();
+          renderAnnouncements();
+          updateAdminStats();
+          return;
         }
         saveData();
         updateAdminStats();

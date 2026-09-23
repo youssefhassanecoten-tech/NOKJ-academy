@@ -10,7 +10,7 @@
       position: relative;
       color: white;
       border-radius: var(--radius);
-      background: linear-gradient(120deg, #3730a3, #4f46e5, #7c3aed);
+      background: linear-gradient(120deg, var(--primary-dark), var(--primary));
       box-shadow: var(--shadow);
     }
     .hero::after {
@@ -64,5 +64,14 @@
       color: var(--primary);
       border: 1px solid #c7d2fe;
       background: white;
+    }
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .quick-actions .primary-button {
+      width: 100%;
+      text-align: left;
     }
 

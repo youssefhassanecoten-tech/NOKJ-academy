@@ -10,16 +10,16 @@
           var isIncome = b.type === 'Income';
           var amountDisplay = isIncome ? '+' + b.amount : '-' + Math.abs(b.amount);
           var amountClass = isIncome ? 'income' : 'expense';
-          var tr = document.createElement('tr');
-          tr.innerHTML = '<td><strong>' + b.category + '</strong></td><td>' + b.type + '</td><td class="' + amountClass +
+          var row = document.createElement('tr');
+          row.innerHTML = '<td><strong>' + b.category + '</strong></td><td>' + tr(b.type) + '</td><td class="' + amountClass +
             '" style="font-weight:700;">$' + amountDisplay + '</td><td>' + b.date + '</td><td><span class="status-badge ' +
-            b.status.toLowerCase() + '">' + b.status + '</span></td><td><button class="action-btn edit" data-id="' + b.id +
+            b.status.toLowerCase() + '">' + tr(b.status) + '</span></td><td><button class="action-btn edit" data-id="' + b.id +
             '" data-type="budget">✏️</button><button class="action-btn delete" data-id="' + b.id +
             '" data-type="budget">🗑️</button></td>';
-          document.getElementById('budget-table-body').appendChild(tr);
+          document.getElementById('budget-table-body').appendChild(row);
         });
         var total = budgetEntries.length;
-        document.getElementById('budget-count').textContent = filtered.length + ' entries';
+        document.getElementById('budget-count').textContent = filtered.length + ' ' + tr('entries');
         var totalIncome = budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(sum, b) { return sum +
             b.amount; }, 0);
         var totalExpense = budgetEntries.filter(function(b) { return b.type === 'Expense'; }).reduce(function(sum, b) { return sum +

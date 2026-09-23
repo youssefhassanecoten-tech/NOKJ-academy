@@ -14,6 +14,7 @@
         const savedBudget = localStorage.getItem('nokj-budget');
         const savedTests = localStorage.getItem('nokj-tests');
         const savedTestSubmissions = localStorage.getItem('nokj-test-submissions');
+        const savedAnnouncements = localStorage.getItem('nokj-announcements');
 
         if (savedStudents) { try { students = JSON.parse(savedStudents); } catch (e) { students = DEFAULT_STUDENTS.slice(); } } else { students =
             DEFAULT_STUDENTS.slice(); }
@@ -38,6 +39,8 @@
         if (savedTests) { try { tests = JSON.parse(savedTests); } catch (e) { tests = []; } } else { tests = []; }
         if (savedTestSubmissions) { try { testSubmissions = JSON.parse(savedTestSubmissions); } catch (e) { testSubmissions =
               {}; } } else { testSubmissions = {}; }
+        if (savedAnnouncements) { try { announcements = JSON.parse(savedAnnouncements); } catch (e) { announcements =
+            DEFAULT_ANNOUNCEMENTS.slice(); } } else { announcements = DEFAULT_ANNOUNCEMENTS.slice(); }
       }
 
       function saveData() {
@@ -53,6 +56,7 @@
         localStorage.setItem('nokj-budget', JSON.stringify(budgetEntries));
         localStorage.setItem('nokj-tests', JSON.stringify(tests));
         localStorage.setItem('nokj-test-submissions', JSON.stringify(testSubmissions));
+        localStorage.setItem('nokj-announcements', JSON.stringify(announcements));
       }
 
       // ============================================================
@@ -104,4 +108,10 @@
           if (u.id > maxId) maxId = u.id;
         });
         return maxId + 1;
+      }
+
+      function escapeHtml(str) {
+        return String(str === null || str === undefined ? '' : str)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
       }

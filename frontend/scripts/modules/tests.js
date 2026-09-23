@@ -57,7 +57,7 @@
         container.querySelectorAll('.delete[data-type="test"]').forEach(function(btn) {
           btn.addEventListener('click', function() {
             var testId = parseInt(this.dataset.id);
-            if (confirm('Delete this test?')) {
+            if (confirm(tr('Delete this test?'))) {
               tests = tests.filter(function(t) { return t.id !== testId; });
               Object.keys(testSubmissions).forEach(function(key) {
                 if (key.startsWith(testId + '-')) delete testSubmissions[key];
@@ -182,7 +182,7 @@
         });
 
         if (!allAnswered) {
-          alert('Please answer all questions before submitting.');
+          alert(tr('Please answer all questions before submitting.'));
           return;
         }
 
@@ -204,7 +204,7 @@
 
         saveData();
         document.getElementById('take-test-modal-overlay').classList.remove('open');
-        alert('Test submitted successfully! Your score: ' + score + '%');
+        alert(tr('Test submitted successfully!') + ' ' + tr('Your Score') + ': ' + score + '%');
         renderTests();
         setLanguage(currentLang);
       }
@@ -214,7 +214,7 @@
         var key = testId + '-' + studentId;
         var submission = testSubmissions[key];
         if (!submission) {
-          alert('No submission found.');
+          alert(tr('No submission found.'));
           return;
         }
 
@@ -245,7 +245,7 @@
         var submissions = Object.keys(testSubmissions).filter(function(key) { return key.startsWith(testId + '-'); });
 
         if (submissions.length === 0) {
-          alert('No submissions for this test yet.');
+          alert(tr('No submissions for this test yet.'));
           return;
         }
 
@@ -280,6 +280,6 @@
         });
         saveData();
         renderTests();
-        alert('Test created successfully!');
+        alert(tr('Test created successfully!'));
         setLanguage(currentLang);
       }

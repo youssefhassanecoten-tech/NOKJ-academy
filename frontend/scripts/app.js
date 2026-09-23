@@ -43,6 +43,12 @@
       const adminGradesBtn = document.getElementById('admin-grades-btn');
       const adminCalendarBtn = document.getElementById('admin-calendar-btn');
       const adminApprovalsBtn = document.getElementById('admin-approvals-btn');
+      const teacherApprovalsBtn = document.getElementById('teacher-approvals-btn');
+      const changeLogoBtn = document.getElementById('change-logo-btn');
+      const resetLogoBtn = document.getElementById('reset-logo-btn');
+      const logoInput = document.getElementById('logo-input');
+      const changeAvatarBtn = document.getElementById('change-avatar-btn');
+      const avatarInput = document.getElementById('avatar-input');
       const adminStatsContainer = document.getElementById('admin-stats-container');
 
       const studentTableBody = document.getElementById('student-table-body');
@@ -129,6 +135,74 @@
       document.getElementById('sidebar-brand').addEventListener('click', function() { openPage('dashboard'); });
       userAvatar.addEventListener('click', function() { openPage('profile'); });
 
+      // Profile photo upload.
+      document.getElementById('change-avatar-btn').addEventListener('click', function() { avatarInput.click(); });
+      avatarInput.addEventListener('change', function(e) {
+        var file = e.target.files && e.target.files[0];
+        if (!file || !currentUser) return;
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+          currentUser.avatar = ev.target.result;
+          var arr = currentUser.role === 'Student' ? students : (currentUser.role === 'Teacher' ? teachers : admins);
+          var idx = arr.findIndex(function(x) { return x.id === currentUser.id; });
+          if (idx !== -1) arr[idx] = currentUser;
+          saveData();
+          localStorage.setItem('nokj-user', JSON.stringify(currentUser));
+          renderAvatar(userAvatar, currentUser);
+          renderAvatar(profileAvatar, currentUser);
+          setLanguage(currentLang);
+        };
+        reader.readAsDataURL(file);
+        e.target.value = '';
+      });
+
+      // NOKJ logo (admin branding).
+      document.getElementById('change-logo-btn').addEventListener('click', function() { logoInput.click(); });
+      document.getElementById('reset-logo-btn').addEventListener('click', function() { saveBrandLogo(null); });
+      logoInput.addEventListener('change', function(e) {
+        var file = e.target.files && e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev) { saveBrandLogo(ev.target.result); };
+        reader.readAsDataURL(file);
+        e.target.value = '';
+      });
+
+      // Enrollment applications: student "Apply" buttons.
+      document.addEventListener('click', function(e) {
+        var btn = e.target.closest('.apply-course-btn');
+        if (!btn) return;
+        applyCourse(parseInt(btn.dataset.course));
+      });
+
+      document.getElementById('enroll-approval-table-body').addEventListener('click', function(e) {
+        var target = e.target.closest('button');
+        if (!target) return;
+        var id = parseInt(target.dataset.id);
+        if (target.classList.contains('approve-btn')) approveEnroll(id);
+        else if (target.dataset.action === 'refuse') refuseEnroll(id);
+      });
+
+      document.getElementById('ann-detail-close').addEventListener('click', function() {
+        document.getElementById('ann-detail-overlay').classList.remove('open');
+      });
+      document.getElementById('ann-detail-overlay').addEventListener('click', function(e) {
+        if (e.target === this) document.getElementById('ann-detail-overlay').classList.remove('open');
+      });
+
+      document.getElementById('announcement-list').addEventListener('click', function(e) {
+        var card = e.target.closest('.announcement-card');
+        if (!card || e.target.closest('button')) return;
+        openAnnouncementDetail(parseInt(card.dataset.id));
+      });
+      document.getElementById('announcement-list').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          var card = e.target.closest('.announcement-card');
+          if (card) { e.preventDefault();
+            openAnnouncementDetail(parseInt(card.dataset.id)); }
+        }
+      });
+
       document.getElementById('notifications-close').addEventListener('click', function() {
         document.getElementById('notifications-overlay').classList.remove('open');
       });
@@ -149,7 +223,7 @@
           listed.forEach(function(a) {
             html += '<div class="notification-item">' +
               '<div class="notification-icon">📌</div>' +
-              '<div class="row-main"><strong>' + escapeHtml(a.title) + '</strong><span>' + escapeHtml(a.message) +
+              '<div class="row-main"><strong>' + escapeHtml(a.title) + '</strong><span>' + escapeHtml(announcementSnippet(a)) +
               '</span><em>' + (a.author || '') + ' · ' + (a.date ? new Date(a.date).toLocaleDateString() : '') +
               '</em></div></div>';
           });
@@ -817,6 +891,7 @@
       // ----- Init -----
       loadData();
       setLanguage(currentLang);
+      applyBrandLogo();
       checkSession();
       setInterval(function() {
         cleanupExpiredMeetings();

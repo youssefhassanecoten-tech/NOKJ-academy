@@ -30,18 +30,51 @@
       // ============================================================
       var modalType, modalMode, editingId, enrollStudentId;
 
-      function openModal(type, mode, data) {
+      function studentModalFields(s) {
+          var edit = !!s;
+          var v = function(k) { return s && s[k] ? s[k] : ''; };
+          var statusOptions = ['Active', 'Warning', 'Inactive'].map(function(st) {
+            return '<option value="' + st + '"' + ((s && s.status === st) || (!s && st === 'Active') ? ' selected' : '') +
+              '>' + st + '</option>';
+          }).join('');
+          return '<label>Name</label><input type="text" id="modal-name" value="' + v('name') +
+            '" placeholder="Full name" />' +
+            '<label>Email</label><input type="email" id="modal-email" value="' + v('email') +
+            '" placeholder="student@example.com" />' +
+            '<label>Password</label><input type="password" id="modal-password" placeholder="' + (edit ?
+              'Leave blank to keep current' : 'Min 6 characters') + '" />' +
+            '<label>Status</label><select id="modal-status">' + statusOptions + '</select>' +
+            '<div id="modal-warning-note-wrap" style="display:none;"><label>' + tr('Reason for warning') +
+            ' <span style="color:var(--danger);">*</span></label>' +
+            '<textarea id="modal-warning-note" placeholder="' + tr('Describe the issue that led to this warning') +
+            '">' + v('warningNote') + '</textarea></div>' +
+            '<label>Phone</label><input type="tel" id="modal-student-phone" value="' + v('phone') + '" />' +
+            '<label>Date of birth</label><input type="date" id="modal-student-dob" value="' + v('dob') + '" />' +
+            '<label>Country</label><input type="text" id="modal-student-country" value="' + v('country') + '" />' +
+            '<label>Address</label><input type="text" id="modal-student-address" value="' + v('address') + '" />' +
+            '<label>Emergency contact</label><input type="text" id="modal-student-emergency" value="' + v(
+            'emergencyContact') + '" />' +
+            '<label>About</label><textarea id="modal-student-bio" placeholder="Notes about this student">' + v('bio') +
+            '</textarea>';
+        }
+
+        function syncStudentWarningField() {
+          var st = document.getElementById('modal-status');
+          var wrap = document.getElementById('modal-warning-note-wrap');
+          if (!st || !wrap) return;
+          wrap.style.display = st.value === 'Warning' ? 'block' : 'none';
+        }
+
+        function openModal(type, mode, data) {
         modalType = type;
         modalMode = mode;
         if (mode === 'add') {
           if (type === 'student') {
             document.getElementById('modal-title').textContent = 'Add Student';
             document.getElementById('modal-sub').textContent = 'Enter student details';
-            document.getElementById('modal-fields').innerHTML =
-              '<label>Name</label><input type="text" id="modal-name" placeholder="Full name" />' +
-              '<label>Email</label><input type="email" id="modal-email" placeholder="student@example.com" />' +
-              '<label>Password</label><input type="password" id="modal-password" placeholder="Min 6 characters" />' +
-              '<label>Status</label><select id="modal-status"><option value="Active">Active</option><option value="Warning">Warning</option><option value="Inactive">Inactive</option></select>';
+            document.getElementById('modal-fields').innerHTML = studentModalFields(null);
+            syncStudentWarningField();
+            document.getElementById('modal-status').addEventListener('change', syncStudentWarningField);
             editingId = null;
           } else if (type === 'course') {
             document.getElementById('modal-title').textContent = 'Add Course';
@@ -58,7 +91,8 @@
             document.getElementById('modal-sub').textContent = 'Fill in the details below.';
             document.getElementById('modal-fields').innerHTML =
               '<label>Title</label><input type="text" id="modal-ann-title" placeholder="Announcement title" />' +
-              '<label>Message</label><textarea id="modal-ann-message" placeholder="Announcement message"></textarea>';
+              '<label>Subtitle (optional)</label><input type="text" id="modal-ann-subtitle" placeholder="Short subtitle" />' +
+              '<label>Content</label><textarea id="modal-ann-content" placeholder="Announcement content"></textarea>';
             editingId = null;
           } else {
             document.getElementById('modal-title').textContent = 'Add Budget Entry';
@@ -91,14 +125,9 @@
             var s = students.find(function(st) { return st.id === data.id; });
             if (s) {
               editingId = s.id;
-              document.getElementById('modal-fields').innerHTML =
-                '<label>Name</label><input type="text" id="modal-name" value="' + s.name + '" />' +
-                '<label>Email</label><input type="email" id="modal-email" value="' + s.email + '" />' +
-                '<label>Password</label><input type="password" id="modal-password" placeholder="Leave blank to keep current" />' +
-                '<label>Status</label><select id="modal-status"><option value="Active"' + (s.status === 'Active' ?
-                  ' selected' : '') + '>Active</option><option value="Warning"' + (s.status === 'Warning' ?
-                  ' selected' : '') + '>Warning</option><option value="Inactive"' + (s.status === 'Inactive' ?
-                  ' selected' : '') + '>Inactive</option></select>';
+              document.getElementById('modal-fields').innerHTML = studentModalFields(s);
+              syncStudentWarningField();
+              document.getElementById('modal-status').addEventListener('change', syncStudentWarningField);
             }
           } else if (type === 'course') {
             var c = courses.find(function(co) { return co.id === data.id; });
@@ -119,7 +148,9 @@
               editingId = a.id;
               document.getElementById('modal-fields').innerHTML =
                 '<label>Title</label><input type="text" id="modal-ann-title" value="' + a.title + '" />' +
-                '<label>Message</label><textarea id="modal-ann-message">' + a.message + '</textarea>';
+                '<label>Subtitle (optional)</label><input type="text" id="modal-ann-subtitle" value="' +
+                (a.subtitle || '') + '" />' +
+                '<label>Content</label><textarea id="modal-ann-content">' + announcementText(a) + '</textarea>';
             }
           } else {
             var b = budgetEntries.find(function(bg) { return bg.id === data.id; });
@@ -179,11 +210,26 @@
           var email = document.getElementById('modal-email').value.trim();
           var password = document.getElementById('modal-password').value.trim();
           var status = document.getElementById('modal-status').value;
+          var warningNote = document.getElementById('modal-warning-note') ?
+            document.getElementById('modal-warning-note').value.trim() : '';
+          if (status === 'Warning' && !warningNote) {
+            alert(tr('Please explain the reason for the warning status.'));
+            return;
+          }
           if (!name || !email) { alert(tr('Please fill in all fields')); return; }
+          var extra = {
+            phone: document.getElementById('modal-student-phone') ? document.getElementById('modal-student-phone').value.trim() : '',
+            dob: document.getElementById('modal-student-dob') ? document.getElementById('modal-student-dob').value : '',
+            country: document.getElementById('modal-student-country') ? document.getElementById('modal-student-country').value.trim() : '',
+            address: document.getElementById('modal-student-address') ? document.getElementById('modal-student-address').value.trim() : '',
+            emergencyContact: document.getElementById('modal-student-emergency') ? document.getElementById('modal-student-emergency').value.trim() : '',
+            bio: document.getElementById('modal-student-bio') ? document.getElementById('modal-student-bio').value.trim() : '',
+            warningNote: status === 'Warning' ? warningNote : ''
+          };
           if (modalMode === 'add') {
             if (getUserByEmail(email)) { alert(tr('Email already exists.')); return; }
-            students.push({ id: generateId(), name: name, email: email, password: password || 'password123',
-              role: 'Student', status: status, createdAt: new Date().toISOString().split('T')[0] });
+            students.push(Object.assign({ id: generateId(), name: name, email: email, password: password || 'password123',
+              role: 'Student', status: status, createdAt: new Date().toISOString().split('T')[0] }, extra));
           } else {
             var index = students.findIndex(function(s) { return s.id === editingId; });
             if (index !== -1) {
@@ -191,6 +237,7 @@
               students[index].email = email;
               if (password) students[index].password = password;
               students[index].status = status;
+              Object.keys(extra).forEach(function(k) { students[index][k] = extra[k]; });
             }
           }
           saveData();
@@ -198,16 +245,19 @@
           closeModal();
         } else if (type === 'announcement') {
           var annTitle = document.getElementById('modal-ann-title').value.trim();
-          var annMessage = document.getElementById('modal-ann-message').value.trim();
-          if (!annTitle || !annMessage) { alert(tr('Please fill in all fields')); return; }
+          var annSubtitle = document.getElementById('modal-ann-subtitle') ?
+            document.getElementById('modal-ann-subtitle').value.trim() : '';
+          var annContent = document.getElementById('modal-ann-content').value.trim();
+          if (!annTitle || !annContent) { alert(tr('Please fill in all fields')); return; }
           if (modalMode === 'add') {
             announcements.unshift({ id: announcements.length ? Math.max.apply(null, announcements.map(function(x) {
-                return x.id; })) + 1 : 1, title: annTitle, message: annMessage,
+                return x.id; })) + 1 : 1, title: annTitle, subtitle: annSubtitle, content: annContent,
               author: currentUser ? currentUser.name : 'Admin', date: new Date().toISOString() });
           } else {
             var index = announcements.findIndex(function(an) { return an.id === editingId; });
             if (index !== -1) { announcements[index].title = annTitle;
-              announcements[index].message = annMessage; }
+              announcements[index].subtitle = annSubtitle;
+              announcements[index].content = annContent; }
           }
           saveData();
           renderAnnouncements();
@@ -283,8 +333,19 @@
         enrollStudentId = studentId;
         var student = students.find(function(s) { return s.id === studentId; });
         if (!student) return;
+        if (student.status !== 'Active') {
+          alert(tr('Students with a Warning or Inactive status cannot be enrolled.'));
+          return;
+        }
         document.getElementById('enroll-modal-title').textContent = 'Enroll Student';
         document.getElementById('enroll-modal-sub').textContent = 'Select courses for ' + student.name;
+        document.getElementById('enroll-info-grid').innerHTML =
+          '<label>Phone</label><input type="tel" id="enroll-phone" value="' + (student.phone || '') + '" />' +
+          '<label>Date of birth</label><input type="date" id="enroll-dob" value="' + (student.dob || '') + '" />' +
+          '<label>Country</label><input type="text" id="enroll-country" value="' + (student.country || '') + '" />' +
+          '<label>Address</label><input type="text" id="enroll-address" value="' + (student.address || '') + '" />' +
+          '<label>Emergency contact</label><input type="text" id="enroll-emergency" value="' + (student.emergencyContact || '') +
+          '" />';
         var enrolledIds = getEnrolledCourseIds(studentId);
         var html = '';
         if (courses.length === 0) html = '<p style="color:var(--muted);padding:20px;text-align:center;">No courses available.</p>';
@@ -306,6 +367,19 @@
 
       function saveEnrollments() {
         if (enrollStudentId === null) return;
+        var student = students.find(function(s) { return s.id === enrollStudentId; });
+        if (!student) return;
+        if (student.status !== 'Active') {
+          alert(tr('Students with a Warning or Inactive status cannot be enrolled.'));
+          closeEnrollModal();
+          return;
+        }
+        student.phone = document.getElementById('enroll-phone') ? document.getElementById('enroll-phone').value.trim() : '';
+        student.dob = document.getElementById('enroll-dob') ? document.getElementById('enroll-dob').value : '';
+        student.country = document.getElementById('enroll-country') ? document.getElementById('enroll-country').value.trim() : '';
+        student.address = document.getElementById('enroll-address') ? document.getElementById('enroll-address').value.trim() : '';
+        student.emergencyContact = document.getElementById('enroll-emergency') ? document.getElementById('enroll-emergency').value.trim() :
+          '';
         var checkboxes = document.getElementById('enrollment-list').querySelectorAll('input[type="checkbox"]');
         var selectedIds = [];
         checkboxes.forEach(function(cb) { if (cb.checked) selectedIds.push(parseInt(cb.value)); });
@@ -320,34 +394,104 @@
       }
 
       // ============================================================
-      //  TEACHER APPLICATIONS (admin approval)
+      //  APPLICATIONS (teacher approvals + enrollment requests)
       // ============================================================
       function renderApprovals() {
-        if (!currentUser || currentUser.role !== 'Admin') return;
+        if (!currentUser || (currentUser.role !== 'Admin' && currentUser.role !== 'Teacher')) return;
+
+        var teacherSection = document.getElementById('teacher-applications-section');
+        if (teacherSection) teacherSection.style.display = currentUser.role === 'Admin' ? 'block' : 'none';
+
         var body = document.getElementById('approval-table-body');
-        if (!body) return;
-        var query = document.getElementById('approval-search') ? document.getElementById('approval-search').value.trim().toLowerCase() :
-          '';
-        var list = pendingTeachers.filter(function(p) {
-          return !query ||
-            (p.name && p.name.toLowerCase().indexOf(query) !== -1) ||
-            (p.email && p.email.toLowerCase().indexOf(query) !== -1);
-        });
-        if (!list.length) {
-          body.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px;">' + tr(
-            'No teacher applications.') + '</td></tr>';
-        } else {
-          body.innerHTML = list.map(function(p) {
-            return '<tr><td>' + escapeHtml(p.name) + '</td><td>' + escapeHtml(p.email) + '</td><td>' +
-              (p.appliedAt ? new Date(p.appliedAt).toLocaleDateString() : (p.createdAt || '—')) +
-              '</td><td>' +
-              '<button class="approve-btn" data-id="' + p.id + '">✓ ' + tr('Approve') + '</button> ' +
-              '<button class="danger-button" data-action="refuse" data-id="' + p.id + '">✕ ' + tr('Refuse') +
-              '</button></td></tr>';
-          }).join('');
+        if (currentUser.role === 'Admin' && body) {
+          var query = document.getElementById('approval-search') ? document.getElementById('approval-search').value.trim()
+            .toLowerCase() : '';
+          var list = pendingTeachers.filter(function(p) {
+            return !query ||
+              (p.name && p.name.toLowerCase().indexOf(query) !== -1) ||
+              (p.email && p.email.toLowerCase().indexOf(query) !== -1);
+          });
+          if (!list.length) {
+            body.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px;">' + tr(
+              'No teacher applications.') + '</td></tr>';
+          } else {
+            body.innerHTML = list.map(function(p) {
+              return '<tr><td>' + escapeHtml(p.name) + '</td><td>' + escapeHtml(p.email) + '</td><td>' +
+                (p.appliedAt ? new Date(p.appliedAt).toLocaleDateString() : (p.createdAt || '—')) +
+                '</td><td>' +
+                '<button class="approve-btn" data-id="' + p.id + '">✓ ' + tr('Approve') + '</button> ' +
+                '<button class="danger-button" data-action="refuse" data-id="' + p.id + '">✕ ' + tr('Refuse') +
+                '</button></td></tr>';
+            }).join('');
+          }
+          document.getElementById('approval-count').textContent = list.length + ' ' + tr('applications');
+          document.getElementById('approval-total').textContent = pendingTeachers.length;
         }
-        document.getElementById('approval-count').textContent = list.length + ' ' + tr('applications');
-        document.getElementById('approval-total').textContent = pendingTeachers.length;
+
+        renderEnrollApprovals();
+        setLanguage(currentLang);
+      }
+
+      function renderEnrollApprovals() {
+        var body = document.getElementById('enroll-approval-table-body');
+        if (!body) return;
+        var filterCourseIds = null;
+        if (currentUser && currentUser.role === 'Teacher') {
+          filterCourseIds = courses.filter(function(c) { return c.teacherId === currentUser.id; }).map(function(c) {
+            return c.id; });
+        }
+        var list = enrollRequests.filter(function(r) { return r.status === 'pending'; });
+        if (filterCourseIds) list = list.filter(function(r) { return filterCourseIds.indexOf(r.courseId) !== -1; });
+
+        var html = list.map(function(r) {
+          var s = students.find(function(x) { return x.id === r.studentId; });
+          var c = courses.find(function(x) { return x.id === r.courseId; });
+          var statusBadge = '<span class="status-badge ' + (s ? s.status.toLowerCase() : 'inactive') + '">' + (s ? tr(
+            s.status) : '—') + '</span>';
+          if (s && s.warningNote && s.status === 'Warning') statusBadge += '<div style="font-size:11px;color:var(--muted);margin-top:4px;">⚠️ ' +
+            escapeHtml(s.warningNote) + '</div>';
+          return '<tr><td>' + (s ? escapeHtml(s.name) : '—') + '</td><td>' + statusBadge + '</td><td>' +
+            (c ? escapeHtml(c.name) : '—') + '</td><td>' +
+            (r.date ? new Date(r.date).toLocaleDateString() : '—') + '</td><td>' +
+            '<button class="approve-btn" data-id="' + r.id + '">✓ ' + tr('Approve') + '</button> ' +
+            '<button class="danger-button" data-action="refuse" data-id="' + r.id + '">✕ ' + tr('Refuse') +
+            '</button></td></tr>';
+        }).join('');
+        if (!list.length) {
+          html = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px;">' + tr(
+            'No enrollment requests.') + '</td></tr>';
+        }
+        body.innerHTML = html;
+        document.getElementById('enroll-approval-count').textContent = list.length + ' ' + tr('applications');
+        document.getElementById('enroll-approval-total').textContent = enrollRequests.filter(function(r) {
+          return r.status === 'pending';
+        }).length;
+      }
+
+      function approveEnroll(id) {
+        var r = enrollRequests.find(function(x) { return x.id === id; });
+        if (!r) return;
+        var s = students.find(function(x) { return x.id === r.studentId; });
+        if (!s) { refuseEnroll(id); return; }
+        if (s.status !== 'Active') {
+          alert(tr('This student cannot be enrolled while their status is Warning or Inactive.'));
+          return;
+        }
+        enrollRequests = enrollRequests.filter(function(x) { return x.id !== id; });
+        enrollments.push({ studentId: r.studentId, courseId: r.courseId });
+        saveData();
+        renderEnrollApprovals();
+        renderStudents();
+        renderCourses();
+        renderStudentCourses();
+        updateAdminStats();
+        setLanguage(currentLang);
+      }
+
+      function refuseEnroll(id) {
+        enrollRequests = enrollRequests.filter(function(x) { return x.id !== id; });
+        saveData();
+        renderEnrollApprovals();
         setLanguage(currentLang);
       }
 

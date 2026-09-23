@@ -142,8 +142,6 @@
       <button class="nav-button" data-page="classroom"><span class="nav-icon">🎥</span> <span class="nav-text">Classroom</span></button>
       <button class="nav-button" data-page="tasks"><span class="nav-icon">📝</span> <span class="nav-text">Tasks</span></button>
       <button class="nav-button" data-page="tests"><span class="nav-icon">📋</span> <span class="nav-text">Tests</span></button>
-      <p class="nav-label">Account</p>
-      <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span> <span class="nav-text">My profile</span></button>
 
       <p class="nav-label" id="admin-nav-label" style="display:none;">Management</p>
       <button class="nav-button" data-page="students" id="admin-students-btn" style="display:none;"><span class="nav-icon">👥</span> <span class="nav-text">Students</span></button>
@@ -152,6 +150,7 @@
       <button class="nav-button" data-page="grades" id="admin-grades-btn" style="display:none;"><span class="nav-icon">📊</span> <span class="nav-text">Grades</span></button>
       <button class="nav-button" data-page="calendar" id="admin-calendar-btn" style="display:none;"><span class="nav-icon">📅</span> <span class="nav-text">Calendar</span></button>
       <button class="nav-button" data-page="approvals" id="admin-approvals-btn" style="display:none;"><span class="nav-icon">🗎</span> <span class="nav-text">Applications</span></button>
+      <button class="nav-button" data-page="approvals" id="teacher-approvals-btn" style="display:none;"><span class="nav-icon">🗎</span> <span class="nav-text">Applications</span></button>
 
       <button class="help-btn" id="help-btn" type="button"><strong>Need help?</strong><span>Contact the NOKJ Academy support team for assistance.</span></button>
     </aside>
@@ -187,11 +186,16 @@
         <div class="heading"><h1 id="greeting">Good afternoon, Alex 👋</h1><p>Here is everything you need to stay on track today.</p></div>
         <div id="admin-stats-container" style="display:none;">
           <div class="admin-stats">
-            <div class="admin-stat-card"><div class="label">Total Students</div><div class="number" id="total-students">0</div><div class="change">Active this term</div></div>
+            <div class="admin-stat-card"><div class="label">Active students</div><div class="number" id="total-students">0</div><div class="change">Active this term</div></div>
             <div class="admin-stat-card"><div class="label">Total Courses</div><div class="number" id="total-courses">0</div><div class="change">Active this term</div></div>
             <div class="admin-stat-card"><div class="label">Total Enrollments</div><div class="number" id="total-enrollments">0</div><div class="change">Across all courses</div></div>
             <div class="admin-stat-card"><div class="label">Revenue</div><div class="number" id="total-revenue">$0</div><div class="change">This month</div></div>
           </div>
+          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="secondary-button" id="change-logo-btn">🖼 Change NOKJ logo</button>
+            <button class="secondary-button" id="reset-logo-btn">✕ Reset logo</button>
+          </div>
+          <input type="file" id="logo-input" accept="image/*" style="display:none;" />
         </div>
         <div id="dashboard-grid" class="dashboard-grid"></div>
       </section>
@@ -280,7 +284,8 @@
       <section class="page" id="profile">
         <div class="heading"><h1>My profile</h1><p>View your account information.</p></div>
         <article class="profile-card">
-          <div class="profile-top"><span class="avatar" id="profile-avatar">AS</span><div><h2 id="profile-name">Alex Student</h2><p id="profile-role-text">Student · NOKJ Academy</p></div><button class="secondary-button" id="edit-profile-btn" style="margin-left:auto;">Edit profile</button></div>
+          <div class="profile-top"><span class="avatar" id="profile-avatar">AS</span><div><h2 id="profile-name">Alex Student</h2><p id="profile-role-text">Student · NOKJ Academy</p></div><div style="display:flex;flex-direction:column;gap:8px;margin-left:auto;align-items:flex-end;"><button class="secondary-button" id="change-avatar-btn">📷 Change photo</button><button class="secondary-button" id="edit-profile-btn">Edit profile</button></div></div>
+          <input type="file" id="avatar-input" accept="image/*" style="display:none;" />
           <div class="details">
             <div><small>Student ID</small><strong id="profile-id">NOKJ-2026-1048</strong></div>
             <div><small>Email address</small><strong id="profile-email">alex.student@example.com</strong></div>
@@ -296,16 +301,29 @@
         </article>
       </section>
 
-      <!-- ===== TEACHER APPLICATIONS (ADMIN) ===== -->
+      <!-- ===== APPLICATIONS (TEACHER + ENROLLMENT) ===== -->
       <section class="page" id="approvals">
-        <div class="heading"><h1>Teacher Applications</h1><p>Review and approve or refuse teacher signup requests.</p></div>
-        <div class="table-container">
-          <div class="table-toolbar">
-            <div class="left"><input type="text" id="approval-search" placeholder="Search applications..." /></div>
-            <div class="right"><span id="approval-count" style="font-size:13px;color:var(--muted);">0 applications</span></div>
+        <div class="heading"><h1>Applications</h1><p>Review and approve or refuse teacher and student enrollment requests.</p></div>
+        <div id="teacher-applications-section">
+          <h3 style="margin:0 0 10px;">Teacher Applications</h3>
+          <div class="table-container">
+            <div class="table-toolbar">
+              <div class="left"><input type="text" id="approval-search" placeholder="Search applications..." /></div>
+              <div class="right"><span id="approval-count" style="font-size:13px;color:var(--muted);">0 applications</span></div>
+            </div>
+            <table><thead><tr><th>Name</th><th>Email</th><th>Applied</th><th>Actions</th></tr></thead><tbody id="approval-table-body"></tbody></table>
+            <div class="table-summary"><span>Pending: <strong id="approval-total">0</strong></span></div>
           </div>
-          <table><thead><tr><th>Name</th><th>Email</th><th>Applied</th><th>Actions</th></tr></thead><tbody id="approval-table-body"></tbody></table>
-          <div class="table-summary"><span>Pending: <strong id="approval-total">0</strong></span></div>
+        </div>
+        <div id="enroll-applications-section" style="margin-top:26px;">
+          <h3 style="margin:0 0 10px;">Enrollment Applications</h3>
+          <div class="table-container">
+            <div class="table-toolbar">
+              <div class="right"><span id="enroll-approval-count" style="font-size:13px;color:var(--muted);">0 applications</span></div>
+            </div>
+            <table><thead><tr><th>Student</th><th>Status</th><th>Course</th><th>Applied</th><th>Actions</th></tr></thead><tbody id="enroll-approval-table-body"></tbody></table>
+            <div class="table-summary"><span>Pending: <strong id="enroll-approval-total">0</strong></span></div>
+          </div>
         </div>
       </section>
 
@@ -571,6 +589,19 @@
     </div>
   </div>
 
+  <!-- ===== ANNOUNCEMENT DETAIL OVERLAY ===== -->
+  <div class="modal-overlay" id="ann-detail-overlay">
+    <div class="modal" style="max-width:640px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h2 id="ann-detail-title" style="margin:0;">Announcement</h2>
+        <span class="preview-close" id="ann-detail-close" style="position:static;">&times;</span>
+      </div>
+      <p class="sub" id="ann-detail-subtitle"></p>
+      <div id="ann-detail-content" style="font-size:14px;line-height:1.7;white-space:pre-line;"></div>
+      <p class="sub" id="ann-detail-meta" style="margin-top:16px;font-size:12px;"></p>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal">
       <h2 id="modal-title">Add Entry</h2>
@@ -588,6 +619,7 @@
     <div class="modal">
       <h2 id="enroll-modal-title">Enroll Student</h2>
       <p class="sub" id="enroll-modal-sub">Select courses for this student.</p>
+      <div class="enroll-info-grid" id="enroll-info-grid"></div>
       <div id="enroll-modal-fields"><div class="enrollment-list" id="enrollment-list"></div></div>
       <div class="modal-actions">
         <button type="button" class="cancel-btn" id="enroll-modal-cancel">Cancel</button>

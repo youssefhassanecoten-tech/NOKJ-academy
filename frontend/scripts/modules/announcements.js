@@ -40,12 +40,34 @@
               ' })">Edit</button>' +
               '<button class="danger-button" onclick="deleteEntry(\'announcement\', ' + a.id + ')">Delete</button></div>';
           }
-          html += '<article class="announcement-card"><span class="round-icon">' + icon +
-            '</span><div class="row-main"><h3>' + a.title + '</h3><p>' + a.message + '</p>' +
+          html += '<article class="announcement-card" data-id="' + a.id + '" role="button" tabindex="0">' +
+            '<span class="round-icon">' + icon + '</span>' +
+            '<div class="row-main"><h3>' + a.title + '</h3>' +
+            (a.subtitle ? '<h4>' + a.subtitle + '</h4>' : '') +
+            '<p>' + announcementSnippet(a) + '</p>' +
             '<p><strong>' + tr('Posted') + ' ' + postedDate + '</strong>' + (a.author ? ' · ' + a.author : '') +
-            '</p></div>' + actions + '</article>';
+            '</p></div>' +
+            '<span class="read-more">' + tr('Read more') + ' ›</span>' +
+            actions + '</article>';
         });
         list.innerHTML = html;
+        setLanguage(currentLang);
+      }
+
+      function openAnnouncementDetail(id) {
+        var a = announcements.find(function(x) { return x.id === id; });
+        if (!a) return;
+        document.getElementById('ann-detail-title').textContent = a.title;
+        document.getElementById('ann-detail-subtitle').textContent = a.subtitle || (a.author ? a.author +
+          (a.date ? ' · ' + unixToTitle(a.date) : '') : '');
+        if (!a.subtitle) document.getElementById('ann-detail-subtitle').style.display = 'none';
+        else document.getElementById('ann-detail-subtitle').style.display = '';
+        document.getElementById('ann-detail-content').textContent = announcementText(a);
+        var meta = '';
+        if (a.author) meta += a.author;
+        if (a.date) meta += (meta ? ' · ' : '') + unixToTitle(a.date);
+        document.getElementById('ann-detail-meta').textContent = meta;
+        document.getElementById('ann-detail-overlay').classList.add('open');
         setLanguage(currentLang);
       }
 

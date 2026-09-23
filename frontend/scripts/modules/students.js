@@ -38,6 +38,18 @@
             });
           }
           detailHtml += '</div>';
+          if (s.status === 'Warning') {
+            detailHtml += '<div class="warning-note">⚠️ <strong>' + tr('Warning:') + '</strong> ' +
+              escapeHtml(s.warningNote || tr('No reason provided.')) + '</div>';
+          }
+          if (s.phone || s.dob || s.country || s.address || s.emergencyContact) {
+            detailHtml += '<div class="student-info-grid"><strong>' + tr('Contact details:') + '</strong>' +
+              '<span>' + (s.phone ? '📞 ' + escapeHtml(s.phone) : '') + '</span>' +
+              '<span>' + (s.dob ? '🎂 ' + s.dob : '') + '</span>' +
+              '<span>' + (s.country ? '🌍 ' + escapeHtml(s.country) : '') + '</span>' +
+              '<span>' + (s.address ? '📍 ' + escapeHtml(s.address) : '') + '</span>' +
+              '<span>' + (s.emergencyContact ? '☎️ ' + escapeHtml(s.emergencyContact) : '') + '</span></div>';
+          }
           detailTr.innerHTML = '<td colspan="4">' + detailHtml + '</td>';
           studentTableBody.appendChild(detailTr);
         });

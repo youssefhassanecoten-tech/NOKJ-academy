@@ -1,11 +1,13 @@
 function updateAdminStats() {
         if (!currentUser || currentUser.role !== 'Admin') return;
-        totalStudentsEl.textContent = students.length;
+        totalStudentsEl.textContent = activeStudentCount();
         totalCoursesEl.textContent = courses.length;
         totalEnrollmentsEl.textContent = enrollments.length;
         var totalIncome = budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(sum, b) { return sum +
             b.amount; }, 0);
         totalRevenueEl.textContent = '$' + totalIncome.toLocaleString();
+        // Keep the dashboard hero stat fresh (e.g. after a status change).
+        renderDashboard();
       }
 
       // ============================================================
@@ -40,7 +42,7 @@ function updateAdminStats() {
           '<button class="primary-button" data-page="students">' + tr('Add student') + '</button>' +
           '</div>';
         html += '<div class="stats">' +
-          statCard(tr('Total Students'), students.length, tr('Active this term'), '▦') +
+          statCard(tr('Active students'), activeStudentCount(), tr('Active this term'), '▦') +
           statCard(tr('Total Courses'), courses.length, tr('Across all courses'), '▣') +
           statCard(tr('Total Enrollments'), enrollments.length, tr('Active this term'), '✓') +
           statCard(tr('Revenue'), '$' + budgetEntries.filter(function(b) { return b.type === 'Income'; }).reduce(function(
@@ -201,8 +203,9 @@ function updateAdminStats() {
         var html = '';
         announcements.slice().sort(function(a, b) { return new Date(b.date) - new Date(a.date); }).slice(0, 2).forEach(
           function(a) {
-            html += '<div class="simple-row"><span class="round-icon">📌</span><div class="row-main"><strong>' + a.title +
-              '</strong><span>' + a.message + '</span></div></div>';
+            html += '<div class="simple-row" style="cursor:pointer;" onclick="openAnnouncementDetail(' + a.id +
+              ')"><span class="round-icon">📌</span><div class="row-main"><strong>' + a.title +
+              '</strong><span>' + announcementSnippet(a, 90) + '</span></div></div>';
           });
         return html;
       }

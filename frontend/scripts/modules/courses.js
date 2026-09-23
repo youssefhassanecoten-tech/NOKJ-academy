@@ -42,27 +42,74 @@
       }
       function renderStudentCourses() {
         if (!currentUser || currentUser.role !== 'Student') return;
+        var container = document.getElementById('student-courses-container');
         var studentId = currentUser.id;
         var enrolledIds = getEnrolledCourseIds(studentId);
         var enrolledCourses = courses.filter(function(c) { return enrolledIds.includes(c.id); });
+        var blocked = currentUser.status !== 'Active';
+        var pendingCourseIds = enrollRequests.filter(function(r) {
+          return r.studentId === studentId && r.status === 'pending';
+        }).map(function(r) { return r.courseId; });
+        var available = courses.filter(function(c) { return enrolledIds.indexOf(c.id) === -1; });
+
+        var html = '<h3 style="margin-top:0;">' + tr('My courses') + '</h3>';
         if (enrolledCourses.length === 0) {
-          document.getElementById('student-courses-container').innerHTML =
-            '<p style="color:var(--muted);">' + tr('You are not enrolled in any courses yet.') + '</p>';
+          html += '<p style="color:var(--muted);">' + tr('You are not enrolled in any courses yet.') + '</p>';
+        } else {
+          html += '<div class="course-grid">';
+          enrolledCourses.forEach(function(c) {
+            var colors = ['', 'orange-cover', 'green-cover'];
+            var colorClass = colors[c.id % 3];
+            var progress = courseProgress(c.id, studentId);
+            html += '<article class="course"><div class="course-cover ' + colorClass + '">' + c.name +
+              '</div><div class="course-body"><h3>' + c.name + '</h3><p>' + tr('Teacher:') + ' ' + getTeacherName(c.teacherId) +
+              '</p><div class="track"><div class="fill" style="width:' + progress +
+              '%"></div></div><div class="course-footer"><span>' + progress +
+              '% ' + tr('complete') + '</span><button class="link-button">' + tr('Open course') +
+              '</button></div></div></article>';
+          });
+          html += '</div>';
+        }
+
+        if (available.length) {
+          html += '<h3 style="margin-top:30px;">' + tr('Available for enrollment') + '</h3>';
+          if (blocked) {
+            html += '<p style="color:var(--danger);background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:12px 14px;">' +
+              tr('Enrollment is blocked while your account has a Warning or Inactive status.') + '</p>';
+          }
+          html += '<div class="course-grid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr));">';
+          available.forEach(function(c) {
+            html += '<article class="course"><div class="course-cover">' + c.name +
+              '</div><div class="course-body"><h3>' + c.name + '</h3><p>' + tr('Teacher:') + ' ' + getTeacherName(c.teacherId) +
+              '</p><div class="course-footer" style="justify-content:flex-start;">';
+            if (blocked) {
+              html += '<span class="pill danger">' + tr('Enrollment blocked') + '</span>';
+            } else if (pendingCourseIds.indexOf(c.id) !== -1) {
+              html += '<span class="pill warning">' + tr('Application pending') + '</span>';
+            } else {
+              html += '<button class="apply-course-btn secondary-button" data-course="' + c.id + '">' + tr('Apply') +
+                '</button>';
+            }
+            html += '</div></div></article>';
+          });
+          html += '</div>';
+        }
+
+        container.innerHTML = html;
+        setLanguage(currentLang);
+      }
+
+      function applyCourse(courseId) {
+        if (!currentUser || currentUser.role !== 'Student') return;
+        if (currentUser.status !== 'Active') {
+          alert(tr('You cannot apply while your account has a Warning or Inactive status.'));
           return;
         }
-        var html = '<div class="course-grid">';
-        enrolledCourses.forEach(function(c) {
-          var colors = ['', 'orange-cover', 'green-cover'];
-          var colorClass = colors[c.id % 3];
-          var progress = courseProgress(c.id, studentId);
-          html += '<article class="course"><div class="course-cover ' + colorClass + '">' + c.name +
-            '</div><div class="course-body"><h3>' + c.name + '</h3><p>' + tr('Teacher:') + ' ' + getTeacherName(c.teacherId) +
-            '</p><div class="track"><div class="fill" style="width:' + progress +
-            '%"></div></div><div class="course-footer"><span>' + progress +
-            '% ' + tr('complete') + '</span><button class="link-button">' + tr('Open course') +
-            '</button></div></div></article>';
-        });
-        html += '</div>';
-        document.getElementById('student-courses-container').innerHTML = html;
+        if (getEnrolledCourseIds(currentUser.id).indexOf(courseId) !== -1) return;
+        if (enrollRequests.some(function(r) { return r.studentId === currentUser.id && r.courseId === courseId; })) return;
+        enrollRequests.push({ id: Date.now(), studentId: currentUser.id, courseId: courseId, status: 'pending',
+          date: new Date().toISOString() });
+        saveData();
+        renderStudentCourses();
         setLanguage(currentLang);
       }

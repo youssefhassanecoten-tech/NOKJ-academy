@@ -371,6 +371,29 @@
     }
     .announcement-card {
       align-items: flex-start;
+      cursor: pointer;
+      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .announcement-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+    }
+    .announcement-card h4 {
+      margin: 5px 0 0;
+      color: var(--primary);
+      font-size: 12.5px;
+      font-weight: 750;
+    }
+    .announcement-card .read-more {
+      align-self: center;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .announcement-actions {
+      display: flex;
+      gap: 6px;
+      align-self: center;
     }
 
     .profile-card {
@@ -571,5 +594,46 @@
     }
     .approve-btn:hover {
       background: #047857;
+    }
+
+    /* === WARNING / STUDENT INFO === */
+    .warning-note {
+      margin-top: 12px;
+      padding: 11px 13px;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+      border-radius: 11px;
+      background: #fffbeb;
+    }
+    .student-info-grid {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .student-info-grid strong {
+      width: 100%;
+      color: var(--text);
+    }
+    .enroll-info-grid {
+      margin-bottom: 16px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 14px;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      background: #fcfdff;
+    }
+    .enroll-info-grid label {
+      margin: 6px 0 3px;
+      font-size: 11px;
+    }
+    .enroll-info-grid input {
+      padding: 8px 10px;
     }
 

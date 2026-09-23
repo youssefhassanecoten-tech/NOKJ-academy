@@ -133,6 +133,7 @@
         testSubmissions = {};
       let announcements = [];
       let pendingTeachers = [];
+      let enrollRequests = [];
       let currentUser = null,
         expandedRows = {},
         currentSlide = 0,

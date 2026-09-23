@@ -115,14 +115,14 @@
         document.body.dataset.theme = (user.role === 'Teacher') ? 'teacher' : (user.role === 'Student' ? 'student' :
           'admin');
 
-        var initials = user.name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
-        userAvatar.textContent = initials;
+        var initials = initialsOf(user.name);
+        renderAvatar(userAvatar, user);
         userAvatar.className = 'avatar' + (user.role === 'Admin' ? ' admin-avatar' : user.role === 'Teacher' ?
           ' teacher-avatar' : '');
         userDisplayName.textContent = user.name;
         userRole.textContent = user.role;
         sidebarRole.textContent = user.role + ' Portal';
-        profileAvatar.textContent = initials;
+        renderAvatar(profileAvatar, user);
         profileAvatar.className = 'avatar' + (user.role === 'Admin' ? ' admin-avatar' : user.role === 'Teacher' ?
           ' teacher-avatar' : '');
         profileName.textContent = user.name;
@@ -139,7 +139,7 @@
 
         // Role-based visibility of navigation entries.
         var hiddenPages = {};
-        if (user.role === 'Admin') hiddenPages = { timetable: 1, courses: 1, tasks: 1, tests: 1 };
+        if (user.role === 'Admin') hiddenPages = { timetable: 1, courses: 1, tasks: 1, tests: 1, assignments: 1 };
         else if (user.role === 'Teacher') hiddenPages = { announcements: 1 };
         else hiddenPages = { announcements: 1 };
 
@@ -162,6 +162,7 @@
           adminGradesBtn.style.display = 'flex';
           adminCalendarBtn.style.display = 'flex';
           adminApprovalsBtn.style.display = 'flex';
+          teacherApprovalsBtn.style.display = 'none';
           adminStatsContainer.style.display = 'block';
           renderStudents();
           renderBudget();
@@ -169,6 +170,17 @@
           renderGrades();
           renderApprovals();
           updateAdminStats();
+        } else if (user.role === 'Teacher') {
+          adminNavLabel.style.display = 'none';
+          adminStudentsBtn.style.display = 'none';
+          adminBudgetBtn.style.display = 'none';
+          adminCoursesBtn.style.display = 'none';
+          adminGradesBtn.style.display = 'none';
+          adminCalendarBtn.style.display = 'none';
+          adminApprovalsBtn.style.display = 'none';
+          teacherApprovalsBtn.style.display = 'flex';
+          adminStatsContainer.style.display = 'none';
+          renderApprovals();
         } else {
           adminNavLabel.style.display = 'none';
           adminStudentsBtn.style.display = 'none';
@@ -177,6 +189,7 @@
           adminGradesBtn.style.display = 'none';
           adminCalendarBtn.style.display = 'none';
           adminApprovalsBtn.style.display = 'none';
+          teacherApprovalsBtn.style.display = 'none';
           adminStatsContainer.style.display = 'none';
         }
 

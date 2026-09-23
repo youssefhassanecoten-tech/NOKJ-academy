@@ -22,19 +22,22 @@
           return false;
         });
 
+        var canManage = currentUser.role === 'Admin' || currentUser.role === 'Teacher';
+
         if (relevant.length === 0) {
-          meetingGrid.innerHTML =
-            '<p style="color:var(--muted);text-align:center;padding:40px;grid-column:1/-1;">' + tr(
-              'No upcoming classes. Check back later!') + '</p>';
-          setLanguage(currentLang);
-          return;
+          var empty = document.createElement('p');
+          empty.style.cssText = 'color:var(--muted);text-align:center;padding:40px;grid-column:1/-1;';
+          empty.textContent = tr('No upcoming classes. Check back later!');
+          meetingGrid.appendChild(empty);
+        } else {
+          relevant.forEach(function(meeting) {
+            meetingGrid.appendChild(buildMeetingCard(meeting));
+          });
         }
 
-        relevant.forEach(function(meeting) {
-          meetingGrid.appendChild(buildMeetingCard(meeting));
-        });
-
-        if (currentUser.role === 'Admin' || currentUser.role === 'Teacher') {
+        // The create option must always be available to admins and teachers,
+        // even when there are no meetings yet.
+        if (canManage) {
           var addCard = document.createElement('div');
           addCard.className = 'meeting-card';
           addCard.style.border = '2px dashed var(--line)';

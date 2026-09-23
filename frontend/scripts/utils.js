@@ -16,6 +16,7 @@
         const savedTestSubmissions = localStorage.getItem('nokj-test-submissions');
         const savedAnnouncements = localStorage.getItem('nokj-announcements');
         const savedPendingTeachers = localStorage.getItem('nokj-pending-teachers');
+        const savedEnrollRequests = localStorage.getItem('nokj-enroll-requests');
 
         if (savedStudents) { try { students = JSON.parse(savedStudents); } catch (e) { students = DEFAULT_STUDENTS.slice(); } } else { students =
             DEFAULT_STUDENTS.slice(); }
@@ -43,6 +44,7 @@
         if (savedAnnouncements) { try { announcements = JSON.parse(savedAnnouncements); } catch (e) { announcements =
             DEFAULT_ANNOUNCEMENTS.slice(); } } else { announcements = DEFAULT_ANNOUNCEMENTS.slice(); }
         if (savedPendingTeachers) { try { pendingTeachers = JSON.parse(savedPendingTeachers); } catch (e) { pendingTeachers = []; } } else { pendingTeachers = []; }
+        if (savedEnrollRequests) { try { enrollRequests = JSON.parse(savedEnrollRequests); } catch (e) { enrollRequests = []; } } else { enrollRequests = []; }
 
         // The demo accounts must always be available so login never breaks,
         // even if local storage holds older seed data.
@@ -84,6 +86,7 @@
         localStorage.setItem('nokj-test-submissions', JSON.stringify(testSubmissions));
         localStorage.setItem('nokj-announcements', JSON.stringify(announcements));
         localStorage.setItem('nokj-pending-teachers', JSON.stringify(pendingTeachers));
+        localStorage.setItem('nokj-enroll-requests', JSON.stringify(enrollRequests));
       }
 
       // ============================================================
@@ -166,4 +169,64 @@
         if (m.visibleToTeachers) labels.push(tr('Teachers'));
         if (!labels.length) labels.push(tr('Admins'));
         return labels;
+      }
+
+      function initialsOf(name) {
+        if (!name) return '?';
+        return name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
+      }
+
+      function activeStudentCount() {
+        return students.filter(function(s) { return s.status === 'Active'; }).length;
+      }
+
+      // Render a user's photo onto an avatar element (span). Falls back to initials.
+      function renderAvatar(el, user) {
+        if (!el) return;
+        el.style.backgroundImage = '';
+        el.style.backgroundSize = '';
+        el.style.backgroundPosition = '';
+        if (user && user.avatar) {
+          el.style.backgroundImage = 'url("' + user.avatar + '")';
+          el.style.backgroundSize = 'cover';
+          el.style.backgroundPosition = 'center';
+          el.style.fontSize = '0';
+        } else {
+          el.textContent = initialsOf(user ? user.name : '');
+        }
+      }
+
+      // Apply the stored NOKJ logo to every brand mark across screens.
+      function applyBrandLogo() {
+        var saved = null;
+        try { saved = localStorage.getItem('nokj-logo') || null; } catch (e) { saved = null; }
+        document.querySelectorAll('.brand-mark').forEach(function(el) {
+          if (saved) {
+            el.style.backgroundImage = 'url("' + saved + '")';
+            el.style.backgroundSize = 'cover';
+            el.style.backgroundPosition = 'center';
+            el.textContent = '';
+          } else {
+            el.style.backgroundImage = '';
+            el.textContent = 'N';
+          }
+        });
+      }
+
+      function saveBrandLogo(dataUrl) {
+        if (dataUrl) localStorage.setItem('nokj-logo', dataUrl);
+        else localStorage.removeItem('nokj-logo');
+        applyBrandLogo();
+      }
+
+      function announcementText(a) {
+        if (!a) return '';
+        return a.content || a.message || '';
+      }
+
+      function announcementSnippet(a, len) {
+        var text = announcementText(a);
+        len = len || 120;
+        if (text.length > len) return text.slice(0, len).trim() + '…';
+        return text;
       }

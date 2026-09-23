@@ -40,12 +40,21 @@
           var icons = { homework: '✎', test: '✓', assignment: '📝' };
           var typeName = t.type === 'homework' ? tr('Homework') : (t.type === 'test' ? tr('Test') : tr('Assignment'));
 
+          var manageLine = '';
+          if (currentUser.role === 'Admin' || currentUser.role === 'Teacher') {
+            var subs = Object.keys(taskSubmissions).filter(function(k) {
+              return k.indexOf(t.id + '-') === 0;
+            }).length;
+            manageLine = '<span>' + tr('Submissions') + ': ' + subs + '</span>';
+          }
+
           html += '<article class="assignment-card"><span class="round-icon ' + (t.type === 'homework' ? 'yellow' :
               (t.type === 'test' ? 'blue' : '')) + '">' + (icons[t.type] || '✎') + '</span>' +
-            '<div class="row-main"><h3>' + t.title + '</h3><p>' + typeName + ' · ' + tr('Due') + ' ' + new Date(t.deadline)
-            .toLocaleDateString() + '</p></div>' +
+            '<div class="row-main"><h3>' + escapeHtml(t.title) + '</h3><p>' + typeName + ' · ' + tr('Due') + ' ' +
+            new Date(t.deadline).toLocaleDateString() + (manageLine ? ' · ' + manageLine : '') + '</p></div>' +
             '<span class="' + pillClass + '">' + pillText + '</span>' +
-            '<button class="secondary-button assignment-button" data-page="tasks">' + tr('Open assignment') + '</button></article>';
+            '<button class="secondary-button assignment-button" data-page="tasks">' + tr('Open assignment') +
+            '</button></article>';
         });
         list.innerHTML = html;
         setLanguage(currentLang);

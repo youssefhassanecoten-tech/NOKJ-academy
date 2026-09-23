@@ -74,12 +74,26 @@
           password: password,
           role: role,
           createdAt: new Date().toISOString().split('T')[0],
-          status: 'Active'
+          status: 'Active',
+          phone: '',
+          dob: '',
+          country: '',
+          address: '',
+          emergencyContact: '',
+          bio: ''
         };
+        if (role === 'Teacher') {
+          // Teacher signup requires admin approval.
+          pendingTeachers.push(Object.assign({}, newUser, { appliedAt: new Date().toISOString(), status: 'pending' }));
+          saveData();
+          showLoginScreen();
+          registerError.textContent = '';
+          alert(tr('Your teacher application was submitted and is pending admin approval.'));
+          setLanguage(currentLang);
+          return true;
+        }
         if (role === 'Student') {
           students.push(newUser);
-        } else if (role === 'Teacher') {
-          teachers.push(newUser);
         } else {
           admins.push(newUser);
         }
@@ -117,10 +131,28 @@
         profileId.textContent = 'NOKJ-' + String(user.id).padStart(4, '0');
         profileRole.textContent = user.role;
         profileSince.textContent = user.createdAt || '2026';
+        fillProfileDetails(user);
 
         var time = new Date().getHours();
         var greetingText = (time < 12) ? 'Good morning' : (time < 17) ? 'Good afternoon' : 'Good evening';
-        greeting.textContent = greetingText + ', ' + user.name + ' 👋';
+        greeting.textContent = tr(greetingText) + ', ' + user.name + ' 👋';
+
+        // Role-based visibility of navigation entries.
+        var hiddenPages = {};
+        if (user.role === 'Admin') hiddenPages = { timetable: 1, courses: 1, tasks: 1, tests: 1 };
+        else if (user.role === 'Teacher') hiddenPages = { announcements: 1 };
+        else hiddenPages = { announcements: 1 };
+
+        document.querySelectorAll('.sidebar .nav-button').forEach(function(btn) {
+          btn.style.display = hiddenPages[btn.dataset.page] ? 'none' : 'flex';
+        });
+        document.querySelectorAll('.mobile-nav .nav-button').forEach(function(btn) {
+          if (hiddenPages[btn.dataset.page]) {
+            btn.style.display = 'none';
+          } else {
+            btn.style.display = '';
+          }
+        });
 
         if (user.role === 'Admin') {
           adminNavLabel.style.display = 'block';
@@ -129,11 +161,13 @@
           adminCoursesBtn.style.display = 'flex';
           adminGradesBtn.style.display = 'flex';
           adminCalendarBtn.style.display = 'flex';
+          adminApprovalsBtn.style.display = 'flex';
           adminStatsContainer.style.display = 'block';
           renderStudents();
           renderBudget();
           renderCourses();
           renderGrades();
+          renderApprovals();
           updateAdminStats();
         } else {
           adminNavLabel.style.display = 'none';
@@ -142,6 +176,7 @@
           adminCoursesBtn.style.display = 'none';
           adminGradesBtn.style.display = 'none';
           adminCalendarBtn.style.display = 'none';
+          adminApprovalsBtn.style.display = 'none';
           adminStatsContainer.style.display = 'none';
         }
 
@@ -154,7 +189,18 @@
         renderDashboard();
         renderAnnouncements();
         renderAssignments();
+        updateGreeting();
+        cleanupExpiredMeetings();
         setLanguage(currentLang);
+      }
+
+      function updateGreeting() {
+        if (!currentUser) return;
+        var el = document.getElementById('greeting');
+        if (!el) return;
+        var time = new Date().getHours();
+        var text = (time < 12) ? 'Good morning' : (time < 17) ? 'Good afternoon' : 'Good evening';
+        el.textContent = tr(text) + ', ' + currentUser.name + ' 👋';
       }
 
       function logout() {

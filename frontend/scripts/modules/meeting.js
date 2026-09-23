@@ -11,6 +11,7 @@
       var meetingMicOn = true;
       var meetingCamOn = true;
       var meetingSlides = [];
+      var meetingContextId = null; // meeting id the current deck belongs to
 
       // --- signalling / webrtc state ---
       var meetingWs = null;
@@ -90,6 +91,27 @@
         document.getElementById('meeting-slide-prev').addEventListener('click', function() { meetingSetSlide(-1); });
         document.getElementById('meeting-slide-next').addEventListener('click', function() { meetingSetSlide(1); });
 
+        // Presentation editor (create/edit slides, upload pptx).
+        var editBtn = document.getElementById('meeting-slide-edit');
+        if (editBtn) editBtn.addEventListener('click', openSlideEditor);
+        var editorClose = document.getElementById('slide-editor-close');
+        if (editorClose) editorClose.addEventListener('click', closeSlideEditor);
+        var editorCancel = document.getElementById('slide-editor-cancel');
+        if (editorCancel) editorCancel.addEventListener('click', closeSlideEditor);
+        var editorOverlay = document.getElementById('slide-editor-overlay');
+        if (editorOverlay) editorOverlay.addEventListener('click', function(e) { if (e.target === this) closeSlideEditor(); });
+        var editorAdd = document.getElementById('slide-editor-add');
+        if (editorAdd) editorAdd.addEventListener('click', meetingAddSlide);
+        var editorSave = document.getElementById('slide-editor-save');
+        if (editorSave) editorSave.addEventListener('click', saveSlideEditor);
+        var editorList = document.getElementById('slide-editor-list');
+        if (editorList) editorList.addEventListener('click', meetingSlideEditorAction);
+        var editorUpload = document.getElementById('slide-editor-upload');
+        if (editorUpload) editorUpload.addEventListener('change', function(e) {
+          meetingHandleSlideUpload(e.target.files && e.target.files[0]);
+          e.target.value = '';
+        });
+
         document.addEventListener('keydown', function(e) {
           var overlay = document.getElementById('meeting-overlay');
           if (!overlay || !overlay.classList.contains('open')) return;
@@ -108,7 +130,8 @@
 
         meetingIsTeacher = currentUser ? currentUser.role !== 'Student' : false;
         meetingSlideIndex = 0;
-        meetingSlides = DEFAULT_PRESENTATION.slice();
+        meetingContextId = meetingId || null;
+        meetingSlides = (meetingContextId && getMeetingSlides(meetingContextId)) || DEFAULT_PRESENTATION.slice();
         meetingRoomKey = 'meeting-' + (meetingId || 'default');
 
         document.getElementById('meeting-room-title').textContent = meetingTitle || 'Meeting Room';
@@ -251,6 +274,8 @@
         var canControl = meetingIsTeacher;
         document.getElementById('meeting-slide-prev').disabled = !canControl;
         document.getElementById('meeting-slide-next').disabled = !canControl;
+        var editBtn = document.getElementById('meeting-slide-edit');
+        if (editBtn) editBtn.style.display = canControl ? 'inline-flex' : 'none';
         setLanguage(currentLang);
       }
 
@@ -261,6 +286,184 @@
         if (meetingSlideIndex >= meetingSlides.length) meetingSlideIndex = meetingSlides.length - 1;
         renderMeetingSlide();
         broadcastMeeting({ type: 'slide', index: meetingSlideIndex, from: meetingSelfId || 'local' });
+      }
+
+      // ============================================================
+      //  PRESENTATION MAKER (persistent per-meeting slides)
+      // ============================================================
+      function getMeetingSlides(meetingId) {
+        if (!meetingId) return null;
+        try {
+          var saved = localStorage.getItem('nokj-pres-' + meetingId);
+          if (saved) {
+            var parsed = JSON.parse(saved);
+            if (parsed && parsed.length) return parsed;
+          }
+        } catch (e) { /* noop */ }
+        return null;
+      }
+
+      function saveMeetingSlides(meetingId, slides) {
+        if (!meetingId) return;
+        try {
+          localStorage.setItem('nokj-pres-' + meetingId, JSON.stringify(slides));
+        } catch (e) { /* noop */ }
+      }
+
+      function openSlideEditor() {
+        if (!meetingIsTeacher) return;
+        renderSlideEditor();
+        document.getElementById('slide-editor-overlay').classList.add('open');
+        setLanguage(currentLang);
+      }
+
+      function closeSlideEditor() {
+        document.getElementById('slide-editor-overlay').classList.remove('open');
+      }
+
+      function renderSlideEditor() {
+        var list = document.getElementById('slide-editor-list');
+        if (!list) return;
+        if (!meetingSlides.length) {
+          list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">' + tr(
+            'No slides yet. Add a slide or upload a presentation.') + '</p>';
+          return;
+        }
+        list.innerHTML = meetingSlides.map(function(slide, i) {
+          return '<div class="slide-editor-item" data-idx="' + i + '">' +
+            '<div class="slide-editor-top"><strong>' + tr('Slide') + ' ' + (i + 1) + '</strong>' +
+            '<div>' +
+            '<button type="button" class="mini-btn" data-move="up" data-idx="' + i + '">↑</button>' +
+            '<button type="button" class="mini-btn" data-move="down" data-idx="' + i + '">↓</button>' +
+            '<button type="button" class="mini-btn danger" data-del="' + i + '">✕</button>' +
+            '</div></div>' +
+            '<input type="text" class="slide-editor-title" value="' + escapeHtml(slide.title || '') +
+            '" placeholder="' + tr('Slide title') + '" />' +
+            '<textarea class="slide-editor-content" placeholder="' + tr('Slide content') + '">' +
+            escapeHtml(slide.content || '') + '</textarea></div>';
+        }).join('');
+      }
+
+      function meetingSlideEditorAction(e) {
+        var btn = e.target.closest('.mini-btn');
+        if (!btn) return;
+        var idx = parseInt(btn.dataset.idx);
+        if (btn.dataset.del !== undefined) {
+          meetingSlides.splice(idx, 1);
+        } else if (btn.dataset.move === 'up') {
+          if (idx > 0) {
+            var s = meetingSlides.splice(idx, 1)[0];
+            meetingSlides.splice(idx - 1, 0, s);
+          }
+        } else if (btn.dataset.move === 'down') {
+          if (idx < meetingSlides.length - 1) {
+            var s2 = meetingSlides.splice(idx, 1)[0];
+            meetingSlides.splice(idx + 1, 0, s2);
+          }
+        }
+        renderSlideEditor();
+      }
+
+      function meetingAddSlide() {
+        meetingSlides.push({ title: '', content: '' });
+        renderSlideEditor();
+      }
+
+      function saveSlideEditor() {
+        var items = document.querySelectorAll('#slide-editor-list .slide-editor-item');
+        var next = [];
+        items.forEach(function(item) {
+          var title = item.querySelector('.slide-editor-title').value.trim();
+          var content = item.querySelector('.slide-editor-content').value.trim();
+          if (title || content) next.push({ title: title, content: content });
+        });
+        if (!next.length) next = [{ title: tr('Welcome'), content: tr('New presentation.') }];
+        meetingSlides = next;
+        meetingSlideIndex = 0;
+        if (meetingContextId) saveMeetingSlides(meetingContextId, meetingSlides);
+        renderMeetingSlide();
+        broadcastMeeting({ type: 'slides-set', slides: meetingSlides, from: meetingSelfId || 'local' });
+        closeSlideEditor();
+      }
+
+      // Upload a .pptx (or exported .json) and import it into the editable deck.
+      function meetingHandleSlideUpload(file) {
+        var note = document.getElementById('slide-editor-upload-note');
+        function say(msg) { if (note) { note.textContent = msg; setTimeout(function() { note.textContent = ''; }, 4000); } }
+        if (!file) return;
+        var name = file.name.toLowerCase();
+        if (name.indexOf('.pptx') === -1 && name.indexOf('.ppt') === -1 && name.indexOf('.json') === -1) {
+          say(tr('Only .pptx or .json presentations can be imported for editing.'));
+          return;
+        }
+        if (name.indexOf('.json') !== -1) {
+          var reader = new FileReader();
+          reader.onload = function(ev) {
+            try {
+              var parsed = JSON.parse(ev.target.result);
+              if (parsed && parsed.length) {
+                meetingSlides = parsed;
+                renderSlideEditor();
+                say(tr('Presentation imported. Edit and save.'));
+              } else say(tr('No slides found in this file.'));
+            } catch (err) { say(tr('Could not read this file.')); }
+          };
+          reader.readAsText(file);
+          return;
+        }
+        var bufReader = new FileReader();
+        bufReader.onload = function(ev) {
+          meetingLoadJSZip(function() {
+            if (!window.JSZip) {
+              say(tr('Could not load the PPTX reader. Check your connection and try again.'));
+              return;
+            }
+            JSZip.loadAsync(ev.target.result).then(function(zip) {
+              var slides = [];
+              var names = Object.keys(zip.files).filter(function(n) {
+                return /^ppt\/slides\/slide\d+\.xml$/i.test(n);
+              }).sort(function(a, b) {
+                return parseInt(a.match(/\d+/)[0]) - parseInt(b.match(/\d+/)[0]);
+              });
+              var chain = Promise.resolve();
+              names.forEach(function(n) {
+                chain = chain.then(function() {
+                  return zip.files[n].async('string').then(function(xml) {
+                    var texts = [];
+                    var re = /<a:t[^>]*>([\s\S]*?)<\/a:t>/g;
+                    var m;
+                    while ((m = re.exec(xml)) !== null) {
+                      texts.push(m[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').
+                        replace(/&#10;/g, '\n').replace(/&#xA;/g, '\n'));
+                    }
+                    if (texts.length) {
+                      slides.push({ title: texts[0], content: texts.slice(1).join('\n') });
+                    }
+                  });
+                });
+              });
+              chain.then(function() {
+                if (slides.length) {
+                  meetingSlides = slides;
+                  renderSlideEditor();
+                  say(tr('Imported') + ' ' + slides.length + ' ' + tr('slides. Edit and save.'));
+                } else {
+                  say(tr('No editable slide text was found in this presentation.'));
+                }
+              });
+            }).catch(function() { say(tr('Could not open this file.')); });
+          });
+        };
+        bufReader.readAsArrayBuffer(file);
+      }
+
+      function meetingLoadJSZip(cb) {
+        if (window.JSZip) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+        s.onload = cb;
+        s.onerror = cb;
+        document.head.appendChild(s);
       }
 
       // ============================================================
@@ -404,6 +607,12 @@
         } else if (msg.type === 'slide') {
           meetingSlideIndex = msg.index || 0;
           renderMeetingSlide();
+        } else if (msg.type === 'slides-set') {
+          if (msg.slides && msg.slides.length) {
+            meetingSlides = msg.slides;
+            meetingSlideIndex = 0;
+            renderMeetingSlide();
+          }
         } else if (msg.type === 'leave') {
           if (msg.name) removeMeetingParticipant(msg.name);
         }
@@ -421,6 +630,13 @@
             if (msg.type === 'chat') meetingAppendChat(msg.name, msg.text, false);
             else if (msg.type === 'slide') { meetingSlideIndex = msg.index || 0;
               renderMeetingSlide(); }
+            else if (msg.type === 'slides-set') {
+              if (msg.slides && msg.slides.length) {
+                meetingSlides = msg.slides;
+                meetingSlideIndex = 0;
+                renderMeetingSlide();
+              }
+            }
             else if (msg.type === 'join') { addMeetingParticipant(msg.name); }
             else if (msg.type === 'leave') {
               if (msg.name) removeMeetingParticipant(msg.name);

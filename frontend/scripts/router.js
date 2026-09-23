@@ -9,5 +9,6 @@
         if (pageName === 'calendar') renderCalendar();
         if (pageName === 'classroom') renderMeetings();
         if (pageName === 'tests') renderTests();
+        if (pageName === 'approvals') renderApprovals();
         setLanguage(currentLang);
       }

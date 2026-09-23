@@ -15,6 +15,7 @@
         const savedTests = localStorage.getItem('nokj-tests');
         const savedTestSubmissions = localStorage.getItem('nokj-test-submissions');
         const savedAnnouncements = localStorage.getItem('nokj-announcements');
+        const savedPendingTeachers = localStorage.getItem('nokj-pending-teachers');
 
         if (savedStudents) { try { students = JSON.parse(savedStudents); } catch (e) { students = DEFAULT_STUDENTS.slice(); } } else { students =
             DEFAULT_STUDENTS.slice(); }
@@ -41,6 +42,31 @@
               {}; } } else { testSubmissions = {}; }
         if (savedAnnouncements) { try { announcements = JSON.parse(savedAnnouncements); } catch (e) { announcements =
             DEFAULT_ANNOUNCEMENTS.slice(); } } else { announcements = DEFAULT_ANNOUNCEMENTS.slice(); }
+        if (savedPendingTeachers) { try { pendingTeachers = JSON.parse(savedPendingTeachers); } catch (e) { pendingTeachers = []; } } else { pendingTeachers = []; }
+
+        // The demo accounts must always be available so login never breaks,
+        // even if local storage holds older seed data.
+        students = mergeDemoUsers(students, DEFAULT_STUDENTS);
+        teachers = mergeDemoUsers(teachers, DEFAULT_TEACHERS);
+        admins = mergeDemoUsers(admins, DEFAULT_ADMINS);
+
+        // Ensure seeded meetings land in the future so the classroom is usable.
+        if (!savedMeetings) {
+          meetings = meetings.map(function(m, i) {
+            var copy = Object.assign({}, m);
+            copy.date = futureMeetingDate(i + 1);
+            return copy;
+          });
+        }
+      }
+
+      function mergeDemoUsers(list, defaults) {
+        var result = Array.isArray(list) ? list : defaults.slice();
+        defaults.forEach(function(def) {
+          var exists = result.some(function(u) { return u && u.email === def.email; });
+          if (!exists) result.push(def);
+        });
+        return result;
       }
 
       function saveData() {
@@ -57,6 +83,7 @@
         localStorage.setItem('nokj-tests', JSON.stringify(tests));
         localStorage.setItem('nokj-test-submissions', JSON.stringify(testSubmissions));
         localStorage.setItem('nokj-announcements', JSON.stringify(announcements));
+        localStorage.setItem('nokj-pending-teachers', JSON.stringify(pendingTeachers));
       }
 
       // ============================================================
@@ -114,4 +141,29 @@
         return String(str === null || str === undefined ? '' : str)
           .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
           .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+
+      // ----- Meeting time helpers -----
+      function meetingStartMs(m) {
+        return new Date(m.date + 'T' + (m.time || '00:00')).getTime();
+      }
+
+      function meetingEndMs(m) {
+        return meetingStartMs(m) + ((m.duration || 60) * 60000);
+      }
+
+      function meetingEditable(m) {
+        if (!currentUser) return false;
+        if (currentUser.role === 'Admin') return true;
+        var now = Date.now();
+        return (m.teacherId === currentUser.id || m.createdBy === currentUser.id) &&
+          now < meetingStartMs(m) - (24 * 60 * 60 * 1000);
+      }
+
+      function meetingAudienceLabels(m) {
+        var labels = [];
+        if (m.visibleToStudents !== false) labels.push(tr('Students'));
+        if (m.visibleToTeachers) labels.push(tr('Teachers'));
+        if (!labels.length) labels.push(tr('Admins'));
+        return labels;
       }

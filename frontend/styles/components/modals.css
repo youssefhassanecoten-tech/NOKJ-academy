@@ -417,8 +417,159 @@
     .details strong {
       font-size: 13px;
     }
+    .details .profile-bio {
+      grid-column: 1 / -1;
+      color: var(--text);
+      font-weight: 500;
+      line-height: 1.6;
+    }
+    .profile-top .edit-profile-btn {
+      margin-left: auto;
+    }
 
     .mobile-nav {
       display: none;
+    }
+
+    /* === SCHEDULE VISIBILITY === */
+    .schedule-visibility {
+      margin: 6px 0 4px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+    .schedule-visibility legend {
+      padding: 0 6px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+    .schedule-visibility label {
+      margin: 0 14px 0 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .schedule-visibility input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      margin: 0;
+      accent-color: var(--primary);
+    }
+
+    /* === NOTIFICATION / HELP CONTENT === */
+    .notification-item {
+      padding: 14px;
+      display: flex;
+      gap: 13px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      margin-bottom: 10px;
+      background: #fcfdff;
+    }
+    .notification-icon {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      border-radius: 12px;
+      background: var(--primary-faint, #eef2ff);
+    }
+    .notification-item .row-main strong,
+    .notification-item .row-main span {
+      display: block;
+    }
+    .notification-item .row-main strong {
+      font-size: 13.5px;
+    }
+    .notification-item .row-main span {
+      margin-top: 3px;
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .notification-item .row-main em {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-style: normal;
+    }
+
+    /* === SLIDE EDITOR === */
+    .slide-editor-upload {
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .file-upload-label {
+      cursor: pointer;
+      position: relative;
+    }
+    .slide-editor-item {
+      padding: 13px;
+      margin-bottom: 11px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #fcfdff;
+    }
+    .slide-editor-top {
+      margin-bottom: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .slide-editor-top strong {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .mini-btn {
+      width: 28px;
+      height: 28px;
+      margin-left: 4px;
+      font-size: 13px;
+      line-height: 1;
+      color: var(--primary);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      cursor: pointer;
+      background: white;
+    }
+    .mini-btn:hover {
+      border-color: var(--primary);
+    }
+    .mini-btn.danger {
+      color: var(--danger);
+    }
+    .slide-editor-title {
+      margin-bottom: 7px;
+      font-weight: 700;
+    }
+    .slide-editor-content {
+      min-height: 70px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    /* === APPROVALS PAGE === */
+    .approve-btn {
+      padding: 6px 13px;
+      margin-right: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #059669;
+    }
+    .approve-btn:hover {
+      background: #047857;
     }
 

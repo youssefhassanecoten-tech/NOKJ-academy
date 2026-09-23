@@ -14,9 +14,13 @@
         }
 
         var ext = fileName.split('.').pop().toLowerCase();
-        var isImage = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp'].includes(ext);
+        var isImage = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp', 'ico'].includes(ext);
         var isPDF = ext === 'pdf';
-        var isText = ['txt', 'md', 'csv', 'json', 'xml', 'html', 'css', 'js', 'log'].includes(ext);
+        var isAudio = ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac', 'opus'].includes(ext);
+        var isVideo = ['mp4', 'webm', 'mov', 'mkv', 'avi', 'm4v', 'ogg'].includes(ext);
+        var isText = ['txt', 'md', 'csv', 'json', 'xml', 'html', 'css', 'js', 'log', 'py', 'java', 'c', 'cpp', 'h',
+          'php', 'rb', 'go', 'sql', 'yaml', 'yml', 'ini', 'sh', 'bat', 'ts', 'tsx', 'jsx'
+        ].includes(ext);
 
         var content = '';
 
@@ -25,6 +29,14 @@
         } else if (isPDF) {
           content = '<iframe src="' + fileData + '" class="file-preview-iframe" title="' + fileName +
             '"></iframe>';
+        } else if (isAudio) {
+          content = '<div class="file-preview-media"><strong>' + fileName +
+            '</strong><audio controls src="' + fileData + '"></audio><a href="' + fileData + '" download="' + fileName +
+            '" style="color:var(--primary);">⬇️ Download file</a></div>';
+        } else if (isVideo) {
+          content = '<div class="file-preview-media"><strong>' + fileName +
+            '</strong><video controls class="file-preview-video" src="' + fileData + '"></video><a href="' + fileData +
+            '" download="' + fileName + '" style="color:var(--primary);">⬇️ Download file</a></div>';
         } else if (isText) {
           try {
             var base64Data = fileData.split(',')[1] || fileData;

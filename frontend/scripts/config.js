@@ -40,13 +40,21 @@
         { studentId: 3, courseId: 2 }
       ];
 
+      // Dates are filled with future dates at seed time (see futureMeetingDate).
       const DEFAULT_MEETINGS = [
-        { id: 1, title: 'Mathematics: Quadratic Equations', teacherId: 1, date: '2026-08-28', time: '15:30', duration: 60,
-          link: '#' },
-        { id: 2, title: 'Biology: Cell Structure', teacherId: 1, date: '2026-08-29', time: '12:00', duration: 60, link: '#' },
-        { id: 3, title: 'English Literature: Macbeth Analysis', teacherId: 2, date: '2026-08-30', time: '09:00', duration: 60,
-          link: '#' }
+        { id: 1, title: 'Mathematics: Quadratic Equations', teacherId: 1, date: null, time: '15:30', duration: 60,
+          link: '#', courseId: 1, createdBy: 1, visibleToStudents: true, visibleToTeachers: false },
+        { id: 2, title: 'Biology: Cell Structure', teacherId: 1, date: null, time: '12:00', duration: 60, link: '#',
+          courseId: 2, createdBy: 1, visibleToStudents: true, visibleToTeachers: false },
+        { id: 3, title: 'English Literature: Macbeth Analysis', teacherId: 2, date: null, time: '09:00', duration: 60,
+          link: '#', courseId: 3, createdBy: 2, visibleToStudents: true, visibleToTeachers: false }
       ];
+
+      function futureMeetingDate(days) {
+        var d = new Date();
+        d.setDate(d.getDate() + days);
+        return d.toISOString().split('T')[0];
+      }
 
       const DEFAULT_TASKS = [
         { id: 1, title: 'Quadratic Equations Practice', type: 'homework', description: 'Solve problems 1-20 from the textbook.',
@@ -124,6 +132,7 @@
       let tests = [],
         testSubmissions = {};
       let announcements = [];
+      let pendingTeachers = [];
       let currentUser = null,
         expandedRows = {},
         currentSlide = 0,

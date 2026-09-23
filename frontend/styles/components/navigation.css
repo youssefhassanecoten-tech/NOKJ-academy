@@ -24,6 +24,14 @@
       align-items: center;
       gap: 11px;
     }
+    #sidebar-brand {
+      cursor: pointer;
+      user-select: none;
+    }
+    #sidebar-brand:hover .brand-mark {
+      color: white;
+      background: rgba(255, 255, 255, 0.22);
+    }
     .brand-mark {
       width: 40px;
       height: 40px;
@@ -87,15 +95,33 @@
       border-radius: 15px;
       background: rgba(255, 255, 255, 0.1);
     }
-    .help-card strong,
-    .help-card span {
+    #help-btn {
+      width: 100%;
+      padding: 15px;
+      margin: auto 0 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      color: white;
+      text-align: left;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 15px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.1);
+      transition: background 0.2s ease;
+    }
+    #help-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    #help-btn strong,
+    #help-btn span {
       display: block;
     }
-    .help-card strong {
+    #help-btn strong {
       margin-bottom: 5px;
       font-size: 13px;
     }
-    .help-card span {
+    #help-btn span {
       color: #e0e7ff;
       font-size: 11px;
       line-height: 1.45;
@@ -159,6 +185,14 @@
       font-weight: 850;
       border-radius: 50%;
       background: linear-gradient(135deg, #f97316, #db2777);
+    }
+    #user-avatar {
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    #user-avatar:hover {
+      transform: scale(1.06);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
     }
     .avatar.admin-avatar {
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));

@@ -1,3 +1,20 @@
+      function fillProfileDetails(user) {
+        function set(id, val) {
+          var el = document.getElementById(id);
+          if (el) el.textContent = val && val !== '' ? val : '—';
+        }
+        set('profile-name', user.name);
+        set('profile-role', user.role);
+        set('profile-id', 'NOKJ-' + String(user.id).padStart(4, '0'));
+        set('profile-email', user.email);
+        set('profile-phone', user.phone);
+        set('profile-dob', user.dob);
+        set('profile-country', user.country);
+        set('profile-address', user.address);
+        set('profile-emergency', user.emergencyContact);
+        set('profile-bio', user.bio);
+      }
+
       function toggleExpand(expandId) {
         expandedRows[expandId] = !expandedRows[expandId];
         var activePage = document.querySelector('.page.active');
@@ -55,7 +72,22 @@
             editingId = null;
           }
         } else {
-          if (type === 'student') {
+          if (type === 'profile') {
+            var u = currentUser || {};
+            document.getElementById('modal-title').textContent = 'Edit profile';
+            document.getElementById('modal-sub').textContent = 'Update your personal information';
+            document.getElementById('modal-fields').innerHTML =
+              '<label>Full Name</label><input type="text" id="modal-profile-name" value="' + (u.name || '') + '" />' +
+              '<label>Phone</label><input type="tel" id="modal-profile-phone" value="' + (u.phone || '') + '" />' +
+              '<label>Date of birth</label><input type="date" id="modal-profile-dob" value="' + (u.dob || '') + '" />' +
+              '<label>Country</label><input type="text" id="modal-profile-country" value="' + (u.country || '') + '" />' +
+              '<label>Address</label><input type="text" id="modal-profile-address" value="' + (u.address || '') + '" />' +
+              '<label>Emergency contact</label><input type="text" id="modal-profile-emergency" value="' + (u.emergencyContact || '') +
+              '" />' +
+              '<label>About me</label><textarea id="modal-profile-bio" placeholder="Tell us about yourself">' + (u.bio || '') +
+              '</textarea>';
+            editingId = null;
+          } else if (type === 'student') {
             var s = students.find(function(st) { return st.id === data.id; });
             if (s) {
               editingId = s.id;
@@ -121,6 +153,27 @@
       function handleModalSubmit(e) {
         e.preventDefault();
         var type = modalType;
+        if (type === 'profile') {
+          if (!currentUser) return;
+          var pname = document.getElementById('modal-profile-name').value.trim();
+          if (!pname) { alert(tr('Please fill in all fields')); return; }
+          currentUser.name = pname;
+          currentUser.phone = document.getElementById('modal-profile-phone').value.trim();
+          currentUser.dob = document.getElementById('modal-profile-dob').value;
+          currentUser.country = document.getElementById('modal-profile-country').value.trim();
+          currentUser.address = document.getElementById('modal-profile-address').value.trim();
+          currentUser.emergencyContact = document.getElementById('modal-profile-emergency').value.trim();
+          currentUser.bio = document.getElementById('modal-profile-bio').value.trim();
+          var arr = currentUser.role === 'Student' ? students : (currentUser.role === 'Teacher' ? teachers : admins);
+          var idx = arr.findIndex(function(x) { return x.id === currentUser.id; });
+          if (idx !== -1) arr[idx] = currentUser;
+          saveData();
+          localStorage.setItem('nokj-user', JSON.stringify(currentUser));
+          showApp(currentUser);
+          closeModal();
+          setLanguage(currentLang);
+          return;
+        }
         if (type === 'student') {
           var name = document.getElementById('modal-name').value.trim();
           var email = document.getElementById('modal-email').value.trim();
@@ -263,5 +316,69 @@
         renderCourses();
         renderStudentCourses();
         closeEnrollModal();
+        setLanguage(currentLang);
+      }
+
+      // ============================================================
+      //  TEACHER APPLICATIONS (admin approval)
+      // ============================================================
+      function renderApprovals() {
+        if (!currentUser || currentUser.role !== 'Admin') return;
+        var body = document.getElementById('approval-table-body');
+        if (!body) return;
+        var query = document.getElementById('approval-search') ? document.getElementById('approval-search').value.trim().toLowerCase() :
+          '';
+        var list = pendingTeachers.filter(function(p) {
+          return !query ||
+            (p.name && p.name.toLowerCase().indexOf(query) !== -1) ||
+            (p.email && p.email.toLowerCase().indexOf(query) !== -1);
+        });
+        if (!list.length) {
+          body.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px;">' + tr(
+            'No teacher applications.') + '</td></tr>';
+        } else {
+          body.innerHTML = list.map(function(p) {
+            return '<tr><td>' + escapeHtml(p.name) + '</td><td>' + escapeHtml(p.email) + '</td><td>' +
+              (p.appliedAt ? new Date(p.appliedAt).toLocaleDateString() : (p.createdAt || '—')) +
+              '</td><td>' +
+              '<button class="approve-btn" data-id="' + p.id + '">✓ ' + tr('Approve') + '</button> ' +
+              '<button class="danger-button" data-action="refuse" data-id="' + p.id + '">✕ ' + tr('Refuse') +
+              '</button></td></tr>';
+          }).join('');
+        }
+        document.getElementById('approval-count').textContent = list.length + ' ' + tr('applications');
+        document.getElementById('approval-total').textContent = pendingTeachers.length;
+        setLanguage(currentLang);
+      }
+
+      function approveTeacher(id) {
+        var idx = pendingTeachers.findIndex(function(p) { return p.id === id; });
+        if (idx === -1) return;
+        var app = pendingTeachers[idx];
+        pendingTeachers.splice(idx, 1);
+        teachers.push({
+          id: app.id,
+          name: app.name,
+          email: app.email,
+          password: app.password,
+          role: 'Teacher',
+          status: 'Active',
+          createdAt: app.createdAt || new Date().toISOString().split('T')[0],
+          phone: app.phone || '',
+          dob: app.dob || '',
+          country: app.country || '',
+          address: app.address || '',
+          emergencyContact: app.emergencyContact || '',
+          bio: app.bio || ''
+        });
+        saveData();
+        renderApprovals();
+        setLanguage(currentLang);
+      }
+
+      function refuseTeacher(id) {
+        pendingTeachers = pendingTeachers.filter(function(p) { return p.id !== id; });
+        saveData();
+        renderApprovals();
         setLanguage(currentLang);
       }

@@ -42,6 +42,7 @@
       const adminCoursesBtn = document.getElementById('admin-courses-btn');
       const adminGradesBtn = document.getElementById('admin-grades-btn');
       const adminCalendarBtn = document.getElementById('admin-calendar-btn');
+      const adminApprovalsBtn = document.getElementById('admin-approvals-btn');
       const adminStatsContainer = document.getElementById('admin-stats-container');
 
       const studentTableBody = document.getElementById('student-table-body');
@@ -67,6 +68,7 @@
       const scheduleTime = document.getElementById('schedule-time');
       const scheduleDuration = document.getElementById('schedule-duration');
       const scheduleLink = document.getElementById('schedule-link');
+      const scheduleCourse = document.getElementById('schedule-course');
 
       const totalStudentsEl = document.getElementById('total-students');
       const totalCoursesEl = document.getElementById('total-courses');
@@ -111,9 +113,51 @@
         if (target && target.dataset.expandId) toggleExpand(target.dataset.expandId);
       });
 
-      document.getElementById('notification-button').addEventListener('click', function() {
-        alert(tr('You have 2 new announcements and 1 assignment due tomorrow.'));
+      document.getElementById('notification-button').addEventListener('click', openNotifications);
+
+      document.getElementById('help-btn').addEventListener('click', function() {
+        document.getElementById('help-overlay').classList.add('open');
+        setLanguage(currentLang);
       });
+      document.getElementById('help-close').addEventListener('click', function() {
+        document.getElementById('help-overlay').classList.remove('open');
+      });
+      document.getElementById('help-overlay').addEventListener('click', function(e) {
+        if (e.target === this) document.getElementById('help-overlay').classList.remove('open');
+      });
+
+      document.getElementById('sidebar-brand').addEventListener('click', function() { openPage('dashboard'); });
+      userAvatar.addEventListener('click', function() { openPage('profile'); });
+
+      document.getElementById('notifications-close').addEventListener('click', function() {
+        document.getElementById('notifications-overlay').classList.remove('open');
+      });
+      document.getElementById('notifications-ok').addEventListener('click', function() {
+        document.getElementById('notifications-overlay').classList.remove('open');
+      });
+      document.getElementById('notifications-overlay').addEventListener('click', function(e) {
+        if (e.target === this) document.getElementById('notifications-overlay').classList.remove('open');
+      });
+
+      function openNotifications() {
+        var list = document.getElementById('notifications-list');
+        var html = '';
+        var listed = announcements.slice().sort(function(a, b) { return new Date(b.date) - new Date(a.date); }).slice(0, 10);
+        if (!listed.length) {
+          html = '<p style="color:var(--muted);text-align:center;padding:20px;">' + tr('No announcements.') + '</p>';
+        } else {
+          listed.forEach(function(a) {
+            html += '<div class="notification-item">' +
+              '<div class="notification-icon">📌</div>' +
+              '<div class="row-main"><strong>' + escapeHtml(a.title) + '</strong><span>' + escapeHtml(a.message) +
+              '</span><em>' + (a.author || '') + ' · ' + (a.date ? new Date(a.date).toLocaleDateString() : '') +
+              '</em></div></div>';
+          });
+        }
+        list.innerHTML = html;
+        document.getElementById('notifications-overlay').classList.add('open');
+        setLanguage(currentLang);
+      }
 
       document.querySelectorAll('.assignment-button').forEach(function(btn) {
         btn.addEventListener('click', function() {
@@ -202,6 +246,14 @@
           var m = meetings.find(function(x) { return x.id === meetingId; });
           if (m) openMeetingRoom(m.title, meetingId);
         }
+        var editBtn = e.target.closest('.meeting-edit-btn');
+        if (editBtn) {
+          openEditMeeting(parseInt(editBtn.dataset.meeting));
+        }
+        var delBtn = e.target.closest('.meeting-delete-btn');
+        if (delBtn) {
+          deleteMeeting(parseInt(delBtn.dataset.meeting));
+        }
         if (e.target.id === 'open-schedule-modal-btn' || e.target.closest('#open-schedule-modal-btn')) {
           openScheduleModal();
         }
@@ -259,13 +311,16 @@
         var time = scheduleTime.value;
         var duration = parseInt(scheduleDuration.value);
         var link = scheduleLink.value.trim();
+        var courseId = scheduleCourse.value ? parseInt(scheduleCourse.value) : null;
+        var visibleToStudents = document.getElementById('schedule-vis-students').checked;
+        var visibleToTeachers = document.getElementById('schedule-vis-teachers').checked;
 
         if (!title || !date || !time) {
           alert(tr('Please fill in all required fields.'));
           return;
         }
 
-        scheduleClass(title, teacherId, date, time, duration, link);
+        scheduleClass(title, teacherId, date, time, duration, link, courseId, visibleToStudents, visibleToTeachers);
         scheduleModalOverlay.classList.remove('open');
       });
 
@@ -555,6 +610,17 @@
       addStudentBtn.addEventListener('click', function() { openModal('student', 'add'); });
       document.getElementById('add-budget-btn').addEventListener('click', function() { openModal('budget', 'add'); });
       document.getElementById('add-course-btn').addEventListener('click', function() { openModal('course', 'add'); });
+      document.getElementById('edit-profile-btn').addEventListener('click', function() { openModal('profile', 'edit'); });
+
+      document.getElementById('approval-table-body').addEventListener('click', function(e) {
+        var target = e.target.closest('button');
+        if (!target) return;
+        var id = parseInt(target.dataset.id);
+        if (target.classList.contains('approve-btn')) approveTeacher(id);
+        else if (target.dataset.action === 'refuse') refuseTeacher(id);
+      });
+      var approvalSearch = document.getElementById('approval-search');
+      if (approvalSearch) approvalSearch.addEventListener('input', renderApprovals);
 
       exportStudentsBtn.addEventListener('click', function() {
         var headers = ['Name', 'Email', 'Status', 'Enrolled Courses'];
@@ -752,3 +818,6 @@
       loadData();
       setLanguage(currentLang);
       checkSession();
+      setInterval(function() {
+        cleanupExpiredMeetings();
+      }, 30000);

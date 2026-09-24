@@ -481,7 +481,48 @@
       document.getElementById('task-modal-overlay').addEventListener('click', function(e) {
         if (e.target === this) document.getElementById('task-modal-overlay').classList.remove('open');
       });
-
+      var questionsBuilder = document.getElementById('task-questions-builder');
+      document.getElementById('task-modal-type').addEventListener('change', function() {
+        questionsBuilder.style.display = this.value === 'interactive' ? 'block' : 'none';
+        if (this.value !== 'interactive') document.getElementById('task-questions-container').innerHTML = '';
+      });
+      document.getElementById('add-task-question-btn').addEventListener('click', addTaskQuestionRow);
+      function addTaskQuestionRow() {
+        var container = document.getElementById('task-questions-container');
+        var row = document.createElement('div');
+        row.className = 'question-row';
+        row.innerHTML =
+          '<span class="q-remove">✕</span><input type="text" class="q-input" placeholder="Enter your question..." />' +
+          '<select class="q-type"><option value="mcq">MCQ</option><option value="text">Short Text</option></select>' +
+          '<div class="q-options"><input class="q-option" placeholder="Option A" /><input class="q-option" placeholder="Option B" />' +
+          '<input class="q-option" placeholder="Option C" /><input class="q-option" placeholder="Option D" />' +
+          '<input class="q-correct" placeholder="Correct (A/B/C/D)" maxlength="1" /></div>';
+        row.querySelector('.q-remove').addEventListener('click', function() { row.remove(); });
+        row.querySelector('.q-type').addEventListener('change', function() {
+          row.querySelector('.q-options').style.display = this.value === 'mcq' ? 'block' : 'none';
+        });
+        container.appendChild(row);
+      }
+      function collectTaskQuestions() {
+        var result = [];
+        document.querySelectorAll('#task-questions-container .question-row').forEach(function(row) {
+          var text = row.querySelector('.q-input').value.trim();
+          var type = row.querySelector('.q-type').value;
+          if (!text) return;
+          if (type === 'mcq') {
+            var options = Array.from(row.querySelectorAll('.q-option')).map(function(i) { return i.value.trim(); });
+            var correct = row.querySelector('.q-correct').value.trim().toUpperCase();
+            if (options.some(function(o) { return !o; })) { alert(tr('Please fill in all options.')); return null; }
+            if (!correct || 'ABCD'.indexOf(correct) === -1) { alert(tr('Select correct answer letter.')); return null; }
+            var correctIndex = 'ABCD'.indexOf(correct);
+            if (correctIndex >= options.length) { alert(tr('Correct answer must match an option.')); return null; }
+            result.push({ type: 'mcq', question: text, options: options, correctAnswer: correctIndex });
+          } else {
+            result.push({ type: 'text', question: text });
+          }
+        });
+        return result;
+      }
       document.getElementById('task-file-input').addEventListener('change', function(e) {
         var files = Array.from(e.target.files);
         files.forEach(function(file) {
@@ -536,7 +577,8 @@
         }
 
         var files = tempTaskFiles.map(function(f) { return { name: f.name, data: f.data }; });
-        createTask(title, type, description, deadline, priority, assignTo, assignedIds, files);
+        var questions = collectTaskQuestions();
+        createTask(title, type, description, deadline, priority, assignTo, assignedIds, files, questions);
         tempTaskFiles = [];
         document.getElementById('task-modal-overlay').classList.remove('open');
       });

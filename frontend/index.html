@@ -669,7 +669,14 @@
         <label>Task Title</label>
         <input type="text" id="task-modal-title-input" placeholder="Enter task title" />
         <label>Task Type</label>
-        <select id="task-modal-type"><option value="homework">Homework</option><option value="test">Test</option><option value="assignment">Assignment</option></select>
+        <select id="task-modal-type"><option value="homework">Homework</option><option value="test">Test</option><option value="assignment">Assignment</option><option value="interactive">Interactive Test</option></select>
+        <div id="task-questions-builder" style="display:none;">
+          <div style="margin:16px 0 8px 0;display:flex;justify-content:space-between;align-items:center;">
+            <strong>Questions</strong>
+            <button type="button" class="primary-button" id="add-task-question-btn" style="padding:4px 12px;font-size:12px;">+ Add Question</button>
+          </div>
+          <div id="task-questions-container"></div>
+        </div>
         <label>Priority</label>
         <select id="task-modal-priority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select>
         <label>Description</label>

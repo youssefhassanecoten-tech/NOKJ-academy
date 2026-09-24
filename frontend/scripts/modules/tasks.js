@@ -300,7 +300,7 @@
         }
       }
 
-      function createTask(title, type, description, deadline, priority, assignedTo, assignedIds, files) {
+      function createTask(title, type, description, deadline, priority, assignedTo, assignedIds, files, questions) {
         tasks.push({
           id: tasks.length + 1,
           title: title,
@@ -311,6 +311,7 @@
           assignedTo: assignedTo || 'all',
           assignedIds: assignedIds || [],
           files: files || [],
+          questions: questions || [],
           createdAt: new Date().toISOString().split('T')[0]
         });
         saveData();
@@ -329,19 +330,38 @@
         setLanguage(currentLang);
       }
 
-      function submitTaskAnswer(taskId, studentId, answer, files) {
+      function submitTaskAnswer(taskId, studentId, answer, files, answers) {
         var key = taskId + '-' + studentId;
-        if (!taskSubmissions[key]) {
+        var submission = taskSubmissions[key];
+        if (!submission) {
           taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null, files: [] };
+          submission = taskSubmissions[key];
         }
-        taskSubmissions[key].answer = answer;
-        taskSubmissions[key].submittedAt = new Date().toISOString();
+        submission.answer = answer || '';
+        submission.submittedAt = new Date().toISOString();
+        submission.files = submission.files || [];
         if (files && files.length > 0) {
-          taskSubmissions[key].files = files;
+          submission.files = files;
+        }
+        if (answers) {
+          submission.answers = answers;
+          var task = tasks.find(function(t) { return t.id === parseInt(taskId); });
+          if (task && task.questions && task.questions.length > 0) {
+            var correct = 0;
+            task.questions.forEach(function(q, index) {
+              if (q.type === 'mcq' && answers[index] !== undefined && answers[index] === q.correctAnswer) correct++;
+            });
+            submission.score = Math.round((correct / task.questions.length) * 100);
+            submission.correct = correct;
+            submission.total = task.questions.length;
+          }
         }
         saveData();
         renderTasks();
-        alert(tr('Task submitted!'));
+        var msg = tr('Task submitted!');
+        if (submission.score !== null && submission.score !== undefined) msg += ' ' + tr('Your Score') + ': ' +
+          submission.score + '%';
+        alert(msg);
         setLanguage(currentLang);
       }
       function updateTaskFileList() {

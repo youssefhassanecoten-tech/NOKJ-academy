@@ -8,7 +8,7 @@
     .meeting-card {
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: white;
+      background: var(--white);
       overflow: hidden;
       transition: transform 0.2s;
     }

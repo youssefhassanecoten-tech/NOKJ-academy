@@ -3,7 +3,7 @@
       overflow-x: auto;
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: white;
+      background: var(--white);
     }
     .table-toolbar {
       padding: 16px 20px;
@@ -31,7 +31,7 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       font-size: 13px;
-      background: white;
+      background: var(--white);
     }
     .table-toolbar input[type="text"]:focus,
     .table-toolbar select:focus {
@@ -60,14 +60,14 @@
       text-align: left;
       font-weight: 700;
       border-bottom: 2px solid var(--line);
-      background: #fafafa;
+      background: var(--input-bg);
     }
     table td {
       padding: 12px 16px;
-      border-bottom: 1px solid #f0f1f4;
+      border-bottom: 1px solid var(--divider);
     }
     table tr:hover td {
-      background: #fafafa;
+      background: var(--input-bg);
     }
 
     .expandable-row {
@@ -106,7 +106,7 @@
       padding: 4px 12px;
       margin: 3px 6px 3px 0;
       border-radius: 6px;
-      background: white;
+      background: var(--white);
       border: 1px solid var(--line);
       font-size: 12px;
     }
@@ -147,7 +147,7 @@
       font-size: 12px;
       border: 1px solid var(--line);
       border-radius: 6px;
-      background: white;
+      background: var(--white);
       margin-right: 4px;
     }
     .action-btn.edit {
@@ -179,7 +179,7 @@
       flex-wrap: wrap;
       border-top: 1px solid var(--line);
       font-size: 13px;
-      background: #fafafa;
+      background: var(--input-bg);
     }
     .table-summary strong {
       color: var(--primary);

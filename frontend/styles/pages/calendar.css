@@ -1,6 +1,6 @@
     /* === CALENDAR === */
     .calendar-container {
-      background: white;
+      background: var(--white);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       overflow: hidden;
@@ -21,7 +21,7 @@
       padding: 6px 14px;
       border: 1px solid var(--line);
       border-radius: 6px;
-      background: white;
+      background: var(--white);
       font-size: 14px;
     }
     .calendar-header .nav-btn:hover {
@@ -82,7 +82,7 @@
     }
     .calendar-grid .day-cell.empty {
       cursor: default;
-      background: #fafafa;
+      background: var(--input-bg);
     }
     .calendar-grid .day-cell.today {
       background: var(--primary-light);

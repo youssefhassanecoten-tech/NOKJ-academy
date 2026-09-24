@@ -134,6 +134,7 @@
       let announcements = [];
       let pendingTeachers = [];
       let enrollRequests = [];
+      let courseRequests = [];
       let currentUser = null,
         expandedRows = {},
         currentSlide = 0,

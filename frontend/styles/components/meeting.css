@@ -171,6 +171,78 @@
       flex-direction: column;
       overflow: hidden;
     }
+
+    /* === MEETING FILES PANEL === */
+    .meeting-files-toolbar {
+      padding: 10px;
+      border-bottom: 1px solid #252f45;
+    }
+    .meeting-upload-btn {
+      width: 100%;
+      padding: 9px 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px dashed #3b4868;
+      border-radius: 10px;
+      color: #e5e9f5;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .meeting-upload-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+    .meeting-file-card {
+      margin: 10px;
+      padding: 10px 12px;
+      background: #1c2536;
+      border: 1px solid #2c3852;
+      border-radius: 10px;
+    }
+    .meeting-file-card strong {
+      display: block;
+      font-size: 12.5px;
+      color: #f3f4f6;
+    }
+    .meeting-file-card strong .file-icon {
+      margin-right: 6px;
+    }
+    .meeting-file-meta {
+      display: block;
+      margin: 3px 0 8px;
+      color: #98a2b3;
+      font-size: 11px;
+    }
+    .meeting-file-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .meeting-file-actions button {
+      padding: 5px 10px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 0;
+      border-radius: 8px;
+      color: white;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .meeting-file-actions button.primary-file {
+      background: var(--primary);
+    }
+    .meeting-file-actions button:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+    .meeting-file-actions button.primary-file:hover {
+      background: var(--primary-dark);
+    }
+    .meeting-files-empty {
+      margin: 10px;
+      padding: 16px;
+      color: #98a2b3;
+      font-size: 12.5px;
+      text-align: center;
+    }
     .meeting-chat-messages {
       flex: 1;
       overflow-y: auto;

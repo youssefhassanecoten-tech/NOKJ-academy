@@ -1,4 +1,4 @@
-    /* === RESET & VARIABLES === */
+/* === RESET & VARIABLES === */
     :root {
       --primary: #4f46e5;
       --primary-dark: #3730a3;
@@ -6,6 +6,8 @@
       --ink: #182033;
       --muted: #6b7280;
       --line: #e5e7eb;
+      --divider: #f0f1f4;
+      --input-bg: #fafafa;
       --bg: #f6f7fb;
       --white: #ffffff;
       --success: #059669;
@@ -26,3 +28,33 @@
       --primary-dark: #991b1b;
       --primary-light: #fef2f2;
     }
+
+    /* ==== DARK THEME ==== */
+    body.theme-dark {
+      --ink: #e7ecf3;
+      --muted: #9aa6b6;
+      --line: #2a3242;
+      --divider: #232b3a;
+      --input-bg: #151b26;
+      --bg: #10141c;
+      --white: #1b2230;
+      --shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    }
+    body.theme-dark[data-theme='admin'] { --primary-light: #3730a333; }
+    body.theme-dark[data-theme='student'] { --primary-light: #1d4ed833; }
+    body.theme-dark[data-theme='teacher'] { --primary-light: #991b1b33; }
+
+    /* ==== SOFT THEME (calm off-white) ==== */
+    body.theme-soft {
+      --ink: #2e2e33;
+      --muted: #6f7076;
+      --line: #e2e1da;
+      --divider: #e8e7df;
+      --input-bg: #edece5;
+      --bg: #f4f3ee;
+      --white: #fbfaf6;
+      --shadow: 0 10px 26px rgba(70, 64, 48, 0.09);
+    }
+    body.theme-soft[data-theme='admin'] { --primary-light: #e8e6f7; }
+    body.theme-soft[data-theme='student'] { --primary-light: #e6edf8; }
+    body.theme-soft[data-theme='teacher'] { --primary-light: #f7e7e7; }

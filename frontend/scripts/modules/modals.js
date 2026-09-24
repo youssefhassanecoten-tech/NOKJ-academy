@@ -94,6 +94,14 @@
               '<label>Subtitle (optional)</label><input type="text" id="modal-ann-subtitle" placeholder="Short subtitle" />' +
               '<label>Content</label><textarea id="modal-ann-content" placeholder="Announcement content"></textarea>';
             editingId = null;
+          } else if (type === 'courseRequest') {
+            document.getElementById('modal-title').textContent = tr('Suggest a new course');
+            document.getElementById('modal-sub').textContent = tr('Fill in the course details below.');
+            document.getElementById('modal-fields').innerHTML =
+              '<label>' + tr('Course Name') + '</label><input type="text" id="modal-course-name" placeholder="' + tr('e.g. Physics') + '" />' +
+              '<label>' + tr('Description') + '</label><input type="text" id="modal-course-description" placeholder="' + tr('e.g. Year 10 Physics') + '" />' +
+              '<p style="color:var(--muted);font-size:13px;">' + tr('An admin will review your request before the course goes live.') + '</p>';
+            editingId = null;
           } else {
             document.getElementById('modal-title').textContent = 'Add Budget Entry';
             document.getElementById('modal-sub').textContent = 'Enter budget details';
@@ -151,6 +159,17 @@
                 '<label>Subtitle (optional)</label><input type="text" id="modal-ann-subtitle" value="' +
                 (a.subtitle || '') + '" />' +
                 '<label>Content</label><textarea id="modal-ann-content">' + announcementText(a) + '</textarea>';
+            }
+          } else if (type === 'courseRequest') {
+            var cr = courses.find(function(co) { return co.id === data.id; });
+            if (cr) {
+              editingId = cr.id;
+              document.getElementById('modal-title').textContent = tr('Edit course description');
+              document.getElementById('modal-sub').textContent = tr('Propose a new description for your course.');
+              document.getElementById('modal-fields').innerHTML =
+                '<label>' + tr('Course Name') + '</label><input type="text" id="modal-course-name" value="' + escapeHtml(cr.name) + '" disabled />' +
+                '<label>' + tr('Description') + '</label><input type="text" id="modal-course-description" value="' + escapeHtml(cr.description || '') + '" />' +
+                '<p style="color:var(--muted);font-size:13px;">' + tr('Only the description can be changed by the teacher. The edit applies after an admin approves.') + '</p>';
             }
           } else {
             var b = budgetEntries.find(function(bg) { return bg.id === data.id; });
@@ -279,6 +298,32 @@
           renderCourses();
           renderStudentCourses();
           closeModal();
+        } else if (type === 'courseRequest') {
+          var courseName = document.getElementById('modal-course-name').value.trim();
+          var courseDesc = document.getElementById('modal-course-description').value.trim();
+          if (!courseName || !courseDesc) { alert(tr('Please fill in all fields')); return; }
+          if (modalMode === 'add') {
+            if (courseRequests.some(function(r) { return r.type === 'create' && r.status === 'pending'; })) {
+              alert(tr('You already have a new course request pending.'));
+              return;
+            }
+            courseRequests.push({ id: Date.now(), type: 'create', status: 'pending', teacherId: currentUser ? currentUser.id : null,
+              name: courseName, description: courseDesc, date: new Date().toISOString() });
+          } else {
+            if (courseRequests.some(function(r) { return r.type === 'edit' && r.status === 'pending' && r.courseId === editingId; })) {
+              alert(tr('An edit request for this course is already pending.'));
+              return;
+            }
+            var teacherCourse = courses.find(function(x) { return x.id === editingId; });
+            if (teacherCourse && teacherCourse.teacherId === currentUser.id) {
+              courseRequests.push({ id: Date.now(), type: 'edit', status: 'pending', teacherId: currentUser.id, courseId: editingId,
+                name: teacherCourse.name, description: courseDesc, date: new Date().toISOString() });
+            }
+          }
+          saveData();
+          closeModal();
+          renderTeacherCourses();
+          renderCourseRequests();
         } else {
           var category = document.getElementById('modal-category').value.trim();
           var type = document.getElementById('modal-type').value;
@@ -429,6 +474,7 @@
         }
 
         renderEnrollApprovals();
+        renderCourseRequests();
         setLanguage(currentLang);
       }
 
@@ -524,5 +570,79 @@
         pendingTeachers = pendingTeachers.filter(function(p) { return p.id !== id; });
         saveData();
         renderApprovals();
+        setLanguage(currentLang);
+      }
+
+      // ============================================================
+      //  COURSE REQUESTS (teacher -> admin approval workflow)
+      // ============================================================
+      function renderCourseRequests() {
+        var section = document.getElementById('course-request-section');
+        if (!section) return;
+        if (!currentUser || currentUser.role !== 'Admin') { section.style.display = 'none'; return; }
+        var pending = courseRequests.filter(function(r) { return r.status === 'pending'; });
+        section.style.display = 'block';
+        var body = document.getElementById('course-request-table-body');
+        if (!body) return;
+        if (pending.length === 0) {
+          body.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px;">' + tr(
+            'No course requests.') + '</td></tr>';
+        } else {
+          body.innerHTML = pending.map(function(r) {
+            var teacher = r.teacherId ? getTeacherName(r.teacherId) : '—';
+            var typeLabel = r.type === 'create' ? tr('Create') : (r.type === 'edit' ? tr('Edit') : tr('Delete'));
+            var courseName = (r.type !== 'create' && r.courseId) ? getCourseName(r.courseId) : (r.name || '—');
+            var extra = (r.description && r.type !== 'delete') ?
+              '<div style="font-size:12px;color:var(--muted);margin-top:4px;">' + escapeHtml(r.description) + '</div>' : '';
+            return '<tr><td>' + escapeHtml(teacher) + '</td><td>' + typeLabel + '</td><td>' + escapeHtml(courseName) + extra +
+              '</td><td>' + (r.date ? new Date(r.date).toLocaleDateString() : '—') + '</td><td>' +
+              '<button class="approve-btn" data-id="' + r.id + '">✓ ' + tr('Approve') + '</button> ' +
+              '<button class="danger-button" data-action="refuse" data-id="' + r.id + '">✕ ' + tr('Refuse') +
+              '</button></td></tr>';
+          }).join('');
+        }
+        var countEl = document.getElementById('course-request-count');
+        if (countEl) countEl.textContent = pending.length + ' ' + tr('pending');
+        var totalEl = document.getElementById('course-request-total');
+        if (totalEl) totalEl.textContent = pending.length;
+      }
+
+      function approveCourseRequest(id) {
+        var r = courseRequests.find(function(x) { return x.id === id; });
+        if (!r) return;
+        if (r.type === 'create') {
+          courses.push({ id: nextCourseId(), name: r.name, teacherId: r.teacherId, description: r.description || '' });
+        } else if (r.type === 'edit') {
+          var tc = courses.find(function(x) { return x.id === r.courseId; });
+          if (tc) tc.description = r.description;
+        } else if (r.type === 'delete') {
+          var delId = r.courseId;
+          courses = courses.filter(function(x) { return x.id !== delId; });
+          enrollments = enrollments.filter(function(e) { return e.courseId !== delId; });
+          meetings = meetings.filter(function(m) { return m.courseId !== delId; });
+          enrollRequests = enrollRequests.filter(function(x) { return x.courseId !== delId; });
+          var keptTestIds = {};
+          tests = tests.filter(function(t) { return t.courseId !== delId; });
+          tests.forEach(function(t) { keptTestIds[t.id] = 1; });
+          Object.keys(testSubmissions).forEach(function(k) {
+            var tid = parseInt(k.split('-')[0]);
+            if (!keptTestIds[tid]) delete testSubmissions[k];
+          });
+        }
+        courseRequests = courseRequests.filter(function(x) { return x.id !== id; });
+        saveData();
+        renderCourseRequests();
+        renderCourses();
+        renderStudentCourses();
+        renderTeacherCourses();
+        updateAdminStats();
+        setLanguage(currentLang);
+      }
+
+      function refuseCourseRequest(id) {
+        courseRequests = courseRequests.filter(function(x) { return x.id !== id; });
+        saveData();
+        renderCourseRequests();
+        renderTeacherCourses();
         setLanguage(currentLang);
       }

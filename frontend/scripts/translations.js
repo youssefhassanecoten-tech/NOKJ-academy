@@ -506,8 +506,104 @@
 
           // ----- Notifications -----
           'You have 2 new announcements and 1 assignment due tomorrow.': 'У вас 2 новых объявления и 1 задание со сроком на завтра.',
-          'Assignment details and submissions will be added in the next development step.': 'Детали заданий и ответы будут добавлены на следующем этапе разработки.'
+          'Assignment details and submissions will be added in the next development step.': 'Детали заданий и ответы будут добавлены на следующем этапе разработки.',
+
+          // ----- Role-specific variants (key + '|' + role) -----
+          'Here is everything you need to stay on track today.|teacher': 'Всё, что нужно для проведения отличных занятий сегодня.',
+          'Here is everything you need to stay on track today.|admin': 'Всё, что нужно для управления академией сегодня.',
+          'My courses|teacher': 'Мои занятия',
+          'My courses|admin': 'Все курсы',
+          'Upcoming assignments|teacher': 'Сроки заданий',
+          'Pending work|teacher': 'Активные задания',
+          'Keep track of your work, deadlines, and teacher feedback.|teacher': 'Отслеживайте ответы учеников и давайте обратную связь.',
+          'View and complete your assignments.|teacher': 'Создавайте задания и отслеживайте работы учеников.',
+          'Create and take tests with questions.|teacher': 'Создавайте тесты и просматривайте результаты учеников.',
+          'Continue learning and track your progress in every course.|teacher': 'Управляйте курсами, которые вы преподаёте, и предлагайте изменения.',
+          'Continue learning and track your progress in every course.|admin': 'Создавайте курсы и управляйте записями учеников.',
+          'Join your live lessons and meetings.|teacher': 'Планируйте и посещайте свои живые занятия.',
+          'Join your live lessons and meetings.|admin': 'Планируйте и контролируйте занятия академии.',
+          'No tasks assigned to you yet.|teacher': 'Вы ещё не создали ни одного задания.',
+          'No tests assigned to you yet.|teacher': 'Вы ещё не создали ни одного теста.',
+          'Your weekly lesson schedule will appear here.|teacher': 'Ваше еженедельное расписание занятий появится здесь.',
+          'Your progress|teacher': 'Прогресс учеников',
+
+          // === New feature strings ===
+          'Good day': 'Добрый день',
+          'A removal request for this course is already pending.': 'Запрос на удаление этого курса уже отправлен.',
+          'Admins': 'Администраторы',
+          'An admin will review your request before the course goes live.': 'Администратор проверит вашу заявку, прежде чем курс станет доступен.',
+          'An edit request for this course is already pending.': 'Запрос на изменение этого курса уже отправлен.',
+          'Apply': 'Подать заявку',
+          'Ask your teacher for extra tasks': 'Попросите преподавателя о дополнительных заданиях',
+          'Awaiting admin approval': 'Ожидает одобрения администратора',
+          'Collect feedback for the developers. Local notes can also be posted straight to the NOKJ GitHub repository.': 'Собирайте отзывы для разработчиков. Локальные заметки можно также публиковать напрямую в репозиторий NOKJ на GitHub.',
+          'Complete your pending tasks': 'Выполните незавершённые задания',
+          'Could not load GitHub issues. Check your connection.': 'Не удалось загрузить задачи GitHub. Проверьте подключение.',
+          'Current deck': 'Текущая презентация',
+          'Delete pending': 'Удаление ожидает одобрения',
+          'Developer feedback': 'Обратная связь разработчикам',
+          'Download': 'Скачать',
+          'Edit course description': 'Изменить описание курса',
+          'Edit deck': 'Редактировать презентацию',
+          'Edit description': 'Изменить описание',
+          'Edit pending': 'Изменение ожидает одобрения',
+          'Fetching GitHub issues...': 'Загрузка задач GitHub…',
+          'Fill in the course details below.': 'Заполните данные курса ниже.',
+          'Finish your scheduled tests': 'Завершите запланированные тесты',
+          'GitHub': 'GitHub',
+          'GitHub posting failed. Check your token.': 'Не удалось опубликовать на GitHub. Проверьте токен.',
+          'GitHub token (optional)': 'Токен GitHub (необязательно)',
+          'Local': 'Локальная',
+          'Local note': 'Локальная заметка',
+          'Manage grades': 'Управление оценками',
+          'No course requests.': 'Заявок на курсы нет.',
+          'No feedback or open GitHub issues yet.': 'Пока нет отзывов или открытых задач GitHub.',
+          'No presentation in this meeting yet.': 'В этой встрече ещё нет презентации.',
+          'No source file attached. Present from a file to store it here.': 'Файл-источник не прикреплён. Начните презентацию из файла, чтобы сохранить его здесь.',
+          'Only .pptx or .json presentations can be imported.': 'Импортировать можно только презентации .pptx или .json.',
+          'Only the description can be changed by the teacher. The edit applies after an admin approves.': 'Преподаватель может изменить только описание. Изменение вступит в силу после одобрения администратором.',
+          'Overall progress': 'Общий прогресс',
+          'Post': 'Отправить',
+          'Posted to GitHub as issue #': 'Опубликовано на GitHub как задача №',
+          'Posting to GitHub...': 'Публикация на GitHub…',
+          'Propose a new description for your course.': 'Предложите новое описание для своего курса.',
+          'Refresh GitHub': 'Обновить GitHub',
+          'Review your course material': 'Повторите материалы курса',
+          'Suggest a new course': 'Предложить новый курс',
+          'Suggest removal': 'Предложить удаление',
+          'Suggest removing this course? Students lose access only after an admin approves.': 'Предложить удаление этого курса? Ученики потеряют доступ только после одобрения администратором.',
+          'Take optional tests for bonus points': 'Пройдите дополнительные тесты ради бонусных баллов',
+          'Teachers': 'Преподаватели',
+          'Write your feedback or request a feature...': 'Напишите отзыв или предложите функцию…',
+          'You already have a new course request pending.': 'У вас уже есть отправленная заявка на новый курс.',
+          'You are doing great!': 'Вы отлично справляетесь!',
+          'You have no courses yet. Suggest a new course or ask an admin to assign one — it appears for students once approved.': 'У вас пока нет курсов. Предложите новый курс или попросите администратора назначить его — он появится у учеников после одобрения.',
+          'e.g. Physics': 'например, Физика',
+          'e.g. Year 10 Physics': 'например, Физика за 10 класс',
+          'pending': 'в ожидании',
+          'slides': 'слайдов'
         }
+      };
+
+      // Role-aware English overrides (text + '|' + role)
+      var I18N_EN_ROLE = {
+        'Here is everything you need to stay on track today.|teacher': 'Everything you need to deliver great lessons today.',
+        'Here is everything you need to stay on track today.|admin': 'Everything you need to run the academy today.',
+        'My courses|teacher': 'My lessons',
+        'My courses|admin': 'All courses',
+        'Upcoming assignments|teacher': 'Assignment deadlines',
+        'Pending work|teacher': 'Active assignments',
+        'Keep track of your work, deadlines, and teacher feedback.|teacher': 'Track student submissions and give feedback.',
+        'View and complete your assignments.|teacher': 'Create tasks and track student work.',
+        'Create and take tests with questions.|teacher': 'Create tests and review student results.',
+        'Continue learning and track your progress in every course.|teacher': 'Manage the courses you teach and propose changes.',
+        'Continue learning and track your progress in every course.|admin': 'Manage courses and student enrollments.',
+        'Join your live lessons and meetings.|teacher': 'Schedule and join your live lessons.',
+        'Join your live lessons and meetings.|admin': 'Schedule and oversee academy classes.',
+        'No tasks assigned to you yet.|teacher': 'You have not created any tasks yet.',
+        'No tests assigned to you yet.|teacher': 'You have not created any tests yet.',
+        'Your weekly lesson schedule will appear here.|teacher': 'Your weekly lesson schedule will appear here.',
+        'Your progress|teacher': 'Student progress'
       };
 
       // Build reverse map: Russian value -> English key
@@ -520,10 +616,41 @@
       var currentLang = localStorage.getItem('nokj-language') || 'en';
       var originalTextMap = new WeakMap();
 
-      function tr(text) {
-        if (currentLang === 'en') return text;
-        var translated = I18N.ru[text];
+      function tr(text, role) {
+        var r = role || (window.nokjRole || '');
+        if (currentLang === 'en') {
+          if (r && I18N_EN_ROLE[text + '|' + r]) return I18N_EN_ROLE[text + '|' + r];
+          return text;
+        }
+        var translated = I18N.ru[text + '|' + r];
+        if (translated !== undefined) return translated;
+        translated = I18N.ru[text];
         return translated !== undefined ? translated : text;
+      }
+
+      // Resolve a text node value with role-aware overrides applied last
+      function resolveRoleText(trimmed, lang) {
+        var role = window.nokjRole || '';
+        if (lang === 'en') {
+          var back = I18N_RU_TO_EN[trimmed];
+          var enKey = back !== undefined ? back : trimmed;
+          if (enKey.indexOf('|') > 0) {
+            var roleEn = I18N_EN_ROLE[enKey];
+            return roleEn !== undefined ? roleEn : enKey;
+          }
+          var rv = (role && I18N_EN_ROLE[enKey + '|' + role]) || null;
+          return rv !== null ? rv : enKey;
+        }
+        var baseKey = I18N_RU_TO_EN[trimmed];
+        if (baseKey !== undefined && baseKey.indexOf('|') > 0) return trimmed;
+        var roleRu;
+        if (role) {
+          roleRu = I18N.ru[trimmed + '|' + role];
+          if (roleRu === undefined && baseKey !== undefined) roleRu = I18N.ru[baseKey + '|' + role];
+        }
+        if (roleRu !== undefined) return roleRu;
+        var ru2 = I18N.ru[trimmed];
+        return ru2 !== undefined ? ru2 : trimmed;
       }
 
       function applyTranslation(lang) {
@@ -560,16 +687,9 @@
 
         nodes.forEach(function(textNode) {
           var trimmed = textNode.nodeValue.trim();
-          if (lang === 'en') {
-            var back = I18N_RU_TO_EN[trimmed];
-            if (back !== undefined) {
-              textNode.nodeValue = textNode.nodeValue.replace(trimmed, back);
-            }
-          } else {
-            var ru = I18N.ru[trimmed];
-            if (ru !== undefined) {
-              textNode.nodeValue = textNode.nodeValue.replace(trimmed, ru);
-            }
+          var target = resolveRoleText(trimmed, lang);
+          if (target !== trimmed) {
+            textNode.nodeValue = textNode.nodeValue.replace(trimmed, target);
           }
         });
 

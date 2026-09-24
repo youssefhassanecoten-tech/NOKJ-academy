@@ -114,6 +114,7 @@
 
         document.body.dataset.theme = (user.role === 'Teacher') ? 'teacher' : (user.role === 'Student' ? 'student' :
           'admin');
+        window.nokjRole = (user.role || '').toLowerCase();
 
         var initials = initialsOf(user.name);
         renderAvatar(userAvatar, user);
@@ -193,7 +194,7 @@
           adminStatsContainer.style.display = 'none';
         }
 
-        renderStudentCourses();
+        if (user.role === 'Teacher') renderTeacherCourses(); else renderStudentCourses();
         renderMeetings();
         renderTasks();
         renderTests();
@@ -219,6 +220,7 @@
       function logout() {
         localStorage.removeItem('nokj-user');
         currentUser = null;
+        window.nokjRole = '';
         document.body.removeAttribute('data-theme');
         app.classList.remove('logged-in');
         showLanding();

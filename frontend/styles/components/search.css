@@ -1,12 +1,17 @@
 /* === GLOBAL SEARCH === */
+    .search-wrap {
+      position: relative;
+      min-width: 0;
+    }
     .search-results {
       position: absolute;
       top: calc(100% + 8px);
-      right: 0;
-      width: min(410px, calc(100vw - 40px));
+      left: 0;
+      right: auto;
+      width: min(410px, 100%);
       max-height: 380px;
       overflow-y: auto;
-      background: #fff;
+      background: var(--white);
       border: 1px solid var(--line);
       border-radius: 14px;
       box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
@@ -36,7 +41,7 @@
       align-items: center;
       justify-content: center;
       border-radius: 9px;
-      background: #f3f4f6;
+      background: var(--input-bg);
       font-size: 15px;
     }
     .search-result-main {

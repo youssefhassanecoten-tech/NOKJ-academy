@@ -15,7 +15,7 @@
     .file-preview-content {
       max-width: 95%;
       max-height: 95%;
-      background: white;
+      background: var(--white);
       border-radius: var(--radius);
       padding: 20px;
       overflow: auto;

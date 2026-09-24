@@ -54,14 +54,14 @@ function updateAdminStats() {
           '<div class="quick-actions">' +
           '<button class="primary-button" data-page="students">👥 ' + tr('Add student') + '</button>' +
           '<button class="primary-button" data-page="calendar">📅 ' + tr('Schedule class') + '</button>' +
-          '<button class="primary-button" data-page="tasks">📝 ' + tr('Create task') + '</button>' +
+          '<button class="primary-button" data-page="grades">⭐ ' + tr('Manage grades') + '</button>' +
           '<button class="primary-button" onclick="openModal(\'announcement\', \'add\')">📌 ' + tr('Create announcement') +
           '</button></div>') +
           panel(tr('Announcements'), renderDashboardAnnouncements()) +
           '</div>' +
           '<div class="stack">' +
           panel(tr('Lessons today'), renderDashboardMeetings()) +
-          panel(tr('Upcoming assignments'), renderDashboardTasks()) +
+          panel(tr('Developer feedback'), renderDeveloperFeedback()) +
           '</div>' +
           '</div>';
         return html;
@@ -79,7 +79,7 @@ function updateAdminStats() {
           statCard(tr('Lessons today'), myMeetings.length, tr('View timetable'), '▦') +
           statCard(tr('Pending work'), tasks.filter(function(t) { return t.assignedTo === 'all'; }).length, tr(
             'Due soon'), '✓') +
-          statCard(tr('Total Students'), students.length, tr('Active this term'), '👥') +
+          statCard(tr('Active students'), activeStudentCount(), tr('Active this term'), '👥') +
           statCard(tr('Total Courses'), courses.filter(function(c) { return c.teacherId === currentUser.id; }).length, tr(
             'Across all courses'), '▣') +
           '</div>';
@@ -106,7 +106,7 @@ function updateAdminStats() {
         });
         var pendingCount = subTasks.filter(function(t) { return !taskSubmissions[(t.id + '-' + currentUser.id)]; }).length;
         var gradesList = Object.keys(gradeData).filter(function(k) {
-          return k.split('-')[1] == currentUser.id;
+          return k.split('-')[0] == currentUser.id;
         }).map(function(k) { return gradeData[k]; });
 
         var avg = gradesList.length ? Math.round(gradesList.reduce(function(a, b) { return a + b; }, 0) / gradesList.length) : 0;
@@ -117,6 +117,7 @@ function updateAdminStats() {
           currentUser.name.split(' ')[0] + ' 👋</h2><p>' + tr('Here is everything you need to stay on track today.') +
           '</p></div>' +
           '<button class="primary-button" data-page="timetable">' + tr('View timetable') + '</button></div>';
+        html += renderOverallProgressBar();
         html += '<div class="stats">' +
           statCard(tr('Lessons today'), todays.length, tr('View timetable'), '▦') +
           statCard(tr('Pending work'), pendingCount, tr('Due soon'), '✓') +
@@ -266,4 +267,183 @@ function updateAdminStats() {
         });
         container.innerHTML = html;
         setLanguage(currentLang);
+      }
+
+      // ============================================================
+      //  DEVELOPER FEEDBACK (admin) + OVERALL PROGRESS (student)
+      // ============================================================
+      function getDeveloperFeedback() {
+        try { return JSON.parse(localStorage.getItem('nokj-dev-feedback')) || []; } catch (e) { return []; }
+      }
+
+      function saveDeveloperFeedback(list) {
+        localStorage.setItem('nokj-dev-feedback', JSON.stringify(list));
+      }
+
+      function getGithubToken() {
+        return localStorage.getItem('nokj-github-token') || '';
+      }
+
+      function saveGithubToken(token) {
+        localStorage.setItem('nokj-github-token', token);
+      }
+
+      function renderDeveloperFeedback() {
+        var flags = (window.nokjGithubIssues || []).length;
+        return '<div class="feedback-wrap">' +
+          '<p style="color:var(--muted);margin:0 0 12px;">' + tr('Collect feedback for the developers. Local notes can also be posted straight to the NOKJ GitHub repository.') + '</p>' +
+          '<div class="feedback-compose"><input id="feedback-input" placeholder="' + tr('Write your feedback or request a feature...') + '" />' +
+          '<button class="primary-button" id="feedback-submit">' + tr('Post') + '</button></div>' +
+          '<div class="feedback-tools"><button class="secondary-button" id="feedback-refresh">⟳ ' + tr('Refresh GitHub') + '</button>' +
+          '<input class="github-token-input" id="github-token-input" type="password" placeholder="' + tr('GitHub token (optional)') + '" value="' + escapeHtml(getGithubToken()) + '" />' +
+          '<span class="feedback-status" id="feedback-status"></span></div>' +
+          '<div class="feedback-list" id="feedback-list"></div>' +
+          '</div>';
+      }
+
+      function updateFeedbackList() {
+        var wrap = document.getElementById('feedback-list');
+        if (!wrap) return;
+        var local = getDeveloperFeedback();
+        var gh = window.nokjGithubIssues || [];
+        var html = '';
+        local.forEach(function(it) {
+          html += '<div class="feedback-item"><div class="row-main"><strong>' + escapeHtml(it.title) +
+            '</strong><span>' + tr('Local note') + ' · ' + escapeHtml(it.date) + '</span></div>' +
+            '<span class="pill">' + tr('Local') + '</span>' +
+            '<button class="action-btn delete feedback-delete" data-id="' + encodeURIComponent(it.id) + '" title="' + tr('Delete') + '">✕</button></div>';
+        });
+        gh.forEach(function(issue) {
+          var labels = (issue.labels || []).map(function(l) { return '#' + escapeHtml(l.name); }).join(' ');
+          html += '<div class="feedback-item"><div class="row-main"><strong><a href="' + escapeHtml(issue.html_url) +
+            '" target="_blank" rel="noopener">' + escapeHtml(issue.title) + '</a></strong><span>GitHub Issue #' +
+            escapeHtml(String(issue.number)) + (labels ? ' · ' + labels : '') + '</span></div>' +
+            '<span class="pill warning">' + tr('GitHub') + '</span></div>';
+        });
+        if (!html) html = '<p style="color:var(--muted);padding:14px 0;">' + tr('No feedback or open GitHub issues yet.') + '</p>';
+        wrap.innerHTML = html;
+        setLanguage(currentLang);
+      }
+
+      function fetchGithubIssues(force) {
+        if (!force && window.nokjGithubFetched) { updateFeedbackList(); return; }
+        var status = document.getElementById('feedback-status');
+        if (status) status.textContent = tr('Fetching GitHub issues...');
+        fetch('https://api.github.com/repos/youssefhassanecoten-tech/NOKJ-academy/issues?state=open&per_page=10&sort=updated')
+          .then(function(res) {
+            if (!res.ok) throw new Error(String(res.status));
+            return res.json();
+          })
+          .then(function(issues) {
+            if (!Array.isArray(issues)) throw new Error('bad-response');
+            window.nokjGithubIssues = issues;
+            window.nokjGithubFetched = true;
+            updateFeedbackList();
+          })
+          .catch(function() {
+            window.nokjGithubFetched = true;
+            updateFeedbackList();
+            var s = document.getElementById('feedback-status');
+            if (s) s.textContent = tr('Could not load GitHub issues. Check your connection.');
+          });
+      }
+
+      function addDeveloperFeedback() {
+        var input = document.getElementById('feedback-input');
+        if (!input) return;
+        var text = input.value.trim();
+        if (!text) return;
+        var list = getDeveloperFeedback();
+        list.unshift({ id: String(Date.now()) + '-' + Math.random().toString(36).substr(2, 6), title: text, date: new Date().toLocaleDateString() });
+        saveDeveloperFeedback(list);
+        input.value = '';
+        postToGithub(text);
+        updateFeedbackList();
+      }
+
+      function deleteDeveloperFeedback(id) {
+        var list = getDeveloperFeedback().filter(function(it) { return String(it.id) !== String(id); });
+        saveDeveloperFeedback(list);
+        updateFeedbackList();
+      }
+
+      function postToGithub(title) {
+        var token = getGithubToken();
+        var statusEl = document.getElementById('feedback-status');
+        if (!token) return;
+        if (statusEl) statusEl.textContent = tr('Posting to GitHub...');
+        fetch('https://api.github.com/repos/youssefhassanecoten-tech/NOKJ-academy/issues', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ title: title, body: 'Created from the NOKJ Academy admin dashboard.' })
+          })
+          .then(function(res) { return res.json().catch(function() { return {}; }).then(function(data) { return { ok: res.ok, data: data }; }); })
+          .then(function(out) {
+            if (out.ok) {
+              if (statusEl) statusEl.textContent = tr('Posted to GitHub as issue #') + (out.data.number || '') + '.';
+              fetchGithubIssues(true);
+            } else {
+              if (statusEl) statusEl.textContent = tr('GitHub posting failed. Check your token.') + (out.data && out.data.message ? ' — ' + out.data.message : '');
+            }
+          });
+      }
+
+      // ----- Overall student progress -----
+      function studentTotalProgress(studentId) {
+        var enrolled = getEnrolledCourseIds(studentId);
+        var courseSum = 0;
+        enrolled.forEach(function(courseId) { courseSum += courseProgress(courseId, studentId); });
+        var coursePct = enrolled.length ? courseSum / enrolled.length : 0;
+
+        var assigned = 0;
+        tasks.forEach(function(t) {
+          if (t.assignedTo === 'all' || (t.assignedTo === 'specific' && (t.assignedIds || []).indexOf(studentId) !== -1)) assigned++;
+        });
+        var subCount = Object.keys(taskSubmissions).filter(function(k) { return k.split('-')[1] == studentId; }).length;
+        var taskPct = assigned ? (subCount / assigned) * 100 : 0;
+
+        var enrolledSet = {};
+        enrolled.forEach(function(c) { enrolledSet[c] = 1; });
+        var eligibleTests = tests.filter(function(x) { return enrolledSet[x.courseId]; });
+        var attempted = eligibleTests.filter(function(x) { return testSubmissions[x.id + '-' + studentId]; }).length;
+        var testPct = eligibleTests.length ? (attempted / eligibleTests.length) * 100 : 0;
+
+        var gradesList = Object.keys(gradeData).filter(function(k) { return k.split('-')[0] == studentId; }).map(function(k) { return gradeData[k]; });
+        var avg = gradesList.length ? gradesList.reduce(function(a, b) { return a + b; }, 0) / gradesList.length : 0;
+        var bonus = 0;
+        if (avg >= 90) bonus += 5;
+        if (avg >= 95) bonus += 5;
+        if (eligibleTests.length && attempted >= eligibleTests.length) bonus += 5;
+        if (assigned && subCount >= assigned) bonus += 5;
+
+        return Math.min(120, Math.round(coursePct * 0.45 + taskPct * 0.35 + testPct * 0.2) + bonus);
+      }
+
+      function renderOverallProgressBar() {
+        var total = studentTotalProgress(currentUser.id);
+        var state = total > 100 ? 'over' : total >= 75 ? 'high' : total >= 25 ? 'mid' : 'low';
+        var fillWidth = Math.min(100, total);
+        var great = total > 100 ? '<span class="progress-great">★ ' + tr('You are doing great!') + '</span>' : '';
+        return '<div class="overall-progress" id="overall-progress">' +
+          '<button class="progress-bar-toggle" aria-expanded="false">' +
+          '<span class="overall-progress-labels"><span>' + tr('Overall progress') + '</span>' +
+          '<strong id="overall-progress-pct">' + total + '%</strong></span>' +
+          '<span class="progress-track overall state-' + state + '"><span class="progress-fill" style="width:' + fillWidth + '%"></span>' + great + '</span>' +
+          '</button>' +
+          '<div class="progress-tips" id="progress-tips">' +
+          '<button data-page="tasks">📝 ' + tr('Complete your pending tasks') + '</button>' +
+          '<button data-page="tasks">💬 ' + tr('Ask your teacher for extra tasks') + '</button>' +
+          '<button data-page="tests">🧪 ' + tr('Finish your scheduled tests') + '</button>' +
+          '<button data-page="tests">⭐ ' + tr('Take optional tests for bonus points') + '</button>' +
+          '<button data-page="courses">📚 ' + tr('Review your course material') + '</button>' +
+          '</div>' +
+          '</div>';
+      }
+
+      function toggleProgressTips() {
+        var tips = document.getElementById('progress-tips');
+        var bar = document.querySelector('#overall-progress .progress-bar-toggle');
+        if (!tips) return;
+        var open = tips.classList.toggle('open');
+        if (bar) bar.setAttribute('aria-expanded', open ? 'true' : 'false');
       }

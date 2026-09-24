@@ -72,16 +72,38 @@
             tab.classList.add('active');
             var chatPanel = document.getElementById('meeting-chat-panel');
             var partsPanel = document.getElementById('meeting-participants-panel');
+            var filesPanel = document.getElementById('meeting-files-panel');
+            if (chatPanel) chatPanel.style.display = 'none';
+            if (partsPanel) partsPanel.style.display = 'none';
+            if (filesPanel) filesPanel.style.display = 'none';
             if (tab.dataset.tab === 'chat') {
               if (chatPanel) chatPanel.style.display = 'flex';
-              if (partsPanel) partsPanel.style.display = 'none';
+            } else if (tab.dataset.tab === 'files') {
+              if (filesPanel) filesPanel.style.display = 'flex';
+              renderMeetingFiles();
             } else {
-              if (chatPanel) chatPanel.style.display = 'none';
               if (partsPanel) partsPanel.style.display = 'flex';
             }
             setLanguage(currentLang);
           });
         });
+
+        var filesUploadBtn = document.getElementById('meeting-files-upload');
+        var filesInput = document.getElementById('meeting-files-input');
+        if (filesUploadBtn && filesInput) {
+          filesUploadBtn.addEventListener('click', function() {
+            if (!meetingIsTeacher) return;
+            filesInput.click();
+          });
+          filesInput.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+              meetingUploadFromFiles(e.target.files[0]);
+            }
+            e.target.value = '';
+          });
+        }
+        var filesList = document.getElementById('meeting-files-list');
+        if (filesList) filesList.addEventListener('click', meetingFilesAction);
 
         var sendBtn = document.getElementById('meeting-chat-send');
         var chatInput = document.getElementById('meeting-chat-input');
@@ -148,6 +170,7 @@
         }
 
         applyTranslation(currentLang);
+        renderMeetingFiles();
         startLocalVideo();
         setupMeetingSignaling();
       }
@@ -403,6 +426,7 @@
               var parsed = JSON.parse(ev.target.result);
               if (parsed && parsed.length) {
                 meetingSlides = parsed;
+                if (meetingContextId) saveMeetingSource(meetingContextId, file);
                 renderSlideEditor();
                 say(tr('Presentation imported. Edit and save.'));
               } else say(tr('No slides found in this file.'));
@@ -445,6 +469,7 @@
               chain.then(function() {
                 if (slides.length) {
                   meetingSlides = slides;
+                  if (meetingContextId) saveMeetingSource(meetingContextId, file);
                   renderSlideEditor();
                   say(tr('Imported') + ' ' + slides.length + ' ' + tr('slides. Edit and save.'));
                 } else {
@@ -464,6 +489,206 @@
         s.onload = cb;
         s.onerror = cb;
         document.head.appendChild(s);
+      }
+
+      // ============================================================
+      //  MEETING FILES (source persistence + deck sharing)
+      // ============================================================
+      function getMeetingSource(meetingId) {
+        if (!meetingId) return null;
+        try {
+          var saved = localStorage.getItem('nokj-pres-src-' + meetingId);
+          return saved ? JSON.parse(saved) : null;
+        } catch (e) { /* noop */ }
+        return null;
+      }
+
+      function saveMeetingSource(meetingId, file) {
+        if (!meetingId || !file) return;
+        if ((file.size || 0) > 2500000) return; // keep under ~2.5 MB for localStorage
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+          try {
+            var data = ev.target.result;
+            if (typeof data === 'string' && data.length > 2600000) return;
+            localStorage.setItem('nokj-pres-src-' + meetingId, JSON.stringify({
+              name: file.name || 'presentation',
+              size: file.size || 0,
+              type: file.type || '',
+              data: data
+            }));
+            renderMeetingFiles();
+          } catch (e) { /* noop */ }
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function clearMeetingSource(meetingId) {
+        if (!meetingId) return;
+        try { localStorage.removeItem('nokj-pres-src-' + meetingId); } catch (e) { /* noop */ }
+      }
+
+      function formatFileSize(bytes) {
+        if (!bytes) return '0 KB';
+        if (bytes < 1024 * 1024) return Math.max(1, Math.round(bytes / 1024)) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+      }
+
+      function meetingDownloadJSON(name, obj) {
+        var blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+      }
+
+      function meetingDownloadSource() {
+        var src = meetingContextId ? getMeetingSource(meetingContextId) : null;
+        if (!src || !src.data) return;
+        var a = document.createElement('a');
+        a.href = src.data;
+        a.download = src.name || 'presentation-source';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() { a.remove(); }, 1500);
+      }
+
+      function renderMeetingFiles() {
+        var list = document.getElementById('meeting-files-list');
+        if (!list) return;
+        if (!meetingSlides.length) {
+          list.innerHTML = '<div class="meeting-files-empty">' + tr('No presentation in this meeting yet.') + '</div>';
+          setLanguage(currentLang);
+          return;
+        }
+        var src = meetingContextId ? getMeetingSource(meetingContextId) : null;
+        var firstTitle = (meetingSlides[0] && meetingSlides[0].title) || '';
+        var html = '';
+        html += '<div class="meeting-file-card">' +
+          '<strong><span class="file-icon">📊</span>' + tr('Current deck') + '</strong>' +
+          '<span class="meeting-file-meta">' + meetingSlides.length + ' ' + tr('slides') +
+          (firstTitle ? ' · ' + escapeHtml(firstTitle) : '') + '</span>' +
+          '<div class="meeting-file-actions">' +
+          (meetingIsTeacher ? '<button type="button" class="primary-file" data-act="open-editor">✏️ ' + tr('Edit deck') + '</button>' : '') +
+          '<button type="button" data-act="export">⬇ ' + tr('Download') + '</button>' +
+          '</div></div>';
+        if (src && src.name) {
+          html += '<div class="meeting-file-card">' +
+            '<strong><span class="file-icon">📁</span>' + escapeHtml(src.name) + '</strong>' +
+            '<span class="meeting-file-meta">' + formatFileSize(src.size) + '</span>' +
+            '<div class="meeting-file-actions">' +
+            '<button type="button" class="primary-file" data-act="src-dl">⬇ ' + tr('Download') + '</button>' +
+            (meetingIsTeacher ? '<button type="button" data-act="src-del">🗑 ' + tr('Remove') + '</button>' : '') +
+            '</div></div>';
+        } else if (meetingIsTeacher && meetingContextId) {
+          html += '<div class="meeting-files-empty">' + tr('No source file attached. Present from a file to store it here.') + '</div>';
+        }
+        list.innerHTML = html;
+        setLanguage(currentLang);
+      }
+
+      function meetingFilesAction(e) {
+        var btn = e.target.closest('button[data-act]');
+        if (!btn) return;
+        var act = btn.dataset.act;
+        if (act === 'open-editor') {
+          openSlideEditor();
+        } else if (act === 'export') {
+          meetingDownloadJSON('nokj-deck-' + (meetingContextId || 'meeting') + '.json', meetingSlides);
+        } else if (act === 'src-dl') {
+          meetingDownloadSource();
+        } else if (act === 'src-del') {
+          clearMeetingSource(meetingContextId);
+          renderMeetingFiles();
+        }
+        setLanguage(currentLang);
+      }
+
+      function meetingFilesStatus(msg) {
+        var list = document.getElementById('meeting-files-list');
+        if (!list) return;
+        list.innerHTML = '<div class="meeting-files-empty">' + escapeHtml(tr(msg)) + '</div>';
+        setTimeout(function() { renderMeetingFiles(); }, 3500);
+      }
+
+      function meetingApplyDeck(slides, srcFile) {
+        if (!slides || !slides.length) return;
+        if (srcFile && meetingContextId) saveMeetingSource(meetingContextId, srcFile);
+        meetingSlides = slides;
+        meetingSlideIndex = 0;
+        if (meetingContextId) saveMeetingSlides(meetingContextId, meetingSlides);
+        renderMeetingSlide();
+        renderMeetingFiles();
+        broadcastMeeting({ type: 'slides-set', slides: meetingSlides, from: meetingSelfId || 'local' });
+      }
+
+      function meetingUploadFromFiles(file) {
+        var list = document.getElementById('meeting-files-list');
+        if (!file) return;
+        var name = file.name.toLowerCase();
+        if (name.indexOf('.pptx') === -1 && name.indexOf('.ppt') === -1 && name.indexOf('.json') === -1) {
+          if (list) list.innerHTML = '<div class="meeting-files-empty">' + tr(
+            'Only .pptx or .json presentations can be imported.') + '</div>';
+          setTimeout(function() { renderMeetingFiles(); }, 4000);
+          return;
+        }
+        if (name.indexOf('.json') !== -1) {
+          var jreader = new FileReader();
+          jreader.onload = function(ev) {
+            try {
+              var parsed = JSON.parse(ev.target.result);
+              if (parsed && parsed.length) {
+                meetingApplyDeck(parsed, file);
+              } else meetingFilesStatus('No slides found in this file.');
+            } catch (err) { meetingFilesStatus('Could not read this file.'); }
+          };
+          jreader.readAsText(file);
+          return;
+        }
+        var bufReader = new FileReader();
+        bufReader.onload = function(ev) {
+          meetingLoadJSZip(function() {
+            if (!window.JSZip) {
+              meetingFilesStatus('Could not load the PPTX reader. Check your connection and try again.');
+              return;
+            }
+            JSZip.loadAsync(ev.target.result).then(function(zip) {
+              var parsedSlides = [];
+              var names = Object.keys(zip.files).filter(function(n) {
+                return /^ppt\/slides\/slide\d+\.xml$/i.test(n);
+              }).sort(function(a, b) {
+                return parseInt(a.match(/\d+/)[0]) - parseInt(b.match(/\d+/)[0]);
+              });
+              var chain = Promise.resolve();
+              names.forEach(function(n) {
+                chain = chain.then(function() {
+                  return zip.files[n].async('string').then(function(xml) {
+                    var texts = [];
+                    var re = /<a:t[^>]*>([\s\S]*?)<\/a:t>/g;
+                    var m;
+                    while ((m = re.exec(xml)) !== null) {
+                      texts.push(m[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').
+                        replace(/&#10;/g, '\n').replace(/&#xA;/g, '\n'));
+                    }
+                    if (texts.length) {
+                      parsedSlides.push({ title: texts[0], content: texts.slice(1).join('\n') });
+                    }
+                  });
+                });
+              });
+              chain.then(function() {
+                if (parsedSlides.length) {
+                  meetingApplyDeck(parsedSlides, file);
+                } else {
+                  meetingFilesStatus('No editable slide text was found in this presentation.');
+                }
+              });
+            }).catch(function() { meetingFilesStatus('Could not open this file.'); });
+          });
+        };
+        bufReader.readAsArrayBuffer(file);
       }
 
       // ============================================================

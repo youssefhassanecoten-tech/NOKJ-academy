@@ -4,6 +4,10 @@
         navButtons.forEach(function(btn) { btn.classList.toggle('active', btn.dataset.page === pageName); });
         window.scrollTo({ top: 0, behavior: 'smooth' });
         if (pageName === 'dashboard') renderDashboard();
+        if (pageName === 'courses') {
+          if (currentUser && currentUser.role === 'Teacher') renderTeacherCourses();
+          else renderStudentCourses();
+        }
         if (pageName === 'timetable') renderTimetable();
         if (pageName === 'assignments') renderAssignments();
         if (pageName === 'announcements') renderAnnouncements();

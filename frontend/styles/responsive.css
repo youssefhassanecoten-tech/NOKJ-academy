@@ -37,6 +37,7 @@
         padding: 12px 16px;
       }
       .search,
+      .search-wrap,
       .user-name {
         display: none;
       }
@@ -51,6 +52,9 @@
       .dashboard-grid {
         grid-template-columns: 1fr;
       }
+      .overall-progress {
+        margin: -8px 0 18px;
+      }
       .mobile-nav {
         padding: 7px 7px calc(7px + env(safe-area-inset-bottom));
         display: grid;
@@ -61,8 +65,7 @@
         left: 0;
         z-index: 20;
         border-top: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.96);
-        backdrop-filter: blur(10px);
+        background: var(--white);
       }
       .mobile-nav .nav-button {
         padding: 5px 1px;

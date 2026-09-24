@@ -5,7 +5,7 @@
       border-radius: var(--radius);
       padding: 20px;
       margin-bottom: 16px;
-      background: #fafafa;
+      background: var(--input-bg);
     }
     .question-builder .question-header {
       display: flex;
@@ -34,7 +34,7 @@
       border: 1px solid var(--line);
       border-radius: 6px;
       font-size: 14px;
-      background: white;
+      background: var(--white);
       box-sizing: border-box;
     }
     .question-builder input[type="text"]:focus,
@@ -60,7 +60,7 @@
       border: 1px solid var(--line);
       border-radius: 6px;
       font-size: 13px;
-      background: white;
+      background: var(--white);
       min-width: 0;
     }
     .question-builder .options-group .option-item input[type="text"]:focus {
@@ -82,12 +82,12 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       padding: 20px;
-      background: white;
+      background: var(--white);
       margin-top: 20px;
     }
     .test-preview .test-question {
       padding: 12px;
-      border-bottom: 1px solid #f0f1f4;
+      border-bottom: 1px solid var(--divider);
     }
     .test-preview .test-question:last-child {
       border-bottom: none;

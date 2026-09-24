@@ -46,7 +46,7 @@
       max-width: 420px;
       padding: 40px 32px;
       border-radius: var(--radius);
-      background: white;
+      background: var(--white);
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
       position: relative;
     }
@@ -100,7 +100,7 @@
       border: 1px solid var(--line);
       border-radius: 10px;
       font-size: 14px;
-      background: #fafafa;
+      background: var(--input-bg);
       transition: border-color 0.2s;
     }
     .login-box input:focus,
@@ -108,7 +108,7 @@
     .register-box select:focus {
       outline: none;
       border-color: var(--primary);
-      background: white;
+      background: var(--white);
     }
     .login-box .login-btn,
     .register-box .register-btn {

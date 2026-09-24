@@ -47,7 +47,7 @@
       padding: 18px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: white;
+      background: var(--white);
     }
     .grade-summary-card .label {
       color: var(--muted);

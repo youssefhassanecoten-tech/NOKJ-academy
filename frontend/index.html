@@ -132,7 +132,7 @@
   <div id="app">
 
     <aside class="sidebar">
-      <div class="brand" id="sidebar-brand" role="button" title="Go to Dashboard" style="cursor:pointer;"><div class="brand-mark">N</div><div><strong>NOKJ Academy</strong><small id="sidebar-role">Student Portal</small></div></div>
+      <div class="brand" id="sidebar-brand" role="button" title="Go to Dashboard" style="cursor:pointer;"><div class="brand-mark" id="sidebar-brand-mark">N</div><div class="brand-text"><strong>NOKJ Academy</strong><small id="sidebar-role">Student Portal</small></div><div class="brand-logo-menu" id="brand-logo-menu"><button class="primary-button" id="change-logo-btn">🖼 Change NOKJ logo</button><button class="secondary-button" id="reset-logo-btn">✕ Reset logo</button><input type="file" id="logo-input" accept="image/*" style="display:none;" /></div></div>
       <p class="nav-label">Menu</p>
       <button class="nav-button active" data-page="dashboard"><span class="nav-icon">⌂</span> <span class="nav-text">Dashboard</span></button>
       <button class="nav-button" data-page="timetable"><span class="nav-icon">▦</span> <span class="nav-text">Timetable</span></button>
@@ -157,23 +157,26 @@
 
     <main>
       <header class="topbar">
-        <label class="search"><span>⌕</span><input type="search" id="global-search" placeholder="Search courses, lessons or assignments" autocomplete="off" /></label>
-        <div class="search-results" id="global-search-results" style="display:none;"></div>
+<div class="search-wrap">
+          <label class="search"><span>⌕</span><input type="search" id="global-search" placeholder="Search courses, lessons or assignments" autocomplete="off" /></label>
+          <div class="search-results" id="global-search-results" style="display:none;"></div>
+        </div>
         <div class="user-area">
-          <button id="language-toggle" type="button" title="Change language" style="width:42px;height:40px;display:grid;place-items:center;border:1px solid #e5e7eb;border-radius:12px;background:white;cursor:pointer;padding:0;">
-            <svg id="flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
-              <rect width="60" height="40" fill="#012169"/>
-              <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
-              <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
-              <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
-              <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
-            </svg>
-            <svg id="flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
-              <rect width="60" height="13.33" fill="#FFFFFF"/>
-              <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
-              <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
-            </svg>
-          </button>
+          <select class="theme-select" id="theme-select" title="Theme"><option value="light">☀️ Light</option><option value="dark">🌙 Dark</option><option value="soft">🍂 Soft</option></select>
+          <button id="language-toggle" type="button" title="Change language" style="width:42px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:12px;background:var(--white);cursor:pointer;padding:0;">
+              <svg id="flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
+                <rect width="60" height="40" fill="#012169"/>
+                <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
+                <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
+                <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
+                <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
+              </svg>
+              <svg id="flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
+                <rect width="60" height="13.33" fill="#FFFFFF"/>
+                <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
+                <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
+              </svg>
+            </button>
           <button class="notification" id="notification-button" aria-label="Notifications">🔔</button>
           <span class="avatar" id="user-avatar">AS</span>
           <span class="user-name"><strong id="user-display-name">Alex Student</strong><span id="user-role">Student</span></span>
@@ -192,10 +195,8 @@
             <div class="admin-stat-card"><div class="label">Revenue</div><div class="number" id="total-revenue">$0</div><div class="change">This month</div></div>
           </div>
           <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="secondary-button" id="change-logo-btn">🖼 Change NOKJ logo</button>
-            <button class="secondary-button" id="reset-logo-btn">✕ Reset logo</button>
+            <button class="secondary-button" id="export-data-btn">⬇ Export backup</button>
           </div>
-          <input type="file" id="logo-input" accept="image/*" style="display:none;" />
         </div>
         <div id="dashboard-grid" class="dashboard-grid"></div>
       </section>
@@ -208,7 +209,7 @@
 
       <!-- ===== MY COURSES ===== -->
       <section class="page" id="courses">
-        <div class="heading"><h1>My courses</h1><p>Continue learning and track your progress in every course.</p></div>
+        <div class="heading"><h1>My courses</h1><p id="courses-sub">Continue learning and track your progress in every course.</p></div>
         <div id="student-courses-container"></div>
       </section>
 
@@ -325,9 +326,17 @@
             <div class="table-summary"><span>Pending: <strong id="enroll-approval-total">0</strong></span></div>
           </div>
         </div>
+      <div id="course-request-section" style="margin-top:26px;display:none;">
+          <h3 style="margin:0 0 10px;">Course Requests</h3>
+          <div class="table-container">
+            <div class="table-toolbar">
+              <div class="right"><span id="course-request-count" style="font-size:13px;color:var(--muted);">0 pending</span></div>
+            </div>
+            <table><thead><tr><th>Teacher</th><th>Type</th><th>Course</th><th>Requested</th><th>Actions</th></tr></thead><tbody id="course-request-table-body"></tbody></table>
+            <div class="table-summary"><span>Pending: <strong id="course-request-total">0</strong></span></div>
+          </div>
+        </div>
       </section>
-
-      <!-- ===== STUDENT RECORDS ===== -->
       <section class="page" id="students">
         <div class="heading"><h1>Student Records</h1><p>Manage all student information, grades, and attendance.</p></div>
         <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
@@ -511,6 +520,7 @@
           <div class="meeting-tabs">
             <button class="meeting-tab active" data-tab="chat">Chat</button>
             <button class="meeting-tab" data-tab="participants">Participants</button>
+            <button class="meeting-tab" data-tab="files">Files</button>
           </div>
           <div class="meeting-panel" id="meeting-chat-panel">
             <div class="meeting-chat-messages" id="meeting-chat-messages"></div>
@@ -521,6 +531,13 @@
           </div>
           <div class="meeting-panel" id="meeting-participants-panel" style="display:none;">
             <div id="meeting-participants-list"></div>
+          </div>
+          <div class="meeting-panel" id="meeting-files-panel" style="display:none;">
+            <div class="meeting-files-toolbar">
+              <button type="button" id="meeting-files-upload" class="meeting-upload-btn">📁 Present from file</button>
+              <input type="file" id="meeting-files-input" accept=".pptx,.ppt,.json" hidden />
+            </div>
+            <div id="meeting-files-list"></div>
           </div>
         </aside>
       </div>

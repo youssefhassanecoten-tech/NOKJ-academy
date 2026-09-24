@@ -17,7 +17,7 @@
       width: 100%;
       padding: 30px;
       border-radius: var(--radius);
-      background: white;
+      background: var(--white);
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
       max-height: 90vh;
       overflow-y: auto;
@@ -46,14 +46,14 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       font-size: 14px;
-      background: #fafafa;
+      background: var(--input-bg);
     }
     .modal input:focus,
     .modal select:focus,
     .modal textarea:focus {
       outline: none;
       border-color: var(--primary);
-      background: white;
+      background: var(--white);
     }
     .modal textarea {
       min-height: 80px;
@@ -114,7 +114,7 @@
       background: #f3f4f6;
     }
     .modal-actions .cancel-btn:hover {
-      background: #e5e7eb;
+      background: var(--line);
     }
     .modal-actions .save-btn {
       color: white;
@@ -134,7 +134,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      border-bottom: 1px solid #f0f1f4;
+      border-bottom: 1px solid var(--divider);
     }
     .enrollment-item input[type="checkbox"] {
       width: 18px;
@@ -191,7 +191,7 @@
       display: flex;
       gap: 12px;
       align-items: center;
-      border-top: 1px solid #f0f1f4;
+      border-top: 1px solid var(--divider);
     }
     .lesson-row:first-of-type,
     .simple-row:first-of-type {
@@ -290,7 +290,7 @@
       height: 8px;
       overflow: hidden;
       border-radius: 20px;
-      background: #eef0f4;
+      background: var(--input-bg);
     }
     .fill {
       height: 100%;
@@ -562,7 +562,7 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       cursor: pointer;
-      background: white;
+      background: var(--white);
     }
     .mini-btn:hover {
       border-color: var(--primary);

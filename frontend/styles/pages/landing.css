@@ -152,7 +152,7 @@
     .landing-features .feature-card {
       padding: 30px;
       border-radius: var(--radius);
-      background: white;
+      background: var(--white);
       box-shadow: var(--shadow);
       text-align: center;
     }

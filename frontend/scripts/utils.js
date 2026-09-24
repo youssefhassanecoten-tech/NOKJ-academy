@@ -17,6 +17,7 @@
         const savedAnnouncements = localStorage.getItem('nokj-announcements');
         const savedPendingTeachers = localStorage.getItem('nokj-pending-teachers');
         const savedEnrollRequests = localStorage.getItem('nokj-enroll-requests');
+        const savedCourseRequests = localStorage.getItem('nokj-course-requests');
 
         if (savedStudents) { try { students = JSON.parse(savedStudents); } catch (e) { students = DEFAULT_STUDENTS.slice(); } } else { students =
             DEFAULT_STUDENTS.slice(); }
@@ -45,6 +46,7 @@
             DEFAULT_ANNOUNCEMENTS.slice(); } } else { announcements = DEFAULT_ANNOUNCEMENTS.slice(); }
         if (savedPendingTeachers) { try { pendingTeachers = JSON.parse(savedPendingTeachers); } catch (e) { pendingTeachers = []; } } else { pendingTeachers = []; }
         if (savedEnrollRequests) { try { enrollRequests = JSON.parse(savedEnrollRequests); } catch (e) { enrollRequests = []; } } else { enrollRequests = []; }
+        if (savedCourseRequests) { try { courseRequests = JSON.parse(savedCourseRequests); } catch (e) { courseRequests = []; } } else { courseRequests = []; }
 
         // The demo accounts must always be available so login never breaks,
         // even if local storage holds older seed data.
@@ -87,6 +89,7 @@
         localStorage.setItem('nokj-announcements', JSON.stringify(announcements));
         localStorage.setItem('nokj-pending-teachers', JSON.stringify(pendingTeachers));
         localStorage.setItem('nokj-enroll-requests', JSON.stringify(enrollRequests));
+        localStorage.setItem('nokj-course-requests', JSON.stringify(courseRequests));
       }
 
       // ============================================================
@@ -180,6 +183,49 @@
         return students.filter(function(s) { return s.status === 'Active'; }).length;
       }
 
+      function nextCourseId() {
+        var maxId = 0;
+        courses.forEach(function(c) { if (Number(c.id) > maxId) maxId = Number(c.id); });
+        courseRequests.forEach(function(r) {
+          if (r.id && Number(r.id) > maxId && (r.type === 'create')) maxId = Number(r.id);
+        });
+        return maxId + 1;
+      }
+
+      // Export the whole academy database as a downloadable JSON backup.
+      function exportAppData() {
+        var payload = {
+          exportedAt: new Date().toISOString(),
+          version: 'NOKJ 2.3',
+          students: students,
+          teachers: teachers,
+          admins: admins,
+          courses: courses,
+          enrollments: enrollments,
+          meetings: meetings,
+          grades: gradeData,
+          tasks: tasks,
+          taskSubmissions: taskSubmissions,
+          budget: budgetEntries,
+          tests: tests,
+          testSubmissions: testSubmissions,
+          announcements: announcements,
+          pendingTeachers: pendingTeachers,
+          enrollRequests: enrollRequests,
+          courseRequests: courseRequests,
+          brandLogo: (function() { try { return localStorage.getItem('nokj-logo'); } catch (e) { return null; } })()
+        };
+        var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'nokj-backup-' + new Date().toISOString().split('T')[0] + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
       // Render a user's photo onto an avatar element (span). Falls back to initials.
       function renderAvatar(el, user) {
         if (!el) return;
@@ -211,6 +257,16 @@
             el.textContent = 'N';
           }
         });
+      }
+
+      function applyTheme(theme) {
+        theme = theme || 'light';
+        if (theme !== 'light' && theme !== 'dark' && theme !== 'soft') theme = 'light';
+        document.body.classList.remove('theme-dark', 'theme-soft');
+        if (theme !== 'light') document.body.classList.add('theme-' + theme);
+        try { localStorage.setItem('nokj-theme', theme); } catch (e) { /* noop */ }
+        var sel = document.getElementById('theme-select');
+        if (sel) sel.value = theme;
       }
 
       function saveBrandLogo(dataUrl) {

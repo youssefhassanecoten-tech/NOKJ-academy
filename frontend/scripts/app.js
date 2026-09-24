@@ -132,7 +132,32 @@
         if (e.target === this) document.getElementById('help-overlay').classList.remove('open');
       });
 
-      document.getElementById('sidebar-brand').addEventListener('click', function() { openPage('dashboard'); });
+      var sidebarBrandEl = document.getElementById('sidebar-brand');
+      var brandLogoMenuEl = document.getElementById('brand-logo-menu');
+      function toggleBrandLogoMenu() {
+        if (!brandLogoMenuEl) return;
+        brandLogoMenuEl.classList.toggle('open');
+      }
+      function closeBrandLogoMenu() {
+        if (brandLogoMenuEl) brandLogoMenuEl.classList.remove('open');
+      }
+      sidebarBrandEl.addEventListener('click', function(e) {
+        if (e.target.closest('.brand-logo-menu')) return;
+        var isAdmin = currentUser && currentUser.role === 'Admin';
+        if (e.target.closest('#sidebar-brand-mark')) {
+          if (isAdmin) { toggleBrandLogoMenu(); return; }
+          closeBrandLogoMenu();
+          openPage('dashboard');
+          return;
+        }
+        if (brandLogoMenuEl && brandLogoMenuEl.classList.contains('open')) closeBrandLogoMenu();
+        openPage('dashboard');
+      });
+      document.addEventListener('click', function(e) {
+        if (brandLogoMenuEl && brandLogoMenuEl.classList.contains('open') && !e.target.closest('#sidebar-brand')) {
+          closeBrandLogoMenu();
+        }
+      });
       userAvatar.addEventListener('click', function() { openPage('profile'); });
 
       // Profile photo upload.
@@ -181,6 +206,14 @@
         var id = parseInt(target.dataset.id);
         if (target.classList.contains('approve-btn')) approveEnroll(id);
         else if (target.dataset.action === 'refuse') refuseEnroll(id);
+      });
+
+      document.getElementById('course-request-table-body').addEventListener('click', function(e) {
+        var target = e.target.closest('button');
+        if (!target) return;
+        var id = parseInt(target.dataset.id);
+        if (target.classList.contains('approve-btn')) approveCourseRequest(id);
+        else if (target.dataset.action === 'refuse') refuseCourseRequest(id);
       });
 
       document.getElementById('ann-detail-close').addEventListener('click', function() {
@@ -343,6 +376,23 @@
           if (searchInput) searchInput.blur();
           openPage(btn.dataset.page);
         }
+      });
+
+      // Developer feedback + student progress tools (dashboards re-render).
+      document.addEventListener('click', function(e) {
+        if (e.target.closest('#feedback-submit')) { addDeveloperFeedback(); return; }
+        if (e.target.closest('#feedback-refresh')) { fetchGithubIssues(true); return; }
+        var del = e.target.closest('.feedback-delete');
+        if (del) { deleteDeveloperFeedback(decodeURIComponent(del.dataset.id || '')); return; }
+        if (e.target.closest('.progress-bar-toggle')) { toggleProgressTips(); }
+      });
+      document.addEventListener('change', function(e) {
+        var tok = e.target.closest('#github-token-input');
+        if (tok) saveGithubToken(tok.value.trim());
+      });
+
+      document.getElementById('export-data-btn').addEventListener('click', function() {
+        if (typeof exportAppData === 'function') exportAppData();
       });
 
       document.getElementById('presentation-close').addEventListener('click', closePresentation);
@@ -892,6 +942,19 @@
       loadData();
       setLanguage(currentLang);
       applyBrandLogo();
+
+      var savedTheme = 'light';
+      try { savedTheme = localStorage.getItem('nokj-theme') || 'light'; } catch (e) { /* noop */ }
+      applyTheme(savedTheme);
+      var themeSelect = document.getElementById('theme-select');
+      if (themeSelect) {
+        themeSelect.value = savedTheme;
+        themeSelect.addEventListener('change', function() {
+          applyTheme(themeSelect.value);
+          setLanguage(currentLang);
+        });
+      }
+
       checkSession();
       setInterval(function() {
         cleanupExpiredMeetings();

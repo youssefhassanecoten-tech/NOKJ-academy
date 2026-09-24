@@ -52,7 +52,7 @@
         }).map(function(r) { return r.courseId; });
         var available = courses.filter(function(c) { return enrolledIds.indexOf(c.id) === -1; });
 
-        var html = '<h3 style="margin-top:0;">' + tr('My courses') + '</h3>';
+        var html = '';
         if (enrolledCourses.length === 0) {
           html += '<p style="color:var(--muted);">' + tr('You are not enrolled in any courses yet.') + '</p>';
         } else {
@@ -96,6 +96,7 @@
         }
 
         container.innerHTML = html;
+        setCoursesHeading();
         setLanguage(currentLang);
       }
 
@@ -111,5 +112,89 @@
           date: new Date().toISOString() });
         saveData();
         renderStudentCourses();
+        setLanguage(currentLang);
+      }
+
+      // ============================================================
+      //  TEACHER COURSES (suggest / edit / remove, admin-approval)
+      // ============================================================
+      function renderTeacherCourses() {
+        if (!currentUser || currentUser.role !== 'Teacher') return;
+        var container = document.getElementById('student-courses-container');
+        if (!container) return;
+        var teacherId = currentUser.id;
+        var mine = courses.filter(function(c) { return c.teacherId === teacherId; });
+        var pending = courseRequests.filter(function(r) { return r.teacherId === teacherId && r.status === 'pending'; });
+
+        var html = '<div class="teacher-courses-toolbar">' +
+          '<button class="primary-button" onclick="openModal(\'courseRequest\', \'add\')">➕ ' + tr('Suggest a new course') + '</button>' +
+          '<span class="pill">' + pending.length + ' ' + tr('pending') + '</span>' +
+          '</div>';
+
+        if (!mine.length && !pending.length) {
+          html += '<p style="color:var(--muted);">' + tr('You have no courses yet. Suggest a new course or ask an admin to assign one — it appears for students once approved.') + '</p>';
+        }
+
+        html += '<div class="course-grid">';
+        mine.forEach(function(c) {
+          var studentCount = getEnrolledStudentIds(c.id).length;
+          var editReq = pending.find(function(r) { return r.courseId === c.id && r.type === 'edit'; });
+          var delReq = pending.find(function(r) { return r.courseId === c.id && r.type === 'delete'; });
+          var pill = editReq ? '<span class="pill warning">' + tr('Edit pending') + '</span>' :
+            (delReq ? '<span class="pill warning">' + tr('Delete pending') + '</span>' :
+            '<span class="pill">' + tr('Active') + '</span>');
+          html += '<article class="course"><div class="course-cover">' + c.name +
+            '</div><div class="course-body"><h3>' + c.name + '</h3><p>' + escapeHtml(c.description || '') +
+            '</p><p>' + studentCount + ' ' + tr('students') + '</p>' +
+            '<div class="course-footer" style="flex-wrap:wrap;">' + pill +
+            '<button class="secondary-button" onclick="openModal(\'courseRequest\', \'edit\', {id:' + c.id + '})">✏️ ' + tr('Edit description') + '</button>' +
+            '<button class="action-btn delete" onclick="suggestCourseDelete(' + c.id + ')" title="' + tr('Suggest removal') + '">🗑️</button>' +
+            '</div></div></article>';
+        });
+        pending.forEach(function(r) {
+          if (r.type === 'create') {
+            html += '<article class="course"><div class="course-cover pending-cover">' + escapeHtml(r.name) +
+              '</div><div class="course-body"><h3>' + escapeHtml(r.name) + '</h3><p>' + escapeHtml(r.description || '') +
+              '</p><div class="course-footer"><span class="pill warning">' + tr('Awaiting admin approval') + '</span>' +
+              '<button class="action-btn delete" onclick="cancelCourseRequest(' + r.id + ')" title="' + tr('Cancel') + '">✕</button>' +
+              '</div></div></article>';
+          }
+        });
+        html += '</div>';
+
+        container.innerHTML = html;
+        setCoursesHeading();
+        setLanguage(currentLang);
+      }
+
+      function setCoursesHeading() {
+        var sub = document.getElementById('courses-sub');
+        if (!sub || !currentUser) return;
+        sub.textContent = tr('Continue learning and track your progress in every course.');
+      }
+
+      function suggestCourseDelete(courseId) {
+        if (!currentUser || currentUser.role !== 'Teacher') return;
+        var c = courses.find(function(x) { return x.id === courseId; });
+        if (!c || c.teacherId !== currentUser.id) return;
+        if (courseRequests.some(function(r) { return r.type === 'delete' && r.courseId === courseId && r.status === 'pending'; })) {
+          alert(tr('A removal request for this course is already pending.'));
+          return;
+        }
+        if (confirm(tr('Suggest removing this course? Students lose access only after an admin approves.'))) {
+          courseRequests.push({ id: Date.now(), type: 'delete', status: 'pending', teacherId: currentUser.id, courseId: courseId,
+            name: c.name, date: new Date().toISOString() });
+          saveData();
+          renderTeacherCourses();
+          renderCourseRequests();
+        }
+      }
+
+      function cancelCourseRequest(reqId) {
+        if (!currentUser || currentUser.role !== 'Teacher') return;
+        courseRequests = courseRequests.filter(function(r) { return r.id !== reqId; });
+        saveData();
+        renderTeacherCourses();
+        renderCourseRequests();
         setLanguage(currentLang);
       }

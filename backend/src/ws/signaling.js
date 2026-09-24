@@ -64,7 +64,8 @@ function attachSignalingServer(server) {
         return;
       }
       msg.from = id;
-      if (msg.type === "chat" || msg.type === "slide" || msg.type === "signal") {
+      if (msg.type === "chat" || msg.type === "slide" || msg.type === "signal" ||
+          msg.type === "slides-set" || msg.type === "mic" || msg.type === "join") {
         broadcast(roomId, id, msg);
       } else if (msg.type === "leave") {
         broadcast(roomId, id, msg);

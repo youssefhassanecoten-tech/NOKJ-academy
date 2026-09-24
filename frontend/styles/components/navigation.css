@@ -23,6 +23,30 @@
       display: flex;
       align-items: center;
       gap: 11px;
+      position: relative;
+    }
+    .brand-logo-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 12px;
+      right: 12px;
+      padding: 10px;
+      flex-direction: column;
+      gap: 8px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+      z-index: 80;
+    }
+    .brand-logo-menu.open {
+      display: flex;
+    }
+    .brand-logo-menu .primary-button,
+    .brand-logo-menu .secondary-button {
+      width: 100%;
+      white-space: nowrap;
     }
     #sidebar-brand {
       cursor: pointer;
@@ -41,7 +65,7 @@
       font-size: 18px;
       font-weight: 900;
       border-radius: 13px;
-      background: white;
+      background: var(--white);
     }
     .brand strong,
     .brand small {
@@ -143,18 +167,32 @@
       top: 0;
       z-index: 5;
       border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(10px);
+      background: var(--white);
+      box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
+    }
+    .search-wrap {
+      flex: 0 1 410px;
+    }
+    .theme-select {
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--white);
+      color: var(--ink);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
     }
     .search {
-      width: min(410px, 100%);
+      width: 100%;
       padding: 10px 13px;
       display: flex;
       gap: 9px;
       align-items: center;
       border: 1px solid var(--line);
       border-radius: 12px;
-      background: #fafafa;
+      background: var(--input-bg);
     }
     .search input {
       width: 100%;
@@ -173,7 +211,7 @@
       font-size: 17px;
       border: 1px solid var(--line);
       border-radius: 12px;
-      background: white;
+      background: var(--white);
     }
     .avatar {
       width: 39px;
@@ -223,5 +261,15 @@
     }
     .logout-btn:hover {
       background: #fee2e2;
+    }
+
+    /* === DARK THEME POLISH === */
+    body.theme-dark .logout-btn {
+      color: #f87171;
+      border-color: rgba(248, 113, 113, 0.35);
+      background: rgba(220, 38, 38, 0.12);
+    }
+    body.theme-dark .logout-btn:hover {
+      background: rgba(220, 38, 38, 0.22);
     }
 

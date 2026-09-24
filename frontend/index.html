@@ -34,6 +34,23 @@
     <header class="landing-header">
       <div class="brand"><div class="brand-mark">N</div><span>NOKJ Academy</span></div>
       <div class="auth-buttons">
+        <button id="landing-lang-toggle" type="button" title="Change language" class="login-lang-toggle">
+          <svg id="landing-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
+            <rect width="60" height="40" fill="#012169"/>
+            <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
+            <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
+            <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
+            <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
+          </svg>
+          <svg id="landing-flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
+            <rect width="60" height="13.33" fill="#FFFFFF"/>
+            <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
+            <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
+          </svg>
+        </button>
+        <select class="theme-select" id="landing-theme-select" title="Theme">
+          <option value="light">☀️ Light</option><option value="dark">🌙 Dark</option><option value="soft">🍂 Soft</option>
+        </select>
         <button class="btn-outline" id="landing-login-btn">Sign In</button>
         <button class="btn-primary" id="landing-register-btn">Join Class</button>
       </div>
@@ -62,14 +79,11 @@
 
   <!-- ===== LOGIN SCREEN ===== -->
   <div id="login-screen">
-    <button id="login-lang-toggle" type="button" title="Change language" class="login-lang-toggle">
+      <select class="theme-select" id="login-theme-select" title="Theme" aria-label="Select theme">
+        <option value="light">☀️ Light</option><option value="dark">🌙 Dark</option><option value="soft">🍂 Soft</option>
+      </select>
+      <button id="login-lang-toggle" type="button" title="Change language" class="login-lang-toggle">
       <svg id="login-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
-        <rect width="60" height="40" fill="#012169"/>
-        <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
-        <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
-        <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
-        <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
-      </svg>
       <svg id="login-flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
         <rect width="60" height="13.33" fill="#FFFFFF"/>
         <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
@@ -78,7 +92,7 @@
     </button>
 
     <div class="login-box">
-      <div class="brand"><div class="brand-mark">N</div><div><strong style="font-size:20px;color:#182033;">NOKJ Academy</strong><small style="color:#6b7280;font-size:13px;">Student Portal</small></div></div>
+      <div class="brand"><div class="brand-mark">N</div><div><strong style="font-size:20px;color:var(--ink);">NOKJ Academy</strong><small style="color:var(--muted);font-size:13px;">Student Portal</small></div></div>
       <div class="login-header"><h2>Welcome back</h2><p>Sign in to your account</p></div>
       <form id="login-form" autocomplete="off">
         <label for="login-email">Email address</label>
@@ -94,9 +108,11 @@
 
   <!-- ===== REGISTER SCREEN ===== -->
   <div id="register-screen">
-    <button id="register-lang-toggle" type="button" title="Change language" class="login-lang-toggle">
+      <select class="theme-select" id="register-theme-select" title="Theme" aria-label="Select theme">
+        <option value="light">☀️ Light</option><option value="dark">🌙 Dark</option><option value="soft">🍂 Soft</option>
+      </select>
+      <button id="register-lang-toggle" type="button" title="Change language" class="login-lang-toggle">
       <svg id="register-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
-        <rect width="60" height="40" fill="#012169"/>
         <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
         <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
         <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
@@ -110,7 +126,7 @@
     </button>
 
     <div class="register-box">
-      <div class="brand"><div class="brand-mark">N</div><div><strong style="font-size:20px;color:#182033;">NOKJ Academy</strong><small style="color:#6b7280;font-size:13px;">Join the community</small></div></div>
+      <div class="brand"><div class="brand-mark">N</div><div><strong style="font-size:20px;color:var(--ink);">NOKJ Academy</strong><small style="color:var(--muted);font-size:13px;">Join the community</small></div></div>
       <div class="register-header"><h2>Create Account</h2><p>Start your learning journey today</p></div>
       <form id="register-form" autocomplete="off">
         <label for="register-name">Full Name</label>

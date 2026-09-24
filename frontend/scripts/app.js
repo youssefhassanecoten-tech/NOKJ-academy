@@ -946,14 +946,14 @@
       var savedTheme = 'light';
       try { savedTheme = localStorage.getItem('nokj-theme') || 'light'; } catch (e) { /* noop */ }
       applyTheme(savedTheme);
-      var themeSelect = document.getElementById('theme-select');
-      if (themeSelect) {
-        themeSelect.value = savedTheme;
-        themeSelect.addEventListener('change', function() {
-          applyTheme(themeSelect.value);
+
+      document.addEventListener('change', function(e) {
+        var themeSel = e.target && (e.target.classList ? (e.target.classList.contains('theme-select') ? e.target : null) : null);
+        if (themeSel) {
+          applyTheme(themeSel.value);
           setLanguage(currentLang);
-        });
-      }
+        }
+      });
 
       checkSession();
       setInterval(function() {

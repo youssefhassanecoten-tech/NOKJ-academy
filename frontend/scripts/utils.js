@@ -265,8 +265,7 @@
         document.body.classList.remove('theme-dark', 'theme-soft');
         if (theme !== 'light') document.body.classList.add('theme-' + theme);
         try { localStorage.setItem('nokj-theme', theme); } catch (e) { /* noop */ }
-        var sel = document.getElementById('theme-select');
-        if (sel) sel.value = theme;
+        document.querySelectorAll('.theme-select').forEach(function(el) { el.value = theme; });
       }
 
       function saveBrandLogo(dataUrl) {

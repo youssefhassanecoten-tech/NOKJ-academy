@@ -700,8 +700,8 @@
         currentLang = lang;
         localStorage.setItem('nokj-language', lang);
 
-        var ukFlags = document.querySelectorAll('#flag-uk, #login-flag-uk, #register-flag-uk');
-        var ruFlags = document.querySelectorAll('#flag-ru, #login-flag-ru, #register-flag-ru');
+        var ukFlags = document.querySelectorAll('#flag-uk, #login-flag-uk, #register-flag-uk, #landing-flag-uk');
+        var ruFlags = document.querySelectorAll('#flag-ru, #login-flag-ru, #register-flag-ru, #landing-flag-ru');
 
         if (lang === 'en') {
           ukFlags.forEach(el => el.style.display = 'block');

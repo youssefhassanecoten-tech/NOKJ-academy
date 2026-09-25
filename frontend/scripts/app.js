@@ -40,6 +40,7 @@
       const adminStudentsBtn = document.getElementById('admin-students-btn');
       const adminBudgetBtn = document.getElementById('admin-budget-btn');
       const adminCoursesBtn = document.getElementById('admin-courses-btn');
+const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
       const adminGradesBtn = document.getElementById('admin-grades-btn');
       const adminCalendarBtn = document.getElementById('admin-calendar-btn');
       const adminApprovalsBtn = document.getElementById('admin-approvals-btn');
@@ -91,6 +92,37 @@
       document.getElementById('login-to-register').addEventListener('click', showRegisterScreen);
       document.getElementById('register-to-login').addEventListener('click', showLoginScreen);
 
+      document.getElementById('register-choose-student').addEventListener('click', function() {
+        showRegisterStep('student');
+        setLanguage(currentLang);
+      });
+      document.getElementById('register-choose-teacher').addEventListener('click', function() {
+        showRegisterStep('teacher');
+        setLanguage(currentLang);
+      });
+      document.getElementById('register-switch-to-student').addEventListener('click', function() {
+        showRegisterStep('student');
+        setLanguage(currentLang);
+      });
+      document.getElementById('register-back-to-welcome').addEventListener('click', showLanding);
+      document.getElementById('generate-teacher-key-btn').addEventListener('click', function() {
+        var rec = createTeacherAuthKey();
+        if (!rec) return;
+        var last = document.getElementById('teacher-key-last');
+        if (last) last.textContent = tr('New key:') + ' ' + rec.key;
+        renderTeacherAuthKeys();
+        setLanguage(currentLang);
+      });
+      document.getElementById('register-form-teacher').addEventListener('submit', function(e) {
+        e.preventDefault();
+        registerTeacherWithKey(
+          document.getElementById('register-teacher-name').value.trim(),
+          document.getElementById('register-teacher-email').value.trim(),
+          document.getElementById('register-teacher-password').value,
+          document.getElementById('register-teacher-key').value.trim()
+        );
+      });
+
       loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         login(loginEmail.value.trim(), loginPassword.value.trim());
@@ -113,6 +145,9 @@
       langToggle.addEventListener('click', toggleLanguage);
       loginLangToggle.addEventListener('click', toggleLanguage);
       registerLangToggle.addEventListener('click', toggleLanguage);
+      var landingLangToggle = document.getElementById('landing-lang-toggle');
+      if (landingLangToggle) landingLangToggle.addEventListener('click', toggleLanguage);
+      document.getElementById('login-back-to-welcome').addEventListener('click', showLanding);
 
       document.addEventListener('click', function(e) {
         var target = e.target.closest('.expandable-row');
@@ -404,6 +439,12 @@
       document.getElementById('export-data-btn').addEventListener('click', function() {
         if (typeof exportAppData === 'function') exportAppData();
       });
+      document.getElementById('export-excel-btn').addEventListener('click', function() {
+        if (typeof exportAdminWorkbook === 'function') exportAdminWorkbook();
+      });
+      document.getElementById('export-json-btn').addEventListener('click', function() {
+        if (typeof exportAppData === 'function') exportAppData();
+      });
 
       document.getElementById('presentation-close').addEventListener('click', closePresentation);
       document.getElementById('presentation-next').addEventListener('click', nextSlide);
@@ -606,16 +647,24 @@
         var optionsContainer = document.getElementById('task-modal-assign-options');
         if (val === 'all') { optionsContainer.style.display = 'none'; return; }
         optionsContainer.style.display = 'block';
-        var html = '<label>Select ' + (val === 'course' ? 'Courses' : 'Students') + '</label>';
+        var html = '<label>Select ' + (val === 'course' ? tr('Courses') : tr('Students')) + '</label>';
         if (val === 'course') {
-          courses.forEach(function(c) {
+          var coursePool = courses;
+          var studentOnly = currentUser && currentUser.role === 'Teacher';
+          if (studentOnly) coursePool = courses.filter(function(c) { return c.teacherId === currentUser.id; });
+          coursePool.forEach(function(c) {
             html += '<div class="enrollment-item"><input type="checkbox" class="task-assign-checkbox" value="' +
-              c.id + '" /><label>' + c.name + '</label></div>';
+              c.id + '" /><label>' + escapeHtml(c.name) + '</label></div>';
           });
         } else {
-          students.forEach(function(s) {
+          var studentPool = students;
+          if (currentUser && currentUser.role === 'Teacher') {
+            var allowed = teacherEnrolledStudentIds();
+            studentPool = students.filter(function(s) { return allowed.indexOf(s.id) !== -1; });
+          }
+          studentPool.forEach(function(s) {
             html += '<div class="enrollment-item"><input type="checkbox" class="task-assign-checkbox" value="' +
-              s.id + '" /><label>' + s.name + '</label></div>';
+              s.id + '" /><label>' + escapeHtml(s.name) + '</label></div>';
           });
         }
         optionsContainer.innerHTML = html;
@@ -673,6 +722,31 @@
           submitTaskAnswer(taskId, studentId, answer, files);
         }
       });
+
+      // Autosave each in-progress answer so a reload or dropped connection never loses work.
+      function draftKeyFor(taskId, studentId) {
+        return 'answer-' + taskId + '-' + studentId;
+      }
+
+      function bindAnswerDrafts() {
+        var studentId = currentUser ? currentUser.id : null;
+        if (!studentId) return;
+        tasks.forEach(function(t) {
+          var input = document.getElementById('answer-' + t.id);
+          if (!input) return;
+          var key = draftKeyFor(t.id, studentId);
+          var saved = loadDraft(key);
+          if (saved && saved.answer && !input.value) input.value = saved.answer;
+          input.addEventListener('input', function() {
+            if (input.value.trim()) saveDraft(key, { answer: input.value, taskId: t.id });
+            else clearDraft(key);
+          });
+        });
+      }
+
+      function clearAnswerDraft(taskId, studentId) {
+        clearDraft(draftKeyFor(taskId, studentId));
+      }
 
       document.getElementById('admin-task-list').addEventListener('click', function(e) {
         var target = e.target.closest('.view-submissions-btn');
@@ -1045,10 +1119,44 @@
         submitTest(testId);
       });
 
+      function initConnectivityBadge() {
+        var badge = document.createElement('div');
+        badge.id = 'connectivity-badge';
+        badge.className = 'conn-badge';
+        badge.setAttribute('role', 'status');
+        badge.setAttribute('aria-live', 'polite');
+        document.body.appendChild(badge);
+
+        function update() {
+          var offline = !navigator.onLine;
+          var saveFailed = false;
+          try { saveFailed = sessionStorage.getItem('nokj-save-failed') === '1'; } catch (e) { /* noop */ }
+          var text;
+          if (saveFailed) text = tr('Storage full — progress kept in this tab only');
+          else if (offline) text = tr('You are offline — your progress is saved on this device');
+          else text = tr('Online — progress saved');
+          badge.textContent = text;
+          badge.classList.toggle('conn-offline', offline || saveFailed);
+          badge.classList.toggle('conn-hidden', !offline && !saveFailed);
+        }
+
+        window.addEventListener('online', function() { saveData(); update(); });
+        window.addEventListener('offline', update);
+        setInterval(update, 5000);
+        update();
+      }
+
       // ----- Init -----
       loadData();
       setLanguage(currentLang);
       applyBrandLogo();
+      initCourseStudio();
+      initAuthHistory();
+      initScheduleAttachment();
+      initConnectivityBadge();
+
+      // Flush any draft that was never confirmed, and re-sync drafts after reload.
+      window.addEventListener('beforeunload', function() { saveData(); });
 
       var savedTheme = 'light';
       try { savedTheme = localStorage.getItem('nokj-theme') || 'light'; } catch (e) { /* noop */ }

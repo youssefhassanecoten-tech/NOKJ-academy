@@ -1,52 +1,243 @@
       // ============================================================
+      //  RESILIENT STORAGE
+      //  Primary: localStorage. Overflow: sessionStorage (survives reload,
+      //  immune to persistent quota pressure). A consolidated snapshot is
+      //  written first so a quota error can never leave a half-written DB.
+      // ============================================================
+      var NOKJ_STORE_KEYS = [
+        ['nokj-students', 'students'],
+        ['nokj-teachers', 'teachers'],
+        ['nokj-admins', 'admins'],
+        ['nokj-courses', 'courses'],
+        ['nokj-enrollments', 'enrollments'],
+        ['nokj-meetings', 'meetings'],
+        ['nokj-grades', 'grades'],
+        ['nokj-tasks', 'tasks'],
+        ['nokj-submissions', 'taskSubmissions'],
+        ['nokj-budget', 'budgetEntries'],
+        ['nokj-tests', 'tests'],
+        ['nokj-test-submissions', 'testSubmissions'],
+        ['nokj-announcements', 'announcements'],
+        ['nokj-pending-teachers', 'pendingTeachers'],
+        ['nokj-enroll-requests', 'enrollRequests'],
+        ['nokj-course-requests', 'courseRequests'],
+        ['nokj-course-materials', 'courseMaterials'],
+        ['nokj-teacher-auth-keys', 'teacherAuthKeys']
+      ];
+
+      function storeGet(key) {
+        try {
+          var v = localStorage.getItem(key);
+          if (v !== null) return v;
+        } catch (e) { /* localStorage blocked */ }
+        try {
+          var s = sessionStorage.getItem(key);
+          if (s !== null) return s;
+        } catch (e2) { /* sessionStorage blocked */ }
+        return null;
+      }
+
+      function storeSet(key, value) {
+        try {
+          localStorage.setItem(key, value);
+          try { sessionStorage.removeItem(key); } catch (e) { /* noop */ }
+          return 'local';
+        } catch (e) {
+          try {
+            sessionStorage.setItem(key, value);
+            return 'session';
+          } catch (e2) {
+            return 'failed';
+          }
+        }
+      }
+
+      function storeRemove(key) {
+        try { localStorage.removeItem(key); } catch (e) { /* noop */ }
+        try { sessionStorage.removeItem(key); } catch (e2) { /* noop */ }
+      }
+
+      var NOKJ_STORE_READERS = {
+        students: function() { return students; },
+        teachers: function() { return teachers; },
+        admins: function() { return admins; },
+        courses: function() { return courses; },
+        enrollments: function() { return enrollments; },
+        meetings: function() { return meetings; },
+        grades: function() { return gradeData; },
+        tasks: function() { return tasks; },
+        taskSubmissions: function() { return taskSubmissions; },
+        budgetEntries: function() { return budgetEntries; },
+        tests: function() { return tests; },
+        testSubmissions: function() { return testSubmissions; },
+        announcements: function() { return announcements; },
+        pendingTeachers: function() { return pendingTeachers; },
+        enrollRequests: function() { return enrollRequests; },
+        courseRequests: function() { return courseRequests; },
+        courseMaterials: function() { return courseMaterials; },
+        teacherAuthKeys: function() { return teacherAuthKeys; }
+      };
+
+      function currentSnapshot() {
+        var snap = {};
+        NOKJ_STORE_KEYS.forEach(function(pair) {
+          var reader = NOKJ_STORE_READERS[pair[1]];
+          if (reader) snap[pair[1]] = reader();
+        });
+        return snap;
+      }
+
+      // Keeps a consolidated copy so a corrupt/partial individual key can be repaired on load.
+      function writeSnapshot(snap) {
+        try { localStorage.setItem('nokj-db-snapshot', JSON.stringify(snap)); } catch (e) { /* noop */ }
+      }
+
+      function readSnapshot() {
+        try {
+          var raw = localStorage.getItem('nokj-db-snapshot');
+          if (!raw) return null;
+          var parsed = JSON.parse(raw);
+          return parsed && typeof parsed === 'object' ? parsed : null;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      // ============================================================
+      //  DRAFTS — in-progress work survives reloads and connectivity loss
+      // ============================================================
+      function saveDraft(key, payload) {
+        return storeSet('nokj-draft-' + key, JSON.stringify({
+          savedAt: Date.now(),
+          data: payload
+        }));
+      }
+
+      function loadDraft(key) {
+        var raw = storeGet('nokj-draft-' + key);
+        if (!raw) return null;
+        try {
+          var parsed = JSON.parse(raw);
+          return parsed && parsed.data !== undefined ? parsed.data : null;
+        } catch (e) {
+          storeRemove('nokj-draft-' + key);
+          return null;
+        }
+      }
+
+      function clearDraft(key) {
+        storeRemove('nokj-draft-' + key);
+      }
+
+      // ============================================================
       //  DATA MANAGEMENT
       // ============================================================
       function loadData() {
-        const savedStudents = localStorage.getItem('nokj-students');
-        const savedTeachers = localStorage.getItem('nokj-teachers');
-        const savedAdmins = localStorage.getItem('nokj-admins');
-        const savedCourses = localStorage.getItem('nokj-courses');
-        const savedEnrollments = localStorage.getItem('nokj-enrollments');
-        const savedMeetings = localStorage.getItem('nokj-meetings');
-        const savedGrades = localStorage.getItem('nokj-grades');
-        const savedTasks = localStorage.getItem('nokj-tasks');
-        const savedSubmissions = localStorage.getItem('nokj-submissions');
-        const savedBudget = localStorage.getItem('nokj-budget');
-        const savedTests = localStorage.getItem('nokj-tests');
-        const savedTestSubmissions = localStorage.getItem('nokj-test-submissions');
-        const savedAnnouncements = localStorage.getItem('nokj-announcements');
-        const savedPendingTeachers = localStorage.getItem('nokj-pending-teachers');
-        const savedEnrollRequests = localStorage.getItem('nokj-enroll-requests');
-        const savedCourseRequests = localStorage.getItem('nokj-course-requests');
+        const savedStudents = storeGet('nokj-students');
+        const savedTeachers = storeGet('nokj-teachers');
+        const savedAdmins = storeGet('nokj-admins');
+        const savedCourses = storeGet('nokj-courses');
+        const savedEnrollments = storeGet('nokj-enrollments');
+        const savedMeetings = storeGet('nokj-meetings');
+        const savedGrades = storeGet('nokj-grades');
+        const savedTasks = storeGet('nokj-tasks');
+        const savedSubmissions = storeGet('nokj-submissions');
+        const savedBudget = storeGet('nokj-budget');
+        const savedTests = storeGet('nokj-tests');
+        const savedTestSubmissions = storeGet('nokj-test-submissions');
+        const savedAnnouncements = storeGet('nokj-announcements');
+        const savedPendingTeachers = storeGet('nokj-pending-teachers');
+        const savedEnrollRequests = storeGet('nokj-enroll-requests');
+        const savedCourseRequests = storeGet('nokj-course-requests');
+        const savedCourseMaterials = storeGet('nokj-course-materials');
+        const savedTeacherAuthKeys = storeGet('nokj-teacher-auth-keys');
+        var snap = readSnapshot();
 
         if (savedStudents) { try { students = JSON.parse(savedStudents); } catch (e) { students = DEFAULT_STUDENTS.slice(); } } else { students =
             DEFAULT_STUDENTS.slice(); }
-        if (savedTeachers) { try { teachers = JSON.parse(savedTeachers); } catch (e) { teachers = DEFAULT_TEACHERS.slice(); } } else { teachers =
-            DEFAULT_TEACHERS.slice(); }
-        if (savedAdmins) { try { admins = JSON.parse(savedAdmins); } catch (e) { admins = DEFAULT_ADMINS.slice(); } } else { admins =
-            DEFAULT_ADMINS.slice(); }
-        if (savedCourses) { try { courses = JSON.parse(savedCourses); } catch (e) { courses = DEFAULT_COURSES.slice(); } } else { courses =
-            DEFAULT_COURSES.slice(); }
-        if (savedEnrollments) { try { enrollments = JSON.parse(savedEnrollments); } catch (e) { enrollments = DEFAULT_ENROLLMENTS.slice(); } } else { enrollments =
-            DEFAULT_ENROLLMENTS.slice(); }
-        if (savedMeetings) { try { meetings = JSON.parse(savedMeetings); } catch (e) { meetings = DEFAULT_MEETINGS.slice(); } } else { meetings =
-            DEFAULT_MEETINGS.slice(); }
-        if (savedGrades) { try { gradeData = JSON.parse(savedGrades); } catch (e) { gradeData = DEFAULT_GRADES; } } else { gradeData =
-            DEFAULT_GRADES; }
-        if (savedTasks) { try { tasks = JSON.parse(savedTasks); } catch (e) { tasks = DEFAULT_TASKS.slice(); } } else { tasks =
-            DEFAULT_TASKS.slice(); }
-        if (savedSubmissions) { try { taskSubmissions = JSON.parse(savedSubmissions); } catch (e) { taskSubmissions =
-              DEFAULT_TASK_SUBMISSIONS; } } else { taskSubmissions = DEFAULT_TASK_SUBMISSIONS; }
-        if (savedBudget) { try { budgetEntries = JSON.parse(savedBudget); } catch (e) { budgetEntries = DEFAULT_BUDGET.slice(); } } else { budgetEntries =
-            DEFAULT_BUDGET.slice(); }
-        if (savedTests) { try { tests = JSON.parse(savedTests); } catch (e) { tests = []; } } else { tests = []; }
-        if (savedTestSubmissions) { try { testSubmissions = JSON.parse(savedTestSubmissions); } catch (e) { testSubmissions =
-              {}; } } else { testSubmissions = {}; }
-        if (savedAnnouncements) { try { announcements = JSON.parse(savedAnnouncements); } catch (e) { announcements =
-            DEFAULT_ANNOUNCEMENTS.slice(); } } else { announcements = DEFAULT_ANNOUNCEMENTS.slice(); }
-        if (savedPendingTeachers) { try { pendingTeachers = JSON.parse(savedPendingTeachers); } catch (e) { pendingTeachers = []; } } else { pendingTeachers = []; }
-        if (savedEnrollRequests) { try { enrollRequests = JSON.parse(savedEnrollRequests); } catch (e) { enrollRequests = []; } } else { enrollRequests = []; }
-        if (savedCourseRequests) { try { courseRequests = JSON.parse(savedCourseRequests); } catch (e) { courseRequests = []; } } else { courseRequests = []; }
+        // Parse each key, recording which ones were unreadable so the repair
+        // pass below knows exactly what to restore from the snapshot.
+        var corrupt = {};
+        function parseInto(name, raw, fallback, apply) {
+          if (!raw) { apply(fallback); return; }
+          try {
+            apply(JSON.parse(raw));
+          } catch (e) {
+            corrupt[name] = true;
+            apply(typeof fallback === 'function' ? fallback() : fallback);
+          }
+        }
+        function asCopy(arr) { return function() { return arr.slice(); }; }
+
+        parseInto('students', savedStudents, asCopy(DEFAULT_STUDENTS), function(v) { students = v; });
+        parseInto('teachers', savedTeachers, asCopy(DEFAULT_TEACHERS), function(v) { teachers = v; });
+        parseInto('admins', savedAdmins, asCopy(DEFAULT_ADMINS), function(v) { admins = v; });
+        parseInto('courses', savedCourses, asCopy(DEFAULT_COURSES), function(v) { courses = v; });
+        parseInto('enrollments', savedEnrollments, asCopy(DEFAULT_ENROLLMENTS), function(v) { enrollments = v; });
+        parseInto('meetings', savedMeetings, asCopy(DEFAULT_MEETINGS), function(v) { meetings = v; });
+        parseInto('grades', savedGrades, function() { return DEFAULT_GRADES; }, function(v) { gradeData = v; });
+        parseInto('tasks', savedTasks, asCopy(DEFAULT_TASKS), function(v) { tasks = v; });
+        parseInto('taskSubmissions', savedSubmissions, function() { return DEFAULT_TASK_SUBMISSIONS; },
+          function(v) { taskSubmissions = v; });
+        parseInto('budgetEntries', savedBudget, asCopy(DEFAULT_BUDGET), function(v) { budgetEntries = v; });
+        parseInto('tests', savedTests, function() { return []; }, function(v) { tests = v; });
+        parseInto('testSubmissions', savedTestSubmissions, function() { return {}; },
+          function(v) { testSubmissions = v; });
+        parseInto('announcements', savedAnnouncements, asCopy(DEFAULT_ANNOUNCEMENTS), function(v) { announcements = v; });
+        parseInto('pendingTeachers', savedPendingTeachers, function() { return []; },
+          function(v) { pendingTeachers = v; });
+        parseInto('enrollRequests', savedEnrollRequests, function() { return []; }, function(v) { enrollRequests = v; });
+        parseInto('courseRequests', savedCourseRequests, function() { return []; },
+          function(v) { courseRequests = v; });
+        parseInto('courseMaterials', savedCourseMaterials, function() { return []; },
+          function(v) { courseMaterials = v; });
+        parseInto('teacherAuthKeys', savedTeacherAuthKeys, function() { return []; },
+          function(v) { teacherAuthKeys = v; });
+
+        // Repair pass: if an individual key was lost or corrupt, fall back to the
+        // last consolidated snapshot so existing records are never dropped.
+        var present = {
+          students: !!savedStudents, teachers: !!savedTeachers, admins: !!savedAdmins,
+          courses: !!savedCourses, enrollments: !!savedEnrollments, meetings: !!savedMeetings,
+          grades: !!savedGrades, tasks: !!savedTasks, taskSubmissions: !!savedSubmissions,
+          budgetEntries: !!savedBudget, tests: !!savedTests, testSubmissions: !!savedTestSubmissions,
+          announcements: !!savedAnnouncements, pendingTeachers: !!savedPendingTeachers,
+          enrollRequests: !!savedEnrollRequests, courseRequests: !!savedCourseRequests,
+          courseMaterials: !!savedCourseMaterials, teacherAuthKeys: !!savedTeacherAuthKeys
+        };
+        if (snap) {
+          var repaired = false;
+          NOKJ_STORE_KEYS.forEach(function(pair) {
+            var name = pair[1];
+            var broken = !present[name] || corrupt[name];
+            if (!broken || snap[name] === undefined) return;
+            try {
+              var val = JSON.parse(JSON.stringify(snap[name]));
+              switch (name) {
+                case 'students': students = val; break;
+                case 'teachers': teachers = val; break;
+                case 'admins': admins = val; break;
+                case 'courses': courses = val; break;
+                case 'enrollments': enrollments = val; break;
+                case 'meetings': meetings = val; break;
+                case 'grades': gradeData = val; break;
+                case 'tasks': tasks = val; break;
+                case 'taskSubmissions': taskSubmissions = val; break;
+                case 'budgetEntries': budgetEntries = val; break;
+                case 'tests': tests = val; break;
+                case 'testSubmissions': testSubmissions = val; break;
+                case 'announcements': announcements = val; break;
+                case 'pendingTeachers': pendingTeachers = val; break;
+                case 'enrollRequests': enrollRequests = val; break;
+                case 'courseRequests': courseRequests = val; break;
+                case 'courseMaterials': courseMaterials = val; break;
+                case 'teacherAuthKeys': teacherAuthKeys = val; break;
+              }
+              repaired = true;
+            } catch (e) { /* ignore unparseable snapshot entry */ }
+          });
+          if (repaired) saveData();
+        }
 
         // The demo accounts must always be available so login never breaks,
         // even if local storage holds older seed data.
@@ -74,22 +265,29 @@
       }
 
       function saveData() {
-        localStorage.setItem('nokj-students', JSON.stringify(students));
-        localStorage.setItem('nokj-teachers', JSON.stringify(teachers));
-        localStorage.setItem('nokj-admins', JSON.stringify(admins));
-        localStorage.setItem('nokj-courses', JSON.stringify(courses));
-        localStorage.setItem('nokj-enrollments', JSON.stringify(enrollments));
-        localStorage.setItem('nokj-meetings', JSON.stringify(meetings));
-        localStorage.setItem('nokj-grades', JSON.stringify(gradeData));
-        localStorage.setItem('nokj-tasks', JSON.stringify(tasks));
-        localStorage.setItem('nokj-submissions', JSON.stringify(taskSubmissions));
-        localStorage.setItem('nokj-budget', JSON.stringify(budgetEntries));
-        localStorage.setItem('nokj-tests', JSON.stringify(tests));
-        localStorage.setItem('nokj-test-submissions', JSON.stringify(testSubmissions));
-        localStorage.setItem('nokj-announcements', JSON.stringify(announcements));
-        localStorage.setItem('nokj-pending-teachers', JSON.stringify(pendingTeachers));
-        localStorage.setItem('nokj-enroll-requests', JSON.stringify(enrollRequests));
-        localStorage.setItem('nokj-course-requests', JSON.stringify(courseRequests));
+        var payload = {};
+        NOKJ_STORE_KEYS.forEach(function(pair) {
+          var reader = NOKJ_STORE_READERS[pair[1]];
+          try {
+            payload[pair[0]] = reader ? JSON.stringify(reader()) : 'null';
+          } catch (e) {
+            payload[pair[0]] = 'null';
+          }
+        });
+        // Snapshot first: if this succeeds the whole database is recoverable.
+        writeSnapshot(currentSnapshot());
+        var degraded = false;
+        var failed = false;
+        Object.keys(payload).forEach(function(key) {
+          var result = storeSet(key, payload[key]);
+          if (result === 'session') degraded = true;
+          else if (result === 'failed') failed = true;
+        });
+        if (failed || degraded) {
+          try { sessionStorage.setItem('nokj-save-failed', '1'); } catch (e) { /* storage unavailable */ }
+        } else {
+          try { sessionStorage.removeItem('nokj-save-failed'); } catch (e2) { /* noop */ }
+        }
       }
 
       // ============================================================
@@ -159,8 +357,9 @@
       }
 
       function meetingEditable(m) {
-        if (!currentUser) return false;
+        if (!currentUser || !m) return false;
         if (currentUser.role === 'Admin') return true;
+        if (currentUser.role !== 'Teacher') return false;
         var now = Date.now();
         return (m.teacherId === currentUser.id || m.createdBy === currentUser.id) &&
           now < meetingStartMs(m) - (24 * 60 * 60 * 1000);
@@ -192,6 +391,111 @@
         return maxId + 1;
       }
 
+      function downloadBlob(content, mime, filename) {
+        var blob = new Blob([content], { type: mime });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function csvCell(value) {
+        var s = value === null || value === undefined ? '' : String(value);
+        if (/^[=+\-@]/.test(s)) s = "'" + s;
+        return '"' + s.replace(/"/g, '""') + '"';
+      }
+
+      // Builds a real .xls (SpreadsheetML) workbook without any external library.
+      function exportToExcel(sheets, filename) {
+        var xml = '<?xml version="1.0"?>\n' +
+          '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" ' +
+          'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">' +
+          '<Styles><Style ss:ID="hdr"><Font ss:Bold="1"/><Interior ss:Color="#EEF2FF" ss:Pattern="Solid"/></Style></Styles>';
+        sheets.forEach(function(sheet) {
+          xml += '<Worksheet ss:Name="' + String(sheet.name).replace(/"/g, '') + '"><Table>';
+          (sheet.rows || []).forEach(function(row, rowIdx) {
+            xml += '<Row>';
+            row.forEach(function(cell) {
+              var style = rowIdx === 0 ? ' ss:StyleID="hdr"' : '';
+              xml += '<Cell' + style + '><Data ss:Type="String">' +
+                String(cell === null || cell === undefined ? '' : cell)
+                  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') +
+                '</Data></Cell>';
+            });
+            xml += '</Row>';
+          });
+          xml += '</Table></Worksheet>';
+        });
+        xml += '</Workbook>';
+        downloadBlob(xml, 'application/vnd.ms-excel', filename || ('nokj-export-' +
+          new Date().toISOString().split('T')[0] + '.xls'));
+      }
+
+      function exportAdminWorkbook() {
+        if (!currentUser || currentUser.role !== 'Admin') return;
+        var enrolledCourseNames = {};
+        enrollments.forEach(function(e) {
+          enrolledCourseNames[e.studentId] = enrolledCourseNames[e.studentId] || [];
+          var c = courses.find(function(x) { return x.id === e.courseId; });
+          if (c) enrolledCourseNames[e.studentId].push(c.name);
+        });
+        exportToExcel([
+          {
+            name: 'Students',
+            rows: [['ID', 'Name', 'Email', 'Role', 'Status', 'Created', 'Courses']].concat(
+              students.map(function(s) {
+                return [s.id, s.name, s.email, 'Student', s.status, s.createdAt || '',
+                  (enrolledCourseNames[s.id] || []).join(' / ')];
+              }))
+          },
+          {
+            name: 'Teachers',
+            rows: [['ID', 'Name', 'Email', 'Teacher Code', 'Status', 'Created']].concat(
+              teachers.map(function(t) {
+                return [t.id, t.name, t.email, t.teacherCode || '', t.status, t.createdAt || ''];
+              }))
+          },
+          {
+            name: 'Courses',
+            rows: [['ID', 'Name', 'Teacher', 'Description', 'Enrolled']].concat(
+              courses.map(function(c) {
+                return [c.id, c.name, getTeacherName(c.teacherId), c.description || '',
+                  getCourseStudentCount(c.id)];
+              }))
+          },
+          {
+            name: 'Tasks',
+            rows: [['ID', 'Title', 'Type', 'Priority', 'Deadline', 'Assigned To', 'Submissions', 'Graded']].concat(
+              tasks.map(function(t) {
+                var keys = Object.keys(taskSubmissions).filter(function(k) { return k.startsWith(t.id + '-'); });
+                var graded = keys.filter(function(k) {
+                  return taskSubmissions[k] && taskSubmissions[k].grade !== null &&
+                    taskSubmissions[k].grade !== undefined;
+                });
+                return [t.id, t.title, t.type, t.priority, t.deadline, t.assignedTo, keys.length, graded.length];
+              }))
+          },
+          {
+            name: 'Budget',
+            rows: [['Category', 'Type', 'Amount', 'Date', 'Status']].concat(
+              budgetEntries.map(function(b) {
+                return [b.category, b.type, b.amount, b.date, b.status];
+              }))
+          },
+          {
+            name: 'Teacher Keys',
+            rows: [['Key', 'Status', 'Used By', 'Created']].concat(
+              teacherAuthKeys.map(function(k) {
+                return [k.key, k.used ? 'Used' : 'Active', k.usedByName || '', k.createdAt || ''];
+              }))
+          }
+        ], 'nokj-academy-' + new Date().toISOString().split('T')[0] + '.xls');
+      }
+
       // Export the whole academy database as a downloadable JSON backup.
       function exportAppData() {
         var payload = {
@@ -213,17 +517,12 @@
           pendingTeachers: pendingTeachers,
           enrollRequests: enrollRequests,
           courseRequests: courseRequests,
+          courseMaterials: courseMaterials,
+          teacherAuthKeys: teacherAuthKeys,
           brandLogo: (function() { try { return localStorage.getItem('nokj-logo'); } catch (e) { return null; } })()
         };
-        var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url;
-        a.download = 'nokj-backup-' + new Date().toISOString().split('T')[0] + '.json';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        downloadBlob(JSON.stringify(payload, null, 2), 'application/json',
+          'nokj-backup-' + new Date().toISOString().split('T')[0] + '.json');
       }
 
       // Render a user's photo onto an avatar element (span). Falls back to initials.

@@ -38,7 +38,7 @@ function updateAdminStats() {
         var html = '';
         html += '<div class="hero">' +
           '<div><p class="eyebrow">' + new Date().toLocaleDateString() + '</p><h2>' + tr('Manage Academy') +
-          '</h2><p>' + tr('Here is everything you need to stay on track today.') + '</p></div>' +
+          '</h2><p class="hero-sub">' + tr('Here is everything you need to stay on track today.|admin') + '</p></div>' +
           '<button class="primary-button" data-page="students">' + tr('Add student') + '</button>' +
           '</div>';
         html += '<div class="stats">' +
@@ -52,7 +52,8 @@ function updateAdminStats() {
           '<div class="stack">' +
           panel(tr('Quick actions'),
           '<div class="quick-actions">' +
-          '<button class="primary-button" data-page="students">👥 ' + tr('Add student') + '</button>' +
+          '<button class="primary-button" data-page="course-workspace">🧩 ' + tr('Create course') + '</button>' +
+          '<button class="primary-button" data-page="tasks">📝 ' + tr('Create task') + '</button>' +
           '<button class="primary-button" data-page="calendar">📅 ' + tr('Schedule class') + '</button>' +
           '<button class="primary-button" data-page="grades">⭐ ' + tr('Manage grades') + '</button>' +
           '<button class="primary-button" onclick="openModal(\'announcement\', \'add\')">📌 ' + tr('Create announcement') +
@@ -72,7 +73,8 @@ function updateAdminStats() {
         var html = '';
         html += '<div class="hero">' +
           '<div><p class="eyebrow">' + new Date().toLocaleDateString() + '</p><h2>' + tr('Good day') + ' ' +
-          currentUser.name.split(' ')[0] + ' 👋</h2><p>' + tr('Here is everything you need to stay on track today.') +
+          escapeHtml(currentUser.name.split(' ')[0]) + ' 👋</h2><p class="hero-sub">' +
+          tr('Here is everything you need to stay on track today.|teacher') +
           '</p></div>' +
           '<button class="primary-button" data-page="calendar">' + tr('Schedule class') + '</button></div>';
         html += '<div class="stats">' +
@@ -114,7 +116,8 @@ function updateAdminStats() {
         var html = '';
         html += '<div class="hero">' +
           '<div><p class="eyebrow">' + new Date().toLocaleDateString() + '</p><h2>' + tr('Good morning') + ', ' +
-          currentUser.name.split(' ')[0] + ' 👋</h2><p>' + tr('Here is everything you need to stay on track today.') +
+          escapeHtml(currentUser.name.split(' ')[0]) + ' 👋</h2><p class="hero-sub">' +
+          tr('Here is everything you need to stay on track today.|student') +
           '</p></div>' +
           '<button class="primary-button" data-page="timetable">' + tr('View timetable') + '</button></div>';
         html += renderOverallProgressBar();
@@ -191,8 +194,9 @@ function updateAdminStats() {
         var html = '';
         enrolled.slice(0, 3).forEach(function(courseId) {
           var pct = courseProgress(courseId, currentUser.id);
-          html += '<div class="progress-item"><div class="progress-top"><span>' + getCourseName(courseId) +
-            '</span><span>' + pct + '%</span></div><div class="track"><div class="fill" style="width:' + pct +
+          html += '<div class="progress-item"><div class="progress-top"><span>' + escapeHtml(getCourseName(courseId)) +
+            '</span><span class="' + progressColorClass(pct) + '">' + pct + '%</span></div>' +
+            '<div class="track ' + progressColorClass(pct) + '"><div class="fill" style="width:' + Math.max(pct, 2) +
             '%"></div></div></div>';
         });
         return html;
@@ -219,10 +223,25 @@ function updateAdminStats() {
         return Math.round(sum / enrolled.length);
       }
 
+      function progressColorClass(pct) {
+        if (pct >= 75) return 'progress-good';
+        if (pct >= 40) return 'progress-mid';
+        if (pct > 0) return 'progress-low';
+        return 'progress-none';
+      }
+
       function courseProgress(courseId, studentId) {
+        var relevant = tasks.filter(function(t) {
+          if (t.assignedTo === 'course') return t.assignedIds && t.assignedIds.indexOf(courseId) !== -1;
+          if (t.assignedTo === 'student') return t.assignedIds && t.assignedIds.indexOf(studentId) !== -1;
+          if (t.assignedTo === 'all') return !t.teacherId;
+          return false;
+        });
+        var taskIds = relevant.map(function(t) { return t.id; });
         var subKeys = Object.keys(taskSubmissions).filter(function(k) {
           var parts = k.split('-');
-          return parts[1] == studentId;
+          if (String(parts[1]) !== String(studentId)) return false;
+          return taskIds.indexOf(parseInt(parts[0])) !== -1;
         });
         if (!subKeys.length) return 0;
         var graded = subKeys.filter(function(k) { return taskSubmissions[k].grade !== null && taskSubmissions[k].grade !==
@@ -237,35 +256,114 @@ function updateAdminStats() {
       // ============================================================
       //  TIMETABLE (data-driven)
       // ============================================================
+      var timetableCursor = null;
+
+      function timetableMonthStart() {
+        if (timetableCursor) return new Date(timetableCursor.getFullYear(), timetableCursor.getMonth(), 1);
+        var n = new Date();
+        return new Date(n.getFullYear(), n.getMonth(), 1);
+      }
+
+      function timetableVisibleMeetings() {
+        return meetings.filter(function(m) {
+          if (m.visibleToTeachers === true) return currentUser && currentUser.role !== 'Student';
+          return m.visibleToStudents !== false;
+        });
+      }
+
       function renderTimetable() {
         var container = document.getElementById('timetable-content');
         if (!container || !currentUser) return;
-        var today = new Date().toISOString().split('T')[0];
-        var weekRows = meetings.filter(function(m) { return m.date >= today; }).sort(function(a, b) {
-          return (a.date + a.time).localeCompare(b.date + b.time);
-        }).slice(0, 7);
+        var monthStart = timetableMonthStart();
+        var year = monthStart.getFullYear();
+        var month = monthStart.getMonth();
 
-        if (!weekRows.length) {
-          container.innerHTML = '<p style="color:var(--muted);padding:24px 0;">' + tr(
-            'No lessons scheduled this week.') + '</p>';
-          setLanguage(currentLang);
-          return;
+        var byDate = {};
+        timetableVisibleMeetings().forEach(function(m) {
+          (byDate[m.date] = byDate[m.date] || []).push(m);
+        });
+        Object.keys(byDate).forEach(function(d) {
+          byDate[d].sort(function(a, b) { return (a.time || '').localeCompare(b.time || ''); });
+        });
+
+        var firstDow = new Date(year, month, 1).getDay();
+        var daysInMonth = new Date(year, month + 1, 0).getDate();
+        var todayKey = new Date().toISOString().slice(0, 10);
+        var monthLabel = new Date(year, month, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+
+        var html = '<div class="cal-head">' +
+          '<button class="cal-nav" id="timetable-prev" title="' + tr('Previous month') + '">‹</button>' +
+          '<h3 class="cal-month">' + escapeHtml(monthLabel) + '</h3>' +
+          '<button class="cal-nav" id="timetable-next" title="' + tr('Next month') + '">›</button>' +
+          '<button class="cal-nav cal-today" id="timetable-today">' + tr('Today') + '</button>' +
+          '</div><div class="cal-grid">';
+
+        ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(function(d) {
+          html += '<div class="cal-dow">' + tr(d + '|calendar') + '</div>';
+        });
+
+        for (var i = 0; i < firstDow; i++) html += '<div class="cal-cell cal-out"></div>';
+
+        for (var day = 1; day <= daysInMonth; day++) {
+          var key = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+          var list = byDate[key] || [];
+          var isToday = key === todayKey;
+          html += '<div class="cal-cell' + (isToday ? ' cal-today-cell' : '') + (list.length ? ' cal-has' : '') + '">' +
+            '<span class="cal-date">' + day + '</span><div class="cal-events">';
+          list.slice(0, 3).forEach(function(m) {
+            html += '<button class="cal-event" data-meeting="' + m.id + '" title="' +
+              escapeHtml(m.time + ' · ' + m.title) + '"><span class="cal-event-time">' + escapeHtml(m.time || '') +
+              '</span><span class="cal-event-name">' + escapeHtml(m.title) + '</span></button>';
+          });
+          if (list.length > 3) {
+            html += '<span class="cal-more">+' + (list.length - 3) + '</span>';
+          }
+          html += '</div></div>';
         }
 
-        var html = '';
-        weekRows.forEach(function(m) {
-          var teacher = getTeacherName(m.teacherId);
-          var link = currentUser && currentUser.role === 'Student' ? '' :
-            '<button class="link-button" onclick="openMeetingRoom(\'' + m.title.replace(/['\\]/g, '') + '\', ' + m.id +
-            ')">' + tr('Join') + '</button>';
-          html += '<article class="panel" style="margin-bottom:14px;">' +
-            '<div class="panel-title"><h3>' + new Date(m.date).toLocaleDateString() + ' · ' + m.time + '</h3>' + link +
-            '</div>' +
-            '<div class="lesson-row"><span class="time">' + m.time + '</span><span class="color-bar"></span>' +
-            '<div class="row-main"><strong>' + m.title + '</strong><span>' + teacher + ' · ' + m.duration + ' min</span></div>' +
-            '<span class="pill">' + tr('Next') + '</span></div></article>';
-        });
+        var trailing = (7 - ((firstDow + daysInMonth) % 7)) % 7;
+        for (var t = 0; t < trailing; t++) html += '<div class="cal-cell cal-out"></div>';
+        html += '</div>';
+
+        var upcoming = timetableVisibleMeetings().filter(function(m) { return m.date >= todayKey; })
+          .sort(function(a, b) { return (a.date + a.time).localeCompare(b.date + b.time); }).slice(0, 6);
+        html += '<div class="cal-upcoming"><h4>' + tr('Upcoming lessons') + '</h4>';
+        if (!upcoming.length) {
+          html += '<p style="color:var(--muted);padding:10px 0;">' + tr('No lessons scheduled this week.') + '</p>';
+        } else {
+          upcoming.forEach(function(m) {
+            html += '<div class="lesson-row"><span class="time">' + escapeHtml(m.time) + '</span>' +
+              '<span class="color-bar"></span><div class="row-main"><strong>' + escapeHtml(m.title) +
+              '</strong><span>' + new Date(m.date).toLocaleDateString() + ' · ' + escapeHtml(getTeacherName(m.teacherId)) +
+              ' · ' + m.duration + ' min</span></div></div>';
+          });
+        }
+        html += '</div>';
+
         container.innerHTML = html;
+
+        var prev = document.getElementById('timetable-prev');
+        var next = document.getElementById('timetable-next');
+        var todayBtn = document.getElementById('timetable-today');
+        if (prev) prev.addEventListener('click', function() {
+          timetableCursor = new Date(year, month - 1, 1);
+          renderTimetable();
+        });
+        if (next) next.addEventListener('click', function() {
+          timetableCursor = new Date(year, month + 1, 1);
+          renderTimetable();
+        });
+        if (todayBtn) todayBtn.addEventListener('click', function() {
+          timetableCursor = null;
+          renderTimetable();
+        });
+        Array.prototype.forEach.call(container.querySelectorAll('.cal-event'), function(btn) {
+          btn.addEventListener('click', function() {
+            var mid = parseInt(btn.dataset.meeting);
+            var m = meetings.find(function(x) { return x.id === mid; });
+            openMeetingRoom(m ? m.title : '', mid);
+          });
+        });
         setLanguage(currentLang);
       }
 

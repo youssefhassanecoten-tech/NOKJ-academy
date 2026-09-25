@@ -441,6 +441,46 @@
       // ============================================================
       //  APPLICATIONS (teacher approvals + enrollment requests)
       // ============================================================
+      function renderTeacherAuthKeys() {
+        var section = document.getElementById('teacher-authkey-section');
+        if (!section || !currentUser) return;
+        var isAdmin = currentUser.role === 'Admin';
+        section.style.display = isAdmin ? 'block' : 'none';
+        if (!isAdmin) return;
+        var body = document.getElementById('teacher-key-table-body');
+        if (!body) return;
+        var keys = teacherAuthKeys.slice().reverse();
+        document.getElementById('teacher-key-count').textContent = keys.length + ' ' + tr('keys');
+        if (keys.length === 0) {
+          body.innerHTML = '<tr><td colspan="5" style="color:var(--muted);padding:18px;">' +
+            tr('No keys generated yet.') + '</td></tr>';
+          return;
+        }
+        body.innerHTML = '';
+        keys.forEach(function(k) {
+          var row = document.createElement('tr');
+          var statusHtml = k.used ? '<span class="pill warning">' + tr('Used') + '</span>' :
+            '<span class="pill">' + tr('Active') + '</span>';
+          row.innerHTML = '<td><code style="font-weight:700;letter-spacing:1px;">' + escapeHtml(k.key) + '</code></td>' +
+            '<td>' + statusHtml + '</td><td>' + escapeHtml(k.usedByName || '—') + '</td>' +
+            '<td>' + (k.createdAt ? new Date(k.createdAt).toLocaleDateString() : '—') + '</td>' +
+            '<td>' + (k.used ? '' : '<button class="action-btn delete" data-key-revoke="' + k.id + '" title="' +
+              tr('Revoke') + '">🗑️</button>') + '</td>';
+          body.appendChild(row);
+        });
+        body.querySelectorAll('[data-key-revoke]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var id = btn.dataset.keyRevoke;
+            if (!confirm(tr('Revoke this key? It can no longer be used to sign up.'))) return;
+            teacherAuthKeys = teacherAuthKeys.filter(function(x) { return String(x.id) !== String(id); });
+            saveData();
+            renderTeacherAuthKeys();
+            setLanguage(currentLang);
+          });
+        });
+        setLanguage(currentLang);
+      }
+
       function renderApprovals() {
         if (!currentUser || (currentUser.role !== 'Admin' && currentUser.role !== 'Teacher')) return;
 

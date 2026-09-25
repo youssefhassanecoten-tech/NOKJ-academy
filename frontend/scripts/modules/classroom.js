@@ -91,6 +91,7 @@
       //  MEETING CRUD
       // ============================================================
       var editingMeetingId = null;
+      var scheduleAttachment = null;
 
       function openScheduleModal(meetingId) {
         if (!currentUser || (currentUser.role !== 'Admin' && currentUser.role !== 'Teacher')) {
@@ -184,15 +185,29 @@
           visibleToStudents: visibleToStudents !== false,
           visibleToTeachers: visibleToTeachers === true
         };
+        if (scheduleAttachment && scheduleAttachment.data) {
+          base.attachment = { name: scheduleAttachment.name, data: scheduleAttachment.data };
+        }
         if (editingMeetingId) {
           var idx = meetings.findIndex(function(m) { return m.id === editingMeetingId; });
           if (idx !== -1) {
             meetings[idx] = Object.assign({}, meetings[idx], base);
+            if (scheduleAttachment && scheduleAttachment.data) {
+              applyPresentationSource(meetings[idx].id, scheduleAttachment);
+            }
           }
         } else {
           meetings.push(Object.assign({ id: meetings.length ? Math.max.apply(null, meetings.map(function(m) { return m.id; })) + 1 : 1,
             createdBy: currentUser ? currentUser.id : parseInt(teacherId) }, base));
+          if (scheduleAttachment && scheduleAttachment.data) {
+            applyPresentationSource(meetings[meetings.length - 1].id, scheduleAttachment);
+          }
         }
+        scheduleAttachment = null;
+        var attachInput = document.getElementById('schedule-file-input');
+        if (attachInput) attachInput.value = '';
+        var attachName = document.getElementById('schedule-file-name');
+        if (attachName) attachName.textContent = '';
         editingMeetingId = null;
         saveData();
         renderMeetings();
@@ -201,6 +216,40 @@
         renderDashboard();
         alert(tr('Class scheduled successfully!'));
         setLanguage(currentLang);
+      }
+
+      function applyPresentationSource(meetingId, attachment) {
+        try {
+          localStorage.setItem('nokj-pres-src-' + meetingId, JSON.stringify(attachment));
+        } catch (e) { /* storage full or unavailable */ }
+      }
+
+      function initScheduleAttachment() {
+        var input = document.getElementById('schedule-file-input');
+        if (!input) return;
+        input.addEventListener('change', function(e) {
+          var file = e.target.files && e.target.files[0];
+          var nameEl = document.getElementById('schedule-file-name');
+          if (!file) { scheduleAttachment = null; if (nameEl) nameEl.textContent = ''; return; }
+          var lower = file.name.toLowerCase();
+          if (lower.indexOf('.pptx') === -1 && lower.indexOf('.ppt') === -1 && lower.indexOf('.pdf') === -1) {
+            alert(tr('Only .pptx, .ppt or .pdf files can be attached to a class.'));
+            input.value = '';
+            scheduleAttachment = null;
+            return;
+          }
+          var reader = new FileReader();
+          reader.onload = function(ev) {
+            scheduleAttachment = { name: file.name, data: ev.target.result };
+            if (nameEl) nameEl.textContent = file.name;
+          };
+          reader.onerror = function() {
+            alert(tr('Could not read that file. Please try again.'));
+            input.value = '';
+            scheduleAttachment = null;
+          };
+          reader.readAsDataURL(file);
+        });
       }
 
       function openEditMeeting(meetingId) {

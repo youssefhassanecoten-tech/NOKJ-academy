@@ -23,8 +23,25 @@
       function renderAdminTasks() {
         var search = document.getElementById('task-search').value.toLowerCase();
         var typeFilter = document.getElementById('task-type-filter').value;
+        var teacherScoped = currentUser && currentUser.role === 'Teacher';
 
-        var filtered = tasks.filter(function(t) {
+        var scope = tasks;
+        if (teacherScoped) {
+          var myCourseIds = typeof teacherOwnCourseIds === 'function' ? teacherOwnCourseIds() : [];
+          var myStudentIds = typeof teacherEnrolledStudentIds === 'function' ? teacherEnrolledStudentIds() : [];
+          scope = tasks.filter(function(t) {
+            if (t.teacherId === currentUser.id) return true;
+            if (t.assignedTo === 'course' && t.assignedIds && t.assignedIds.some(function(id) {
+              return myCourseIds.indexOf(id) !== -1;
+            })) return true;
+            if (t.assignedTo === 'student' && t.assignedIds && t.assignedIds.some(function(id) {
+              return myStudentIds.indexOf(id) !== -1;
+            })) return true;
+            return false;
+          });
+        }
+
+        var filtered = scope.filter(function(t) {
           var matchesSearch = t.title.toLowerCase().includes(search) || t.description.toLowerCase().includes(search);
           var matchesType = typeFilter === 'all' || t.type === typeFilter;
           return matchesSearch && matchesType;
@@ -34,15 +51,17 @@
         container.innerHTML = '';
 
         if (filtered.length === 0) {
-          container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">No tasks found.</p>';
+          container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">' +
+            (teacherScoped ? tr('You have no tasks yet. Create one for your course or students.') : tr('No tasks found.')) +
+            '</p>';
           return;
         }
 
-        var totalTasks = tasks.length;
+        var totalTasks = scope.length;
         var pendingCount = 0,
           submittedCount = 0,
           gradedCount = 0;
-        tasks.forEach(function(task) {
+        scope.forEach(function(task) {
           var submissions = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id +
             '-'); });
           var graded = submissions.filter(function(key) {
@@ -104,7 +123,12 @@
         var studentId = currentUser.id;
         var container = document.getElementById('student-task-list');
         var assignedTasks = tasks.filter(function(task) {
-          if (task.assignedTo === 'all') return true;
+          if (task.assignedTo === 'all') {
+            if (task.teacherId && typeof teacherEnrolledStudentIds === 'function') {
+              return teacherEnrolledStudentIds().indexOf(studentId) !== -1;
+            }
+            return true;
+          }
           if (task.assignedTo === 'student') return task.assignedIds && task.assignedIds.includes(studentId);
           if (task.assignedTo === 'course') {
             var studentCourses = getEnrolledCourseIds(studentId);
@@ -261,6 +285,7 @@
             });
           }
         });
+        if (typeof bindAnswerDrafts === 'function') bindAnswerDrafts();
         setLanguage(currentLang);
       }
       // ============================================================
@@ -314,9 +339,18 @@
         }
       }
 
+      function nextTaskId() {
+        var maxId = 0;
+        tasks.forEach(function(t) {
+          var n = parseInt(t.id);
+          if (!isNaN(n) && n > maxId) maxId = n;
+        });
+        return maxId + 1;
+      }
+
       function createTask(title, type, description, deadline, priority, assignedTo, assignedIds, files, questions) {
         tasks.push({
-          id: tasks.length + 1,
+          id: nextTaskId(),
           title: title,
           type: type,
           description: description,
@@ -326,6 +360,7 @@
           assignedIds: assignedIds || [],
           files: files || [],
           questions: questions || [],
+          teacherId: currentUser && currentUser.role === 'Teacher' ? currentUser.id : null,
           createdAt: new Date().toISOString().split('T')[0]
         });
         saveData();
@@ -334,7 +369,25 @@
         setLanguage(currentLang);
       }
 
+      function canManageTaskById(taskId) {
+        if (!currentUser) return false;
+        if (currentUser.role === 'Admin') return true;
+        if (currentUser.role !== 'Teacher') return false;
+        var task = tasks.find(function(t) { return t.id === taskId; });
+        if (!task) return false;
+        if (task.teacherId === currentUser.id) return true;
+        if (typeof teacherOwnCourseIds === 'function' && task.assignedTo === 'course' && task.assignedIds &&
+          task.assignedIds.some(function(id) { return teacherOwnCourseIds().indexOf(id) !== -1; })) return true;
+        if (typeof teacherEnrolledStudentIds === 'function' && task.assignedTo === 'student' && task.assignedIds &&
+          task.assignedIds.some(function(id) { return teacherEnrolledStudentIds().indexOf(id) !== -1; })) return true;
+        return false;
+      }
+
       function deleteTask(taskId) {
+        if (!canManageTaskById(taskId)) {
+          alert(tr('You can only remove your own tasks.'));
+          return;
+        }
         tasks = tasks.filter(function(t) { return t.id !== taskId; });
         Object.keys(taskSubmissions).forEach(function(key) {
           if (key.startsWith(taskId + '-')) delete taskSubmissions[key];
@@ -371,7 +424,9 @@
           }
         }
         saveData();
+        if (typeof clearAnswerDraft === 'function') clearAnswerDraft(taskId, studentId);
         renderTasks();
+        bindAnswerDrafts();
         var msg = tr('Task submitted!');
         if (submission.score !== null && submission.score !== undefined) msg += ' ' + tr('Your Score') + ': ' +
           submission.score + '%';

@@ -135,6 +135,8 @@
       let pendingTeachers = [];
       let enrollRequests = [];
       let courseRequests = [];
+      let courseMaterials = [];
+      let teacherAuthKeys = [];
       let currentUser = null,
         expandedRows = {},
         currentSlide = 0,

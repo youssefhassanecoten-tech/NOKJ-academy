@@ -64,8 +64,29 @@
           <button class="btn-large primary" id="landing-start-btn">Start Learning Free</button>
           <button class="btn-large outline" id="landing-signin-btn">Sign In</button>
         </div>
+        <ul class="landing-trust">
+          <li>✓ No card required</li>
+          <li>✓ Works offline</li>
+          <li>✓ Progress saved automatically</li>
+        </ul>
       </div>
       <div class="hero-image"><div class="image-placeholder">🎓</div></div>
+    </section>
+
+    <section class="landing-stats">
+      <div class="landing-stat"><strong>1:1</strong><span>Live teacher support</span></div>
+      <div class="landing-stat"><strong>24/7</strong><span>Access to your coursework</span></div>
+      <div class="landing-stat"><strong>3</strong><span>Steps: join, learn, track</span></div>
+      <div class="landing-stat"><strong>0</strong><span>Setup headaches</span></div>
+    </section>
+
+    <section class="landing-steps">
+      <h2>Get started in three steps</h2>
+      <div class="steps-grid">
+        <div class="step-card"><span class="step-num">1</span><h3>Create your account</h3><p>Sign up as a student in seconds, or use your teacher's auth key to join as a teacher.</p></div>
+        <div class="step-card"><span class="step-num">2</span><h3>Join your courses</h3><p>Enroll in the subjects you need, attend live classes, and download the study material.</p></div>
+        <div class="step-card"><span class="step-num">3</span><h3>Track your progress</h3><p>Submit assignments, take interactive tests, and watch your grades update in real time.</p></div>
+      </div>
     </section>
 
     <section class="landing-features">
@@ -79,20 +100,29 @@
 
   <!-- ===== LOGIN SCREEN ===== -->
   <div id="login-screen">
-      <select class="theme-select" id="login-theme-select" title="Theme" aria-label="Select theme">
+    <div class="auth-top-controls">
+      <select class="theme-select auth-theme-select" id="login-theme-select" title="Theme" aria-label="Select theme">
         <option value="light">☀️ Light</option><option value="dark">🌙 Dark</option><option value="soft">🍂 Soft</option>
       </select>
       <button id="login-lang-toggle" type="button" title="Change language" class="login-lang-toggle">
-      <svg id="login-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
-      <svg id="login-flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
-        <rect width="60" height="13.33" fill="#FFFFFF"/>
-        <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
-        <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
-      </svg>
-    </button>
+        <svg id="login-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
+          <rect width="60" height="40" fill="#012169"/>
+          <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
+          <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
+          <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
+          <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
+        </svg>
+        <svg id="login-flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
+          <rect width="60" height="13.33" fill="#FFFFFF"/>
+          <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
+          <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
+        </svg>
+      </button>
+    </div>
 
     <div class="login-box">
       <div class="brand"><div class="brand-mark">N</div><div><strong style="font-size:20px;color:var(--ink);">NOKJ Academy</strong><small style="color:var(--muted);font-size:13px;">Student Portal</small></div></div>
+      <button type="button" class="register-back-btn" id="login-back-to-welcome">← <span>Back to Welcome</span></button>
       <div class="login-header"><h2>Welcome back</h2><p>Sign in to your account</p></div>
       <form id="login-form" autocomplete="off">
         <label for="login-email">Email address</label>
@@ -108,39 +138,86 @@
 
   <!-- ===== REGISTER SCREEN ===== -->
   <div id="register-screen">
-      <select class="theme-select" id="register-theme-select" title="Theme" aria-label="Select theme">
+    <div class="auth-top-controls">
+      <select class="theme-select auth-theme-select" id="register-theme-select" title="Theme" aria-label="Select theme">
         <option value="light">☀️ Light</option><option value="dark">🌙 Dark</option><option value="soft">🍂 Soft</option>
       </select>
       <button id="register-lang-toggle" type="button" title="Change language" class="login-lang-toggle">
-      <svg id="register-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
-        <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
-        <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
-        <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
-        <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
-      </svg>
-      <svg id="register-flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
-        <rect width="60" height="13.33" fill="#FFFFFF"/>
-        <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
-        <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
-      </svg>
-    </button>
+        <svg id="register-flag-uk" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19">
+          <rect width="60" height="40" fill="#012169"/>
+          <path d="M0 0 L60 40 M60 0 L0 40" stroke="white" stroke-width="8"/>
+          <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="4"/>
+          <path d="M30 0 L30 40 M0 20 L60 20" stroke="white" stroke-width="8"/>
+          <path d="M30 0 L30 40 M0 20 L60 20" stroke="#C8102E" stroke-width="4"/>
+        </svg>
+        <svg id="register-flag-ru" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40" width="28" height="19" style="display:none;">
+          <rect width="60" height="13.33" fill="#FFFFFF"/>
+          <rect y="13.33" width="60" height="13.33" fill="#0039A6"/>
+          <rect y="26.66" width="60" height="13.33" fill="#D52B1E"/>
+        </svg>
+      </button>
+    </div>
 
     <div class="register-box">
       <div class="brand"><div class="brand-mark">N</div><div><strong style="font-size:20px;color:var(--ink);">NOKJ Academy</strong><small style="color:var(--muted);font-size:13px;">Join the community</small></div></div>
-      <div class="register-header"><h2>Create Account</h2><p>Start your learning journey today</p></div>
-      <form id="register-form" autocomplete="off">
-        <label for="register-name">Full Name</label>
-        <input type="text" id="register-name" placeholder="Alex Student" />
-        <label for="register-email">Email address</label>
-        <input type="email" id="register-email" placeholder="you@example.com" />
-        <label for="register-role">I am a...</label>
-        <select id="register-role"><option value="Student">Student</option><option value="Teacher">Teacher</option></select>
-        <label for="register-password">Password</label>
-        <input type="password" id="register-password" placeholder="Min 6 characters" />
-        <button type="submit" class="register-btn">Create Account</button>
-        <div id="register-error" class="register-error"></div>
-      </form>
-      <div class="register-footer">Already have an account? <a id="register-to-login">Sign In</a></div>
+      <button type="button" class="register-back-btn" id="register-back-to-welcome">← <span>Back to Welcome</span></button>
+
+      <!-- Page 1: role chooser -->
+      <div id="register-step-role">
+        <div class="register-header"><h2>Create Account</h2><p>Choose how you want to join NOKJ Academy</p></div>
+        <div class="register-role-choices">
+          <button type="button" class="register-role-card" id="register-choose-student">
+            <span class="register-role-icon">🎒</span>
+            <strong>I'm a Student</strong>
+            <span>Join classes, complete assignments and track my progress</span>
+          </button>
+          <button type="button" class="register-role-card" id="register-choose-teacher">
+            <span class="register-role-icon">👩‍🏫</span>
+            <strong>I'm a Teacher</strong>
+            <span>Create courses, teach classes and manage my students</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Page 2a: student details -->
+      <div id="register-step-student" style="display:none;">
+        <div class="register-header"><h2>Student Sign Up</h2><p>Start your learning journey today</p></div>
+        <form id="register-form" autocomplete="off">
+          <input type="hidden" id="register-role" value="Student" />
+          <label for="register-name">Full Name</label>
+          <input type="text" id="register-name" placeholder="Alex Student" />
+          <label for="register-email">Email address</label>
+          <input type="email" id="register-email" placeholder="you@example.com" />
+          <label for="register-password">Password</label>
+          <input type="password" id="register-password" placeholder="Min 6 characters" />
+          <button type="submit" class="register-btn">Create Account</button>
+          <div id="register-error" class="register-error"></div>
+        </form>
+      </div>
+
+      <!-- Page 2b: teacher details -->
+      <div id="register-step-teacher" style="display:none;">
+        <div class="recruiting-badge" id="recruiting-badge">
+          <span class="recruiting-dot"></span>
+          <div><strong>We're recruiting teachers</strong><span>Join the NOKJ Academy teaching team</span></div>
+        </div>
+        <div class="register-header"><h2>Teacher Sign Up</h2><p>Enter the authorisation key issued by your academy admin</p></div>
+        <form id="register-form-teacher" autocomplete="off">
+          <label for="register-teacher-key">Teacher Authorisation Key</label>
+          <input type="text" id="register-teacher-key" placeholder="TCHR-XXXXXXXX" autocapitalize="characters" />
+          <label for="register-teacher-name">Full Name</label>
+          <input type="text" id="register-teacher-name" placeholder="Maria Teacher" />
+          <label for="register-teacher-email">Email address</label>
+          <input type="email" id="register-teacher-email" placeholder="you@example.com" />
+          <label for="register-teacher-password">Password</label>
+          <input type="password" id="register-teacher-password" placeholder="Min 6 characters" />
+          <button type="submit" class="register-btn">Create Teacher Account</button>
+          <div id="register-teacher-error" class="register-error"></div>
+        </form>
+        <div style="margin-top:12px;"><button type="button" class="link-button" id="register-switch-to-student">← I'm actually a student</button></div>
+      </div>
+
+      <div class="register-footer" id="register-footer-login">Already have an account? <a id="register-to-login">Sign In</a></div>
     </div>
   </div>
 
@@ -163,6 +240,7 @@
       <button class="nav-button" data-page="students" id="admin-students-btn" style="display:none;"><span class="nav-icon">👥</span> <span class="nav-text">Students</span></button>
       <button class="nav-button" data-page="budget" id="admin-budget-btn" style="display:none;"><span class="nav-icon">💰</span> <span class="nav-text">Budget</span></button>
       <button class="nav-button" data-page="courses-admin" id="admin-courses-btn" style="display:none;"><span class="nav-icon">📚</span> <span class="nav-text">Courses</span></button>
+      <button class="nav-button" data-page="course-workspace" id="course-workspace-btn" style="display:none;"><span class="nav-icon">🧩</span> <span class="nav-text">Course Studio</span></button>
       <button class="nav-button" data-page="grades" id="admin-grades-btn" style="display:none;"><span class="nav-icon">📊</span> <span class="nav-text">Grades</span></button>
       <button class="nav-button" data-page="calendar" id="admin-calendar-btn" style="display:none;"><span class="nav-icon">📅</span> <span class="nav-text">Calendar</span></button>
       <button class="nav-button" data-page="approvals" id="admin-approvals-btn" style="display:none;"><span class="nav-icon">🗎</span> <span class="nav-text">Applications</span></button>
@@ -210,7 +288,10 @@
             <div class="admin-stat-card"><div class="label">Total Enrollments</div><div class="number" id="total-enrollments">0</div><div class="change">Across all courses</div></div>
             <div class="admin-stat-card"><div class="label">Revenue</div><div class="number" id="total-revenue">$0</div><div class="change">This month</div></div>
           </div>
-          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            <span style="font-size:13px;color:var(--muted);">Export as:</span>
+            <button class="secondary-button" id="export-excel-btn">📊 Excel</button>
+            <button class="secondary-button" id="export-json-btn">📄 JSON</button>
             <button class="secondary-button" id="export-data-btn">⬇ Export backup</button>
           </div>
         </div>
@@ -326,6 +407,19 @@
       <!-- ===== APPLICATIONS (TEACHER + ENROLLMENT) ===== -->
       <section class="page" id="approvals">
         <div class="heading"><h1>Applications</h1><p>Review and approve or refuse teacher and student enrollment requests.</p></div>
+        <div id="teacher-authkey-section" style="display:none;margin-bottom:26px;">
+          <h3 style="margin:0 0 10px;">Teacher Authorisation Keys</h3>
+          <div class="table-container">
+            <div class="table-toolbar">
+              <div class="left">
+                <button class="primary-button" id="generate-teacher-key-btn">+ Generate Key</button>
+                <span id="teacher-key-last" style="font-size:13px;color:var(--muted);margin-left:10px;"></span>
+              </div>
+              <div class="right"><span id="teacher-key-count" style="font-size:13px;color:var(--muted);">0 keys</span></div>
+            </div>
+            <table><thead><tr><th>Key</th><th>Status</th><th>Used by</th><th>Created</th><th>Actions</th></tr></thead><tbody id="teacher-key-table-body"></tbody></table>
+          </div>
+        </div>
         <div id="teacher-applications-section">
           <h3 style="margin:0 0 10px;">Teacher Applications</h3>
           <div class="table-container">
@@ -404,6 +498,64 @@
           </div>
           <table><thead><tr><th>Course Name</th><th>Teacher</th><th>Students</th><th>Actions</th></tr></thead><tbody id="course-table-body"></tbody></table>
           <div class="table-summary"><span>Total Courses: <strong id="course-total">0</strong></span><span>Total Enrollments: <strong id="course-enrollments-total">0</strong></span></div>
+        </div>
+      </section>
+
+      <!-- ===== COURSE STUDIO (teacher + admin) ===== -->
+      <section class="page" id="course-workspace">
+        <div class="heading"><h1>Course Studio</h1><p id="course-studio-sub">Create courses and manage the study material your students use.</p></div>
+        <div id="course-workspace-view" style="display:none;">
+          <div class="table-container" style="margin-bottom:20px;">
+            <div class="table-toolbar">
+              <div class="left"><strong id="studio-course-count">0 courses</strong></div>
+              <div class="right" style="display:flex;gap:8px;flex-wrap:wrap;">
+                <input type="text" id="studio-course-name" placeholder="New course name..." style="max-width:220px;" />
+                <button class="primary-button" id="studio-create-course-btn">+ Create Course</button>
+              </div>
+            </div>
+            <div id="studio-course-list" class="course-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr));"></div>
+          </div>
+
+          <div id="studio-material-panel" style="display:none;">
+            <div class="table-container">
+              <div class="table-toolbar">
+                <div class="left"><strong id="studio-material-course-name"></strong></div>
+                <div class="right"><button class="secondary-button" id="studio-material-close-btn">✕ Close</button></div>
+              </div>
+              <div class="detail-content" style="margin-bottom:16px;">
+                <label for="studio-material-title">Title</label>
+                <input type="text" id="studio-material-title" placeholder="Material title..." />
+                <label for="studio-material-kind">Type</label>
+                <select id="studio-material-kind">
+                  <option value="note">Note</option>
+                  <option value="link">Link</option>
+                  <option value="file">File</option>
+                </select>
+                <div id="studio-material-note-wrap">
+                  <label for="studio-material-body">Content</label>
+                  <textarea id="studio-material-body" placeholder="Write your lesson notes here..."></textarea>
+                </div>
+                <div id="studio-material-link-wrap" style="display:none;">
+                  <label for="studio-material-url">Link URL</label>
+                  <input type="url" id="studio-material-url" placeholder="https://..." />
+                </div>
+                <div id="studio-material-file-wrap" style="display:none;">
+                  <label for="studio-material-file">File</label>
+                  <input type="file" id="studio-material-file" />
+                  <span id="studio-material-file-name" style="font-size:12px;color:var(--muted);">No file chosen</span>
+                </div>
+                <label style="display:flex;gap:8px;align-items:center;margin-top:10px;">
+                  <input type="checkbox" id="studio-material-published" checked />
+                  <span>Published (visible to enrolled students)</span>
+                </label>
+                <div style="margin-top:12px;display:flex;gap:8px;">
+                  <button class="primary-button" id="studio-material-save-btn">Save Material</button>
+                  <button class="secondary-button" id="studio-material-cancel-btn">Clear</button>
+                </div>
+              </div>
+              <div id="studio-material-list"></div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -756,6 +908,12 @@
         </select>
         <label>Meeting Link</label>
         <input type="url" id="schedule-link" placeholder="https://meet.google.com/..." />
+        <label>Attach Presentation (.pptx / .ppt / .pdf)</label>
+        <div class="file-input-wrapper">
+          <label for="schedule-file-input">📎 Choose Presentation</label>
+          <input type="file" id="schedule-file-input" accept=".pptx,.ppt,.pdf" />
+        </div>
+        <span id="schedule-file-name" style="font-size:12px;color:var(--muted);"></span>
         <label>Course</label>
         <select id="schedule-course"><option value="">No course (general)</option></select>
         <fieldset class="schedule-visibility">

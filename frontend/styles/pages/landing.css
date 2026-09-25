@@ -125,6 +125,17 @@
     .landing-hero .hero-content .hero-buttons .btn-large.outline:hover {
       background: var(--primary-light);
     }
+    .landing-trust {
+      margin: 24px 0 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      list-style: none;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
     .landing-hero .hero-image {
       flex: 1;
       text-align: center;
@@ -141,9 +152,84 @@
       font-size: 80px;
     }
 
+    .landing-stats {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 8px 40px 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+    }
+    .landing-stat {
+      padding: 18px 16px;
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--white);
+    }
+    .landing-stat strong {
+      display: block;
+      color: var(--primary);
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+    .landing-stat span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .landing-steps {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 40px 44px;
+    }
+    .landing-steps h2 {
+      margin: 0 0 22px;
+      font-size: 26px;
+      text-align: center;
+    }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .step-card {
+      padding: 24px 22px;
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+    .step-card .step-num {
+      width: 34px;
+      height: 34px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      border-radius: 50%;
+      background: var(--primary);
+      font-size: 16px;
+      font-weight: 900;
+    }
+    .step-card h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+    .step-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
     .landing-features {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 30px;
       max-width: 1200px;
       margin: 0 auto;

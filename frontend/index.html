@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="styles/components/file-preview.css" />
   <link rel="stylesheet" href="styles/components/modals.css" />
   <link rel="stylesheet" href="styles/components/test-constructor.css" />
+  <link rel="stylesheet" href="styles/components/studio.css" />
   <link rel="stylesheet" href="styles/responsive.css" />
 </head>
 <body>
@@ -505,57 +506,202 @@
       <section class="page" id="course-workspace">
         <div class="heading"><h1>Course Studio</h1><p id="course-studio-sub">Create courses and manage the study material your students use.</p></div>
         <div id="course-workspace-view" style="display:none;">
-          <div class="table-container" style="margin-bottom:20px;">
-            <div class="table-toolbar">
-              <div class="left"><strong id="studio-course-count">0 courses</strong></div>
-              <div class="right" style="display:flex;gap:8px;flex-wrap:wrap;">
-                <input type="text" id="studio-course-name" placeholder="New course name..." style="max-width:220px;" />
-                <button class="primary-button" id="studio-create-course-btn">+ Create Course</button>
-              </div>
-            </div>
-            <div id="studio-course-list" class="course-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr));"></div>
-          </div>
 
-          <div id="studio-material-panel" style="display:none;">
-            <div class="table-container">
-              <div class="table-toolbar">
-                <div class="left"><strong id="studio-material-course-name"></strong></div>
-                <div class="right"><button class="secondary-button" id="studio-material-close-btn">✕ Close</button></div>
-              </div>
-              <div class="detail-content" style="margin-bottom:16px;">
-                <label for="studio-material-title">Title</label>
-                <input type="text" id="studio-material-title" placeholder="Material title..." />
-                <label for="studio-material-kind">Type</label>
-                <select id="studio-material-kind">
-                  <option value="note">Note</option>
-                  <option value="link">Link</option>
-                  <option value="file">File</option>
+          <!-- ===== STUDIO SIDEBAR ===== -->
+          <aside class="studio-sidebar">
+            <div class="studio-side-head">
+              <div class="studio-side-actions">
+                <input type="search" id="studio-search" class="studio-search" placeholder="Search courses..." data-i18n-ph="Search courses..." />
+                <select id="studio-filter" class="studio-filter">
+                  <option value="active">Active</option>
+                  <option value="all">All</option>
+                  <option value="published">Published</option>
+                  <option value="draft">Draft</option>
+                  <option value="archived">Archived</option>
                 </select>
-                <div id="studio-material-note-wrap">
-                  <label for="studio-material-body">Content</label>
-                  <textarea id="studio-material-body" placeholder="Write your lesson notes here..."></textarea>
+              </div>
+              <button class="primary-button studio-new-btn" id="studio-new-course-btn">＋ <span id="studio-new-course-label">New course</span></button>
+              <div class="studio-bulk" id="studio-bulk-bar" style="display:none;">
+                <span id="studio-bulk-count">0 selected</span>
+                <button class="ghost-btn" id="studio-bulk-publish">Publish</button>
+                <button class="ghost-btn" id="studio-bulk-unpublish">Unpublish</button>
+                <button class="ghost-btn danger" id="studio-bulk-archive">Archive</button>
+              </div>
+            </div>
+            <div class="studio-course-list" id="studio-course-list"></div>
+            <div class="studio-side-foot">
+              <span id="studio-course-count">0 courses</span>
+              <button class="ghost-btn" id="studio-select-all">Select all</button>
+            </div>
+          </aside>
+
+          <!-- ===== STUDIO CANVAS ===== -->
+          <main class="studio-canvas">
+            <div class="studio-empty" id="studio-empty">
+              <div class="studio-empty-art">🧩</div>
+              <h2 id="studio-empty-title">Build something great</h2>
+              <p id="studio-empty-text">Create a course, then organise it into modules and lessons your students can follow.</p>
+              <button class="primary-button" id="studio-empty-create">＋ <span id="studio-empty-create-label">Create your first course</span></button>
+            </div>
+
+            <div class="studio-editor" id="studio-editor" style="display:none;">
+              <!-- Editor header -->
+              <div class="studio-editor-head">
+                <button class="ghost-btn studio-back" id="studio-back-to-list">← <span id="studio-back-label">All courses</span></button>
+                <div class="studio-title-row">
+                  <button class="studio-emoji-btn" id="studio-emoji-btn" title="Change cover emoji">📘</button>
+                  <input type="text" id="studio-course-title-input" class="studio-title-input" />
+                  <span class="pill" id="studio-status-pill">Draft</span>
                 </div>
-                <div id="studio-material-link-wrap" style="display:none;">
-                  <label for="studio-material-url">Link URL</label>
-                  <input type="url" id="studio-material-url" placeholder="https://..." />
+                <div class="studio-head-meta">
+                  <span id="studio-meta-code" class="studio-meta-chip"></span>
+                  <span id="studio-meta-students" class="studio-meta-chip"></span>
+                  <span id="studio-meta-lessons" class="studio-meta-chip"></span>
+                  <span id="studio-saved-state" class="studio-saved">All changes saved</span>
                 </div>
-                <div id="studio-material-file-wrap" style="display:none;">
-                  <label for="studio-material-file">File</label>
-                  <input type="file" id="studio-material-file" />
-                  <span id="studio-material-file-name" style="font-size:12px;color:var(--muted);">No file chosen</span>
-                </div>
-                <label style="display:flex;gap:8px;align-items:center;margin-top:10px;">
-                  <input type="checkbox" id="studio-material-published" checked />
-                  <span>Published (visible to enrolled students)</span>
-                </label>
-                <div style="margin-top:12px;display:flex;gap:8px;">
-                  <button class="primary-button" id="studio-material-save-btn">Save Material</button>
-                  <button class="secondary-button" id="studio-material-cancel-btn">Clear</button>
+                <div class="studio-head-actions">
+                  <button class="ghost-btn" id="studio-preview-btn">👁 <span id="studio-preview-label">Preview</span></button>
+                  <button class="ghost-btn" id="studio-duplicate-btn">⧉ <span id="studio-duplicate-label">Duplicate</span></button>
+                  <button class="ghost-btn" id="studio-archive-btn">📦 <span id="studio-archive-label">Archive</span></button>
+                  <button class="ghost-btn danger" id="studio-delete-btn">🗑 <span id="studio-delete-label">Delete</span></button>
                 </div>
               </div>
-              <div id="studio-material-list"></div>
+
+              <!-- Tabs -->
+              <div class="studio-tabs" id="studio-tabs">
+                <button class="studio-tab active" data-studio-tab="curriculum" id="studio-tab-curriculum">Curriculum</button>
+                <button class="studio-tab" data-studio-tab="library" id="studio-tab-library">Library</button>
+                <button class="studio-tab" data-studio-tab="settings" id="studio-tab-settings">Settings</button>
+                <button class="studio-tab" data-studio-tab="analytics" id="studio-tab-analytics">Analytics</button>
+              </div>
+
+              <!-- ===== CURRICULUM TAB ===== -->
+              <div class="studio-pane active" id="studio-pane-curriculum">
+                <div class="studio-pane-head">
+                  <div>
+                    <h3 id="studio-curriculum-title">Curriculum</h3>
+                    <p id="studio-curriculum-sub">Drag modules and lessons to reorder them.</p>
+                  </div>
+                  <button class="primary-button" id="studio-add-module-btn">＋ <span id="studio-add-module-label">Add module</span></button>
+                </div>
+                <div id="studio-module-list" class="studio-module-list"></div>
+                <div class="studio-empty-inline" id="studio-curriculum-empty" style="display:none;">
+                  <p id="studio-curriculum-empty-text">No modules yet. Add your first module to start building the curriculum.</p>
+                </div>
+              </div>
+
+              <!-- ===== LIBRARY TAB ===== -->
+              <div class="studio-pane" id="studio-pane-library">
+                <div class="studio-pane-head">
+                  <div>
+                    <h3 id="studio-library-title">Library</h3>
+                    <p id="studio-library-sub">Standalone notes, links and files shared with everyone enrolled.</p>
+                  </div>
+                </div>
+                <div class="studio-lib-form" id="studio-lib-form">
+                  <div class="studio-row">
+                    <label for="studio-lib-title" class="studio-lbl">Title</label>
+                    <input type="text" id="studio-lib-title" placeholder="Material title..." data-i18n-ph="Material title..." />
+                  </div>
+                  <div class="studio-row">
+                    <label for="studio-lib-kind" class="studio-lbl">Type</label>
+                    <select id="studio-lib-kind">
+                      <option value="note">Note</option>
+                      <option value="link">Link</option>
+                      <option value="file">File</option>
+                    </select>
+                  </div>
+                  <div class="studio-row" id="studio-lib-note-wrap">
+                    <label for="studio-lib-body" class="studio-lbl">Content</label>
+                    <textarea id="studio-lib-body" placeholder="Write your notes here..." data-i18n-ph="Write your notes here..."></textarea>
+                  </div>
+                  <div class="studio-row" id="studio-lib-link-wrap" style="display:none;">
+                    <label for="studio-lib-url" class="studio-lbl">Link URL</label>
+                    <input type="url" id="studio-lib-url" placeholder="https://..." />
+                  </div>
+                  <div class="studio-row" id="studio-lib-file-wrap" style="display:none;">
+                    <label for="studio-lib-file" class="studio-lbl">File</label>
+                    <input type="file" id="studio-lib-file" />
+                    <span id="studio-lib-file-name" class="studio-file-name">No file chosen</span>
+                  </div>
+                  <div class="studio-row studio-row-inline">
+                    <label class="studio-check">
+                      <input type="checkbox" id="studio-lib-published" checked />
+                      <span id="studio-lib-published-label">Published (visible to enrolled students)</span>
+                    </label>
+                    <div class="studio-btn-row">
+                      <button class="primary-button" id="studio-lib-save-btn">Save material</button>
+                      <button class="secondary-button" id="studio-lib-clear-btn">Clear</button>
+                    </div>
+                  </div>
+                  <input type="hidden" id="studio-lib-edit-id" value="" />
+                </div>
+                <div id="studio-lib-list" class="studio-lib-list"></div>
+              </div>
+
+              <!-- ===== SETTINGS TAB ===== -->
+              <div class="studio-pane" id="studio-pane-settings">
+                <div class="studio-pane-head">
+                  <div>
+                    <h3 id="studio-settings-title">Course settings</h3>
+                    <p id="studio-settings-sub">Control how this course appears and who can join it.</p>
+                  </div>
+                </div>
+                <div class="studio-settings-grid">
+                  <div class="studio-field">
+                    <label for="studio-set-description" class="studio-lbl">Description</label>
+                    <textarea id="studio-set-description" placeholder="What will students learn?" data-i18n-ph="What will students learn?"></textarea>
+                  </div>
+                  <div class="studio-field">
+                    <label for="studio-set-code" class="studio-lbl">Course code</label>
+                    <input type="text" id="studio-set-code" placeholder="e.g. MATH-101" data-i18n-ph="e.g. MATH-101" />
+                    <small id="studio-set-code-hint">Students can use this code to join.</small>
+                  </div>
+                  <div class="studio-field">
+                    <label for="studio-set-visibility" class="studio-lbl">Visibility</label>
+                    <select id="studio-set-visibility">
+                      <option value="private">Private — invite only</option>
+                      <option value="public">Public — anyone can request</option>
+                    </select>
+                  </div>
+                  <div class="studio-field">
+                    <label for="studio-set-capacity" class="studio-lbl">Capacity</label>
+                    <input type="number" id="studio-set-capacity" min="0" step="1" placeholder="0" />
+                    <small id="studio-set-capacity-hint">0 means unlimited.</small>
+                  </div>
+                  <div class="studio-field">
+                    <label for="studio-set-passing" class="studio-lbl">Passing score (%)</label>
+                    <input type="number" id="studio-set-passing" min="0" max="100" step="1" />
+                  </div>
+                  <div class="studio-field">
+                    <label class="studio-lbl">Accent colour</label>
+                    <div class="studio-swatches" id="studio-color-swatches"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ===== ANALYTICS TAB ===== -->
+              <div class="studio-pane" id="studio-pane-analytics">
+                <div class="studio-pane-head">
+                  <div>
+                    <h3 id="studio-analytics-title">Analytics</h3>
+                    <p id="studio-analytics-sub">How this course is performing right now.</p>
+                  </div>
+                </div>
+                <div class="studio-kpis" id="studio-kpis"></div>
+                <div class="studio-analytics-cols">
+                  <div class="studio-analytics-card">
+                    <h4 id="studio-student-progress-title">Student progress</h4>
+                    <div id="studio-student-progress"></div>
+                  </div>
+                  <div class="studio-analytics-card">
+                    <h4 id="studio-lesson-engagement-title">Lesson engagement</h4>
+                    <div id="studio-lesson-engagement"></div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          </main>
         </div>
       </section>
 
@@ -979,11 +1125,129 @@
   <script src="scripts/translations.js"></script>
   <script src="scripts/router.js"></script>
   <script src="scripts/auth.js"></script>
+  <!-- ===== STUDIO: MODULE EDITOR ===== -->
+  <div class="modal-overlay" id="studio-module-modal-overlay">
+    <div class="modal studio-modal">
+      <h2 id="studio-module-modal-title">Add module</h2>
+      <p class="sub" id="studio-module-modal-sub">Group related lessons together.</p>
+      <form id="studio-module-form">
+        <label for="studio-module-title">Module title</label>
+        <input type="text" id="studio-module-title" placeholder="e.g. Week 1 — Foundations" data-i18n-ph="e.g. Week 1 — Foundations" />
+        <label for="studio-module-description">Description</label>
+        <textarea id="studio-module-description" placeholder="What does this module cover?" data-i18n-ph="What does this module cover?"></textarea>
+        <label class="studio-check" style="display:flex;gap:8px;align-items:center;margin-top:10px;">
+          <input type="checkbox" id="studio-module-published" />
+          <span id="studio-module-published-label">Published</span>
+        </label>
+        <input type="hidden" id="studio-module-edit-id" value="" />
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="studio-module-cancel-btn">Cancel</button>
+          <button type="submit" class="save-btn" id="studio-module-save-btn">Save module</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== STUDIO: LESSON EDITOR ===== -->
+  <div class="modal-overlay" id="studio-lesson-modal-overlay">
+    <div class="modal studio-modal studio-modal-wide">
+      <h2 id="studio-lesson-modal-title">Add lesson</h2>
+      <p class="sub" id="studio-lesson-modal-sub">Pick a type, then fill in the content.</p>
+      <form id="studio-lesson-form">
+        <input type="hidden" id="studio-lesson-module-id" value="" />
+        <input type="hidden" id="studio-lesson-edit-id" value="" />
+        <div class="studio-row">
+          <label for="studio-lesson-title" class="studio-lbl">Lesson title</label>
+          <input type="text" id="studio-lesson-title" placeholder="e.g. Introduction to quadratics" data-i18n-ph="e.g. Introduction to quadratics" />
+        </div>
+        <div class="studio-row">
+          <label class="studio-lbl">Type</label>
+          <div class="studio-type-grid" id="studio-type-grid"></div>
+        </div>
+        <div class="studio-row">
+          <label for="studio-lesson-duration" class="studio-lbl">Duration (minutes)</label>
+          <input type="number" id="studio-lesson-duration" min="0" step="5" placeholder="0" />
+        </div>
+
+        <div class="studio-lesson-body" id="studio-body-text">
+          <label class="studio-lbl">Content</label>
+          <div class="studio-rte">
+            <div class="studio-rte-toolbar" id="studio-rte-toolbar">
+              <button type="button" data-cmd="bold" title="Bold"><b>B</b></button>
+              <button type="button" data-cmd="italic" title="Italic"><i>I</i></button>
+              <button type="button" data-cmd="underline" title="Underline"><u>U</u></button>
+              <span class="studio-rte-sep"></span>
+              <button type="button" data-block="h2" title="Heading">H2</button>
+              <button type="button" data-block="h3" title="Subheading">H3</button>
+              <button type="button" data-block="p" title="Paragraph">¶</button>
+              <span class="studio-rte-sep"></span>
+              <button type="button" data-cmd="insertUnorderedList" title="Bullet list">•</button>
+              <button type="button" data-cmd="insertOrderedList" title="Numbered list">1.</button>
+              <span class="studio-rte-sep"></span>
+              <button type="button" data-cmd="formatBlock" data-value="blockquote" title="Quote">❝</button>
+              <button type="button" data-cmd="removeFormat" title="Clear formatting">✕</button>
+              <span class="studio-rte-spacer"></span>
+              <button type="button" id="studio-rte-preview-toggle" class="studio-rte-preview-btn" title="Toggle preview">👁</button>
+            </div>
+            <div class="studio-rte-area" id="studio-lesson-body" contenteditable="true" data-placeholder="Write your lesson content..." data-i18n-ph="Write your lesson content..."></div>
+            <div class="studio-rte-preview studio-prose" id="studio-lesson-preview" style="display:none;"></div>
+          </div>
+        </div>
+
+        <div class="studio-row" id="studio-body-url" style="display:none;">
+          <label for="studio-lesson-url" class="studio-lbl">URL</label>
+          <input type="url" id="studio-lesson-url" placeholder="https://..." />
+        </div>
+        <div class="studio-row" id="studio-body-file" style="display:none;">
+          <label for="studio-lesson-file" class="studio-lbl">File</label>
+          <input type="file" id="studio-lesson-file" />
+          <span id="studio-lesson-file-name" class="studio-file-name">No file chosen</span>
+        </div>
+        <div class="studio-row" id="studio-body-assignment" style="display:none;">
+          <label for="studio-lesson-assignment" class="studio-lbl">Linked task</label>
+          <select id="studio-lesson-assignment"></select>
+        </div>
+        <div class="studio-row" id="studio-body-quiz" style="display:none;">
+          <label for="studio-lesson-quiz" class="studio-lbl">Linked quiz</label>
+          <select id="studio-lesson-quiz"></select>
+        </div>
+        <div class="studio-row studio-row-inline">
+          <label class="studio-check">
+            <input type="checkbox" id="studio-lesson-published" />
+            <span id="studio-lesson-published-label">Published</span>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" id="studio-lesson-cancel-btn">Cancel</button>
+          <button type="submit" class="save-btn" id="studio-lesson-save-btn">Save lesson</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== STUDIO: STUDENT PREVIEW ===== -->
+  <div class="modal-overlay" id="studio-preview-overlay">
+    <div class="modal studio-modal studio-modal-wide">
+      <div class="studio-preview-head">
+        <div>
+          <span class="studio-preview-tag" id="studio-preview-tag">Student preview</span>
+          <h2 id="studio-preview-title">Course</h2>
+          <p class="sub" id="studio-preview-sub"></p>
+        </div>
+        <button type="button" class="cancel-btn" id="studio-preview-close">Close</button>
+      </div>
+      <div id="studio-preview-body" class="studio-preview-body"></div>
+    </div>
+  </div>
+
+  <div class="studio-emoji-picker" id="studio-emoji-picker" hidden></div>
+
   <script src="scripts/modules/dashboard.js"></script>
   <script src="scripts/modules/calendar.js"></script>
   <script src="scripts/modules/classroom.js"></script>
   <script src="scripts/modules/students.js"></script>
   <script src="scripts/modules/courses.js"></script>
+  <script src="scripts/modules/studio.js"></script>
   <script src="scripts/modules/budget.js"></script>
   <script src="scripts/modules/grades.js"></script>
   <script src="scripts/modules/tasks.js"></script>

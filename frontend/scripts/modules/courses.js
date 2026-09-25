@@ -254,263 +254,18 @@
         return courseMaterials.filter(function(m) { return m.courseId === courseId; });
       }
 
-      // ============================================================
-      //  COURSE STUDIO (teachers create/manage own; admin sees all)
-      // ============================================================
-      var studioSelectedCourseId = null;
-      var studioTempFile = null;
-
+      // Course Studio lives in its own module (studio.js). The permission
+      // helpers above stay here because courses.js loads first.
       function renderCourseStudio() {
-        var view = document.getElementById('course-workspace-view');
-        if (!view || !currentUser) return;
-        var allowed = isAdminUser() || isTeacherUser();
-        view.style.display = allowed ? 'block' : 'none';
-        if (!allowed) return;
-
-        var list = isAdminUser() ? courses.slice() : courses.filter(function(c) { return c.teacherId === currentUser.id; });
-        list.sort(function(a, b) { return a.name.localeCompare(b.name); });
-
-        var countEl = document.getElementById('studio-course-count');
-        if (countEl) countEl.textContent = list.length + ' ' + tr('courses');
-        var sub = document.getElementById('course-studio-sub');
-        if (sub) sub.textContent = isAdminUser() ? tr('Create courses and manage the study material for every course.') :
-          tr('Create your own courses and manage the study material for your students.');
-
-        var container = document.getElementById('studio-course-list');
-        if (!container) return;
-        if (studioSelectedCourseId && !list.some(function(c) { return c.id === studioSelectedCourseId; })) {
-          studioSelectedCourseId = null;
-        }
-
-        if (list.length === 0) {
-          container.innerHTML = '<p style="color:var(--muted);padding:20px;">' + tr('No courses yet. Create your first course to start adding study material.') + '</p>';
-        } else {
-          container.innerHTML = '';
-          list.forEach(function(c) {
-            var matCount = getCourseMaterials(c.id).length;
-            var studentCount = getEnrolledStudentIds(c.id).length;
-            var card = document.createElement('article');
-            card.className = 'course';
-            card.innerHTML = '<div class="course-cover">' + escapeHtml(c.name) + '</div>' +
-              '<div class="course-body"><h3>' + escapeHtml(c.name) + '</h3>' +
-              '<p>' + escapeHtml(c.description || '') + '</p>' +
-              '<p>' + matCount + ' ' + tr('materials') + ' · ' + studentCount + ' ' + tr('students') + '</p>' +
-              '<div class="course-footer" style="flex-wrap:wrap;">' +
-              '<button class="primary-button" data-studio-open="' + c.id + '">📂 ' + tr('Manage materials') + '</button>' +
-              (canManageCourse(c.id) ? '<button class="action-btn delete" data-studio-delete="' + c.id + '" title="' +
-                tr('Delete course') + '">🗑️</button>' : '') +
-              '</div></div>';
-            container.appendChild(card);
-          });
-        }
-
-        container.querySelectorAll('[data-studio-open]').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            studioSelectCourse(parseInt(btn.dataset.studioOpen));
-          });
-        });
-        container.querySelectorAll('[data-studio-delete]').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            studioDeleteCourse(parseInt(btn.dataset.studioDelete));
-          });
-        });
-
-        renderStudioMaterials();
-      }
-
-      function studioSelectCourse(courseId) {
-        if (!canManageCourse(courseId)) return;
-        studioSelectedCourseId = courseId;
-        var panel = document.getElementById('studio-material-panel');
-        if (panel) panel.style.display = 'block';
-        renderStudioMaterials();
-        if (panel && panel.scrollIntoView) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (typeof initStudio === 'function') initStudio();
       }
 
       function renderStudioMaterials() {
-        var nameEl = document.getElementById('studio-material-course-name');
-        var listEl = document.getElementById('studio-material-list');
-        if (!nameEl || !listEl) return;
-        if (!studioSelectedCourseId) {
-          nameEl.textContent = '';
-          listEl.innerHTML = '';
-          return;
-        }
-        var course = courses.find(function(c) { return c.id === studioSelectedCourseId; });
-        nameEl.textContent = course ? course.name : '';
-        var mats = getCourseMaterials(studioSelectedCourseId);
-        if (mats.length === 0) {
-          listEl.innerHTML = '<p style="color:var(--muted);padding:14px;">' + tr('No study material yet. Add your first note, link or file below.') + '</p>';
-          return;
-        }
-        var html = '<table><thead><tr><th>' + tr('Title') + '</th><th>' + tr('Type') + '</th><th>' + tr('Status') +
-          '</th><th>' + tr('Actions') + '</th></tr></thead><tbody>';
-        mats.forEach(function(m) {
-          html += '<tr><td><strong>' + escapeHtml(m.title) + '</strong>' +
-            (m.fileName ? '<br><span style="font-size:12px;color:var(--muted);">' + escapeHtml(m.fileName) + '</span>' : '') +
-            '</td><td>' + tr(m.kind) + '</td><td>' + (m.published ? '<span class="pill">' + tr('Published') +
-            '</span>' : '<span class="pill warning">' + tr('Draft') + '</span>') + '</td><td>' +
-            '<button class="action-btn edit" data-mat-toggle="' + m.id + '" title="' + tr('Toggle published') + '">👁️</button>' +
-            '<button class="action-btn delete" data-mat-delete="' + m.id + '" title="' + tr('Delete') + '">🗑️</button>' +
-            '</td></tr>';
-          if (m.kind === 'link' && m.url) {
-            html += '<tr class="expandable-detail open"><td colspan="4"><a href="' + escapeHtml(m.url) +
-              '" target="_blank" rel="noopener">' + escapeHtml(m.url) + '</a></td></tr>';
-          } else if (m.kind === 'note' && m.body) {
-            html += '<tr class="expandable-detail open"><td colspan="4">' + escapeHtml(m.body) + '</td></tr>';
-          } else if (m.kind === 'file' && m.fileData) {
-            html += '<tr class="expandable-detail open"><td colspan="4"><span class="file-link" onclick="window.openFilePreview(\'' +
-              escapeHtml(m.fileName || 'file') + '\', \'' + String(m.fileData).replace(/'/g, "\\'") + '\')">' +
-              escapeHtml(m.fileName || tr('Open file')) + '</span></td></tr>';
-          }
-        });
-        html += '</tbody></table>';
-        listEl.innerHTML = html;
-
-        listEl.querySelectorAll('[data-mat-toggle]').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            if (!canManageCourse(studioSelectedCourseId)) return;
-            var id = parseInt(btn.dataset.matToggle);
-            var mat = courseMaterials.find(function(m) { return m.id === id; });
-            if (mat) { mat.published = !mat.published; saveData(); renderStudioMaterials(); }
-          });
-        });
-        listEl.querySelectorAll('[data-mat-delete]').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            if (!canManageCourse(studioSelectedCourseId)) return;
-            var id = parseInt(btn.dataset.matDelete);
-            if (!confirm(tr('Delete this material?'))) return;
-            courseMaterials = courseMaterials.filter(function(m) { return m.id !== id; });
-            saveData();
-            renderStudioMaterials();
-          });
-        });
-      }
-
-      function studioSaveMaterial() {
-        if (!canManageCourse(studioSelectedCourseId)) return;
-        var title = document.getElementById('studio-material-title').value.trim();
-        var kind = document.getElementById('studio-material-kind').value;
-        var body = document.getElementById('studio-material-body').value.trim();
-        var url = document.getElementById('studio-material-url').value.trim();
-        var published = document.getElementById('studio-material-published').checked;
-        if (!title) { alert(tr('Please enter a title.')); return; }
-        if (kind === 'link' && !url) { alert(tr('Please enter a link URL.')); return; }
-        if (kind === 'file' && !studioTempFile) { alert(tr('Please choose a file.')); return; }
-
-        var mat = {
-          id: Date.now(),
-          courseId: studioSelectedCourseId,
-          createdBy: currentUser.id,
-          title: title,
-          description: '',
-          kind: kind,
-          body: kind === 'note' ? body : '',
-          url: kind === 'link' ? url : '',
-          fileName: kind === 'file' && studioTempFile ? studioTempFile.name : '',
-          fileData: kind === 'file' && studioTempFile ? studioTempFile.data : '',
-          published: published,
-          createdAt: new Date().toISOString()
-        };
-        courseMaterials.push(mat);
-        saveData();
-        studioTempFile = null;
-        document.getElementById('studio-material-title').value = '';
-        document.getElementById('studio-material-body').value = '';
-        document.getElementById('studio-material-url').value = '';
-        document.getElementById('studio-material-file').value = '';
-        var fn = document.getElementById('studio-material-file-name');
-        if (fn) fn.textContent = tr('No file chosen');
-        renderStudioMaterials();
-        setLanguage(currentLang);
-      }
-
-      function studioClearMaterialForm() {
-        document.getElementById('studio-material-title').value = '';
-        document.getElementById('studio-material-body').value = '';
-        document.getElementById('studio-material-url').value = '';
-        document.getElementById('studio-material-file').value = '';
-        var fn = document.getElementById('studio-material-file-name');
-        if (fn) fn.textContent = tr('No file chosen');
-        studioTempFile = null;
-      }
-
-      function studioCreateCourse() {
-        if (!isAdminUser() && !isTeacherUser()) return;
-        var input = document.getElementById('studio-course-name');
-        var name = input.value.trim();
-        if (!name) { alert(tr('Please enter a course name.')); return; }
-        var teacherId = isAdminUser() ? (teachers[0] ? teachers[0].id : null) : currentUser.id;
-        courses.push({
-          id: nextCourseId(),
-          name: name,
-          description: tr('Created in Course Studio.'),
-          teacherId: teacherId,
-          createdAt: new Date().toISOString()
-        });
-        input.value = '';
-        saveData();
-        renderCourseStudio();
-        if (isAdminUser()) renderCourses();
-        setLanguage(currentLang);
-      }
-
-      function studioDeleteCourse(courseId) {
-        if (!canManageCourse(courseId)) return;
-        var c = courses.find(function(x) { return x.id === courseId; });
-        if (!c) return;
-        if (!confirm(tr('Delete this course? Its study material will be removed too.'))) return;
-        courses = courses.filter(function(x) { return x.id !== courseId; });
-        courseMaterials = courseMaterials.filter(function(m) { return m.courseId !== courseId; });
-        if (studioSelectedCourseId === courseId) {
-          studioSelectedCourseId = null;
-          var panel = document.getElementById('studio-material-panel');
-          if (panel) panel.style.display = 'none';
-        }
-        saveData();
-        renderCourseStudio();
-        if (isAdminUser()) renderCourses();
-        if (isTeacherUser()) renderTeacherCourses();
-        setLanguage(currentLang);
+        if (typeof renderStudioLibrary === 'function') renderStudioLibrary();
       }
 
       function initCourseStudio() {
-        var kindSel = document.getElementById('studio-material-kind');
-        if (kindSel) {
-          kindSel.addEventListener('change', function() {
-            var v = this.value;
-            document.getElementById('studio-material-note-wrap').style.display = v === 'note' ? 'block' : 'none';
-            document.getElementById('studio-material-link-wrap').style.display = v === 'link' ? 'block' : 'none';
-            document.getElementById('studio-material-file-wrap').style.display = v === 'file' ? 'block' : 'none';
-          });
-        }
-        var createBtn = document.getElementById('studio-create-course-btn');
-        if (createBtn) createBtn.addEventListener('click', studioCreateCourse);
-        var saveBtn = document.getElementById('studio-material-save-btn');
-        if (saveBtn) saveBtn.addEventListener('click', studioSaveMaterial);
-        var cancelBtn = document.getElementById('studio-material-cancel-btn');
-        if (cancelBtn) cancelBtn.addEventListener('click', studioClearMaterialForm);
-        var closeBtn = document.getElementById('studio-material-close-btn');
-        if (closeBtn) closeBtn.addEventListener('click', function() {
-          studioSelectedCourseId = null;
-          var panel = document.getElementById('studio-material-panel');
-          if (panel) panel.style.display = 'none';
-          renderStudioMaterials();
-        });
-        var fileInput = document.getElementById('studio-material-file');
-        if (fileInput) {
-          fileInput.addEventListener('change', function(e) {
-            var file = e.target.files && e.target.files[0];
-            if (!file) return;
-            var reader = new FileReader();
-            reader.onload = function(ev) {
-              studioTempFile = { name: file.name, data: ev.target.result };
-              var fn = document.getElementById('studio-material-file-name');
-              if (fn) fn.textContent = file.name;
-            };
-            reader.readAsDataURL(file);
-          });
-        }
+        if (typeof initStudio === 'function') initStudio();
       }
 
       function openCourse(courseId) {
@@ -523,7 +278,7 @@
           renderStudentCourseDetail(c);
           return;
         }
-        studioSelectCourse(courseId);
+        if (typeof studioSelectCourse === 'function') studioSelectCourse(courseId);
         openPage('course-workspace');
       }
 
@@ -542,10 +297,12 @@
           tr('Back to My courses') + '</button></div>';
         html += '<h3>' + escapeHtml(course.name) + '</h3>';
         html += '<p>' + tr('Teacher:') + ' ' + getTeacherName(course.teacherId) + '</p>';
+        html += renderStudentCurriculum(course);
         if (mats.length === 0) {
           html += '<p style="color:var(--muted);padding:18px;">' + tr('No study material published yet for this course.') + '</p>';
         } else {
-          html += '<div class="course-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr));">';
+          html += '<h4>' + tr('Course materials') + '</h4>';
+          html += '<div class="course-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr));';
           mats.forEach(function(m) {
             html += '<article class="course"><div class="course-body"><span class="pill">' + tr(m.kind) + '</span>' +
               '<h3>' + escapeHtml(m.title) + '</h3>';
@@ -560,5 +317,70 @@
           html += '</div>';
         }
         container.innerHTML = html;
+        bindStudentCurriculum(course);
         setLanguage(currentLang);
+      }
+
+      // Renders the published modules/lessons a student can work through.
+      // Draft modules and draft lessons are never exposed to students.
+      function renderStudentCurriculum(course) {
+        if (!course || !currentUser) return '';
+        var mods = getCourseModules(course.id).filter(function(m) { return m.published; });
+        var pct = courseCompletion(course.id, currentUser.id);
+        var html = '<div class="student-curriculum" data-student-curriculum="' + course.id + '">';
+        html += '<div class="student-curriculum-head"><h4>' + tr('Curriculum') + '</h4>';
+        html += '<div class="student-curriculum-progress"><div class="track ' + progressColorClass(pct) +
+          '"><div class="fill" style="width:' + Math.max(pct, 2) + '%"></div></div><span class="' +
+          progressColorClass(pct) + '">' + pct + '% ' + tr('complete') + '</span></div></div>';
+        if (!mods.length) {
+          html += '<p class="empty-msg">' + tr('No lessons have been published for this course yet.') + '</p></div>';
+          return html;
+        }
+        mods.forEach(function(mod, mi) {
+          var lessons = mod.lessons.filter(function(l) { return l.published; });
+          if (!lessons.length) return;
+          html += '<section class="student-module"><h5 class="student-module-title">' +
+            escapeHtml(mod.title) + '</h5>';
+          if (mod.description) html += '<p class="student-module-sub">' + escapeHtml(mod.description) + '</p>';
+          html += '<ul class="student-lesson-list">';
+          lessons.forEach(function(lesson) {
+            var done = isLessonComplete(course.id, lesson.id, currentUser.id);
+            html += '<li class="student-lesson' + (done ? ' done' : '') + '">' +
+              '<label class="student-lesson-check"><input type="checkbox" data-lesson-complete="' +
+              escapeHtml(lesson.id) + '"' + (done ? ' checked' : '') + ' />' +
+              '<span class="student-lesson-icon">' + studioLessonTypeIcon(lesson.type) + '</span>' +
+              '<span class="student-lesson-text">' + escapeHtml(lesson.title) + '</span></label>' +
+              '<span class="student-lesson-meta">' + escapeHtml(tr(STUDIO_TYPE_LABELS[lesson.type] || lesson.type)) +
+              (lesson.duration ? ' · ' + lesson.duration + ' ' + tr('min') : '') + '</span></li>';
+          });
+          html += '</ul></section>';
+        });
+        html += '</div>';
+        return html;
+      }
+
+      function bindStudentCurriculum(course) {
+        var root = document.querySelector('[data-student-curriculum="' + course.id + '"]');
+        if (!root) return;
+        root.querySelectorAll('[data-lesson-complete]').forEach(function(box) {
+          box.addEventListener('change', function() {
+            setLessonComplete(course.id, box.dataset.lessonComplete, currentUser.id, box.checked);
+            var li = box.closest('.student-lesson');
+            if (li) li.classList.toggle('done', box.checked);
+            var pct = courseCompletion(course.id, currentUser.id);
+            var wrap = root.querySelector('.student-curriculum-progress');
+            if (!wrap) return;
+            var track = wrap.querySelector('.track');
+            if (track) {
+              track.className = 'track ' + progressColorClass(pct);
+              var fill = track.querySelector('.fill');
+              if (fill) fill.style.width = Math.max(pct, 2) + '%';
+            }
+            var label = wrap.querySelector('span');
+            if (label) {
+              label.className = progressColorClass(pct);
+              label.textContent = pct + '% ' + tr('complete');
+            }
+          });
+        });
       }

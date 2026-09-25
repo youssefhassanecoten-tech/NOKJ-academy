@@ -22,7 +22,8 @@
         ['nokj-enroll-requests', 'enrollRequests'],
         ['nokj-course-requests', 'courseRequests'],
         ['nokj-course-materials', 'courseMaterials'],
-        ['nokj-teacher-auth-keys', 'teacherAuthKeys']
+        ['nokj-teacher-auth-keys', 'teacherAuthKeys'],
+        ['nokj-lesson-progress', 'lessonProgress']
       ];
 
       function storeGet(key) {
@@ -75,7 +76,8 @@
         enrollRequests: function() { return enrollRequests; },
         courseRequests: function() { return courseRequests; },
         courseMaterials: function() { return courseMaterials; },
-        teacherAuthKeys: function() { return teacherAuthKeys; }
+        teacherAuthKeys: function() { return teacherAuthKeys; },
+        lessonProgress: function() { return lessonProgress; }
       };
 
       function currentSnapshot() {
@@ -151,6 +153,7 @@
         const savedCourseRequests = storeGet('nokj-course-requests');
         const savedCourseMaterials = storeGet('nokj-course-materials');
         const savedTeacherAuthKeys = storeGet('nokj-teacher-auth-keys');
+        const savedLessonProgress = storeGet('nokj-lesson-progress');
         var snap = readSnapshot();
 
         if (savedStudents) { try { students = JSON.parse(savedStudents); } catch (e) { students = DEFAULT_STUDENTS.slice(); } } else { students =
@@ -193,6 +196,8 @@
           function(v) { courseMaterials = v; });
         parseInto('teacherAuthKeys', savedTeacherAuthKeys, function() { return []; },
           function(v) { teacherAuthKeys = v; });
+        parseInto('lessonProgress', savedLessonProgress, function() { return {}; },
+          function(v) { lessonProgress = v; });
 
         // Repair pass: if an individual key was lost or corrupt, fall back to the
         // last consolidated snapshot so existing records are never dropped.
@@ -203,7 +208,8 @@
           budgetEntries: !!savedBudget, tests: !!savedTests, testSubmissions: !!savedTestSubmissions,
           announcements: !!savedAnnouncements, pendingTeachers: !!savedPendingTeachers,
           enrollRequests: !!savedEnrollRequests, courseRequests: !!savedCourseRequests,
-          courseMaterials: !!savedCourseMaterials, teacherAuthKeys: !!savedTeacherAuthKeys
+          courseMaterials: !!savedCourseMaterials, teacherAuthKeys: !!savedTeacherAuthKeys,
+          lessonProgress: !!savedLessonProgress
         };
         if (snap) {
           var repaired = false;
@@ -232,6 +238,7 @@
                 case 'courseRequests': courseRequests = val; break;
                 case 'courseMaterials': courseMaterials = val; break;
                 case 'teacherAuthKeys': teacherAuthKeys = val; break;
+                case 'lessonProgress': lessonProgress = val; break;
               }
               repaired = true;
             } catch (e) { /* ignore unparseable snapshot entry */ }
@@ -293,6 +300,137 @@
       // ============================================================
       //  HELPER FUNCTIONS
       // ============================================================
+      //  COURSE STUDIO DATA MODEL
+      //  These helpers only ADD fields. Existing values are never discarded,
+      //  so upgrading the studio cannot destroy a teacher's data.
+      // ============================================================
+      var STUDIO_LESSON_TYPES = [
+        { value: 'text', icon: '📄' },
+        { value: 'video', icon: '🎬' },
+        { value: 'link', icon: '🔗' },
+        { value: 'file', icon: '📎' },
+        { value: 'assignment', icon: '📝' },
+        { value: 'quiz', icon: '❓' },
+        { value: 'live', icon: '🔴' },
+        { value: 'embed', icon: '🧩' }
+      ];
+
+      var STUDIO_ACCENTS = ['#4f46e5', '#0891b2', '#059669', '#d97706', '#dc2626', '#7c3aed', '#db2777', '#0f172a'];
+
+      function studioLessonTypeIcon(type) {
+        var found = STUDIO_LESSON_TYPES.find(function(t) { return t.value === type; });
+        return found ? found.icon : '📄';
+      }
+
+      function studioNextId(prefix) {
+        return prefix + '-' + Date.now().toString(36) + '-' +
+          Math.floor(Math.random() * 1e6).toString(36);
+      }
+
+      // Adds any missing studio field to a course in place. Never removes or
+      // overwrites a field that already has a value.
+      function ensureCourseShape(course) {
+        if (!course || typeof course !== 'object') return course;
+        if (course.emoji === undefined) course.emoji = '📘';
+        if (course.color === undefined) course.color = '#4f46e5';
+        if (course.code === undefined) course.code = '';
+        if (course.visibility === undefined) course.visibility = 'private';
+        if (course.capacity === undefined) course.capacity = 0;
+        if (course.passingScore === undefined) course.passingScore = 60;
+        if (course.archived === undefined) course.archived = false;
+        if (course.updatedAt === undefined) course.updatedAt = course.createdAt || new Date().toISOString();
+        if (!Array.isArray(course.modules)) course.modules = [];
+        course.modules.forEach(function(mod) {
+          if (!mod || typeof mod !== 'object') return;
+          if (mod.id === undefined) mod.id = studioNextId('m');
+          if (mod.title === undefined) mod.title = tr('Untitled module');
+          if (mod.description === undefined) mod.description = '';
+          if (mod.published === undefined) mod.published = false;
+          if (mod.collapsed === undefined) mod.collapsed = false;
+          if (!Array.isArray(mod.lessons)) mod.lessons = [];
+          mod.lessons.forEach(function(lesson) {
+            if (!lesson || typeof lesson !== 'object') return;
+            if (lesson.id === undefined) lesson.id = studioNextId('l');
+            if (lesson.title === undefined) lesson.title = tr('Untitled lesson');
+            if (lesson.type === undefined) lesson.type = 'text';
+            if (lesson.body === undefined) lesson.body = '';
+            if (lesson.url === undefined) lesson.url = '';
+            if (lesson.fileName === undefined) lesson.fileName = '';
+            if (lesson.fileData === undefined) lesson.fileData = '';
+            if (lesson.duration === undefined) lesson.duration = 0;
+            if (lesson.published === undefined) lesson.published = false;
+            if (lesson.order === undefined) lesson.order = 0;
+          });
+          mod.lessons.forEach(function(lesson, index) { lesson.order = index; });
+        });
+        return course;
+      }
+
+      function ensureAllCourseShapes() {
+        courses.forEach(ensureCourseShape);
+      }
+
+      function getCourseModules(courseId) {
+        var c = courses.find(function(x) { return x.id === courseId; });
+        if (!c) return [];
+        ensureCourseShape(c);
+        return c.modules;
+      }
+
+      // includeDrafts=true counts every lesson regardless of state.
+      // includeDrafts=false counts only what students can actually see, so a
+      // lesson inside an unpublished module is never counted as published.
+      function countCourseLessons(courseId, includeDrafts) {
+        return getCourseModules(courseId).reduce(function(sum, mod) {
+          if (!includeDrafts && !mod.published) return sum;
+          return sum + mod.lessons.filter(function(l) { return includeDrafts || l.published; }).length;
+        }, 0);
+      }
+
+      function countCourseModules(courseId) {
+        return getCourseModules(courseId).length;
+      }
+
+      function isCoursePublished(course) {
+        if (!course) return false;
+        var mods = getCourseModules(course.id);
+        if (!mods.length) return false;
+        return mods.some(function(m) {
+          return m.published && m.lessons.some(function(l) { return l.published; });
+        });
+      }
+
+      // Completion for a single student across a course curriculum.
+      function courseCompletion(courseId, studentId) {
+        var lessons = [];
+        getCourseModules(courseId).forEach(function(mod) {
+          if (!mod.published) return;
+          mod.lessons.forEach(function(l) { if (l.published) lessons.push(l); });
+        });
+        if (!lessons.length) return 0;
+        var done = lessons.filter(function(l) { return isLessonComplete(courseId, l.id, studentId); }).length;
+        return Math.round((done / lessons.length) * 100);
+      }
+
+      function lessonProgressKey(courseId, lessonId, studentId) {
+        return courseId + '::' + lessonId + '::' + studentId;
+      }
+
+      function isLessonComplete(courseId, lessonId, studentId) {
+        var rec = lessonProgress[lessonProgressKey(courseId, lessonId, studentId)];
+        return !!(rec && rec.completed);
+      }
+
+      function setLessonComplete(courseId, lessonId, studentId, completed) {
+        var key = lessonProgressKey(courseId, lessonId, studentId);
+        if (completed) {
+          lessonProgress[key] = { completed: true, completedAt: new Date().toISOString() };
+        } else {
+          delete lessonProgress[key];
+        }
+        saveData();
+      }
+
       function getTeacherName(id) {
         var t = teachers.find(function(tc) { return tc.id === id; });
         return t ? t.name : 'Unknown';

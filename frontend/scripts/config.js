@@ -137,6 +137,7 @@
       let courseRequests = [];
       let courseMaterials = [];
       let teacherAuthKeys = [];
+      let lessonProgress = {};
       let currentUser = null,
         expandedRows = {},
         currentSlide = 0,

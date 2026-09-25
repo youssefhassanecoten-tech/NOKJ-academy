@@ -277,6 +277,11 @@
             <div class="task-stat-card"><div class="number" id="student-task-graded" style="color:var(--success);">0</div><div class="label">Graded</div></div>
           </div>
 
+          <div id="student-tasks-tabbar" style="display:flex;gap:8px;margin:18px 0 4px 0;flex-wrap:wrap;">
+            <button type="button" class="pill active" id="student-tasks-tab-assignments" style="cursor:pointer;">My Assignments</button>
+            <button type="button" class="pill" id="student-tasks-tab-interactive" style="cursor:pointer;">Interactive Tests</button>
+          </div>
+
           <div class="task-grid" id="student-task-list"></div>
         </div>
       </section>
@@ -674,6 +679,12 @@
           <div style="margin:16px 0 8px 0;display:flex;justify-content:space-between;align-items:center;">
             <strong>Questions</strong>
             <button type="button" class="primary-button" id="add-task-question-btn" style="padding:4px 12px;font-size:12px;">+ Add Question</button>
+          </div>
+          <button type="button" class="secondary-button" id="toggle-task-pdf-scan" style="padding:4px 12px;font-size:12px;margin-bottom:8px;">📄 Scan PDF / Paste Text → Auto Questions</button>
+          <div id="task-pdf-scan-options" style="display:none;margin-bottom:8px;">
+            <label>Scanned text (paste from PDF/screenshot OCR)</label>
+            <textarea id="task-scan-text" placeholder="Paste OCR text here..."></textarea>
+            <button type="button" class="primary-button" id="task-pdf-scan-generate" style="padding:4px 12px;font-size:12px;">✨ Auto-Generate Questions</button>
           </div>
           <div id="task-questions-container"></div>
         </div>

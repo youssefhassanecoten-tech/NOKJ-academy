@@ -113,10 +113,16 @@
           return false;
         });
 
+        var activeTab = window.studentTasksTab || 'assignments';
+        var visibleTasks = assignedTasks.filter(function(task) {
+          var isInteractive = task.questions && task.questions.length > 0;
+          return activeTab === 'interactive' ? isInteractive : !isInteractive;
+        });
+
         var pendingCount = 0,
           submittedCount = 0,
           gradedCount = 0;
-        assignedTasks.forEach(function(task) {
+        visibleTasks.forEach(function(task) {
           var key = task.id + '-' + studentId;
           var sub = taskSubmissions[key];
           if (sub && sub.grade !== null && sub.grade !== undefined) gradedCount++;
@@ -124,20 +130,28 @@
           else pendingCount++;
         });
 
-        document.getElementById('student-task-total').textContent = assignedTasks.length;
+        document.getElementById('student-task-total').textContent = visibleTasks.length;
         document.getElementById('student-task-pending').textContent = pendingCount;
         document.getElementById('student-task-submitted').textContent = submittedCount;
         document.getElementById('student-task-graded').textContent = gradedCount;
 
+        var tabAssignments = document.getElementById('student-tasks-tab-assignments');
+        var tabInteractive = document.getElementById('student-tasks-tab-interactive');
+        if (tabAssignments && tabInteractive) {
+          tabAssignments.classList.toggle('active', activeTab === 'assignments');
+          tabInteractive.classList.toggle('active', activeTab === 'interactive');
+        }
+
         container.innerHTML = '';
 
-        if (assignedTasks.length === 0) {
-          container.innerHTML =
-            '<p style="color:var(--muted);text-align:center;padding:40px;">No tasks assigned to you yet.</p>';
+        if (visibleTasks.length === 0) {
+          container.innerHTML = activeTab === 'interactive' ?
+            '<p style="color:var(--muted);text-align:center;padding:40px;">' + tr('No interactive tests yet.|student') + '</p>' :
+            '<p style="color:var(--muted);text-align:center;padding:40px;">' + tr('No tasks assigned to you yet.|student') + '</p>';
           return;
         }
 
-        assignedTasks.sort(function(a, b) {
+        visibleTasks.sort(function(a, b) {
           var aOverdue = a.deadline < new Date().toISOString().split('T')[0];
           var bOverdue = b.deadline < new Date().toISOString().split('T')[0];
           if (aOverdue && !bOverdue) return -1;

@@ -272,6 +272,16 @@
         });
       });
 
+      window.studentTasksTab = window.studentTasksTab || 'assignments';
+      ['student-tasks-tab-assignments', 'student-tasks-tab-interactive'].forEach(function(id) {
+        var tab = document.getElementById(id);
+        if (!tab) return;
+        tab.addEventListener('click', function() {
+          window.studentTasksTab = id === 'student-tasks-tab-interactive' ? 'interactive' : 'assignments';
+          renderStudentTasks();
+        });
+      });
+
       document.getElementById('file-preview-close').addEventListener('click', closeFilePreview);
       document.getElementById('file-preview-overlay').addEventListener('click', function(e) {
         if (e.target === this) closeFilePreview();
@@ -522,6 +532,61 @@
           }
         });
         return result;
+      }
+
+      var pdfScanToggle = document.getElementById('toggle-task-pdf-scan');
+      var pdfScanOptions = document.getElementById('task-pdf-scan-options');
+      if (pdfScanToggle) {
+        pdfScanToggle.addEventListener('click', function() {
+          pdfScanOptions.style.display = pdfScanOptions.style.display === 'block' ? 'none' : 'block';
+        });
+        document.getElementById('task-pdf-scan-generate').addEventListener('click', function() {
+          parseScannedTextIntoQuestions();
+        });
+      }
+      function parseScannedTextIntoQuestions() {
+        var raw = document.getElementById('task-scan-text').value;
+        if (!raw.trim()) { alert(tr('Paste some scanned text first.')); return; }
+        var blockLines = String(raw).split(/\r?\n/).map(function(l) { return l.trim(); }).filter(function(l) {
+          return l.length > 0;
+        });
+        var idx = 0;
+        while (idx < blockLines.length) {
+          var qLines = [];
+          while (idx < blockLines.length && !/^[A-D][\).:]|^Option\s*[A-D]|^\d+[\).:]/.test(blockLines[idx])) {
+            qLines.push(blockLines[idx]);
+            idx++;
+          }
+          if (qLines.length === 0) { qLines.push(blockLines[idx]); idx++; }
+          var questionText = qLines.join(' ');
+          if (/^[A-D][\).:]/.test(blockLines[idx])) {
+            var opts = [];
+            while (idx < blockLines.length && /^[A-D][\).:]/.test(blockLines[idx])) {
+              opts.push(blockLines[idx].replace(/^[A-D][\).:]\s*/, ''));
+              idx++;
+            }
+            addTaskQuestionRow();
+            var rows = document.querySelectorAll('#task-questions-container .question-row');
+            var row = rows[rows.length - 1];
+            row.querySelector('.q-input').value = questionText;
+            var optInputs = row.querySelectorAll('.q-option');
+            for (var oi = 0; oi < optInputs.length && oi < opts.length; oi++) optInputs[oi].value = opts[oi];
+            if (opts.length > 0) row.querySelectorAll('.q-option')[0].value = opts[0];
+            row.querySelector('.q-type').value = 'mcq';
+            row.querySelector('.q-options').style.display = 'block';
+            row.querySelector('.q-correct').value = 'A';
+          } else {
+            addTaskQuestionRow();
+            var rows2 = document.querySelectorAll('#task-questions-container .question-row');
+            var row2 = rows2[rows2.length - 1];
+            row2.querySelector('.q-input').value = questionText;
+            row2.querySelector('.q-type').value = 'text';
+            row2.querySelector('.q-options').style.display = 'none';
+          }
+        }
+        document.getElementById('task-scan-text').value = '';
+        pdfScanOptions.style.display = 'none';
+        alert(tr('Questions generated from scanned text. Review and adjust before saving.'));
       }
       document.getElementById('task-file-input').addEventListener('change', function(e) {
         var files = Array.from(e.target.files);

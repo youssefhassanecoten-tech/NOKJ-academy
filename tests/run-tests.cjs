@@ -188,6 +188,68 @@ check('mcq block grades a blank answer as zero', vmRoundTrip.blank === 0, JSON.s
 check('mcq block carries a default point value', vmRoundTrip.points > 0, JSON.stringify(vmRoundTrip));
 check('grading returns per-block detail', vmRoundTrip.detail === true, JSON.stringify(vmRoundTrip));
 
+console.log('== Shape maths formulas (vm) ==');
+// The cylinder used to be drawn and graded as a cuboid, and the round shapes
+// halved `a` to get a radius while the field was labelled "radius".
+const vmShapes = (() => {
+  try {
+    const vm = require('vm');
+    const context = vm.createContext({ window: {}, document: { getElementById: () => null } });
+    for (const s of ['task-blocks.js', 'task-blocks-core.js', 'task-blocks-math.js']) {
+      vm.runInContext(fs.readFileSync(path.join(SCRIPTS_DIR, 'modules', s), 'utf8'), context);
+    }
+    const out = vm.runInContext(`(function () {
+      function make(shape, ask, a, b, c) {
+        var blk = makeBlock('shapemath');
+        blk.props.question = '';
+        blk.props.shape = shape; blk.props.ask = ask;
+        blk.props.a = a; blk.props.b = b; blk.props.c = c;
+        return blk;
+      }
+      function ans(blk) { return gradeTaskAnswers([blk], { [blk.id]: String(shapeAnswer(blk)) }).score === gradeTaskAnswers([blk], { [blk.id]: String(shapeAnswer(blk)) }).max; }
+      var cyl = make('cyl', 'volume', 3, 4, 10);   // pi * 3^2 * 10
+      var cir = make('circle', 'area', 4, 0, 0);  // pi * 4^2
+      var cirC = make('circle', 'perimeter', 4, 0, 0); // 2*pi*4
+      var sph = make('sphere', 'volume', 3, 0, 0);    // 4/3*pi*27
+      var con = make('cone', 'volume', 3, 0, 6);      // 1/3*pi*9*6
+      var cube = make('cube', 'volume', 3, 0, 0);     // 27
+      var cub = make('cuboid', 'volume', 2, 3, 4);   // 24
+      var tri = make('tri', 'area', 6, 4, 0);        // 12
+      var rect = make('rect', 'area', 6, 4, 0);      // 24
+      return JSON.stringify({
+        cyl: shapeAnswer(cyl), cylGrads: ans(cyl),
+        cir: shapeAnswer(cir), cirGrads: ans(cir),
+        cirC: shapeAnswer(cirC),
+        sph: shapeAnswer(sph), sphGrads: ans(sph),
+        con: shapeAnswer(con), conGrads: ans(con),
+        cube: shapeAnswer(cube), cub: shapeAnswer(cub),
+        tri: shapeAnswer(tri), rect: shapeAnswer(rect),
+        question: shapeQuestion(cir),
+        dims: shapeDims(cyl)
+      });
+    })()`, context);
+    return JSON.parse(out);
+  } catch (err) {
+    return { error: err.message };
+  }
+})();
+check('shape maths evaluates', !vmShapes.error, vmShapes.error || '');
+check('cylinder volume is pi r^2 h', Math.abs(vmShapes.cyl - Math.PI * 9 * 10) < 1e-6, 'got ' + vmShapes.cyl);
+check('cylinder grades its own answer', vmShapes.cylGrads === true);
+check('circle area is pi r^2 with a as the radius', Math.abs(vmShapes.cir - Math.PI * 16) < 1e-6, 'got ' + vmShapes.cir);
+check('circle circumference is 2 pi r', Math.abs(vmShapes.cirC - 2 * Math.PI * 4) < 1e-6, 'got ' + vmShapes.cirC);
+check('circle grades its own answer', vmShapes.cirGrads === true);
+check('sphere volume is 4/3 pi r^3', Math.abs(vmShapes.sph - (4 / 3) * Math.PI * 27) < 1e-6, 'got ' + vmShapes.sph);
+check('sphere grades its own answer', vmShapes.sphGrads === true);
+check('cone volume is a third of the cylinder', Math.abs(vmShapes.con - (Math.PI * 9 * 6) / 3) < 1e-6, 'got ' + vmShapes.con);
+check('cone grades its own answer', vmShapes.conGrads === true);
+check('cube volume is a cubed', Math.abs(vmShapes.cube - 27) < 1e-6, 'got ' + vmShapes.cube);
+check('cuboid volume is l x w x h', Math.abs(vmShapes.cub - 24) < 1e-6, 'got ' + vmShapes.cub);
+check('triangle area is half base times height', Math.abs(vmShapes.tri - 12) < 1e-6, 'got ' + vmShapes.tri);
+check('rectangle area is length times width', Math.abs(vmShapes.rect - 24) < 1e-6, 'got ' + vmShapes.rect);
+check('the generated question names the shape and quantity', /circle/.test(vmShapes.question) && /area/.test(vmShapes.question), vmShapes.question);
+check('the dimension label states the radius and height', /radius 3 cm/.test(vmShapes.dims) && /height 10 cm/.test(vmShapes.dims), vmShapes.dims);
+
 console.log('== Student course sections (vm) ==');
 // A small data world plus just enough DOM to render the three work sections
 // and run one block submission end to end.

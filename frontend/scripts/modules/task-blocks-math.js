@@ -159,12 +159,17 @@
           var read = el.querySelector('[data-tb-read]');
           var fb = el.querySelector('[data-tb-fb]');
           var picked = null;
-          // Whole numbers across the range, so the line stays readable.
-          for (var v = min; v <= max; v += (max - min) / 10) {
+          // Ticks are labelled from their real value, so the line reads
+          // correctly at any range instead of rounding into duplicates.
+          var steps = 10;
+          var stepVal = (max - min) / steps;
+          var decimals = stepVal < 1 ? (stepVal < 0.1 ? 2 : 1) : 0;
+          for (var i = 0; i <= steps; i++) {
+            var v = min + stepVal * i;
             var t = document.createElement('span');
             t.className = 'tb-tick';
             t.style.left = ((v - min) / (max - min) * 100) + '%';
-            t.textContent = Math.round(v);
+            t.textContent = decimals ? v.toFixed(decimals) : String(Math.round(v * 100) / 100);
             ticks.appendChild(t);
           }
           box.addEventListener('click', function(e) {
@@ -172,7 +177,8 @@
             var p = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
             picked = min + p * (max - min);
             mark.style.left = (p * 100) + '%';
-            read.textContent = 'Marked value: ' + (Math.round(picked * 100) / 100);
+            var shown = Math.round(picked * 100) / 100;
+            read.textContent = 'Marked value: ' + shown;
           });
           el.querySelector('[data-tb-check]').addEventListener('click', function() {
             if (picked === null) { fb.className = 'tb-feedback'; fb.textContent = 'Mark a value first.'; return; }
@@ -209,6 +215,21 @@
         return plotValue(b, x);
       }
 
+      // The question is derived from the sliders so the mark can never drift
+      // from what is asked.
+      function plotQuestion(b) {
+        var what = b.props.ask === 'gradient' ? 'the gradient'
+          : (b.props.ask === 'yint' ? 'the y-intercept'
+            : 'the value when x = ' + (parseFloat(b.props.at) || 0));
+        if (b.props.hide) {
+          return 'Move the sliders to match the line in the question. Then work out ' + what + '.';
+        }
+        return 'This is y = ' +
+          (b.props.kind === 'quadratic' ? (b.props.a + 'x² ' + (b.props.b >= 0 ? '+ ' : '- ') + Math.abs(b.props.b) + 'x ' + (b.props.c >= 0 ? '+ ' : '- ') + Math.abs(b.props.c))
+            : (b.props.a + 'x ' + (b.props.b >= 0 ? '+ ' : '- ') + Math.abs(b.props.b))) +
+          '. Work out ' + what + '.';
+      }
+
       defineBlock('funcplot', {
         label: 'Function plot', icon: '📈', category: 'Maths', graded: true, defaultPoints: 1,
         fields: [
@@ -222,10 +243,11 @@
           { key: 'hide', type: 'bool', label: 'Hide the coefficients' }
         ],
         defaults: () => ({
-          question: 'Move the sliders. What is the gradient of this line?',
+          question: '', // empty means "describe this function for me"
           kind: 'linear', ask: 'gradient', at: 0, a: 2, b: 1, c: 0, hide: true
         }),
-        render: (b) => '<div class="tb-q"><div class="tb-q-text">' + miniMd(b.props.question) + '</div>' +
+        render: (b) => '<div class="tb-q"><div class="tb-q-text">' +
+          miniMd(b.props.question || plotQuestion(b)) + '</div>' +
           '<canvas class="tb-plot" width="520" height="300" data-tb-plot="' + b.id + '"></canvas>' +
           '<div class="tb-mesh-ctrl">' +
           '<label>a <input type="range" min="-6" max="6" step="0.5" value="' + esc(b.props.a) + '" data-tb-a/></label>' +
@@ -305,22 +327,64 @@
       });
 
       // ---------- shape maths ----------
+      // `a` is the radius for round shapes and the base for flat ones, `b` the
+      // width or height, `c` the height. Previously the round shapes halved `a`
+      // to get a radius while the label said "radius", and the cylinder used
+      // `a` as both its diameter and its height.
       function shapeAnswer(b) {
         var a = parseFloat(b.props.a) || 0, bb = parseFloat(b.props.b) || 0, c = parseFloat(b.props.c) || 0;
-        var r = a / 2;
+        var vol = b.props.ask === 'volume';
+        var surf = b.props.ask === 'perimeter';
         switch (b.props.shape) {
-          case 'rect': return b.props.ask === 'area' ? a * bb : 2 * (a + bb);
-          case 'tri': return b.props.ask === 'area' ? a * bb / 2 : a + bb + Math.sqrt(a * a + bb * bb);
-          case 'circle': return b.props.ask === 'area' ? Math.PI * r * r : 2 * Math.PI * r;
-          case 'cube': return b.props.ask === 'volume' ? a * a * a : 6 * a * a;
-          case 'cuboid': return b.props.ask === 'volume' ? a * bb * c : 2 * (a * bb + a * c + bb * c);
-          case 'cyl': return b.props.ask === 'volume' ? Math.PI * r * r * a : 2 * Math.PI * r * (r + a);
+          case 'rect': return vol ? a * bb * c : (surf ? 2 * (a * bb + a * c + bb * c) : a * bb);
+          case 'tri': return vol ? (a * bb * c) / 6 : (surf ? a + bb + Math.sqrt(a * a + bb * bb) : (a * bb) / 2);
+          case 'trap': return surf ? (a + a * 1.6) / 2 * 2 + 2 * bb : (a + a * 1.6) / 2 * bb;
+          case 'circle': return surf ? 2 * Math.PI * a : Math.PI * a * a;
+          case 'cube': return vol ? a * a * a : 6 * a * a;
+          case 'cuboid': return vol ? a * bb * c : 2 * (a * bb + a * c + bb * c);
+          case 'cyl': return vol ? Math.PI * a * a * c : 2 * Math.PI * a * a + 2 * Math.PI * a * c;
+          case 'cone': return vol ? (Math.PI * a * a * c) / 3 : Math.PI * a * (a + Math.sqrt(a * a + c * c));
+          case 'sphere': return surf ? 4 * Math.PI * a * a : (4 / 3) * Math.PI * a * a * a;
           default: return 0;
         }
       }
+
+      // A question that says exactly what to work out, so the exercise is never
+      // ambiguous about which formula is wanted.
+      function shapeQuestion(b) {
+        var ask = b.props.ask;
+        var name = {
+          rect: 'the cuboid below', tri: 'the right-angled triangle below',
+          trap: 'the trapezium below', circle: 'the circle below',
+          cube: 'the cube below', cuboid: 'the cuboid below',
+          cyl: 'the cylinder below', cone: 'the cone below', sphere: 'the sphere below'
+        }[b.props.shape] || 'the shape below';
+        var what = ask === 'volume' ? 'volume'
+          : (ask === 'perimeter' ? 'perimeter, or surface area for the solid shapes'
+            : 'area');
+        return 'Find the ' + what + ' of ' + name + '. Use 3.14 for π.';
+      }
+
+      function shapeDims(b) {
+        var a = parseFloat(b.props.a) || 0, bb = parseFloat(b.props.b) || 0, c = parseFloat(b.props.c) || 0;
+        switch (b.props.shape) {
+          case 'rect': return a + ' cm by ' + bb + ' cm';
+          case 'tri': return 'base ' + a + ' cm, height ' + bb + ' cm (right angled)';
+          case 'trap': return 'parallel sides ' + a + ' cm and ' + (a * 1.6).toFixed(1) + ' cm, height ' + bb + ' cm';
+          case 'circle': return 'radius ' + a + ' cm';
+          case 'cube': return 'side ' + a + ' cm';
+          case 'cuboid': return a + ' cm by ' + bb + ' cm by ' + c + ' cm';
+          case 'cyl': return 'radius ' + a + ' cm, height ' + c + ' cm';
+          case 'cone': return 'radius ' + a + ' cm, height ' + c + ' cm';
+          case 'sphere': return 'radius ' + a + ' cm';
+          default: return '';
+        }
+      }
+
       var SHAPES = [
-        ['rect', 'Rectangle'], ['tri', 'Triangle'], ['circle', 'Circle'],
-        ['cube', 'Cube'], ['cuboid', 'Cuboid'], ['cyl', 'Cylinder']
+        ['rect', 'Cuboid (l × w × h)'], ['tri', 'Right triangle'], ['trap', 'Trapezium'],
+        ['circle', 'Circle'], ['cube', 'Cube'], ['cuboid', 'Cuboid (3 lengths)'],
+        ['cyl', 'Cylinder'], ['cone', 'Cone'], ['sphere', 'Sphere']
       ];
 
       defineBlock('shapemath', {
@@ -334,10 +398,11 @@
           { key: 'c', type: 'number', label: 'Height', min: 0, max: 20 }
         ],
         defaults: () => ({
-          question: 'Find the area of the shape. Use 3.14 for π.',
+          question: '', // empty means "write one for me from the shape and quantity"
           shape: 'rect', ask: 'area', a: 8, b: 5, c: 3
         }),
-        render: (b) => '<div class="tb-q"><div class="tb-q-text">' + miniMd(b.props.question) + '</div>' +
+        render: (b) => '<div class="tb-q"><div class="tb-q-text">' +
+          miniMd(b.props.question || shapeQuestion(b)) + '</div>' +
           '<canvas class="tb-shape" width="260" height="200" data-tb-shape="' + b.id + '"></canvas>' +
           '<div class="tb-shape-dims" data-tb-dims="' + b.id + '"></div>' +
           '<div class="tb-q-sub">Answer: <input type="text" class="tb-input tb-num" data-tb-x="' + b.id + '"/></div>' +
@@ -359,10 +424,26 @@
               ctx.rect(20, 20, a * sc, bb * sc);
             } else if (b.props.shape === 'tri') {
               ctx.moveTo(20, 20 + bb * sc); ctx.lineTo(20 + a * sc, 20 + bb * sc); ctx.lineTo(20, 20);
+            } else if (b.props.shape === 'trap') {
+              var t2 = a * 1.6 * sc;
+              ctx.moveTo(20, 20 + bb * sc);
+              ctx.lineTo(20 + (t2 - a * sc) / 2, 20);
+              ctx.lineTo(20 + (t2 - a * sc) / 2 + a * sc, 20);
+              ctx.lineTo(20 + t2, 20 + bb * sc);
             } else if (b.props.shape === 'circle') {
               ctx.arc(20 + a * sc / 2, 100, a * sc / 2, 0, Math.PI * 2);
-            } else if (b.props.shape === 'cube' || b.props.shape === 'cuboid' || b.props.shape === 'cyl') {
-              var w = (b.props.shape === 'cuboid' ? a : a) * sc;
+            } else if (b.props.shape === 'cyl') {
+              // A cylinder: an ellipse for the top, straight sides, and a
+              // curved base. It used to fall through to the cuboid branch and
+              // was drawn as a box.
+              var r = a * sc, cy = 20 + bb * sc, ry = Math.max(10, r * 0.32);
+              ctx.ellipse(20 + r, cy, r, ry, 0, 0, Math.PI * 2);
+              ctx.moveTo(20, cy);
+              ctx.lineTo(20, cy + c * sc);
+              ctx.ellipse(20 + r, cy + c * sc, r, ry, 0, Math.PI, 0, true);
+              ctx.lineTo(20 + r * 2, cy);
+            } else if (b.props.shape === 'cube' || b.props.shape === 'cuboid') {
+              var w = a * sc;
               var h = (b.props.shape === 'cuboid' ? c : a) * sc;
               var d = 26;
               ctx.moveTo(30, 150 - h); ctx.lineTo(30 + w, 150 - h);
@@ -370,6 +451,14 @@
               ctx.moveTo(30 + w, 150 - h); ctx.lineTo(30 + w + d, 150 - h - d);
               ctx.lineTo(30 + w + d, 150 - d); ctx.lineTo(30 + w, 150);
               ctx.moveTo(30, 150); ctx.lineTo(30 + d, 150 - d); ctx.lineTo(30 + w + d, 150 - d);
+            } else if (b.props.shape === 'cone') {
+              var cr = a * sc, ch = c * sc, base = 150;
+              ctx.moveTo(30 + cr, base - ch);
+              ctx.ellipse(30 + cr, base, cr, Math.max(8, cr * 0.28), 0, 0, Math.PI);
+              ctx.closePath();
+            } else if (b.props.shape === 'sphere') {
+              var sr = a * sc;
+              ctx.arc(130, 100, sr, 0, Math.PI * 2);
             } else {
               ctx.rect(20, 20, a * sc, bb * sc);
             }
@@ -378,11 +467,7 @@
             ctx.stroke();
           }
           draw();
-          var shown = b.props.shape === 'tri' ? 'base ' + a + ', height ' + bb
-            : (b.props.shape === 'circle' || b.props.shape === 'cyl' ? 'radius ' + a
-              : (b.props.shape === 'cube' ? 'side ' + a
-                : (b.props.shape === 'cuboid' ? a + ' × ' + bb + ' × ' + c : a + ' × ' + bb)));
-          dims.textContent = shown;
+          dims.textContent = shapeDims(b);
           var fb = el.querySelector('[data-tb-fb]');
           el.querySelector('[data-tb-check]').addEventListener('click', function() {
             var v = el.querySelector('[data-tb-x]').value.trim();
@@ -390,7 +475,10 @@
             var want = shapeAnswer(b);
             var ok = numClose(v, want, Math.max(0.05, Math.abs(want) * 0.01));
             fb.className = 'tb-feedback ' + (ok ? 'ok' : 'bad');
-            fb.textContent = ok ? '✓ Correct!' : '✕ Check the formula for this shape.';
+            fb.textContent = ok ? '✓ Correct! ' + shapeDims(b)
+              : '✕ Not quite. You were asked for the ' +
+                (b.props.ask === 'volume' ? 'volume' : b.props.ask === 'perimeter' ? 'perimeter or surface area' : 'area') +
+                ' of ' + shapeDims(b) + '.';
           });
         },
         collect: (b, el) => el.querySelector('[data-tb-x]').value.trim(),

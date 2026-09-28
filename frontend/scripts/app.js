@@ -312,16 +312,6 @@ const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
         });
       });
 
-      window.studentTasksTab = window.studentTasksTab || 'assignments';
-      ['student-tasks-tab-assignments', 'student-tasks-tab-interactive'].forEach(function(id) {
-        var tab = document.getElementById(id);
-        if (!tab) return;
-        tab.addEventListener('click', function() {
-          window.studentTasksTab = id === 'student-tasks-tab-interactive' ? 'interactive' : 'assignments';
-          renderStudentTasks();
-        });
-      });
-
       document.getElementById('file-preview-close').addEventListener('click', closeFilePreview);
       document.getElementById('file-preview-overlay').addEventListener('click', function(e) {
         if (e.target === this) closeFilePreview();
@@ -515,126 +505,15 @@ const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
       });
 
       // ----- TASK EVENTS -----
-      document.getElementById('add-task-btn').addEventListener('click', function() {
-        document.getElementById('task-modal-title').textContent = 'Create Task';
-        document.getElementById('task-modal-sub').textContent = 'Fill in the task details below.';
-        document.getElementById('task-modal-title-input').value = '';
-        document.getElementById('task-modal-type').value = 'homework';
-        document.getElementById('task-modal-priority').value = 'medium';
-        document.getElementById('task-modal-description').value = '';
-        document.getElementById('task-modal-deadline').value = '';
-        document.getElementById('task-modal-assign').value = 'all';
-        document.getElementById('task-modal-assign-options').style.display = 'none';
-        document.getElementById('task-file-list').innerHTML = '';
-        tempTaskFiles = [];
-        document.getElementById('task-modal-save').textContent = 'Create Task';
-        document.getElementById('task-modal-overlay').classList.add('open');
-        setLanguage(currentLang);
-      });
-
+      // The basic task form is opened from a course section in the studio
+      // (openBasicTaskModal), which also decides the owning course. There is no
+      // standalone tasks page left to own an "add" button.
       document.getElementById('task-modal-cancel').addEventListener('click', function() {
         document.getElementById('task-modal-overlay').classList.remove('open');
       });
       document.getElementById('task-modal-overlay').addEventListener('click', function(e) {
         if (e.target === this) document.getElementById('task-modal-overlay').classList.remove('open');
       });
-      var questionsBuilder = document.getElementById('task-questions-builder');
-      document.getElementById('task-modal-type').addEventListener('change', function() {
-        questionsBuilder.style.display = this.value === 'interactive' ? 'block' : 'none';
-        if (this.value !== 'interactive') document.getElementById('task-questions-container').innerHTML = '';
-      });
-      document.getElementById('add-task-question-btn').addEventListener('click', addTaskQuestionRow);
-      function addTaskQuestionRow() {
-        var container = document.getElementById('task-questions-container');
-        var row = document.createElement('div');
-        row.className = 'question-row';
-        row.innerHTML =
-          '<span class="q-remove">✕</span><input type="text" class="q-input" placeholder="Enter your question..." />' +
-          '<select class="q-type"><option value="mcq">MCQ</option><option value="text">Short Text</option></select>' +
-          '<div class="q-options"><input class="q-option" placeholder="Option A" /><input class="q-option" placeholder="Option B" />' +
-          '<input class="q-option" placeholder="Option C" /><input class="q-option" placeholder="Option D" />' +
-          '<input class="q-correct" placeholder="Correct (A/B/C/D)" maxlength="1" /></div>';
-        row.querySelector('.q-remove').addEventListener('click', function() { row.remove(); });
-        row.querySelector('.q-type').addEventListener('change', function() {
-          row.querySelector('.q-options').style.display = this.value === 'mcq' ? 'block' : 'none';
-        });
-        container.appendChild(row);
-      }
-      function collectTaskQuestions() {
-        var result = [];
-        document.querySelectorAll('#task-questions-container .question-row').forEach(function(row) {
-          var text = row.querySelector('.q-input').value.trim();
-          var type = row.querySelector('.q-type').value;
-          if (!text) return;
-          if (type === 'mcq') {
-            var options = Array.from(row.querySelectorAll('.q-option')).map(function(i) { return i.value.trim(); });
-            var correct = row.querySelector('.q-correct').value.trim().toUpperCase();
-            if (options.some(function(o) { return !o; })) { alert(tr('Please fill in all options.')); return null; }
-            if (!correct || 'ABCD'.indexOf(correct) === -1) { alert(tr('Select correct answer letter.')); return null; }
-            var correctIndex = 'ABCD'.indexOf(correct);
-            if (correctIndex >= options.length) { alert(tr('Correct answer must match an option.')); return null; }
-            result.push({ type: 'mcq', question: text, options: options, correctAnswer: correctIndex });
-          } else {
-            result.push({ type: 'text', question: text });
-          }
-        });
-        return result;
-      }
-
-      var pdfScanToggle = document.getElementById('toggle-task-pdf-scan');
-      var pdfScanOptions = document.getElementById('task-pdf-scan-options');
-      if (pdfScanToggle) {
-        pdfScanToggle.addEventListener('click', function() {
-          pdfScanOptions.style.display = pdfScanOptions.style.display === 'block' ? 'none' : 'block';
-        });
-        document.getElementById('task-pdf-scan-generate').addEventListener('click', function() {
-          parseScannedTextIntoQuestions();
-        });
-      }
-      function parseScannedTextIntoQuestions() {
-        var raw = document.getElementById('task-scan-text').value;
-        if (!raw.trim()) { alert(tr('Paste some scanned text first.')); return; }
-        var blockLines = String(raw).split(/\r?\n/).map(function(l) { return l.trim(); }).filter(function(l) {
-          return l.length > 0;
-        });
-        var idx = 0;
-        while (idx < blockLines.length) {
-          var qLines = [];
-          while (idx < blockLines.length && !/^[A-D][\).:]|^Option\s*[A-D]|^\d+[\).:]/.test(blockLines[idx])) {
-            qLines.push(blockLines[idx]);
-            idx++;
-          }
-          if (qLines.length === 0) { qLines.push(blockLines[idx]); idx++; }
-          var questionText = qLines.join(' ');
-          if (/^[A-D][\).:]/.test(blockLines[idx])) {
-            var opts = [];
-            while (idx < blockLines.length && /^[A-D][\).:]/.test(blockLines[idx])) {
-              opts.push(blockLines[idx].replace(/^[A-D][\).:]\s*/, ''));
-              idx++;
-            }
-            addTaskQuestionRow();
-            var rows = document.querySelectorAll('#task-questions-container .question-row');
-            var row = rows[rows.length - 1];
-            row.querySelector('.q-input').value = questionText;
-            var optInputs = row.querySelectorAll('.q-option');
-            for (var oi = 0; oi < optInputs.length && oi < opts.length; oi++) optInputs[oi].value = opts[oi];
-            if (opts.length > 0) row.querySelectorAll('.q-option')[0].value = opts[0];
-            row.querySelector('.q-type').value = 'mcq';
-            row.querySelector('.q-options').style.display = 'block';
-            row.querySelector('.q-correct').value = 'A';
-          } else {
-            addTaskQuestionRow();
-            var rows2 = document.querySelectorAll('#task-questions-container .question-row');
-            var row2 = rows2[rows2.length - 1];
-            row2.querySelector('.q-input').value = questionText;
-            row2.querySelector('.q-type').value = 'text';
-            row2.querySelector('.q-options').style.display = 'none';
-          }
-        }
-        document.getElementById('task-scan-text').value = '';
-        pdfScanOptions.style.display = 'none';
-        alert(tr('Questions generated from scanned text. Review and adjust before saving.'));
-      }
       document.getElementById('task-file-input').addEventListener('change', function(e) {
         var files = Array.from(e.target.files);
         files.forEach(function(file) {
@@ -697,228 +576,180 @@ const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
         }
 
         var files = tempTaskFiles.map(function(f) { return { name: f.name, data: f.data }; });
-        var questions = collectTaskQuestions();
-        createTask(title, type, description, deadline, priority, assignTo, assignedIds, files, questions);
+        // The basic form has no question builder any more: questions belong to
+        // the Task Designer Suite, which stores them as blocks.
+        var questions = [];
+        // When the form was opened from a course section the target course
+        // comes from the studio, so the item lands in that course instead of
+        // needing a manual assignment every time.
+        var studioCourseId = null;
+        if (window.studio && studio.editingTaskId) {
+          var existing = tasks.find(function(t) { return t.id === studio.editingTaskId; });
+          if (existing) studioCourseId = taskCourseId(existing);
+        } else if (window.studio && studio.pendingCourseId) {
+          studioCourseId = studio.pendingCourseId;
+        }
+        if (studioCourseId && assignTo !== 'course') {
+          assignTo = 'course';
+          assignedIds = [studioCourseId];
+        }
+        var editingId = window.studio ? studio.editingTaskId : null;
+        if (editingId) {
+          updateTask(editingId, title, type, description, deadline, priority, assignTo, assignedIds, files, questions, studioCourseId);
+        } else {
+          createTask(title, type, description, deadline, priority, assignTo, assignedIds, files, questions, true, studioCourseId);
+        }
+        if (window.studio) studio.editingTaskId = null;
         tempTaskFiles = [];
         document.getElementById('task-modal-overlay').classList.remove('open');
-      });
-
-      bindTaskDesigner();
-
-      document.getElementById('task-search').addEventListener('input', debounce(renderTasks, 180));
-      document.getElementById('task-type-filter').addEventListener('change', renderTasks);
-      document.getElementById('task-status-filter').addEventListener('change', renderTasks);
-
-      document.getElementById('student-task-list').addEventListener('click', function(e) {
-        var target = e.target.closest('.submit-btn');
-        if (target) {
-          var taskId = parseInt(target.dataset.task);
-          var input = document.getElementById('answer-' + taskId);
-          var fileInput = document.getElementById('file-' + taskId);
-          var studentId = currentUser.id;
-
-          var files = [];
-          if (fileInput && fileInput.files && fileInput.files.length > 0) {
-            files = Array.from(fileInput.files).map(function(f) {
-              return { name: f.name, size: f.size, type: f.type };
-            });
-          }
-
-          var answer = input ? input.value.trim() : '';
-          if (!answer && files.length === 0) { alert(tr('Please enter your answer or upload a file.')); return; }
-
-          submitTaskAnswer(taskId, studentId, answer, files);
-        }
+        if (window.studio && studio.courseId) renderStudioCurrentSection();
       });
 
       // Autosave each in-progress answer so a reload or dropped connection never loses work.
-      function draftKeyFor(taskId, studentId) {
-        return 'answer-' + taskId + '-' + studentId;
-      }
+      // Reviews who has submitted a task. Tasks are course sections now, so the
+      // Course Studio work list calls this instead of a standalone task page.
+      function viewTaskSubmissions(taskId) {
+        var task = tasks.find(function(t) { return t.id === taskId; });
+        if (!task) return;
 
-      function bindAnswerDrafts() {
-        var studentId = currentUser ? currentUser.id : null;
-        if (!studentId) return;
-        tasks.forEach(function(t) {
-          var input = document.getElementById('answer-' + t.id);
-          if (!input) return;
-          var key = draftKeyFor(t.id, studentId);
-          var saved = loadDraft(key);
-          if (saved && saved.answer && !input.value) input.value = saved.answer;
-          // localStorage writes are synchronous and block the main thread, so
-          // a long answer used to stall the browser on every keystroke.
-          var persist = debounce(function() {
-            if (input.value.trim()) saveDraft(key, { answer: input.value, taskId: t.id });
-            else clearDraft(key);
-          }, 400);
-          input.addEventListener('input', persist);
-          // Commit the pending write before the page can be closed.
-          input.addEventListener('blur', persist.flush);
+        var submissionKeys = Object.keys(taskSubmissions).filter(function(key) {
+          return key.startsWith(taskId + '-');
+        });
+
+        if (submissionKeys.length === 0) {
+          alert(tr('No submissions yet for this task.'));
+          return;
+        }
+
+        var studentList = [];
+        submissionKeys.forEach(function(key) {
+          var studentId = parseInt(key.split('-')[1]);
+          var student = students.find(function(s) { return s.id === studentId; });
+          var submission = taskSubmissions[key];
+          if (student) {
+            studentList.push({
+              id: studentId,
+              name: student.name,
+              status: submission.grade !== null && submission.grade !== undefined ? '✅ Graded: ' +
+                submission.grade + '%' : '⏳ Pending',
+              submission: submission
+            });
+          }
+        });
+
+        studentList.sort(function(a, b) {
+          var aGraded = a.submission.grade !== null && a.submission.grade !== undefined;
+          var bGraded = b.submission.grade !== null && b.submission.grade !== undefined;
+          if (!aGraded && bGraded) return -1;
+          if (aGraded && !bGraded) return 1;
+          return a.name.localeCompare(b.name);
+        });
+
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:20px;';
+
+        var modal = document.createElement('div');
+        modal.style.cssText = 'max-width:750px;width:100%;max-height:90vh;background:white;border-radius:18px;padding:24px;overflow:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);';
+
+        var title = document.createElement('h2');
+        title.textContent = '📋 Submissions: ' + task.title;
+        title.style.marginTop = '0';
+        title.style.marginBottom = '8px';
+
+        var sub = document.createElement('p');
+        sub.textContent = 'Total: ' + studentList.length + ' submissions';
+        sub.style.color = '#6b7280';
+        sub.style.marginBottom = '16px';
+
+        modal.appendChild(title);
+        modal.appendChild(sub);
+
+        studentList.forEach(function(item) {
+          var section = document.createElement('div');
+          section.style.cssText = 'padding:12px;margin-bottom:12px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;';
+
+          var nameRow = document.createElement('div');
+          nameRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;';
+          nameRow.innerHTML = '<strong>' + escapeHtml(item.name) + '</strong> <span>' + escapeHtml(item.status) + '</span>';
+          section.appendChild(nameRow);
+
+          var answerRow = document.createElement('div');
+          answerRow.style.cssText = 'margin-top:6px;font-size:13px;color:#4b5563;';
+          if (item.submission.blockAnswers) {
+            // A block document: show the auto score instead of a text answer.
+            answerRow.textContent = '🧩 ' + (item.submission.score || 0) + ' / ' + (item.submission.max || 0) + ' ' + tr('points');
+          } else {
+            answerRow.textContent = '📝 ' + (item.submission.answer || tr('No answer provided.'));
+          }
+          section.appendChild(answerRow);
+
+          if (item.submission.files && item.submission.files.length > 0) {
+            var filesRow = document.createElement('div');
+            filesRow.style.cssText = 'margin-top:4px;font-size:12px;';
+            filesRow.innerHTML = '<strong>📎 Files:</strong> ';
+            item.submission.files.forEach(function(file) {
+              var fileData = file.data || '';
+              var link = document.createElement('span');
+              link.style.cssText = 'color:#4f46e5;text-decoration:underline;cursor:pointer;margin-right:8px;';
+              link.textContent = file.name;
+              link.onclick = function() { window.openFilePreview(file.name, fileData); };
+              filesRow.appendChild(link);
+            });
+            section.appendChild(filesRow);
+          }
+
+          if (item.submission.grade === null || item.submission.grade === undefined) {
+            var gradeBtn = document.createElement('button');
+            gradeBtn.textContent = '⭐ Grade';
+            gradeBtn.style.cssText = 'margin-top:8px;padding:4px 16px;background:#4f46e5;color:white;border:0;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px;';
+            gradeBtn.onclick = function() {
+              openGradeModal(taskId, item.id);
+              document.body.removeChild(overlay);
+            };
+            section.appendChild(gradeBtn);
+          } else if (item.submission.feedback) {
+            var feedbackRow = document.createElement('div');
+            feedbackRow.style.cssText = 'margin-top:4px;font-size:12px;color:#6b7280;';
+            feedbackRow.textContent = '💬 Feedback: ' + item.submission.feedback;
+            section.appendChild(feedbackRow);
+          }
+
+          modal.appendChild(section);
+        });
+
+        var closeBtn = document.createElement('button');
+        closeBtn.textContent = 'Close';
+        closeBtn.style.cssText = 'padding:10px 24px;background:#4f46e5;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer;margin-top:8px;';
+        closeBtn.addEventListener('click', function() {
+          document.body.removeChild(overlay);
+        });
+
+        var btnWrapper = document.createElement('div');
+        btnWrapper.style.display = 'flex';
+        btnWrapper.style.justifyContent = 'flex-end';
+        btnWrapper.appendChild(closeBtn);
+        modal.appendChild(btnWrapper);
+
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+
+        overlay.addEventListener('click', function(e) {
+          if (e.target === overlay) {
+            document.body.removeChild(overlay);
+          }
         });
       }
 
-      function clearAnswerDraft(taskId, studentId) {
-        clearDraft(draftKeyFor(taskId, studentId));
+      // Deploys or deletes a task from anywhere that owns a list of them.
+      function deployTaskById(taskId) {
+        var draft = tasks.find(function(t) { return t.id === taskId; });
+        if (!draft || !canManageTaskById(taskId)) return false;
+        setTaskPublished(draft, true);
+        saveData();
+        alert(tr('Task deployed to students!'));
+        setLanguage(currentLang);
+        return true;
       }
-
-      document.getElementById('admin-task-list').addEventListener('click', function(e) {
-        var target = e.target.closest('.view-submissions-btn');
-        if (target) {
-          var taskId = parseInt(target.dataset.task);
-          var task = tasks.find(function(t) { return t.id === taskId; });
-          if (!task) return;
-
-          var submissionKeys = Object.keys(taskSubmissions).filter(function(key) {
-            return key.startsWith(taskId + '-');
-          });
-
-          if (submissionKeys.length === 0) {
-            alert(tr('No submissions yet for this task.'));
-            return;
-          }
-
-          var studentList = [];
-          submissionKeys.forEach(function(key) {
-            var studentId = parseInt(key.split('-')[1]);
-            var student = students.find(function(s) { return s.id === studentId; });
-            var submission = taskSubmissions[key];
-            if (student) {
-              studentList.push({
-                id: studentId,
-                name: student.name,
-                status: submission.grade !== null && submission.grade !== undefined ? '✅ Graded: ' +
-                  submission.grade + '%' : '⏳ Pending',
-                submission: submission
-              });
-            }
-          });
-
-          studentList.sort(function(a, b) {
-            var aGraded = a.submission.grade !== null && a.submission.grade !== undefined;
-            var bGraded = b.submission.grade !== null && b.submission.grade !== undefined;
-            if (!aGraded && bGraded) return -1;
-            if (aGraded && !bGraded) return 1;
-            return a.name.localeCompare(b.name);
-          });
-
-          var overlay = document.createElement('div');
-          overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:20px;';
-
-          var modal = document.createElement('div');
-          modal.style.cssText = 'max-width:750px;width:100%;max-height:90vh;background:white;border-radius:18px;padding:24px;overflow:auto;box-shadow:0 25px 60px rgba(0,0,0,0.3);';
-
-          var title = document.createElement('h2');
-          title.textContent = '📋 Submissions: ' + task.title;
-          title.style.marginTop = '0';
-          title.style.marginBottom = '8px';
-
-          var sub = document.createElement('p');
-          sub.textContent = 'Total: ' + studentList.length + ' submissions';
-          sub.style.color = '#6b7280';
-          sub.style.marginBottom = '16px';
-
-          modal.appendChild(title);
-          modal.appendChild(sub);
-
-          studentList.forEach(function(item) {
-            var section = document.createElement('div');
-            section.style.cssText = 'padding:12px;margin-bottom:12px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa;';
-
-            var nameRow = document.createElement('div');
-            nameRow.style.cssText = 'display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;';
-            nameRow.innerHTML = '<strong>' + item.name + '</strong> <span>' + item.status + '</span>';
-            section.appendChild(nameRow);
-
-            var answerRow = document.createElement('div');
-            answerRow.style.cssText = 'margin-top:6px;font-size:13px;color:#4b5563;';
-            answerRow.textContent = '📝 ' + (item.submission.answer || 'No answer provided.');
-            section.appendChild(answerRow);
-
-            if (item.submission.files && item.submission.files.length > 0) {
-              var filesRow = document.createElement('div');
-              filesRow.style.cssText = 'margin-top:4px;font-size:12px;';
-              filesRow.innerHTML = '<strong>📎 Files:</strong> ';
-              item.submission.files.forEach(function(file) {
-                var fileData = file.data || '';
-                var escapedData = fileData.replace(/'/g, "\\'");
-                var link = document.createElement('span');
-                link.style.cssText =
-                  'color:#4f46e5;text-decoration:underline;cursor:pointer;margin-right:8px;';
-                link.textContent = file.name;
-                link.onclick = function() { window.openFilePreview(file.name, fileData); };
-                filesRow.appendChild(link);
-              });
-              section.appendChild(filesRow);
-            }
-
-            if (item.submission.grade === null || item.submission.grade === undefined) {
-              var gradeBtn = document.createElement('button');
-              gradeBtn.textContent = '⭐ Grade';
-              gradeBtn.style.cssText = 'margin-top:8px;padding:4px 16px;background:#4f46e5;color:white;border:0;border-radius:6px;font-weight:600;cursor:pointer;font-size:12px;';
-              gradeBtn.onclick = function() {
-                openGradeModal(taskId, item.id);
-                document.body.removeChild(overlay);
-              };
-              section.appendChild(gradeBtn);
-            } else if (item.submission.feedback) {
-              var feedbackRow = document.createElement('div');
-              feedbackRow.style.cssText = 'margin-top:4px;font-size:12px;color:#6b7280;';
-              feedbackRow.textContent = '💬 Feedback: ' + item.submission.feedback;
-              section.appendChild(feedbackRow);
-            }
-
-            modal.appendChild(section);
-          });
-
-          var closeBtn = document.createElement('button');
-          closeBtn.textContent = 'Close';
-          closeBtn.style.cssText = 'padding:10px 24px;background:#4f46e5;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer;margin-top:8px;';
-          closeBtn.addEventListener('click', function() {
-            document.body.removeChild(overlay);
-          });
-
-          var btnWrapper = document.createElement('div');
-          btnWrapper.style.display = 'flex';
-          btnWrapper.style.justifyContent = 'flex-end';
-          btnWrapper.appendChild(closeBtn);
-          modal.appendChild(btnWrapper);
-
-          overlay.appendChild(modal);
-          document.body.appendChild(overlay);
-
-          overlay.addEventListener('click', function(e) {
-            if (e.target === overlay) {
-              document.body.removeChild(overlay);
-            }
-          });
-        }
-      });
-
-      document.getElementById('admin-task-list').addEventListener('click', function(e) {
-        var editTarget = e.target.closest('[data-edit]');
-        if (editTarget) {
-          openTaskDesigner(parseInt(editTarget.getAttribute('data-edit'), 10));
-          return;
-        }
-        var deployTarget = e.target.closest('[data-deploy]');
-        if (deployTarget) {
-          var deployId = parseInt(deployTarget.getAttribute('data-deploy'), 10);
-          var draft = tasks.find(function(t) { return t.id === deployId; });
-          if (draft && canManageTaskById(deployId)) {
-            setTaskPublished(draft, true);
-            saveData();
-            renderTasks();
-            alert(tr('Task deployed to students!'));
-            setLanguage(currentLang);
-          }
-          return;
-        }
-        var target = e.target.closest('.delete');
-        if (target && target.dataset.type === 'task') {
-          var taskId = parseInt(target.dataset.id);
-          if (confirm(tr('Delete this task?'))) deleteTask(taskId);
-        }
-      });
 
       document.getElementById('grade-task-modal-cancel').addEventListener('click', function() {
         document.getElementById('grade-task-modal-overlay').classList.remove('open');
@@ -1019,27 +850,45 @@ const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
       });
 
       // ----- TEST EVENTS -----
-      document.getElementById('create-test-btn').addEventListener('click', function() {
-        document.getElementById('test-modal-title').textContent = 'Create Test';
-        document.getElementById('test-modal-sub').textContent = 'Build your test with multiple choice questions.';
+      // The basic (question based) test form. The Course Studio Tests section
+      // opens it pre-pointed at the course being edited.
+      function openBasicTestModal(courseId) {
+        var overlay = document.getElementById('test-modal-overlay');
+        if (!overlay) return;
+        var courseSelect = document.getElementById('test-modal-course');
+        var titleEl = document.getElementById('test-modal-title');
+        var subEl = document.getElementById('test-modal-sub');
+        var saveBtn = document.getElementById('test-modal-save');
+        var qBox = document.getElementById('questions-container');
+
         document.getElementById('test-modal-title-input').value = '';
         document.getElementById('test-modal-description').value = '';
         document.getElementById('test-modal-deadline').value = '';
 
-        var courseSelect = document.getElementById('test-modal-course');
         courseSelect.innerHTML = '';
-        courses.forEach(function(c) {
+        var pool = courses;
+        if (currentUser && currentUser.role === 'Teacher') {
+          pool = courses.filter(function(c) { return c.teacherId === currentUser.id; });
+        }
+        pool.forEach(function(c) {
           var opt = document.createElement('option');
           opt.value = c.id;
           opt.textContent = c.name;
+          if (courseId !== undefined && courseId !== null && c.id === courseId) opt.selected = true;
           courseSelect.appendChild(opt);
         });
-
-        document.getElementById('questions-container').innerHTML = '';
+        if (titleEl) titleEl.textContent = 'Create Test';
+        if (subEl) {
+          subEl.textContent = courseId
+            ? tr('Build your test with multiple choice questions.')
+            : tr('Build your test with multiple choice questions.');
+        }
+        if (saveBtn) saveBtn.textContent = 'Create Test';
+        if (qBox) qBox.innerHTML = '';
         questionCounter = 0;
-        document.getElementById('test-modal-overlay').classList.add('open');
+        overlay.classList.add('open');
         setLanguage(currentLang);
-      });
+      }
 
       document.getElementById('add-question-btn').addEventListener('click', function() {
         var container = document.getElementById('questions-container');

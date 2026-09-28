@@ -1,5 +1,10 @@
+      // Tasks, tests and assignments are course sections now, so the old
+      // standalone routes are gone. Anything still pointing at them (an old
+      // link, a bookmark, a deep link) lands on the course list instead.
+      var MERGED_PAGES = ['assignments', 'tasks', 'tests'];
+
       function openPage(pageName) {
-        if (pageName === 'assignments' && currentUser && currentUser.role === 'Admin') pageName = 'dashboard';
+        if (MERGED_PAGES.indexOf(pageName) !== -1) pageName = 'courses';
         if ((pageName === 'course-workspace' || pageName === 'courses-admin') && currentUser && currentUser.role === 'Student') {
           pageName = 'dashboard';
         }
@@ -12,11 +17,9 @@
           else renderStudentCourses();
         }
         if (pageName === 'timetable') renderTimetable();
-        if (pageName === 'assignments') renderAssignments();
         if (pageName === 'announcements') renderAnnouncements();
         if (pageName === 'calendar') renderCalendar();
         if (pageName === 'classroom') renderMeetings();
-        if (pageName === 'tests') renderTests();
         if (pageName === 'approvals') { renderApprovals(); renderTeacherAuthKeys(); }
         if (pageName === 'course-workspace') renderCourseStudio();
         setLanguage(currentLang);

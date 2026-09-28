@@ -1,299 +1,17 @@
       // ============================================================
       //  TASKS
+      //
+      //  Tasks are course sections, not a page of their own. The list a
+      //  teacher works with lives in the Course Studio, and a student reaches
+      // their tasks through the course they are enrolled in.
       // ============================================================
       function renderTasks() {
         if (!currentUser) return;
-        var isAdmin = currentUser.role === 'Admin';
-        var isTeacher = currentUser.role === 'Teacher';
-        var adminView = document.getElementById('admin-tasks-view');
-        var studentView = document.getElementById('student-tasks-view');
-
-        if (isAdmin || isTeacher) {
-          adminView.style.display = 'block';
-          studentView.style.display = 'none';
-          renderAdminTasks();
-        } else {
-          adminView.style.display = 'none';
-          studentView.style.display = 'block';
-          renderStudentTasks();
+        if (typeof renderStudioCurrentSection === 'function' && studio && studio.courseId) {
+          renderStudioCurrentSection();
         }
-        setLanguage(currentLang);
       }
 
-      function renderAdminTasks() {
-        var search = document.getElementById('task-search').value.toLowerCase();
-        var typeFilter = document.getElementById('task-type-filter').value;
-        var teacherScoped = currentUser && currentUser.role === 'Teacher';
-
-        var scope = tasks;
-        if (teacherScoped) {
-          var myCourseIds = typeof teacherOwnCourseIds === 'function' ? teacherOwnCourseIds() : [];
-          var myStudentIds = typeof teacherEnrolledStudentIds === 'function' ? teacherEnrolledStudentIds() : [];
-          scope = tasks.filter(function(t) {
-            if (t.teacherId === currentUser.id) return true;
-            if (t.assignedTo === 'course' && t.assignedIds && t.assignedIds.some(function(id) {
-              return myCourseIds.indexOf(id) !== -1;
-            })) return true;
-            if (t.assignedTo === 'student' && t.assignedIds && t.assignedIds.some(function(id) {
-              return myStudentIds.indexOf(id) !== -1;
-            })) return true;
-            return false;
-          });
-        }
-
-        var filtered = scope.filter(function(t) {
-          var matchesSearch = t.title.toLowerCase().includes(search) || t.description.toLowerCase().includes(search);
-          var matchesType = typeFilter === 'all' || t.type === typeFilter;
-          return matchesSearch && matchesType;
-        });
-
-        var container = document.getElementById('admin-task-list');
-        container.innerHTML = '';
-
-        if (filtered.length === 0) {
-          container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">' +
-            (teacherScoped ? tr('You have no tasks yet. Create one for your course or students.') : tr('No tasks found.')) +
-            '</p>';
-          return;
-        }
-
-        var totalTasks = scope.length;
-        var pendingCount = 0,
-          submittedCount = 0,
-          gradedCount = 0;
-        scope.forEach(function(task) {
-          var submissions = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id +
-            '-'); });
-          var graded = submissions.filter(function(key) {
-            return taskSubmissions[key] && taskSubmissions[key].grade !== null && taskSubmissions[key].grade !==
-            undefined;
-          });
-          if (graded.length === submissions.length && submissions.length > 0) { gradedCount++; } else if (submissions
-            .length > 0) { submittedCount++; } else { pendingCount++; }
-        });
-        document.getElementById('task-total').textContent = totalTasks;
-        document.getElementById('task-pending').textContent = pendingCount;
-        document.getElementById('task-submitted').textContent = submittedCount;
-        document.getElementById('task-graded').textContent = gradedCount;
-
-        filtered.forEach(function(task) {
-          var submissionKeys = Object.keys(taskSubmissions).filter(function(key) { return key.startsWith(task.id +
-            '-'); });
-          var totalStudents = students.length;
-          var submittedCount = submissionKeys.length;
-
-          var card = document.createElement('div');
-          card.className = 'task-card';
-          var deadlineClass = task.deadline < new Date().toISOString().split('T')[0] ? 'overdue' : 'on-time';
-          var priorityLabel = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' } [task.priority] || 'Medium';
-          var priorityClass = task.priority || 'medium';
-
-          var filesHtml = '';
-          if (task.files && task.files.length > 0) {
-            filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
-            task.files.forEach(function(file) {
-              var fileData = file.data || '';
-              var escapedData = fileData.replace(/'/g, "\\'");
-              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="window.openFilePreview(\'' +
-                file.name + '\', \'' + escapedData + '\')">' + file.name + '</span></div>';
-            });
-            filesHtml += '</div>';
-          }
-
-          card.innerHTML =
-            '<div class="task-header"><div><h3>' + task.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">Assigned to: ' +
-            (task.assignedTo === 'all' ? 'All Students' : 'Specific') +
-            '</div></div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="task-priority ' +
-            priorityClass + '">' + priorityLabel + '</span><span class="task-type ' + task.type + '">' + task.type
-            .charAt(0).toUpperCase() + task.type.slice(1) + '</span></div></div>' +
-            '<div class="task-body"><div class="task-description">' + task.description + '</div><div class="task-deadline ' +
-            deadlineClass + '">⏰ Due: ' + task.deadline + (deadlineClass === 'overdue' ? ' (Overdue!)' : '') +
-            '</div>' + filesHtml +
-            '<div style="margin-top:8px;font-size:12px;color:var(--muted);">📊 ' + submittedCount + ' / ' +
-            totalStudents + ' students submitted</div></div>' +
-            '<div class="task-footer"><button class="secondary-button view-submissions-btn" data-task="' + task.id +
-            '">📋 View Submissions (' + submittedCount + ')</button>' +
-            (isTaskDraft(task) ? '<button class="action-btn deploy" data-deploy="' + task.id + '">🚀 ' + tr('Deploy') +
-              '</button><span class="task-state-badge draft">📝 ' + tr('Draft') + '</span>' :
-              '<span class="task-state-badge live">🟢 ' + tr('Deployed') + '</span>') +
-            '<button class="action-btn edit" data-edit="' + task.id + '">✏️ ' + tr('Edit') +
-            '</button><button class="action-btn delete" data-id="' + task.id + '" data-type="task">🗑️ ' + tr('Delete') +
-            '</button></div>';
-          container.appendChild(card);
-        });
-        setLanguage(currentLang);
-      }
-
-      function renderStudentTasks() {
-        var studentId = currentUser.id;
-        var container = document.getElementById('student-task-list');
-        var assignedTasks = tasks.filter(function(task) {
-          if (!isTaskPublished(task)) return false;
-          if (task.assignedTo === 'all') {
-            if (task.teacherId && typeof teacherEnrolledStudentIds === 'function') {
-              return teacherEnrolledStudentIds().indexOf(studentId) !== -1;
-            }
-            return true;
-          }
-          if (task.assignedTo === 'student') return task.assignedIds && task.assignedIds.includes(studentId);
-          if (task.assignedTo === 'course') {
-            var studentCourses = getEnrolledCourseIds(studentId);
-            return task.assignedIds && task.assignedIds.some(function(cid) { return studentCourses.includes(cid); });
-          }
-          return false;
-        });
-
-        var activeTab = window.studentTasksTab || 'assignments';
-        var visibleTasks = assignedTasks.filter(function(task) {
-          var isInteractive = task.questions && task.questions.length > 0;
-          return activeTab === 'interactive' ? isInteractive : !isInteractive;
-        });
-
-        var pendingCount = 0,
-          submittedCount = 0,
-          gradedCount = 0;
-        visibleTasks.forEach(function(task) {
-          var key = task.id + '-' + studentId;
-          var sub = taskSubmissions[key];
-          if (sub && sub.grade !== null && sub.grade !== undefined) gradedCount++;
-          else if (sub) submittedCount++;
-          else pendingCount++;
-        });
-
-        document.getElementById('student-task-total').textContent = visibleTasks.length;
-        document.getElementById('student-task-pending').textContent = pendingCount;
-        document.getElementById('student-task-submitted').textContent = submittedCount;
-        document.getElementById('student-task-graded').textContent = gradedCount;
-
-        var tabAssignments = document.getElementById('student-tasks-tab-assignments');
-        var tabInteractive = document.getElementById('student-tasks-tab-interactive');
-        if (tabAssignments && tabInteractive) {
-          tabAssignments.classList.toggle('active', activeTab === 'assignments');
-          tabInteractive.classList.toggle('active', activeTab === 'interactive');
-        }
-
-        container.innerHTML = '';
-
-        if (visibleTasks.length === 0) {
-          container.innerHTML = activeTab === 'interactive' ?
-            '<p style="color:var(--muted);text-align:center;padding:40px;">' + tr('No interactive tests yet.|student') + '</p>' :
-            '<p style="color:var(--muted);text-align:center;padding:40px;">' + tr('No tasks assigned to you yet.|student') + '</p>';
-          return;
-        }
-
-        visibleTasks.sort(function(a, b) {
-          var aOverdue = a.deadline < new Date().toISOString().split('T')[0];
-          var bOverdue = b.deadline < new Date().toISOString().split('T')[0];
-          if (aOverdue && !bOverdue) return -1;
-          if (!aOverdue && bOverdue) return 1;
-          return a.deadline.localeCompare(b.deadline);
-        });
-
-        assignedTasks.forEach(function(task) {
-          var key = task.id + '-' + studentId;
-          var submission = taskSubmissions[key];
-          var status = submission ? (submission.grade !== null && submission.grade !== undefined ? 'graded' :
-            'submitted') : 'pending';
-          var deadlineClass = task.deadline < new Date().toISOString().split('T')[0] ? 'overdue' : 'on-time';
-          var priorityLabel = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' } [task.priority] || 'Medium';
-          var priorityClass = task.priority || 'medium';
-
-          var filesHtml = '';
-          if (task.files && task.files.length > 0) {
-            filesHtml = '<div class="task-files"><strong>📎 Attached Files:</strong>';
-            task.files.forEach(function(file) {
-              var fileData = file.data || '';
-              var escapedData = fileData.replace(/'/g, "\\'");
-              filesHtml += '<div class="file-item"><span class="file-icon">📄</span><span class="file-link" onclick="window.openFilePreview(\'' +
-                file.name + '\', \'' + escapedData + '\')">' + file.name + '</span></div>';
-            });
-            filesHtml += '</div>';
-          }
-
-          var card = document.createElement('div');
-          card.className = 'task-card';
-
-          var statusDisplay = '';
-          var footerHtml = '';
-
-          if (status === 'graded') {
-            statusDisplay = '<span class="graded-status">✅ Graded: ' + submission.grade + '%</span>';
-            footerHtml = '<div class="graded-status">✅ Graded: ' + submission.grade + '%</div>' + (submission
-              .feedback ? '<div style="font-size:12px;color:var(--muted);">📝 ' + submission.feedback + '</div>' :
-              '');
-          } else if (status === 'submitted') {
-            statusDisplay = '<span class="submitted-status">⏳ Submitted</span>';
-            footerHtml =
-              '<div class="submitted-status">⏳ Submitted</div><div style="font-size:12px;color:var(--muted);">Waiting for grading...</div>';
-            if (submission.files && submission.files.length > 0) {
-              var fileLinks = '';
-              submission.files.forEach(function(file) {
-                var fileData = file.data || '';
-                var escapedData = fileData.replace(/'/g, "\\'");
-                fileLinks += '<span class="item-tag" style="cursor:pointer;color:var(--primary);text-decoration:underline;margin-right:6px;" onclick="window.openFilePreview(\'' +
-                  file.name + '\', \'' + escapedData + '\')">📄 ' + file.name + '</span>';
-              });
-              footerHtml += '<div style="font-size:12px;color:var(--muted);margin-top:4px;">📎 ' + fileLinks +
-                '</div>';
-            }
-          } else {
-            statusDisplay = '<span class="pill danger">⚠️ Pending</span>';
-            footerHtml =
-              '<input type="text" class="answer-input" id="answer-' + task.id + '" placeholder="Enter your answer..." />' +
-              '<input type="file" id="file-' + task.id + '" style="display:none;" multiple />' +
-              '<button class="file-upload-btn" onclick="document.getElementById(\'file-' + task.id +
-              '\').click()">📎 Upload Files</button>' +
-              '<span id="file-name-' + task.id + '" class="file-name">No files chosen</span>' +
-              '<button class="submit-btn" data-task="' + task.id + '">Submit</button>';
-          }
-
-          card.innerHTML =
-            '<div class="task-header"><div><h3>' + task.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">' +
-            task.type.charAt(0).toUpperCase() + task.type.slice(1) +
-            '</div></div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="task-priority ' +
-            priorityClass + '">' + priorityLabel + '</span>' + statusDisplay + '</div></div>' +
-            '<div class="task-body"><div class="task-description">' + task.description + '</div><div class="task-deadline ' +
-            deadlineClass + '">⏰ Due: ' + task.deadline + (deadlineClass === 'overdue' ? ' ⚠️ Overdue!' : '') +
-            '</div>' + filesHtml + '</div>' +
-            '<div class="task-footer">' + footerHtml + '</div>';
-          container.appendChild(card);
-
-          var fileInput = document.getElementById('file-' + task.id);
-          if (fileInput) {
-            fileInput.addEventListener('change', function(e) {
-              var fileNameSpan = document.getElementById('file-name-' + task.id);
-              if (e.target.files && e.target.files.length > 0) {
-                var names = Array.from(e.target.files).map(function(f) { return f.name; }).join(', ');
-                fileNameSpan.textContent = names;
-                var key = task.id + '-' + studentId;
-                if (!taskSubmissions[key]) {
-                  taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null,
-                    files: [] };
-                }
-                var filesData = [];
-                var completed = 0;
-                Array.from(e.target.files).forEach(function(file, index) {
-                  var reader = new FileReader();
-                  reader.onload = function(event) {
-                    filesData[index] = { name: file.name, size: file.size, type: file.type,
-                      data: event.target.result };
-                    completed++;
-                    if (completed === e.target.files.length) {
-                      taskSubmissions[key].files = filesData;
-                      saveData();
-                    }
-                  };
-                  reader.readAsDataURL(file);
-                });
-              } else {
-                fileNameSpan.textContent = 'No files chosen';
-              }
-            });
-          }
-        });
-        if (typeof bindAnswerDrafts === 'function') bindAnswerDrafts();
-        setLanguage(currentLang);
-      }
       // ============================================================
       //  GRADE TASK MODAL
       // ============================================================
@@ -366,7 +84,7 @@
         task.publishedAt = published ? new Date().toISOString() : (task.publishedAt || null);
       }
 
-      function createTask(title, type, description, deadline, priority, assignedTo, assignedIds, files, questions, published) {
+      function createTask(title, type, description, deadline, priority, assignedTo, assignedIds, files, questions, published, courseId) {
         var task = {
           id: nextTaskId(),
           title: title,
@@ -378,6 +96,9 @@
           assignedIds: assignedIds || [],
           files: files || [],
           questions: questions || [],
+          // Tasks are sections of a course, so the owning course is recorded
+          // explicitly. Older tasks fall back to the first assigned course.
+          courseId: courseId !== undefined ? courseId : (assignedTo === 'course' && assignedIds && assignedIds.length ? assignedIds[0] : null),
           teacherId: currentUser && currentUser.role === 'Teacher' ? currentUser.id : null,
           createdAt: new Date().toISOString().split('T')[0]
         };
@@ -396,14 +117,40 @@
         return task;
       }
 
+      // Editing from a course section keeps the item inside its course, so the
+      // owning course is never dropped while changing details.
+      function updateTask(taskId, title, type, description, deadline, priority, assignedTo, assignedIds, files, questions, courseId) {
+        var task = tasks.find(function(t) { return t.id === taskId; });
+        if (!task) return null;
+        if (!canManageTaskById(taskId)) return null;
+        task.title = title;
+        task.type = type;
+        task.description = description;
+        task.deadline = deadline;
+        task.priority = priority || 'medium';
+        task.assignedTo = assignedTo || 'all';
+        task.assignedIds = assignedIds || [];
+        if (courseId !== undefined && courseId !== null) {
+          task.courseId = courseId;
+          task.assignedTo = 'course';
+          task.assignedIds = [courseId];
+        }
+        if (files && files.length) task.files = files;
+        if (questions && questions.length) task.questions = questions;
+        task.updatedAt = new Date().toISOString();
+        saveData();
+        renderTasks();
+        setLanguage(currentLang);
+        return task;
+      }
+
       function canManageTaskById(taskId) {
         if (!currentUser) return false;
         if (currentUser.role === 'Admin') return true;
         if (currentUser.role !== 'Teacher') return false;
         var task = tasks.find(function(t) { return t.id === taskId; });
         if (!task) return false;
-        if (task.teacherId === currentUser.id) return true;
-        if (typeof teacherOwnCourseIds === 'function' && task.assignedTo === 'course' && task.assignedIds &&
+        if (task.teacherId === currentUser.id) return true;        if (typeof teacherOwnCourseIds === 'function' && task.assignedTo === 'course' && task.assignedIds &&
           task.assignedIds.some(function(id) { return teacherOwnCourseIds().indexOf(id) !== -1; })) return true;
         if (typeof teacherEnrolledStudentIds === 'function' && task.assignedTo === 'student' && task.assignedIds &&
           task.assignedIds.some(function(id) { return teacherEnrolledStudentIds().indexOf(id) !== -1; })) return true;
@@ -413,52 +160,16 @@
       function deleteTask(taskId) {
         if (!canManageTaskById(taskId)) {
           alert(tr('You can only remove your own tasks.'));
-          return;
+          return false;
         }
         tasks = tasks.filter(function(t) { return t.id !== taskId; });
         Object.keys(taskSubmissions).forEach(function(key) {
-          if (key.startsWith(taskId + '-')) delete taskSubmissions[key];
+          if (key.indexOf(taskId + '-') === 0) delete taskSubmissions[key];
         });
         saveData();
         renderTasks();
         setLanguage(currentLang);
-      }
-
-      function submitTaskAnswer(taskId, studentId, answer, files, answers) {
-        var key = taskId + '-' + studentId;
-        var submission = taskSubmissions[key];
-        if (!submission) {
-          taskSubmissions[key] = { answer: '', submittedAt: null, grade: null, feedback: null, files: [] };
-          submission = taskSubmissions[key];
-        }
-        submission.answer = answer || '';
-        submission.submittedAt = new Date().toISOString();
-        submission.files = submission.files || [];
-        if (files && files.length > 0) {
-          submission.files = files;
-        }
-        if (answers) {
-          submission.answers = answers;
-          var task = tasks.find(function(t) { return t.id === parseInt(taskId); });
-          if (task && task.questions && task.questions.length > 0) {
-            var correct = 0;
-            task.questions.forEach(function(q, index) {
-              if (q.type === 'mcq' && answers[index] !== undefined && answers[index] === q.correctAnswer) correct++;
-            });
-            submission.score = Math.round((correct / task.questions.length) * 100);
-            submission.correct = correct;
-            submission.total = task.questions.length;
-          }
-        }
-        saveData();
-        if (typeof clearAnswerDraft === 'function') clearAnswerDraft(taskId, studentId);
-        renderTasks();
-        bindAnswerDrafts();
-        var msg = tr('Task submitted!');
-        if (submission.score !== null && submission.score !== undefined) msg += ' ' + tr('Your Score') + ': ' +
-          submission.score + '%';
-        alert(msg);
-        setLanguage(currentLang);
+        return true;
       }
       function updateTaskFileList() {
         var list = document.getElementById('task-file-list');

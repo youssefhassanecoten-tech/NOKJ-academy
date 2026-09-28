@@ -357,6 +357,85 @@
       font-size: 13px;
     }
 
+    /* ===== WORK ITEMS (tasks / assignments / tests inside a course) ===== */
+    .studio-work-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .studio-work {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--white);
+    }
+    .studio-work-icon {
+      width: 34px;
+      height: 34px;
+      flex: none;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .studio-work-main {
+      flex: 1;
+      min-width: 0;
+    }
+    .studio-work-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+    .studio-work-sub {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .studio-work-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .studio-work-actions button {
+      padding: 6px 10px;
+      font-size: 12.5px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--ink);
+      cursor: pointer;
+      min-height: 34px;
+    }
+    .studio-work-actions button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .studio-work-actions .danger:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+    .studio-work-draft {
+      color: var(--warning);
+      font-weight: 700;
+    }
+    .studio-work-empty {
+      padding: 22px 18px;
+      border: 2px dashed var(--line);
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
     /* ===== MODULES ===== */
     .studio-module-list {
       display: flex;
@@ -942,6 +1021,109 @@
       font-size: 12px;
       font-weight: 700;
       border-top: 1px solid var(--divider);
+    }
+
+    /* ============================================================
+       STUDENT COURSE SECTIONS (material / assignments / tests)
+       ============================================================ */
+    .course-sections {
+      margin: 0 0 24px;
+    }
+    .course-section-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .course-section-tab {
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+      background: transparent;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      min-height: 40px;
+    }
+    .course-section-tab:hover {
+      color: var(--ink);
+    }
+    .course-section-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .course-section {
+      margin-bottom: 18px;
+    }
+    .course-section-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .course-section-head h4 {
+      margin: 0;
+      font-size: 15px;
+    }
+    .course-work-grid {
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+    .course-work .course-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .course-work-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .course-work-desc {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--muted);
+      white-space: pre-wrap;
+    }
+    .course-work-host {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      background: var(--bg, #fbfcfe);
+    }
+    .course-work-questions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .course-work-q {
+      font-size: 13.5px;
+      font-weight: 700;
+    }
+    .course-work-answer textarea {
+      width: 100%;
+      min-height: 110px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--white);
+      color: var(--ink);
+      font: inherit;
+      resize: vertical;
+    }
+    .course-work-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .course-work-feedback {
+      padding: 9px 11px;
+      border-radius: 10px;
+      background: var(--primary-light);
+      font-size: 13px;
     }
 
     /* ============================================================

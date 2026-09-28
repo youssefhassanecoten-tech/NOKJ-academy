@@ -51,7 +51,16 @@
           var canSeeDrafts = role === 'Admin' || role === 'Teacher';
           if (role === 'Student' && !isTaskPublished(t)) return;
           if ((t.title || '').toLowerCase().indexOf(q) !== -1) {
-            html += searchItem('tasks', t.title, tr('Task'), '📝');
+            // A task lives in its course section, so the result opens that
+            // course instead of the old standalone tasks page.
+            var courseId = taskCourseId(t);
+            if (courseId) {
+              html += '<button class="search-result" onclick="openCourse(' + courseId + ')">' +
+                '<span class="search-result-icon">📝</span><span class="search-result-main"><strong>' +
+                escapeHtml(t.title) + '</strong><em>' + escapeHtml(tr('Task')) + '</em></span></button>';
+            } else {
+              html += searchItem('courses', t.title, tr('Task'), '📝');
+            }
             count++;
           }
         });

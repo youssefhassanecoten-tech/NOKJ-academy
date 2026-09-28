@@ -124,6 +124,50 @@
       background: var(--primary-dark);
     }
 
+    /* === BUILD METHOD CHOOSER (basic upload vs Task Designer Suite) === */
+    .build-method-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .build-method-card {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+      text-align: left;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--white);
+      color: var(--ink);
+      cursor: pointer;
+      min-height: 44px;
+    }
+    .build-method-card:hover {
+      border-color: var(--primary);
+    }
+    .build-method-card.featured {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .build-method-icon {
+      font-size: 26px;
+    }
+    .build-method-card strong {
+      font-size: 15px;
+    }
+    .build-method-card small {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    @media (max-width: 560px) {
+      .build-method-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .enrollment-list {
       max-height: 300px;
       overflow-y: auto;
@@ -431,32 +475,25 @@
       font-weight: 600;
     }
 
-    .assignment-list,
     .announcement-list {
       display: grid;
       gap: 13px;
     }
-    .assignment-card,
     .announcement-card {
       padding: 18px;
       display: flex;
       align-items: center;
       gap: 15px;
     }
-    .assignment-card h3,
     .announcement-card h3 {
       margin: 0;
       font-size: 14px;
     }
-    .assignment-card p,
     .announcement-card p {
       margin: 5px 0 0;
       color: var(--muted);
       font-size: 12px;
       line-height: 1.45;
-    }
-    .assignment-card .secondary-button {
-      margin-left: auto;
     }
     .announcement-card {
       align-items: flex-start;

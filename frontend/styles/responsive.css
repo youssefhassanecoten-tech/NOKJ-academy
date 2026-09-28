@@ -161,14 +161,6 @@
       .meeting-grid {
         grid-template-columns: 1fr;
       }
-      .assignment-card {
-        align-items: flex-start;
-        flex-wrap: wrap;
-      }
-      .assignment-card .secondary-button {
-        width: 100%;
-        margin-left: 0;
-      }
       .login-box,
       .register-box {
         padding: 28px 20px;
@@ -209,8 +201,6 @@
     }
     .page > *,
     .panel,
-    .task-card,
-    .course-card,
     .stat-card {
       min-width: 0;
     }
@@ -221,23 +211,15 @@
     .page h3,
     .page p,
     .panel,
-    .task-card,
-    .task-description,
+    .course-work,
     .file-link {
       overflow-wrap: break-word;
       word-break: break-word;
     }
-    .task-admin-actions input,
-    .task-admin-actions select {
-      flex: 1 1 160px;
+    .task-files {
       min-width: 0;
     }
-    .task-footer {
-      flex-wrap: wrap;
-    }
-    .task-footer > * {
-      min-width: 0;
-    }
+
 
     /* ==========================================================
        PHONE + TABLET
@@ -245,19 +227,11 @@
        comfortable tap targets. The desktop sidebar is replaced by
        the fixed bottom bar.
        ========================================================== */
-    @media (max-width: 1024px) {
-      .task-designer-grid {
-        grid-template-columns: 1fr;
-      }
-      .task-designer-side {
-        position: static;
-      }
-    }
-
     @media (max-width: 790px) {
       body {
         overflow-x: hidden;
       }
+
       main {
         min-height: 100dvh;
       }
@@ -267,70 +241,31 @@
       .heading {
         margin-bottom: 18px;
       }
-      .task-designer {
-        margin-top: 16px;
-      }
-      .task-designer-head,
-      .task-designer-grid {
-        padding: 14px;
-      }
-      .task-designer-row {
-        grid-template-columns: 1fr;
-        gap: 0;
-      }
-      .task-designer-main input,
-      .task-designer-main select,
-      .task-designer-main textarea,
-      .task-designer-side input {
-        /* 16px keeps iOS Safari from zooming the viewport on focus. */
-        font-size: 16px;
-      }
-      .task-designer-actions button,
-      .task-admin-actions button {
-        min-height: 44px;
-      }
-      .task-d-option-row {
-        flex-wrap: nowrap;
-      }
-      .task-stat-card {
-        padding: 12px;
-      }
-      .task-stats-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-      }
-      /* Buttons stack full width so nothing is clipped. */
-      .task-admin-actions {
-        gap: 8px;
-      }
-      .task-admin-actions input,
-      .task-admin-actions select,
-      .task-admin-actions button {
+      /* Course work cards: comfortable tap targets and full-width actions. */
+      .course-work-actions button {
         flex: 1 1 100%;
         width: 100%;
         min-height: 44px;
       }
-      .task-footer button {
-        flex: 1 1 auto;
-        min-height: 40px;
+      .course-work-actions {
+        gap: 8px;
       }
-      .task-state-badge {
-        order: -1;
+      .course-work-host {
+        padding: 12px;
       }
     }
 
     /* Touch devices: no hover-only affordances, no tap highlight flash. */
     @media (hover: none) and (pointer: coarse) {
-      .task-card:hover {
+      .course-work:hover,
+      .course:hover {
         box-shadow: none;
       }
       .primary-button,
       .secondary-button,
-      .task-admin-actions button,
-      .task-footer button,
-      .task-d-q-remove,
-      .task-d-file-remove,
-      .task-designer-close {
+      .course-work-actions button,
+      .build-method-card {
         -webkit-tap-highlight-color: transparent;
       }
     }
+

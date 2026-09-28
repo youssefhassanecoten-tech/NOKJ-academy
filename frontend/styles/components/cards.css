@@ -8,7 +8,6 @@
     .stat-card,
     .panel,
     .course,
-    .assignment-card,
     .announcement-card,
     .profile-card {
       border: 1px solid var(--line);

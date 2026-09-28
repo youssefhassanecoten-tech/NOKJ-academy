@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="styles/components/modals.css" />
   <link rel="stylesheet" href="styles/components/test-constructor.css" />
   <link rel="stylesheet" href="styles/components/studio.css" />
+  <link rel="stylesheet" href="styles/components/task-blocks.css" />
   <link rel="stylesheet" href="styles/responsive.css" />
 </head>
 <body>
@@ -231,11 +232,8 @@
       <button class="nav-button active" data-page="dashboard"><span class="nav-icon">⌂</span> <span class="nav-text">Dashboard</span></button>
       <button class="nav-button" data-page="timetable"><span class="nav-icon">▦</span> <span class="nav-text">Timetable</span></button>
       <button class="nav-button" data-page="courses"><span class="nav-icon">▣</span> <span class="nav-text">My courses</span></button>
-      <button class="nav-button" data-page="assignments"><span class="nav-icon">✓</span> <span class="nav-text">Assignments</span></button>
       <button class="nav-button" data-page="announcements"><span class="nav-icon">◉</span> <span class="nav-text">Announcements</span></button>
       <button class="nav-button" data-page="classroom"><span class="nav-icon">🎥</span> <span class="nav-text">Classroom</span></button>
-      <button class="nav-button" data-page="tasks"><span class="nav-icon">📝</span> <span class="nav-text">Tasks</span></button>
-      <button class="nav-button" data-page="tests"><span class="nav-icon">📋</span> <span class="nav-text">Tests</span></button>
 
       <p class="nav-label" id="admin-nav-label" style="display:none;">Management</p>
       <button class="nav-button" data-page="students" id="admin-students-btn" style="display:none;"><span class="nav-icon">👥</span> <span class="nav-text">Students</span></button>
@@ -311,12 +309,6 @@
         <div id="student-courses-container"></div>
       </section>
 
-      <!-- ===== ASSIGNMENTS ===== -->
-      <section class="page" id="assignments">
-        <div class="heading"><h1>Assignments</h1><p>Keep track of your work, deadlines, and teacher feedback.</p></div>
-        <div class="assignment-list" id="assignment-list"></div>
-      </section>
-
       <!-- ===== ANNOUNCEMENTS ===== -->
       <section class="page" id="announcements">
         <div class="heading"><h1>Announcements</h1><p>Important news and updates from NOKJ Academy.</p></div>
@@ -328,143 +320,6 @@
       <section class="page" id="classroom">
         <div class="heading"><h1>Virtual Classroom</h1><p>Join your live lessons and meetings.</p></div>
         <div class="meeting-grid" id="meeting-grid"></div>
-      </section>
-
-      <!-- ===== TASKS ===== -->
-      <section class="page" id="tasks">
-        <div class="heading"><h1>Tasks</h1><p id="tasks-subheading">View and complete your assignments.</p></div>
-
-        <div id="admin-tasks-view" style="display:none;">
-          <div class="task-stats-grid">
-            <div class="task-stat-card"><div class="number" id="task-total">0</div><div class="label">Total Tasks</div></div>
-            <div class="task-stat-card"><div class="number" id="task-pending">0</div><div class="label">Pending</div></div>
-            <div class="task-stat-card"><div class="number" id="task-submitted">0</div><div class="label">Submitted</div></div>
-            <div class="task-stat-card"><div class="number" id="task-graded">0</div><div class="label">Graded</div></div>
-          </div>
-
-          <div class="task-admin-actions">
-            <input type="text" id="task-search" placeholder="Search tasks..." />
-            <select id="task-type-filter"><option value="all">All Types</option><option value="homework">Homework</option><option value="test">Test</option><option value="assignment">Assignment</option></select>
-            <select id="task-status-filter"><option value="all">All Status</option><option value="pending">Pending</option><option value="submitted">Submitted</option><option value="graded">Graded</option></select>
-            <button class="primary-button" id="open-task-designer-btn" data-i18n="Task Designer"><span aria-hidden="true">🎨</span> Task Designer</button>
-            <button class="secondary-button" id="add-task-btn">+ Add Task</button>
-          </div>
-
-          <div class="task-designer" id="task-designer-panel" style="display:none;">
-            <div class="task-designer-head">
-              <div>
-                <h2 id="task-designer-title">Design a Task</h2>
-                <p class="sub" id="task-designer-sub">Build your task, then save it as a draft or deploy it to students.</p>
-              </div>
-              <button type="button" class="task-designer-close" id="task-designer-close" aria-label="Close">✕</button>
-            </div>
-
-            <div class="task-designer-grid">
-              <div class="task-designer-main">
-                <label for="task-d-title" data-i18n="Task Title">Task Title</label>
-                <input type="text" id="task-d-title" placeholder="Enter task title" />
-
-                <div class="task-designer-row">
-                  <div>
-                    <label for="task-d-type" data-i18n="Task Type">Task Type</label>
-                    <select id="task-d-type">
-                      <option value="homework">Homework</option>
-                      <option value="test">Test</option>
-                      <option value="assignment">Assignment</option>
-                      <option value="interactive">Interactive Test</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label for="task-d-priority" data-i18n="Priority">Priority</label>
-                    <select id="task-d-priority">
-                      <option value="low">Low</option>
-                      <option value="medium" selected>Medium</option>
-                      <option value="high">High</option>
-                    </select>
-                  </div>
-                </div>
-
-                <label for="task-d-description" data-i18n="Description">Description</label>
-                <textarea id="task-d-description" placeholder="Describe the task..."></textarea>
-
-                <div class="task-designer-row">
-                  <div>
-                    <label for="task-d-deadline" data-i18n="Deadline">Deadline</label>
-                    <input type="date" id="task-d-deadline" />
-                  </div>
-                  <div>
-                    <label for="task-d-assign" data-i18n="Assign To">Assign To</label>
-                    <select id="task-d-assign">
-                      <option value="all">All Students</option>
-                      <option value="course">Course</option>
-                      <option value="student">Student</option>
-                    </select>
-                  </div>
-                </div>
-                <div id="task-d-assign-options" class="task-designer-assign-options" style="display:none;"></div>
-
-                <div id="task-d-questions" style="display:none;">
-                  <div class="task-designer-section-head">
-                    <strong data-i18n="Questions">Questions</strong>
-                    <button type="button" class="primary-button" id="task-d-add-question" style="padding:4px 12px;font-size:12px;">+ Add Question</button>
-                  </div>
-                  <div id="task-d-questions-list"></div>
-                </div>
-              </div>
-
-              <div class="task-designer-side">
-                <label data-i18n="Attach Files">Attach Files</label>
-                <div class="file-input-wrapper">
-                  <label for="task-d-file-input">📎 Choose Files</label>
-                  <input type="file" id="task-d-file-input" multiple />
-                </div>
-                <div id="task-d-files" class="task-designer-files"></div>
-
-                <div class="task-designer-actions">
-                  <button type="button" class="secondary-button" id="task-d-cancel" data-i18n="Cancel">Cancel</button>
-                  <button type="button" class="secondary-button" id="task-d-save" data-i18n="Save only"><span aria-hidden="true">💾</span> Save only</button>
-                  <button type="button" class="primary-button" id="task-d-deploy" data-i18n="Save and deploy"><span aria-hidden="true">🚀</span> Save and deploy</button>
-                </div>
-                <p class="task-designer-hint">💾 <strong>Save only</strong> keeps the task as a private draft.
-                  🚀 <strong>Save and deploy</strong> publishes it straight to your students.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="task-grid" id="admin-task-list"></div>
-        </div>
-
-        <div id="student-tasks-view" style="display:none;">
-          <div class="task-stats-grid">
-            <div class="task-stat-card"><div class="number" id="student-task-total">0</div><div class="label">Total Tasks</div></div>
-            <div class="task-stat-card"><div class="number" id="student-task-pending" style="color:var(--danger);">0</div><div class="label">Pending</div></div>
-            <div class="task-stat-card"><div class="number" id="student-task-submitted" style="color:var(--warning);">0</div><div class="label">Submitted</div></div>
-            <div class="task-stat-card"><div class="number" id="student-task-graded" style="color:var(--success);">0</div><div class="label">Graded</div></div>
-          </div>
-
-          <div id="student-tasks-tabbar" style="display:flex;gap:8px;margin:18px 0 4px 0;flex-wrap:wrap;">
-            <button type="button" class="pill active" id="student-tasks-tab-assignments" style="cursor:pointer;">My Assignments</button>
-            <button type="button" class="pill" id="student-tasks-tab-interactive" style="cursor:pointer;">Interactive Tests</button>
-          </div>
-
-          <div class="task-grid" id="student-task-list"></div>
-        </div>
-      </section>
-
-      <!-- ===== TESTS ===== -->
-      <section class="page" id="tests">
-        <div class="heading"><h1>Tests &amp; Quizzes</h1><p id="tests-subheading">Create and take tests with questions.</p></div>
-
-        <div id="admin-tests-view" style="display:none;">
-          <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="primary-button" id="create-test-btn">+ Create Test</button>
-          </div>
-          <div id="admin-test-list" class="task-grid"></div>
-        </div>
-
-        <div id="student-tests-view" style="display:none;">
-          <div id="student-test-list" class="task-grid"></div>
-        </div>
       </section>
 
       <!-- ===== PROFILE ===== -->
@@ -650,19 +505,21 @@
                 </div>
               </div>
 
-              <!-- Tabs -->
+              <!-- The four course sections -->
               <div class="studio-tabs" id="studio-tabs">
-                <button class="studio-tab active" data-studio-tab="curriculum" id="studio-tab-curriculum">Curriculum</button>
-                <button class="studio-tab" data-studio-tab="library" id="studio-tab-library">Library</button>
-                <button class="studio-tab" data-studio-tab="settings" id="studio-tab-settings">Settings</button>
-                <button class="studio-tab" data-studio-tab="analytics" id="studio-tab-analytics">Analytics</button>
+                <button class="studio-tab active" data-studio-tab="lessons" id="studio-tab-lessons"><span aria-hidden="true">📘</span> <span id="studio-lessons-label">Lessons</span></button>
+                <button class="studio-tab" data-studio-tab="material" id="studio-tab-material"><span aria-hidden="true">📎</span> <span id="studio-material-label">Material &amp; Tasks</span></button>
+                <button class="studio-tab" data-studio-tab="assignments" id="studio-tab-assignments"><span aria-hidden="true">📝</span> <span id="studio-assignments-label">Assignments</span></button>
+                <button class="studio-tab" data-studio-tab="tests" id="studio-tab-tests"><span aria-hidden="true">📋</span> <span id="studio-tests-label">Tests</span></button>
+                <button class="studio-tab" data-studio-tab="settings" id="studio-tab-settings"><span id="studio-settings-tab-label">Settings</span></button>
+                <button class="studio-tab" data-studio-tab="analytics" id="studio-tab-analytics"><span id="studio-analytics-tab-label">Analytics</span></button>
               </div>
 
-              <!-- ===== CURRICULUM TAB ===== -->
-              <div class="studio-pane active" id="studio-pane-curriculum">
+              <!-- ===== SECTION 1: LESSONS ===== -->
+              <div class="studio-pane active" id="studio-pane-lessons">
                 <div class="studio-pane-head">
                   <div>
-                    <h3 id="studio-curriculum-title">Curriculum</h3>
+                    <h3 id="studio-curriculum-title">Lessons</h3>
                     <p id="studio-curriculum-sub">Drag modules and lessons to reorder them.</p>
                   </div>
                   <button class="primary-button" id="studio-add-module-btn">＋ <span id="studio-add-module-label">Add module</span></button>
@@ -673,15 +530,18 @@
                 </div>
               </div>
 
-              <!-- ===== LIBRARY TAB ===== -->
-              <div class="studio-pane" id="studio-pane-library">
+              <!-- ===== SECTION 2: MATERIAL & TASKS ===== -->
+              <div class="studio-pane" id="studio-pane-material">
                 <div class="studio-pane-head">
                   <div>
-                    <h3 id="studio-library-title">Library</h3>
-                    <p id="studio-library-sub">Standalone notes, links and files shared with everyone enrolled.</p>
+                    <h3 id="studio-library-title">Material &amp; Tasks</h3>
+                    <p id="studio-library-sub">Shared material for everyone enrolled, plus the tasks for this course.</p>
                   </div>
+                  <button class="primary-button" id="studio-add-material-task-btn">＋ <span id="studio-add-material-task-label">Add task</span></button>
                 </div>
+                <div id="studio-material-tasks" class="studio-work-list"></div>
                 <div class="studio-lib-form" id="studio-lib-form">
+                  <h4 id="studio-lib-form-title">Add material</h4>
                   <div class="studio-row">
                     <label for="studio-lib-title" class="studio-lbl">Title</label>
                     <input type="text" id="studio-lib-title" placeholder="Material title..." data-i18n-ph="Material title..." />
@@ -720,6 +580,30 @@
                   <input type="hidden" id="studio-lib-edit-id" value="" />
                 </div>
                 <div id="studio-lib-list" class="studio-lib-list"></div>
+              </div>
+
+              <!-- ===== SECTION 3: ASSIGNMENTS ===== -->
+              <div class="studio-pane" id="studio-pane-assignments">
+                <div class="studio-pane-head">
+                  <div>
+                    <h3 id="studio-assignments-title">Assignments</h3>
+                    <p id="studio-assignments-sub">Coursework students hand in, built here or in the Task Designer Suite.</p>
+                  </div>
+                  <button class="primary-button" id="studio-add-assignment-btn">＋ <span id="studio-add-assignment-label">Add assignment</span></button>
+                </div>
+                <div id="studio-assignment-list" class="studio-work-list"></div>
+              </div>
+
+              <!-- ===== SECTION 4: TESTS ===== -->
+              <div class="studio-pane" id="studio-pane-tests">
+                <div class="studio-pane-head">
+                  <div>
+                    <h3 id="studio-tests-title">Tests</h3>
+                    <p id="studio-tests-sub">Graded quizzes for this course.</p>
+                  </div>
+                  <button class="primary-button" id="studio-add-test-btn">＋ <span id="studio-add-test-label">Add test</span></button>
+                </div>
+                <div id="studio-test-list" class="studio-work-list"></div>
               </div>
 
               <!-- ===== SETTINGS TAB ===== -->
@@ -851,7 +735,6 @@
       <button class="nav-button active" data-page="dashboard"><span class="nav-icon">⌂</span><span>Home</span></button>
       <button class="nav-button" data-page="timetable"><span class="nav-icon">▦</span><span>Schedule</span></button>
       <button class="nav-button" data-page="courses"><span class="nav-icon">▣</span><span>Courses</span></button>
-      <button class="nav-button" data-page="tasks"><span class="nav-icon">✓</span><span>Tasks</span></button>
       <button class="nav-button" data-page="profile"><span class="nav-icon">◌</span><span>Profile</span></button>
     </nav>
   </div>
@@ -1089,6 +972,28 @@
           <button type="submit" class="save-btn" id="task-modal-save">Create Task</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="build-method-overlay">
+    <div class="modal">
+      <h2 id="build-method-title">How do you want to build this?</h2>
+      <p class="sub" id="build-method-sub">Pick a starting point. You can change your mind later.</p>
+      <div class="build-method-grid">
+        <button type="button" class="build-method-card" id="build-method-basic">
+          <span class="build-method-icon" aria-hidden="true">📤</span>
+          <strong id="build-method-basic-title">Basic upload</strong>
+          <small id="build-method-basic-sub">Title, description, deadline and files. Fastest way to hand something over.</small>
+        </button>
+        <button type="button" class="build-method-card featured" id="build-method-suite">
+          <span class="build-method-icon" aria-hidden="true">🧩</span>
+          <strong id="build-method-suite-title">Task Designer Suite</strong>
+          <small id="build-method-suite-sub">Build it block by block: maps, 3D terrain, animations, flashcards, games and auto-graded questions.</small>
+        </button>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" id="build-method-cancel">Cancel</button>
+      </div>
     </div>
   </div>
 
@@ -1334,11 +1239,15 @@
   <script src="scripts/modules/budget.js" defer></script>
   <script src="scripts/modules/grades.js" defer></script>
   <script src="scripts/modules/tasks.js" defer></script>
-  <script src="scripts/modules/task-designer.js" defer></script>
+  <script src="scripts/modules/task-blocks.js" defer></script>
+  <script src="scripts/modules/task-blocks-core.js" defer></script>
+  <script src="scripts/modules/task-blocks-geo.js" defer></script>
+  <script src="scripts/modules/task-blocks-math.js" defer></script>
+  <script src="scripts/modules/task-blocks-english.js" defer></script>
+  <script src="scripts/modules/course-work.js" defer></script>
   <script src="scripts/modules/tests.js" defer></script>
 <script src="scripts/modules/files.js" defer></script>
   <script src="scripts/modules/announcements.js" defer></script>
-  <script src="scripts/modules/assignments.js" defer></script>
   <script src="scripts/modules/meeting.js" defer></script>
   <script src="scripts/modules/search.js" defer></script>
   <script src="scripts/modules/modals.js" defer></script>

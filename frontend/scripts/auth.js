@@ -337,7 +337,6 @@
         renderUpcomingClasses();
         renderDashboard();
         renderAnnouncements();
-        renderAssignments();
         updateGreeting();
         cleanupExpiredMeetings();
         setLanguage(currentLang);

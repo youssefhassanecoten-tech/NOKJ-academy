@@ -287,12 +287,6 @@
         if (isTeacherUser()) return ownsCourse(courseId);
         return false;
       }
-      function canManageTask(task) {
-        if (!currentUser || !task) return false;
-        if (isAdminUser()) return true;
-        if (isTeacherUser()) return task.teacherId === currentUser.id;
-        return false;
-      }
       function teacherOwnCourseIds() {
         if (!currentUser) return [];
         return courses.filter(function(c) { return c.teacherId === currentUser.id; }).map(function(c) { return c.id; });
@@ -315,10 +309,6 @@
       // helpers above stay here because courses.js loads first.
       function renderCourseStudio() {
         if (typeof initStudio === 'function') initStudio();
-      }
-
-      function renderStudioMaterials() {
-        if (typeof renderStudioLibrary === 'function') renderStudioLibrary();
       }
 
       function initCourseStudio() {
@@ -348,6 +338,9 @@
       function renderStudentCourseDetail(course) {
         var container = document.getElementById('student-courses-container');
         if (!container || !course) return;
+        // Block documents own timers and window listeners, so the previous
+        // course view has to be torn down before new markup lands.
+        if (typeof stopStudentCourseWork === 'function') stopStudentCourseWork();
         var mats = getCourseMaterials(course.id).filter(function(m) { return m.published; });
         var enrolled = getEnrolledCourseIds(currentUser.id);
         if (enrolled.indexOf(course.id) === -1) {
@@ -378,9 +371,29 @@
           html += '<p style="font-size:12px;color:var(--muted);">' + tr('Pass mark') + ': ' + detailPassMark + '%</p>';
         }
         html += renderStudentCurriculum(course);
-        if (mats.length === 0) {
-          html += '<p style="color:var(--muted);padding:18px;">' + tr('No study material published yet for this course.') + '</p>';
-        } else {
+        // The other three course sections. They are rendered up front and
+        // switched with a local tab strip, so a student never leaves the
+        // course to find their work.
+        var sectionTabs = [
+          ['material', '📎', tr('Material &amp; Tasks')],
+          ['assignments', '📝', tr('Assignments')],
+          ['tests', '📋', tr('Tests')]
+        ];
+        html += '<div class="course-sections" data-course-sections="' + course.id + '">';
+        html += '<div class="course-section-tabs" role="tablist">';
+        sectionTabs.forEach(function(pair, i) {
+          html += '<button type="button" role="tab" class="course-section-tab' + (i === 0 ? ' active' : '') +
+            '" data-course-section-btn="' + pair[0] + '" onclick="switchCourseSection(' + course.id + ',\'' + pair[0] + '\')">' +
+            pair[1] + ' ' + pair[2] + '</button>';
+        });
+        html += '</div>';
+        sectionTabs.forEach(function(pair, i) {
+          html += '<div data-course-section-panel="' + pair[0] + '"' + (i === 0 ? '' : ' hidden') + '>';
+          html += renderStudentCourseWork(course.id, pair[0]);
+          html += '</div>';
+        });
+        html += '</div>';
+        if (mats.length) {
           html += '<h4>' + tr('Course materials') + '</h4>';
           html += '<div class="course-grid" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr));';
           mats.forEach(function(m) {
@@ -398,6 +411,7 @@
         }
         container.innerHTML = html;
         bindStudentCurriculum(course);
+        bindStudentCourseWork(container);
         setLanguage(currentLang);
       }
 

@@ -182,13 +182,22 @@
         // pass below knows exactly what to restore from the snapshot.
         var corrupt = {};
         function parseInto(name, raw, fallback, apply) {
-          if (!raw) { apply(fallback); return; }
-          try {
-            apply(JSON.parse(raw));
-          } catch (e) {
-            corrupt[name] = true;
-            apply(typeof fallback === 'function' ? fallback() : fallback);
+          // `fallback` is a thunk for the seeded defaults, so it has to be
+          // called. Passing the function through would put a function where an
+          // array belongs and break the first .map() on a fresh install.
+          var seed = typeof fallback === 'function' ? fallback() : fallback;
+          if (!raw) { apply(seed); return; }
+          var parsed = null;
+          var ok = false;
+          try { parsed = JSON.parse(raw); ok = true; } catch (e) { ok = false; }
+          // A stored `null` would be just as fatal as a broken value, so it is
+          // treated the same as unreadable.
+          if (!ok || parsed === null || parsed === undefined) {
+            if (ok) corrupt[name] = true;
+            apply(seed);
+            return;
           }
+          apply(parsed);
         }
         function asCopy(arr) { return function() { return arr.slice(); }; }
 
@@ -347,6 +356,22 @@
           Math.floor(Math.random() * 1e6).toString(36);
       }
 
+      // Every course preloads these four sections. Tasks, assignments and
+      // tests used to live on separate pages; they are now sections of the
+      // course itself, so one course is the single place a teacher works in.
+      var COURSE_SECTIONS = [
+        { key: 'lessons', icon: '📘', title: 'Lessons' },
+        { key: 'material-tasks', icon: '📎', title: 'Material & Tasks' },
+        { key: 'assignments', icon: '📝', title: 'Assignments' },
+        { key: 'tests', icon: '📋', title: 'Tests' }
+      ];
+
+      function defaultCourseSections() {
+        return COURSE_SECTIONS.map(function(s, i) {
+          return { key: s.key, title: s.title, icon: s.icon, published: true, order: i };
+        });
+      }
+
       // Adds any missing studio field to a course in place. Never removes or
       // overwrites a field that already has a value.
       function ensureCourseShape(course) {
@@ -359,6 +384,11 @@
         if (course.passingScore === undefined) course.passingScore = 60;
         if (course.archived === undefined) course.archived = false;
         if (course.updatedAt === undefined) course.updatedAt = course.createdAt || new Date().toISOString();
+        // Preloaded on first sight of the course, then left alone forever, so
+        // a teacher can reorder or retitle sections without losing them.
+        if (!Array.isArray(course.sections) || !course.sections.length) {
+          course.sections = defaultCourseSections();
+        }
         if (!Array.isArray(course.modules)) course.modules = [];
         course.modules.forEach(function(mod) {
           if (!mod || typeof mod !== 'object') return;
@@ -472,6 +502,114 @@
 
       function getEnrolledStudentIds(courseId) {
         return enrollments.filter(function(e) { return e.courseId === courseId; }).map(function(e) { return e.studentId; });
+      }
+
+      // ============================================================
+      //  COURSE SECTIONS
+      //  Tasks, assignments and tests belong to a course, so they are
+      //  listed per course instead of on separate pages.
+      // ============================================================
+      // Tasks used to be linked by assignedTo/assignedIds only. Older records
+      // have no courseId, so the first course id is used as a fallback.
+      function taskCourseId(task) {
+        if (!task) return null;
+        if (task.courseId !== undefined && task.courseId !== null) return task.courseId;
+        if (task.assignedTo === 'course' && Array.isArray(task.assignedIds) && task.assignedIds.length) {
+          return task.assignedIds[0];
+        }
+        return null;
+      }
+
+      // A task is a course section, so who may see it is decided by the same
+      // assignment rules the old standalone task list used. Drafts and
+      // unpublished items are never visible.
+      function taskVisibleToStudent(task, studentId) {
+        if (!task || !studentId) return false;
+        if (!isTaskPublished(task)) return false;
+        if (task.assignedTo === 'course') {
+          var enrolled = getEnrolledCourseIds(studentId);
+          return Array.isArray(task.assignedIds) && task.assignedIds.some(function(cid) {
+            return enrolled.indexOf(cid) !== -1;
+          });
+        }
+        if (task.assignedTo === 'student') {
+          return Array.isArray(task.assignedIds) && task.assignedIds.indexOf(studentId) !== -1;
+        }
+        if (task.assignedTo === 'all') {
+          if (task.teacherId && typeof teacherEnrolledStudentIds === 'function') {
+            return teacherEnrolledStudentIds().indexOf(studentId) !== -1;
+          }
+          return true;
+        }
+        return false;
+      }
+
+      function testVisibleToStudent(test, studentId) {
+        if (!test || !studentId) return false;
+        if (test.published === false) return false;
+        if (Array.isArray(test.courseIds) && test.courseIds.length) {
+          var enrolled = getEnrolledCourseIds(studentId);
+          return test.courseIds.some(function(cid) { return enrolled.indexOf(cid) !== -1; });
+        }
+        // A test tied to a course is visible to whoever is in that course.
+        if (test.courseId) return getEnrolledCourseIds(studentId).indexOf(test.courseId) !== -1;
+        return true;
+      }
+
+      // What a given student can actually open in a course section.
+      function courseWorkForStudent(courseId, section, studentId) {
+        if (section === 'tests') {
+          return tests.filter(function(t) {
+            return t.courseId === courseId && testVisibleToStudent(t, studentId);
+          });
+        }
+        if (section === 'material' || section === 'assignments') {
+          var onlyAssignments = section === 'assignments';
+          return tasks.filter(function(t) {
+            // Legacy interactive tasks count as material, so nothing that
+            // used to be visible disappears from the course.
+            if (onlyAssignments ? t.type !== 'assignment' : t.type === 'assignment') return false;
+            if (taskCourseId(t) !== courseId) return false;
+            return taskVisibleToStudent(t, studentId);
+          });
+        }
+        return [];
+      }
+
+      // Everything a student must finish in one course, in section order.
+      // With no studentId this is the teacher's view: every published item in
+      // the course, regardless of who it was assigned to.
+      function courseWorkCounts(courseId, studentId) {
+        var publishedTasks = tasks.filter(function(t) {
+          if (isTaskDraft(t)) return false;
+          return taskCourseId(t) === courseId;
+        });
+        var publishedTests = tests.filter(function(t) {
+          return t.published !== false && t.courseId === courseId;
+        });
+        if (!studentId) {
+          return {
+            material: publishedTasks.filter(function(t) { return t.type !== 'assignment'; }).length,
+            assignments: publishedTasks.filter(function(t) { return t.type === 'assignment'; }).length,
+            tests: publishedTests.length,
+            pending: 0
+          };
+        }
+        var material = courseWorkForStudent(courseId, 'material', studentId);
+        var assignments = courseWorkForStudent(courseId, 'assignments', studentId);
+        var courseTestList = courseWorkForStudent(courseId, 'tests', studentId);
+        var pendingTasks = material.concat(assignments).filter(function(t) {
+          return !taskSubmissions[t.id + '-' + studentId];
+        }).length;
+        var pendingTests = courseTestList.filter(function(t) {
+          return !testSubmissions[t.id + '-' + studentId];
+        }).length;
+        return {
+          material: material.length,
+          assignments: assignments.length,
+          tests: courseTestList.length,
+          pending: pendingTasks + pendingTests
+        };
       }
 
       function getCourseStudentCount(courseId) {

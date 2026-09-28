@@ -53,7 +53,7 @@ function updateAdminStats() {
           panel(tr('Quick actions'),
           '<div class="quick-actions">' +
           '<button class="primary-button" data-page="course-workspace">🧩 ' + tr('Create course') + '</button>' +
-          '<button class="primary-button" data-page="tasks">📝 ' + tr('Create task') + '</button>' +
+          '<button class="primary-button" data-page="course-workspace">📝 ' + tr('Create task') + '</button>' +
           '<button class="primary-button" data-page="calendar">📅 ' + tr('Schedule class') + '</button>' +
           '<button class="primary-button" data-page="grades">⭐ ' + tr('Manage grades') + '</button>' +
           '<button class="primary-button" onclick="openModal(\'announcement\', \'add\')">📌 ' + tr('Create announcement') +
@@ -548,10 +548,12 @@ function updateAdminStats() {
           '<span class="progress-track overall state-' + state + '"><span class="progress-fill" style="width:' + fillWidth + '%"></span>' + great + '</span>' +
           '</button>' +
           '<div class="progress-tips" id="progress-tips">' +
-          '<button data-page="tasks">📝 ' + tr('Complete your pending tasks') + '</button>' +
-          '<button data-page="tasks">💬 ' + tr('Ask your teacher for extra tasks') + '</button>' +
-          '<button data-page="tests">🧪 ' + tr('Finish your scheduled tests') + '</button>' +
-          '<button data-page="tests">⭐ ' + tr('Take optional tests for bonus points') + '</button>' +
+          // Tasks and tests are course sections now, so these tips send the
+          // student to their courses rather than a page that no longer exists.
+          '<button data-page="courses">📝 ' + tr('Complete your pending tasks') + '</button>' +
+          '<button data-page="courses">💬 ' + tr('Ask your teacher for extra tasks') + '</button>' +
+          '<button data-page="courses">🧪 ' + tr('Finish your scheduled tests') + '</button>' +
+          '<button data-page="courses">⭐ ' + tr('Take optional tests for bonus points') + '</button>' +
           '<button data-page="courses">📚 ' + tr('Review your course material') + '</button>' +
           '</div>' +
           '</div>';

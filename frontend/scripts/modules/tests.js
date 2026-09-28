@@ -1,181 +1,145 @@
       // ============================================================
       //  TESTS
       // ============================================================
+      // Tests live in the course Tests section now, so there is no standalone
+      // tests page. This entry point only refreshes the studio section.
       function renderTests() {
         if (!currentUser) return;
-        var isAdmin = currentUser.role === 'Admin';
-        var isTeacher = currentUser.role === 'Teacher';
-        var adminView = document.getElementById('admin-tests-view');
-        var studentView = document.getElementById('student-tests-view');
-
-        if (isAdmin || isTeacher) {
-          adminView.style.display = 'block';
-          studentView.style.display = 'none';
-          renderAdminTests();
-        } else {
-          adminView.style.display = 'none';
-          studentView.style.display = 'block';
-          renderStudentTests();
+        if (typeof renderStudioCurrentSection === 'function' && studio && studio.courseId) {
+          renderStudioCurrentSection();
         }
-        setLanguage(currentLang);
-      }
-
-      function renderAdminTests() {
-        var container = document.getElementById('admin-test-list');
-        container.innerHTML = '';
-
-        if (tests.length === 0) {
-          container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">No tests created yet.</p>';
-          return;
-        }
-
-        tests.forEach(function(test) {
-          var card = document.createElement('div');
-          card.className = 'task-card';
-          var subCount = Object.keys(testSubmissions).filter(function(key) { return key.startsWith(test.id + '-'); })
-            .length;
-
-          card.innerHTML =
-            '<div class="task-header"><div><h3>' + test.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">' +
-            getCourseName(test.courseId) + ' · ' + test.questions.length + ' questions</div></div><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span class="task-type test">Test</span></div></div>' +
-            '<div class="task-body"><div class="task-description">' + test.description + '</div><div class="task-deadline on-time">⏰ Due: ' +
-            test.deadline + '</div><div style="margin-top:8px;font-size:12px;color:var(--muted);">📊 ' + subCount +
-            ' submissions</div></div>' +
-            '<div class="task-footer"><button class="secondary-button view-test-results" data-test="' + test.id +
-            '">📊 View Results</button><button class="action-btn delete" data-id="' + test.id +
-            '" data-type="test">🗑️ Delete</button></div>';
-          container.appendChild(card);
-        });
-
-        container.querySelectorAll('.view-test-results').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            var testId = parseInt(this.dataset.test);
-            viewTestResults(testId);
-          });
-        });
-
-        container.querySelectorAll('.delete[data-type="test"]').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            var testId = parseInt(this.dataset.id);
-            if (confirm(tr('Delete this test?'))) {
-              tests = tests.filter(function(t) { return t.id !== testId; });
-              Object.keys(testSubmissions).forEach(function(key) {
-                if (key.startsWith(testId + '-')) delete testSubmissions[key];
-              });
-              saveData();
-              renderTests();
-            }
-          });
-        });
-        setLanguage(currentLang);
-      }
-
-      function renderStudentTests() {
-        var studentId = currentUser.id;
-        var container = document.getElementById('student-test-list');
-        var enrolledCourses = getEnrolledCourseIds(studentId);
-
-        var assignedTests = tests.filter(function(test) {
-          return enrolledCourses.includes(test.courseId);
-        });
-
-        container.innerHTML = '';
-
-        if (assignedTests.length === 0) {
-          container.innerHTML =
-            '<p style="color:var(--muted);text-align:center;padding:40px;">No tests assigned to you yet.</p>';
-          return;
-        }
-
-        assignedTests.forEach(function(test) {
-          var key = test.id + '-' + studentId;
-          var submission = testSubmissions[key];
-          var status = submission ? 'submitted' : 'pending';
-          var score = submission ? submission.score : null;
-
-          var card = document.createElement('div');
-          card.className = 'task-card';
-          var deadlineClass = test.deadline < new Date().toISOString().split('T')[0] ? 'overdue' : 'on-time';
-
-          var actionHtml = '';
-          if (status === 'submitted') {
-            actionHtml = '<div><span class="submitted-status">✅ Submitted</span>' +
-              (score !== null ? ' · Score: ' + score + '%' : '') +
-              '</div><button class="secondary-button view-test-results-btn" data-test="' + test.id +
-              '" style="margin-top:8px;">📊 View Results</button>';
-          } else {
-            actionHtml = '<button class="primary-button take-test-btn" data-test="' + test.id +
-              '" style="padding:8px 20px;">Take Test</button>';
-          }
-
-          card.innerHTML =
-            '<div class="task-header"><div><h3>' + test.title + '</h3><div style="margin-top:4px;font-size:12px;color:var(--muted);">' +
-            getCourseName(test.courseId) + ' · ' + test.questions.length + ' questions</div></div><span class="task-type test">Test</span></div>' +
-            '<div class="task-body"><div class="task-description">' + test.description + '</div><div class="task-deadline ' +
-            deadlineClass + '">⏰ Due: ' + test.deadline + (deadlineClass === 'overdue' ? ' ⚠️ Overdue!' : '') +
-            '</div></div>' +
-            '<div class="task-footer">' + actionHtml + '</div>';
-          container.appendChild(card);
-        });
-
-        container.querySelectorAll('.take-test-btn').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            var testId = parseInt(this.dataset.test);
-            openTakeTestModal(testId);
-          });
-        });
-
-        container.querySelectorAll('.view-test-results-btn').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            var testId = parseInt(this.dataset.test);
-            viewStudentTestResults(testId);
-          });
-        });
-        setLanguage(currentLang);
       }
 
       function openTakeTestModal(testId) {
         var test = tests.find(function(t) { return t.id === testId; });
         if (!test) return;
+        var questions = Array.isArray(test.questions) ? test.questions : [];
+        if (!questions.length) {
+          // A block test has no questions; it is answered inside the course.
+          alert(tr('This test is made of interactive blocks. Open it from the course to start.'));
+          return;
+        }
 
-        document.getElementById('take-test-title').textContent = test.title;
-        document.getElementById('take-test-sub').textContent = test.description + ' · ' + test.questions.length +
-          ' questions';
-
+        var titleEl = document.getElementById('take-test-title');
+        var subEl = document.getElementById('take-test-sub');
         var container = document.getElementById('take-test-questions');
-        container.innerHTML = '';
+        var overlay = document.getElementById('take-test-modal-overlay');
+        if (!container || !overlay) return;
+        if (titleEl) titleEl.textContent = test.title || '';
+        if (subEl) {
+          subEl.textContent = (test.description || '') + ' · ' + questions.length + ' ' + tr('questions');
+        }
 
-        test.questions.forEach(function(q, index) {
+        // A resubmission starts from the previous answers so "Review" is useful.
+        var previous = testSubmissions[testId + '-' + (currentUser ? currentUser.id : '')];
+        var prevAnswers = (previous && previous.answers) || {};
+
+        container.innerHTML = '';
+        questions.forEach(function(q, index) {
           var div = document.createElement('div');
           div.className = 'test-question';
-          div.innerHTML = '<div class="q-text">' + (index + 1) + '. ' + q.question + '</div><div class="q-options">';
-          q.options.forEach(function(option, optIndex) {
+          var opts = Array.isArray(q.options) ? q.options : [];
+          var html = '<div class="q-text">' + (index + 1) + '. ' + escapeHtml(q.question || '') + '</div><div class="q-options">';
+          opts.forEach(function(option, optIndex) {
             var letter = String.fromCharCode(65 + optIndex);
-            div.innerHTML +=
-              '<label><input type="radio" name="q-' + index + '" value="' + optIndex + '" /> ' + letter +
-              '. ' + option + '</label>';
+            var checked = prevAnswers[index] === optIndex ? ' checked' : '';
+            html += '<label><input type="radio" name="q-' + index + '" value="' + optIndex + '"' + checked + ' /> ' +
+              letter + '. ' + escapeHtml(option) + '</label>';
           });
-          div.innerHTML += '</div>';
+          div.innerHTML = html + '</div>';
           container.appendChild(div);
         });
 
-        document.getElementById('take-test-modal-overlay').classList.add('open');
+        overlay.classList.add('open');
         document.getElementById('take-test-form').dataset.testId = testId;
         setLanguage(currentLang);
+      }
+
+      // Reviews who has submitted a test. Tests are course sections now, so the
+      // Course Studio Tests section calls this directly.
+      function viewTestSubmissions(testId) {
+        var test = tests.find(function(t) { return t.id === testId; });
+        if (!test) return;
+
+        var keys = Object.keys(testSubmissions).filter(function(key) {
+          return key.indexOf(testId + '-') === 0;
+        });
+        if (!keys.length) {
+          alert(tr('No submissions yet for this test.'));
+          return;
+        }
+
+        var rows = keys.map(function(key) {
+          var studentId = parseInt(key.split('-')[1], 10);
+          var student = students.filter(function(s) { return s.id === studentId; })[0];
+          var sub = testSubmissions[key];
+          return {
+            name: student ? student.name : tr('Student') + ' #' + studentId,
+            score: typeof sub.score === 'number' ? sub.score : null,
+            max: typeof sub.max === 'number' ? sub.max : null,
+            answers: sub.answers || null
+          };
+        }).sort(function(a, b) { return a.name.localeCompare(b.name); });
+
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;padding:20px;';
+        var modal = document.createElement('div');
+        modal.style.cssText = 'max-width:640px;width:100%;max-height:90vh;overflow:auto;background:white;border-radius:18px;padding:24px;';
+
+        var title = document.createElement('h2');
+        title.textContent = tr('Submissions') + ': ' + test.title;
+        title.style.marginTop = '0';
+        modal.appendChild(title);
+
+        var summary = document.createElement('p');
+        summary.style.color = '#6b7280';
+        summary.textContent = tr('Total') + ': ' + rows.length + ' ' + tr('submissions');
+        modal.appendChild(summary);
+
+        rows.forEach(function(r) {
+          var card = document.createElement('div');
+          card.style.cssText = 'padding:12px;margin-bottom:10px;border:1px solid #e5e7eb;border-radius:8px;';
+          var head = document.createElement('div');
+          head.textContent = r.name;
+          head.style.fontWeight = '700';
+          card.appendChild(head);
+          var score = document.createElement('div');
+          score.style.cssText = 'margin-top:4px;font-size:13px;color:#4b5563;';
+          score.textContent = r.score !== null
+            ? '🧩 ' + r.score + ' / ' + (r.max || 0) + ' ' + tr('points')
+            : '📝 ' + tr('submitted');
+          card.appendChild(score);
+          modal.appendChild(card);
+        });
+
+        var closeBtn = document.createElement('button');
+        closeBtn.textContent = tr('Close');
+        closeBtn.style.cssText = 'padding:10px 24px;background:#4f46e5;color:white;border:0;border-radius:8px;font-weight:700;cursor:pointer;margin-top:8px;';
+        closeBtn.addEventListener('click', function() { document.body.removeChild(overlay); });
+
+        var wrap = document.createElement('div');
+        wrap.style.cssText = 'display:flex;justify-content:flex-end;';
+        wrap.appendChild(closeBtn);
+        modal.appendChild(wrap);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) document.body.removeChild(overlay); });
       }
 
       function submitTest(testId) {
         var test = tests.find(function(t) { return t.id === testId; });
         if (!test) return;
+        var questions = Array.isArray(test.questions) ? test.questions : [];
+        if (!questions.length) return;
 
         var studentId = currentUser.id;
         var answers = {};
         var allAnswered = true;
 
-        test.questions.forEach(function(q, index) {
+        questions.forEach(function(q, index) {
           var selected = document.querySelector('input[name="q-' + index + '"]:checked');
           if (selected) {
-            answers[index] = parseInt(selected.value);
+            answers[index] = parseInt(selected.value, 10);
           } else {
             allAnswered = false;
           }
@@ -186,96 +150,55 @@
           return;
         }
 
-        // Calculate score
         var correct = 0;
-        test.questions.forEach(function(q, index) {
+        questions.forEach(function(q, index) {
           if (answers[index] === q.correctAnswer) correct++;
         });
-        var score = Math.round((correct / test.questions.length) * 100);
+        var score = Math.round((correct / questions.length) * 100);
 
         var key = testId + '-' + studentId;
+        var prev = testSubmissions[key] || {};
         testSubmissions[key] = {
           answers: answers,
           score: score,
           correct: correct,
-          total: test.questions.length,
-          submittedAt: new Date().toISOString()
+          total: questions.length,
+          submittedAt: new Date().toISOString(),
+          // The teacher still owns the final mark, so a resubmission must not
+          // wipe a grade that has already been given.
+          grade: prev.grade === undefined ? null : prev.grade,
+          feedback: prev.feedback || ''
         };
 
         saveData();
-        document.getElementById('take-test-modal-overlay').classList.remove('open');
+        var overlay = document.getElementById('take-test-modal-overlay');
+        if (overlay) overlay.classList.remove('open');
         alert(tr('Test submitted successfully!') + ' ' + tr('Your Score') + ': ' + score + '%');
         renderTests();
         setLanguage(currentLang);
       }
 
-      function viewStudentTestResults(testId) {
-        var studentId = currentUser.id;
-        var key = testId + '-' + studentId;
-        var submission = testSubmissions[key];
-        if (!submission) {
-          alert(tr('No submission found.'));
-          return;
-        }
-
-        var test = tests.find(function(t) { return t.id === testId; });
-        if (!test) return;
-
-        var msg = '📊 Test Results: ' + test.title + '\n\n';
-        msg += 'Score: ' + submission.score + '% (' + submission.correct + '/' + submission.total + ')\n\n';
-        msg += 'Question Details:\n';
-        test.questions.forEach(function(q, index) {
-          var userAnswer = submission.answers[index];
-          var isCorrect = userAnswer === q.correctAnswer;
-          var letter = String.fromCharCode(65 + (userAnswer !== undefined ? userAnswer : 0));
-          msg += (index + 1) + '. ' + (isCorrect ? '✅' : '❌') + ' ' + q.question + '\n';
-          msg += '   Your answer: ' + letter + '. ' + (userAnswer !== undefined ? q.options[userAnswer] : 'Not answered') +
-            '\n';
-          msg += '   Correct: ' + String.fromCharCode(65 + q.correctAnswer) + '. ' + q.options[q.correctAnswer] + '\n\n';
+      // `tests.length + 1` collides as soon as a test is deleted or ids were
+      // never a dense 1..n, which silently overwrites another test's record.
+      function nextTestId() {
+        var max = 0;
+        tests.forEach(function(t) {
+          var n = parseInt(t.id, 10);
+          if (!isNaN(n) && n > max) max = n;
         });
-
-        alert(msg);
-        setLanguage(currentLang);
-      }
-
-      function viewTestResults(testId) {
-        var test = tests.find(function(t) { return t.id === testId; });
-        if (!test) return;
-
-        var submissions = Object.keys(testSubmissions).filter(function(key) { return key.startsWith(testId + '-'); });
-
-        if (submissions.length === 0) {
-          alert(tr('No submissions for this test yet.'));
-          return;
-        }
-
-        var msg = '📊 Test Results: ' + test.title + '\n\n';
-        submissions.forEach(function(key) {
-          var studentId = parseInt(key.split('-')[1]);
-          var student = students.find(function(s) { return s.id === studentId; });
-          var sub = testSubmissions[key];
-          if (student) {
-            msg += '👤 ' + student.name + ': ' + sub.score + '% (' + sub.correct + '/' + sub.total + ')\n';
-          }
-        });
-
-        // Calculate average
-        var scores = submissions.map(function(key) { return testSubmissions[key].score; });
-        var avg = scores.length > 0 ? Math.round(scores.reduce(function(a, b) { return a + b; }, 0) / scores.length) : 0;
-        msg += '\n📊 Average Score: ' + avg + '%';
-
-        alert(msg);
-        setLanguage(currentLang);
+        return max + 1;
       }
 
       function createTest(title, courseId, description, deadline, questions) {
         tests.push({
-          id: tests.length + 1,
+          id: nextTestId(),
           title: title,
-          courseId: parseInt(courseId),
+          courseId: parseInt(courseId, 10),
           description: description,
           deadline: deadline,
-          questions: questions,
+          questions: questions || [],
+          published: true,
+          teacherId: currentUser && currentUser.role === 'Teacher' ? currentUser.id : null,
           createdAt: new Date().toISOString().split('T')[0]
         });
         saveData();

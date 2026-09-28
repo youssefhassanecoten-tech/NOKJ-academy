@@ -16,10 +16,16 @@
         lessonFile: null,
         dragModuleId: null,
         dragLesson: null,
-        bound: false
+        bound: false,
+        // Pending context for the build-method prompt and the basic form.
+        buildKind: 'material',
+        pendingCourseId: null,
+        pendingKind: 'material',
+        editingTaskId: null
       };
 
       var STUDIO_EMOJI = ['📘', '📐', '🧬', '📖', '🧪', '🌍', '💻', '🎨', '🎵', '⚖️', '🩺', '💰', '🚀', '🗺️', '🏛️', '🧮', '🔬', '✍️'];
+      var STUDIO_TABS = ['lessons', 'material', 'assignments', 'tests', 'settings', 'analytics'];
       var STUDIO_TYPE_LABELS = {
         text: 'Text', video: 'Video', link: 'Link', file: 'File',
         assignment: 'Assignment', quiz: 'Quiz', live: 'Live', embed: 'Embed'
@@ -221,7 +227,7 @@
       function studioSelectCourse(courseId) {
         if (!canManageCourse(courseId)) return;
         studio.courseId = courseId;
-        studio.tab = 'curriculum';
+        studio.tab = 'lessons';
         studioSelectEmoji = false;
         renderStudioSidebar();
         renderStudioEditor();
@@ -329,14 +335,15 @@
         }
 
         studioRenderTabs();
-        if (studio.tab === 'curriculum') renderStudioCurriculum();
-        else if (studio.tab === 'library') renderStudioLibrary();
-        else if (studio.tab === 'settings') renderStudioSettings();
-        else if (studio.tab === 'analytics') renderStudioAnalytics();
+        renderStudioCurrentSection();
       }
 
+      // The first four tabs are the course's own sections; the last two are
+      // course-level views that are not sections.
+      var STUDIO_SECTION_TABS = ['lessons', 'material', 'assignments', 'tests'];
+
       function studioRenderTabs() {
-        ['curriculum', 'library', 'settings', 'analytics'].forEach(function(name) {
+        STUDIO_TABS.forEach(function(name) {
           var tab = document.getElementById('studio-tab-' + name);
           var pane = document.getElementById('studio-pane-' + name);
           if (tab) tab.classList.toggle('active', studio.tab === name);
@@ -347,10 +354,18 @@
       function studioSetTab(name) {
         studio.tab = name;
         studioRenderTabs();
-        if (name === 'curriculum') renderStudioCurriculum();
-        else if (name === 'library') renderStudioLibrary();
-        else if (name === 'settings') renderStudioSettings();
-        else if (name === 'analytics') renderStudioAnalytics();
+        renderStudioCurrentSection();
+      }
+
+      // Single entry point for "draw whatever the active section needs".
+      // The basic form and the suite both come back to this after saving.
+      function renderStudioCurrentSection() {
+        if (!studio.courseId) return;
+        if (studio.tab === 'lessons') renderStudioCurriculum();
+        else if (studio.tab === 'material') renderStudioMaterial();
+        else if (studio.tab === 'assignments' || studio.tab === 'tests') renderStudioWork(studio.tab);
+        else if (studio.tab === 'settings') renderStudioSettings();
+        else if (studio.tab === 'analytics') renderStudioAnalytics();
       }
 
       // ============================================================
@@ -925,6 +940,287 @@
       }
 
       // ============================================================
+      //  COURSE WORK SECTIONS
+      //  Tasks, assignments and tests used to live on their own pages.
+      //  They are now sections of the course, so everything a teacher
+      //  hands out is created from inside the course.
+      // ============================================================
+      function renderStudioMaterial() {
+        renderStudioWorkList('material');
+        renderStudioLibrary();
+      }
+
+      function renderStudioWork(tab) {
+        renderStudioWorkList(tab === 'tests' ? 'tests' : 'assignment');
+      }
+
+      // One row renderer for all three work sections.
+      function studioWorkRow(opts) {
+        return '<div class="studio-work" data-work-id="' + opts.id + '" data-work-kind="' + opts.kind + '">' +
+          '<span class="studio-work-icon" aria-hidden="true">' + opts.icon + '</span>' +
+          '<div class="studio-work-main"><div class="studio-work-title">' + escapeHtml(opts.title) + '</div>' +
+          '<div class="studio-work-sub">' + opts.sub + '</div></div>' +
+          '<div class="studio-work-actions">' + opts.actions + '</div></div>';
+      }
+
+      function studioSubmissionCount(taskId) {
+        return Object.keys(taskSubmissions).filter(function(key) {
+          return key.indexOf(taskId + '-') === 0;
+        }).length;
+      }
+
+      function studioTestSubmissionCount(testId) {
+        return Object.keys(testSubmissions).filter(function(key) {
+          return key.indexOf(testId + '-') === 0;
+        }).length;
+      }
+
+      function renderStudioWorkList(kind) {
+        var c = studioCourse();
+        var hostId = kind === 'material' ? 'studio-material-tasks'
+          : (kind === 'tests' ? 'studio-test-list' : 'studio-assignment-list');
+        var listEl = document.getElementById(hostId);
+        if (!c || !listEl) return;
+        if (!canManageCourse(c.id)) {
+          listEl.innerHTML = '';
+          return;
+        }
+
+        var items = [];
+        if (kind === 'tests') {
+          // Drafts are listed too, so a teacher can finish and deploy them.
+          items = tests.filter(function(t) { return t.courseId === c.id; });
+        } else {
+          // Legacy interactive tasks count as material so nothing that used to
+          // be visible drops out of the course. Drafts stay listed because the
+          // teacher has to be able to deploy them.
+          items = tasks.filter(function(t) {
+            if (kind === 'assignment' ? t.type !== 'assignment' : t.type === 'assignment') return false;
+            return taskCourseId(t) === c.id;
+          });
+        }
+
+        if (!items.length) {
+          listEl.innerHTML = '<div class="studio-work-empty">' + escapeHtml(
+            kind === 'tests'
+              ? tr('No tests in this course yet. Use “Add test” to create one.')
+              : (kind === 'assignment'
+                ? tr('No assignments in this course yet. Use “Add assignment” to create one.')
+                : tr('No tasks in this course yet. Use “Add task” to create one.'))) + '</div>';
+          return;
+        }
+
+        items.sort(function(a, b) { return String(a.deadline || '').localeCompare(String(b.deadline || '')); });
+
+        var html = '';
+        items.forEach(function(item) {
+          var draft = item.published === false;
+          var subCount = kind === 'tests' ? studioTestSubmissionCount(item.id) : studioSubmissionCount(item.id);
+          var pieces = [];
+          if (item.deadline) pieces.push('⏰ ' + escapeHtml(item.deadline));
+          if (item.blocks && item.blocks.length) {
+            pieces.push('🧩 ' + item.blocks.length + ' ' + tr('blocks') + ' · ' +
+              blockTotalPoints(item.blocks) + ' ' + tr('points'));
+          } else if (kind === 'tests' && item.questions && item.questions.length) {
+            pieces.push('❓ ' + item.questions.length + ' ' + tr('questions'));
+          } else if (item.files && item.files.length) {
+            pieces.push('📎 ' + item.files.length + ' ' + tr('files'));
+          }
+          pieces.push('👤 ' + subCount + ' ' + tr('submissions'));
+          pieces.push('<span class="' + (draft ? 'studio-work-draft' : '') + '">' +
+            (draft ? tr('Draft') : tr('Deployed')) + '</span>');
+
+          var actions = '';
+          if (kind === 'tests') {
+            actions += '<button data-work-submissions="' + item.id + '">👥 ' + escapeHtml(tr('Submissions')) + '</button>';
+          } else {
+            if (draft) {
+              actions += '<button data-work-deploy="' + item.id + '">🚀 ' + escapeHtml(tr('Deploy')) + '</button>';
+            }
+            if (item.kind !== 'suite') {
+              actions += '<button data-work-edit="' + item.id + '">✏️ ' + escapeHtml(tr('Edit')) + '</button>';
+            }
+            actions += '<button data-work-submissions="' + item.id + '">👥 ' + escapeHtml(tr('Submissions')) + '</button>';
+          }
+          actions += '<button class="danger" data-work-delete="' + item.id + '">🗑 ' + escapeHtml(tr('Delete')) + '</button>';
+
+          html += studioWorkRow({
+            id: item.id,
+            kind: kind,
+            icon: kind === 'tests' ? '📋' : (kind === 'assignment' ? '📝' : '📎'),
+            title: item.title,
+            sub: pieces.join(' · '),
+            actions: actions
+          });
+        });
+        listEl.innerHTML = html;
+
+        listEl.querySelectorAll('[data-work-deploy]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var id = parseInt(btn.dataset.workDeploy, 10);
+            if (kind === 'tests') {
+              var test = tests.find(function(t) { return t.id === id; });
+              if (!test) return;
+              test.published = true;
+              test.publishedAt = new Date().toISOString();
+              studioCommit();
+            } else {
+              // deployTaskById owns the ownership check and the save.
+              if (!deployTaskById(id)) return;
+            }
+            renderStudioWorkList(kind);
+            renderTasks();
+            setLanguage(currentLang);
+          });
+        });
+
+        listEl.querySelectorAll('[data-work-submissions]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            if (kind === 'tests') { viewTestSubmissions(parseInt(btn.dataset.workSubmissions, 10)); return; }
+            viewTaskSubmissions(parseInt(btn.dataset.workSubmissions, 10));
+          });
+        });
+
+        listEl.querySelectorAll('[data-work-edit]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            openBasicTaskModal(c.id, kind, parseInt(btn.dataset.workEdit, 10));
+          });
+        });
+
+        listEl.querySelectorAll('[data-work-delete]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var id = parseInt(btn.dataset.workDelete, 10);
+            var item = kind === 'tests' ? tests.find(function(t) { return t.id === id; })
+              : tasks.find(function(t) { return t.id === id; });
+            if (!item) return;
+            if (!confirm(tr('Delete') + ': ' + item.title + '?')) return;
+            if (kind === 'tests') {
+              tests = tests.filter(function(t) { return t.id !== id; });
+              Object.keys(testSubmissions).forEach(function(key) {
+                if (key.indexOf(id + '-') === 0) delete testSubmissions[key];
+              });
+              studioCommit();
+            } else {
+              // deleteTask owns the ownership check and submission cleanup.
+              if (!deleteTask(id)) return;
+            }
+            renderStudioWorkList(kind);
+            renderTasks();
+            setLanguage(currentLang);
+          });
+        });
+      }
+
+      // ============================================================
+      //  BUILD METHOD PROMPT
+      //  Every new task, assignment or test asks the teacher whether
+      //  they want the quick form or the full Task Designer Suite.
+      // ============================================================
+      function askBuildMethod(kind) {
+        var c = studioCourse();
+        if (!c) return;
+        var overlay = document.getElementById('build-method-overlay');
+        if (!overlay) { openStudioBasic(c.id, kind); return; }
+        studio.buildKind = kind;
+        var titles = { material: tr('task'), assignment: tr('assignment'), tests: tr('test') };
+        var titleEl = document.getElementById('build-method-title');
+        var subEl = document.getElementById('build-method-sub');
+        if (titleEl) titleEl.textContent = tr('How do you want to build this?');
+        if (subEl) {
+          subEl.textContent = tr('New') + ' ' + titles[kind] + ' — ' + escapeHtml(c.name) + '. ' +
+            tr('Choose a starting point.');
+        }
+        overlay.classList.add('open');
+        setLanguage(currentLang);
+      }
+
+      // Basic upload: the plain title / description / deadline form, pre-pointed
+      // at this course. Tasks and assignments share the task form; a test uses
+      // the question based test form.
+      function openStudioBasic(courseId, kind) {
+        if (kind === 'tests') { openBasicTestModal(courseId); return; }
+        openBasicTaskModal(courseId, kind);
+      }
+
+      function openBasicTaskModal(courseId, kind, editId) {
+        var c = courses.find(function(x) { return x.id === courseId; });
+        if (!c) return;
+        if (!canManageCourse(courseId)) return;
+        studio.pendingCourseId = courseId;
+        studio.pendingKind = kind;
+        var editing = null;
+        if (editId) {
+          editing = tasks.find(function(t) { return t.id === editId; });
+          if (editing && !canManageTaskById(editId)) return;
+        }
+
+        var overlay = document.getElementById('task-modal-overlay');
+        if (!overlay) return;
+        var titleEl = document.getElementById('task-modal-title');
+        var subEl = document.getElementById('task-modal-sub');
+        var titleInput = document.getElementById('task-modal-title-input');
+        var typeSel = document.getElementById('task-modal-type');
+        var assignSel = document.getElementById('task-modal-assign');
+        var optionsEl = document.getElementById('task-modal-assign-options');
+        var saveBtn = document.getElementById('task-modal-save');
+        var qBuilder = document.getElementById('task-questions-builder');
+        var qContainer = document.getElementById('task-questions-container');
+
+        if (qContainer) qContainer.innerHTML = '';
+        if (qBuilder) qBuilder.style.display = 'none';
+        document.getElementById('task-modal-priority').value = 'medium';
+        document.getElementById('task-modal-description').value = '';
+        document.getElementById('task-modal-deadline').value = '';
+        document.getElementById('task-file-list').innerHTML = '';
+        tempTaskFiles = [];
+        studio.editingTaskId = editing ? editing.id : null;
+
+        if (editing) {
+          if (titleEl) titleEl.textContent = tr('Edit task');
+          if (subEl) subEl.textContent = escapeHtml(c.name);
+          titleInput.value = editing.title || '';
+          typeSel.value = editing.type || (kind === 'assignment' ? 'assignment' : 'homework');
+          document.getElementById('task-modal-priority').value = editing.priority || 'medium';
+          document.getElementById('task-modal-description').value = editing.description || '';
+          document.getElementById('task-modal-deadline').value = editing.deadline || '';
+          assignSel.value = editing.assignedTo || 'course';
+        } else {
+          if (titleEl) titleEl.textContent = tr('Create') + ' ' + tr(kind === 'assignment' ? 'assignment' : 'task');
+          if (subEl) subEl.textContent = escapeHtml(c.name) + ' — ' + tr('fill in the details below');
+          titleInput.value = '';
+          typeSel.value = kind === 'assignment' ? 'assignment' : 'homework';
+        }
+
+        // The course is the destination, so the picker starts on it with
+        // this course already ticked.
+        assignSel.value = 'course';
+        optionsEl.style.display = 'block';
+        var html = '<label>' + escapeHtml(tr('Select course')) + '</label>';
+        var pool = isAdminUser() ? courses.slice() : courses.filter(function(x) { return x.teacherId === currentUser.id; });
+        pool.forEach(function(x) {
+          var on = x.id === courseId;
+          html += '<div class="enrollment-item"><input type="checkbox" class="task-assign-checkbox" value="' +
+            x.id + '"' + (on ? ' checked' : '') + ' /><label>' + escapeHtml(x.name) + '</label></div>';
+        });
+        optionsEl.innerHTML = html;
+
+        if (saveBtn) saveBtn.textContent = editing ? tr('Save changes') : tr('Create task');
+        overlay.classList.add('open');
+        setLanguage(currentLang);
+      }
+
+      // Task Designer Suite: same origin, so the course and the kind travel
+      // in the query string and the suite comes back already pointed at them.
+      function openStudioSuite(courseId, kind) {
+        var c = courses.find(function(x) { return x.id === courseId; });
+        if (!c) return;
+        if (!canManageCourse(courseId)) return;
+        var suiteKind = kind === 'tests' ? 'test' : (kind === 'assignment' ? 'assignment' : 'material');
+        window.location.href = 'suite/index.html?course=' + encodeURIComponent(courseId) +
+          '&kind=' + encodeURIComponent(suiteKind);
+      }
+
+      // ============================================================
       //  LIBRARY (existing notes / links / files)
       // ============================================================
       function renderStudioLibrary() {
@@ -1143,9 +1439,15 @@
 
         var kpis = document.getElementById('studio-kpis');
         if (kpis) {
+          // The four course sections, counted from the same place the student
+          // view counts them, so the numbers cannot drift apart.
+          var work = courseWorkCounts(c.id);
           kpis.innerHTML =
             studioKpi(tr('Enrolled students'), studentIds.length, c.capacity ? tr('Limit') + ': ' + c.capacity : tr('Unlimited')) +
             studioKpi(tr('Published lessons'), publishedLessons, totalLessons + ' ' + tr('total')) +
+            studioKpi(tr('Material &amp; Tasks'), work.material, tr('in this course')) +
+            studioKpi(tr('Assignments'), work.assignments, tr('in this course')) +
+            studioKpi(tr('Tests'), work.tests, tr('in this course')) +
             studioKpi(tr('Avg completion'), avgProgress + '%', studentIds.length ? tr('across enrolled') : tr('no students yet')) +
             studioKpi(tr('Average grade'), avgGrade ? avgGrade + '%' : '—', tr('graded work'));
         }
@@ -1365,6 +1667,38 @@
         document.querySelectorAll('[data-studio-tab]').forEach(function(btn) {
           btn.addEventListener('click', function() { studioSetTab(btn.dataset.studioTab); });
         });
+
+        // Each work section opens the build-method prompt, not the form
+        // directly, so the teacher always gets the choice.
+        [['studio-add-material-task-btn', 'material'],
+         ['studio-add-assignment-btn', 'assignment'],
+         ['studio-add-test-btn', 'tests']].forEach(function(pair) {
+          var btn = document.getElementById(pair[0]);
+          if (btn) btn.addEventListener('click', function() { askBuildMethod(pair[1]); });
+        });
+
+        var buildOverlay = document.getElementById('build-method-overlay');
+        if (buildOverlay) {
+          var basicBtn = document.getElementById('build-method-basic');
+          var suiteBtn = document.getElementById('build-method-suite');
+          var cancelBtn = document.getElementById('build-method-cancel');
+          // The course and kind are read at click time, not captured here: the
+          // binding happens once, long before the teacher picks a course.
+          if (basicBtn) basicBtn.addEventListener('click', function() {
+            buildOverlay.classList.remove('open');
+            openStudioBasic(studio.courseId, studio.buildKind);
+          });
+          if (suiteBtn) suiteBtn.addEventListener('click', function() {
+            buildOverlay.classList.remove('open');
+            openStudioSuite(studio.courseId, studio.buildKind);
+          });
+          if (cancelBtn) cancelBtn.addEventListener('click', function() {
+            buildOverlay.classList.remove('open');
+          });
+          buildOverlay.addEventListener('click', function(e) {
+            if (e.target === this) this.classList.remove('open');
+          });
+        }
 
         var titleInput = document.getElementById('studio-course-title-input');
         if (titleInput) {

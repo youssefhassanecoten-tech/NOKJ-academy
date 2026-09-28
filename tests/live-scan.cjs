@@ -288,6 +288,8 @@ console.log('== Static DOM reference audit ==');
       const id = m[1];
       if (ids.has(id)) continue;
       if (src.includes('id="' + id + '"')) continue; // built at runtime
+      if (src.includes(".id = '" + id + "'")) continue; // assigned at runtime
+      if (src.includes('.id = "' + id + '"')) continue;
       missing.push(path.relative(ROOT, f).replace(/\\/g, '/') + ' -> #' + id);
     }
   }
@@ -837,7 +839,7 @@ console.log('== Task Designer Suite ==');
   check('suite shows a back-to-course control', win.document.getElementById('suite-back').hidden === false);
   check('palette is populated', win.document.querySelectorAll('#suite-palette [data-tb-type], #suite-palette button').length > 5, String(win.document.querySelectorAll('#suite-palette button').length));
 
-  // Insert two blocks through the real palette, then preview and grade.
+  // Insert two blocks through the real palette, then preview and deploy.
   const palette = [...win.document.querySelectorAll('#suite-palette button')];
   if (palette.length > 0) {
     palette[0].click();
@@ -857,6 +859,70 @@ console.log('== Task Designer Suite ==');
   }
   const snap = win.localStorage.getItem('nokj-db-snapshot');
   check('suite updates the snapshot', !!snap);
+
+  // ---- Suite editing improvements ----
+  // Two blocks were already inserted above, so the strip count is n + 1.
+  check('insert strips appear between and after blocks',
+    win.document.querySelectorAll('#suite-blocks .suite-insert').length === 3,
+    'strips=' + win.document.querySelectorAll('#suite-blocks .suite-insert').length);
+  check('undo is enabled once something has been inserted', win.document.getElementById('suite-undo').disabled === false);
+  // Delete the last block, then undo it back.
+  const blocksBefore = win.document.querySelectorAll('#suite-blocks .tb-block').length;
+  const delBtn = [...win.document.querySelectorAll('[data-tb-del]')].pop();
+  delBtn && delBtn.click();
+  const blocksAfterDelete = win.document.querySelectorAll('#suite-blocks .tb-block').length;
+  check('deleting a block removes it', blocksAfterDelete === blocksBefore - 1,
+    blocksBefore + ' -> ' + blocksAfterDelete);
+  check('undo becomes available', win.document.getElementById('suite-undo').disabled === false);
+  win.document.getElementById('suite-undo').click();
+  check('undo restores the deleted block', win.document.querySelectorAll('#suite-blocks .tb-block').length === blocksBefore,
+    'after undo=' + win.document.querySelectorAll('#suite-blocks .tb-block').length);
+  check('redo becomes available', win.document.getElementById('suite-redo').disabled === false);
+  // Folding a block must hide its body.
+  const fold = win.document.querySelector('[data-tb-collapse]');
+  check('a block has a fold control', !!fold);
+  if (fold) {
+    const id = fold.getAttribute('data-tb-collapse');
+    fold.click();
+    const card = win.document.querySelector('#suite-blocks [data-tb-id="' + id + '"]');
+    check('folding a block hides its body', !!card && card.classList.contains('tb-collapsed'));
+    fold.click();
+  }
+  // The outline lists what is on the page.
+  check('the outline lists every block', win.document.querySelectorAll('#suite-outline .suite-outline-row').length === blocksBefore,
+    'outline=' + win.document.querySelectorAll('#suite-outline .suite-outline-row').length);
+  // The empty state appears when everything is removed. Each delete re-renders
+  // the canvas, so the button has to be re-queried each time.
+  let deleted = 0;
+  for (let guard = 0; guard < 10; guard++) {
+    const d = win.document.querySelector('[data-tb-del]');
+    if (!d) break;
+    d.click();
+    deleted++;
+  }
+  check('an empty page shows the empty state', !!win.document.querySelector('.suite-canvas-empty'),
+    'blocks left=' + win.document.querySelectorAll('#suite-blocks .tb-block').length);
+  // Undo is one step per press, so step back once per deletion.
+  for (let i = 0; i < deleted; i++) win.document.getElementById('suite-undo').click();
+  check('undo brings the blocks back', win.document.querySelectorAll('#suite-blocks .tb-block').length === blocksBefore,
+    'after ' + deleted + ' undos=' + win.document.querySelectorAll('#suite-blocks .tb-block').length + ' expected ' + blocksBefore);
+
+  // ---- Suite language ----
+  const langBtn = win.document.getElementById('suite-lang');
+  check('the Suite has a language toggle', !!langBtn);
+  if (langBtn) {
+    check('the Suite starts in English', /EN/.test(langBtn.textContent), langBtn.textContent);
+    langBtn.click();
+    check('the toggle switches to Russian', /RU/.test(langBtn.textContent), langBtn.textContent);
+    check('the palette is translated', /Заголовок|Текст|Вопрос/.test(win.document.getElementById('suite-palette').textContent),
+      win.document.getElementById('suite-palette').textContent.slice(0, 80));
+    check('the toolbar is translated', /Опубликовать/.test(win.document.getElementById('suite-deploy').textContent),
+      win.document.getElementById('suite-deploy').textContent);
+    check('the category names are translated', /География|Математика|Английский/.test(win.document.getElementById('suite-palette').textContent),
+      win.document.getElementById('suite-palette').textContent.slice(0, 120));
+    langBtn.click();
+    check('the toggle switches back to English', /EN/.test(langBtn.textContent), langBtn.textContent);
+  }
 
   // A test-kind suite must write to nokj-tests instead.
   const dom2 = new JSDOM(shell, {

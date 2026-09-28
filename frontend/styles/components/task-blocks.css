@@ -7,6 +7,35 @@
     .tb-block-body {
       position: relative;
     }
+
+    /* ---------- editing chrome (Suite only) ----------
+       The fold control and the folded state keep a long document
+       scannable. The body is not rendered at all when folded. */
+    .tb-collapse {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      margin-right: 4px;
+      padding: 0;
+      border: 0;
+      border-radius: 5px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .tb-collapse:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .tb-collapsed > .tb-block-body {
+      display: none;
+    }
+    .tb-editable {
+      cursor: default;
+    }
     .tb-empty,
     .tb-placeholder,
     .tb-unknown {

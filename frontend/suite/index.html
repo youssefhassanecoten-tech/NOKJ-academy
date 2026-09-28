@@ -23,7 +23,10 @@
     <div class="suite-meta" id="suite-meta">0 points · 0 blocks</div>
     <div class="suite-actions">
       <button type="button" class="suite-btn" id="suite-back" hidden>← Back to course</button>
+      <button type="button" class="suite-btn" id="suite-lang" title="Change language">🇷🇺 RU</button>
       <button type="button" class="suite-btn" id="suite-theme">🌙</button>
+      <button type="button" class="suite-btn" id="suite-undo" title="Undo (Ctrl+Z)">↶ Undo</button>
+      <button type="button" class="suite-btn" id="suite-redo" title="Redo (Ctrl+Shift+Z)">↷ Redo</button>
       <button type="button" class="suite-btn" id="suite-preview-btn">👁 Preview</button>
       <button type="button" class="suite-btn" id="suite-new">✨ New</button>
       <button type="button" class="suite-btn" id="suite-save">💾 Save draft</button>
@@ -34,12 +37,14 @@
   <div class="suite-context" id="suite-context" hidden></div>
 
   <div class="suite-body">
-    <aside class="suite-side">
+    <aside class="suite-side" id="suite-side">
       <div class="suite-side-head">
         <span id="suite-list-head">My tasks</span>
         <button type="button" class="suite-btn" id="suite-reload" title="Reload from storage">↻</button>
       </div>
       <div class="suite-side-body" id="suite-task-list"></div>
+      <div class="suite-side-head"><span>On this page</span></div>
+      <div class="suite-side-body suite-outline" id="suite-outline"></div>
       <div class="suite-side-head"><span>Blocks</span></div>
       <div class="suite-side-body">
         <input type="text" class="suite-search" id="suite-block-search" placeholder="Search blocks..." />

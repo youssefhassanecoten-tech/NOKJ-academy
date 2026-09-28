@@ -73,8 +73,9 @@ for (const file of jsFiles) {
   for (const m of src.matchAll(/getElementById\(['"]([^'"]+)['"]\)/g)) {
     const id = m[1];
     if (!ids.has(id)) {
-      // ids built inside JS template literals are created at runtime
-      const appearsBuilt = src.includes('id="' + id + '"');
+      // ids built inside JS, or assigned to a node at runtime, exist already
+      const appearsBuilt = src.includes('id="' + id + '"') ||
+        src.includes(".id = '" + id + "'") || src.includes('.id = "' + id + '"');
       if (appearsBuilt) dynamicIds.add(id);
       else missing.add(id);
     }
@@ -82,8 +83,11 @@ for (const file of jsFiles) {
 }
 check('no dangling getElementById refs', missing.size === 0, [...missing].join(', '));
 check('dynamic ids are built in JS', [...dynamicIds].filter(id => {
-  // every dynamic id must actually be emitted in some script as id="..."
-  return jsFiles.some(f => fs.readFileSync(f, 'utf8').includes('id="' + id + '"'));
+  // every dynamic id must be emitted in markup or assigned to a node in a script
+  return jsFiles.some(f => {
+    const s = fs.readFileSync(f, 'utf8');
+    return s.includes('id="' + id + '"') || s.includes(".id = '" + id + "'");
+  });
 }).length === dynamicIds.size, ...dynamicIds.length ? ['unverified: ' + [...dynamicIds].join(', ')] : []);
 
 console.log('== Landing/entry markers ==');

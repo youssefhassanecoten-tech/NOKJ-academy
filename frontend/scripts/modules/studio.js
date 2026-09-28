@@ -1233,6 +1233,11 @@
         if (!c) return;
         if (!canManageCourse(courseId)) return;
         var suiteKind = kind === 'tests' ? 'test' : (kind === 'assignment' ? 'assignment' : 'material');
+        // Remember exactly where the teacher was, so the Suite's back button
+        // returns to this tab instead of the course list.
+        try {
+          sessionStorage.setItem('nokj-studio-back', 'courses/' + courseId + '/' + studioKind);
+        } catch (e) { /* noop */ }
         window.location.href = 'suite/index.html?course=' + encodeURIComponent(courseId) +
           '&kind=' + encodeURIComponent(suiteKind);
       }
@@ -1638,6 +1643,29 @@
         studio.bound = true;
         bindStudioEvents();
         initStudioRte();
+        restoreStudioFromHash();
+      }
+
+      // Returning from the Task Designer Suite carries a hash of the form
+      // courses/<id>/<kind>, which reopens that course on the same tab.
+      var STUDIO_KIND_TO_SUB = { material: 'task', assignment: 'assignment', test: 'test' };
+      function restoreStudioFromHash() {
+        var hash = (window.location.hash || '').replace(/^#/, '');
+        if (hash.indexOf('courses/') !== 0) return;
+        var parts = hash.split('/');
+        var courseId = parseInt(parts[1], 10);
+        var sub = STUDIO_KIND_TO_SUB[parts[2]] || 'lesson';
+        if (isNaN(courseId) || !canManageCourse(courseId)) return;
+        openPage('course-workspace');
+        studioSelectCourse(courseId);
+        studio.tab = 'lessons';
+        studio.sub = sub;
+        studioRenderTabs();
+        renderStudioCurrentSection();
+        // The hash has done its job, so drop it to keep the back button sane.
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
       }
 
       function bindStudioEvents() {

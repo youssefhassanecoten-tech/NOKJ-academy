@@ -99,8 +99,12 @@
           }
           var wrapCls = 'tb-block' + (ctx.editing ? ' tb-editable' : '') +
             (ctx.selectedId === b.id ? ' tb-selected' : '');
+          var isCollapsed = !!(ctx.collapsed && ctx.collapsed[b.id]);
           var label = ctx.editing
-            ? '<div class="tb-block-bar"><span class="tb-block-name">' + def.icon + ' ' + esc(def.label) + '</span>' +
+            ? '<div class="tb-block-bar"><span class="tb-block-name">' +
+              '<button type="button" class="tb-collapse" data-tb-collapse="' + b.id + '" title="Fold this block">' +
+              (isCollapsed ? '▸' : '▾') + '</button>' +
+              def.icon + ' ' + esc(def.label) + '</span>' +
               '<span class="tb-block-tools">' +
               '<button type="button" data-tb-move="up" data-tb-id="' + b.id + '" title="Move up">↑</button>' +
               '<button type="button" data-tb-move="down" data-tb-id="' + b.id + '" title="Move down">↓</button>' +
@@ -108,8 +112,10 @@
               '<button type="button" data-tb-del="' + b.id + '" title="Delete">✕</button>' +
               '</span></div>'
             : '';
-          return '<div class="' + wrapCls + '" data-tb-id="' + b.id + '" data-tb-type="' + b.type + '">' +
-            label + '<div class="tb-block-body">' + def.render(b, ctx) + '</div></div>';
+          var bodyHtml = (ctx.editing && isCollapsed) ? '' : def.render(b, ctx);
+          return '<div class="' + wrapCls + (isCollapsed ? ' tb-collapsed' : '') + '" data-tb-id="' + b.id +
+            '" data-tb-type="' + b.type + '">' +
+            label + '<div class="tb-block-body">' + bodyHtml + '</div></div>';
         }).join('');
       }
 

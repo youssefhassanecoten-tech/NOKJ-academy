@@ -244,6 +244,9 @@
     alert(result
       ? tr('Submitted. Your score:') + ' ' + result.score + ' / ' + result.max
       : tr('Submitted successfully!'));
+    // The attempt is finished, so the timer and the guard both stand down.
+    stopWorkTimer();
+    stopTabGuard();
     setLanguage(currentLang);
   }
 
@@ -279,6 +282,153 @@
     clearDraft(draftKeyFor(taskId, studentId));
   }
 
+  // ---------- exam timer and tab guard ----------
+
+  var COURSE_WORK_RUN = { timer: null, startedAt: 0, guardOn: false, violations: 0 };
+
+  function workTimerConfig(item) {
+    var t = item && item.timer;
+    if (!t || !t.enabled) return null;
+    var minutes = parseInt(t.minutes, 10);
+    if (!minutes || minutes <= 0) return null;
+    return { mode: t.mode === 'up' ? 'up' : 'down', minutes: minutes, warnAt: parseInt(t.warnAt, 10) || 0 };
+  }
+
+  function fmtClock(totalSeconds) {
+    var s = Math.max(0, Math.floor(totalSeconds));
+    var h = Math.floor(s / 3600);
+    var m = Math.floor((s % 3600) / 60);
+    var sec = s % 60;
+    var pad = function(n) { return n < 10 ? '0' + n : String(n); };
+    return (h > 0 ? h + ':' : '') + pad(m) + ':' + pad(sec);
+  }
+
+  // A single interval drives the timer; it is torn down with the course view.
+  function startWorkTimer(item, hostId, onExpire) {
+    var cfg = workTimerConfig(item);
+    if (!cfg) return;
+    stopWorkTimer();
+    var started = Date.now();
+    var bar = document.createElement('div');
+    bar.className = 'course-work-timer';
+    bar.setAttribute('role', 'timer');
+    var label = document.createElement('span');
+    var readout = document.createElement('strong');
+    bar.appendChild(label);
+    bar.appendChild(readout);
+    var anchor = hostId ? document.getElementById(hostId) : null;
+    if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(bar, anchor);
+    else document.body.appendChild(bar);
+
+    function paint() {
+      var elapsed = Math.floor((Date.now() - started) / 1000);
+      if (cfg.mode === 'down') {
+        var left = cfg.minutes * 60 - elapsed;
+        readout.textContent = fmtClock(left);
+        label.textContent = tr('Time left');
+        if (left <= 0) {
+          stopWorkTimer();
+          if (bar.parentNode) bar.parentNode.removeChild(bar);
+          if (onExpire) onExpire();
+          return;
+        }
+        bar.classList.toggle('warn', cfg.warnAt > 0 && left <= cfg.warnAt * 60);
+        bar.classList.remove('done');
+      } else {
+        readout.textContent = fmtClock(elapsed);
+        label.textContent = tr('Time spent');
+        bar.classList.remove('warn', 'done');
+      }
+    }
+    paint();
+    COURSE_WORK_RUN.timer = setInterval(paint, 500);
+  }
+
+  function stopWorkTimer() {
+    if (COURSE_WORK_RUN.timer) clearInterval(COURSE_WORK_RUN.timer);
+    COURSE_WORK_RUN.timer = null;
+    var old = document.querySelectorAll('.course-work-timer');
+    for (var i = 0; i < old.length; i++) {
+      if (old[i].parentNode) old[i].parentNode.removeChild(old[i]);
+    }
+  }
+
+  // Leaving the tab during a guarded exam. This cannot stop a determined
+  // student using a second device; it records and reacts.
+  function startTabGuard(item, onWarn, onSubmit) {
+    var cfg = (item && item.guard) || { mode: 'off' };
+    if (cfg.mode !== 'warn' && cfg.mode !== 'submit') return;
+    stopTabGuard();
+    COURSE_WORK_RUN.guardOn = true;
+    COURSE_WORK_RUN.violations = 0;
+    var overlay = null;
+    function dismiss() {
+      if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      overlay = null;
+    }
+    // Stored so stopTabGuard can detach exactly these listeners.
+    COURSE_WORK_RUN.dismiss = dismiss;
+    COURSE_WORK_RUN.handle = function() {
+      if (typeof document.hidden !== 'boolean' || document.hidden) return;
+      COURSE_WORK_RUN.violations++;
+      if (cfg.mode === 'submit') {
+        stopTabGuard();
+        if (onSubmit) onSubmit(COURSE_WORK_RUN.violations);
+        return;
+      }
+      if (!overlay) overlay = buildWarn(COURSE_WORK_RUN.violations, dismiss);
+      if (overlay) overlay.style.display = 'flex';
+      if (onWarn) onWarn(COURSE_WORK_RUN.violations);
+    };
+    document.addEventListener('visibilitychange', COURSE_WORK_RUN.handle);
+    window.addEventListener('blur', COURSE_WORK_RUN.handle);
+  }
+
+  function stopTabGuard() {
+    if (COURSE_WORK_RUN.handle) {
+      document.removeEventListener('visibilitychange', COURSE_WORK_RUN.handle);
+      window.removeEventListener('blur', COURSE_WORK_RUN.handle);
+      COURSE_WORK_RUN.handle = null;
+    }
+    if (COURSE_WORK_RUN.dismiss) { COURSE_WORK_RUN.dismiss(); COURSE_WORK_RUN.dismiss = null; }
+    COURSE_WORK_RUN.guardOn = false;
+    var warn = document.getElementById('course-work-guard');
+    if (warn && warn.parentNode) warn.parentNode.removeChild(warn);
+  }
+
+  function buildWarn(count, onDismiss) {
+    var old = document.getElementById('course-work-guard');
+    if (old && old.parentNode) old.parentNode.removeChild(old);
+    var wrap = document.createElement('div');
+    wrap.id = 'course-work-guard';
+    wrap.className = 'course-work-guard';
+    wrap.style.cssText = 'position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,0.72);padding:20px;';
+    var card = document.createElement('div');
+    card.style.cssText = 'max-width:420px;background:#fff;border-radius:18px;padding:24px;text-align:center;';
+    var h = document.createElement('h2');
+    h.style.margin = '0 0 8px';
+    h.textContent = 'Please stay on this page';
+    var p = document.createElement('p');
+    p.style.margin = '0 0 14px';
+    p.style.fontSize = '14px';
+    p.style.lineHeight = '1.6';
+    p.textContent = 'You left the test tab. This has been recorded' + (count > 1 ? ' (' + count + ' times).' : '.');
+    var btn = document.createElement('button');
+    btn.textContent = 'Back to my test';
+    btn.style.cssText = 'padding:10px 22px;border:0;border-radius:10px;background:#4f46e5;color:#fff;font-weight:700;cursor:pointer;';
+    btn.addEventListener('click', onDismiss);
+    card.appendChild(h);
+    card.appendChild(p);
+    card.appendChild(btn);
+    wrap.appendChild(card);
+    document.body.appendChild(wrap);
+    return wrap;
+  }
+
+  function winHidden() {
+    return typeof document.hidden === 'boolean' ? document.hidden : false;
+  }
+
   // ---------- binding ----------
 
   function bindStudentCourseWork(root) {
@@ -287,7 +437,18 @@
     root.addEventListener('click', function(e) {
       var openBtn = e.target.closest('[data-cw-open]');
       if (openBtn) {
-        openCourseWork(parseInt(openBtn.dataset.cwOpen, 10), openBtn.dataset.cwSection, openBtn.dataset.cwHost);
+        var startedId = parseInt(openBtn.dataset.cwOpen, 10);
+        openCourseWork(startedId, openBtn.dataset.cwSection, openBtn.dataset.cwHost);
+        // Start the clock and arm the tab guard for this attempt.
+        var startedItem = courseWorkItem(startedId, openBtn.dataset.cwSection);
+        var hostId = openBtn.dataset.cwHost;
+        startWorkTimer(startedItem, hostId, function() {
+          submitCourseWork(startedId, openBtn.dataset.cwSection, hostId);
+        });
+        startTabGuard(startedItem, null, function(count) {
+          submitCourseWork(startedId, openBtn.dataset.cwSection, hostId);
+          alert(tr('You left the test tab, so your attempt was submitted.') + ' (' + count + ')');
+        });
         return;
       }
       var takeBtn = e.target.closest('[data-cw-take-test]');
@@ -326,4 +487,7 @@
       if (host) stopTaskBlocks(host);
     });
     COURSE_WORK.open = {};
+    // The clock and the guard must not outlive the course view.
+    stopWorkTimer();
+    stopTabGuard();
   }

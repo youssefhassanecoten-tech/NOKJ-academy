@@ -498,6 +498,15 @@
       function renderApprovals() {
         if (!currentUser || (currentUser.role !== 'Admin' && currentUser.role !== 'Teacher')) return;
 
+        // A teacher only ever sees student enrollments into their own courses,
+        // so the page must not promise them teacher-application review.
+        var subheading = document.getElementById('approvals-subheading');
+        if (subheading) {
+          subheading.textContent = currentUser.role === 'Admin' ?
+            tr('Review and approve or refuse teacher and student enrollment requests.') :
+            tr('Review and approve or refuse student enrollment requests for your courses.');
+        }
+
         var teacherSection = document.getElementById('teacher-applications-section');
         if (teacherSection) teacherSection.style.display = currentUser.role === 'Admin' ? 'block' : 'none';
 

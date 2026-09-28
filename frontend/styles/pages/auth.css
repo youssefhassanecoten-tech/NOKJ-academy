@@ -5,9 +5,11 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      min-height: 100dvh;
       padding: 20px;
-      background: linear-gradient(135deg, #312e81, #4f46e5, #7c3aed);
+      background: linear-gradient(135deg, var(--auth-from), var(--auth-via), var(--auth-to));
       position: relative;
+      overflow-y: auto;
     }
     #login-screen.open,
     #register-screen.open {
@@ -26,14 +28,14 @@
       height: 44px;
       display: grid;
       place-items: center;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      border: 2px solid var(--auth-control-line);
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.15);
+      background: var(--auth-control);
       cursor: pointer;
       padding: 0;
     }
     .login-lang-toggle:hover {
-      background: rgba(255, 255, 255, 0.25);
+      background: var(--auth-control-hover);
     }
     .login-lang-toggle svg {
       width: 28px;
@@ -51,17 +53,19 @@
     .auth-theme-select {
       height: 44px;
       padding: 0 10px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      border: 2px solid var(--auth-control-line);
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
+      background: var(--auth-control);
+      color: var(--auth-ink);
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
     }
+    /* Native <option> popups ignore most inherited styling, so the menu
+       needs its own tokens rather than the translucent control colour. */
     .auth-theme-select option {
-      color: #0f172a;
-      background: #fff;
+      color: var(--auth-option-ink);
+      background: var(--auth-option-bg);
     }
     .auth-top-controls .login-lang-toggle {
       position: static;
@@ -280,14 +284,15 @@
       height: 12px;
       flex-shrink: 0;
       border-radius: 50%;
-      background: #22c55e;
+      background: var(--success);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 18%, transparent);
     }
     .recruiting-dot::after {
       content: "";
       position: absolute;
       inset: -6px;
       border-radius: 50%;
-      border: 2px solid #22c55e;
+      border: 2px solid var(--success);
       animation: nokj-recruit-pulse 2.6s ease-out infinite;
     }
     @keyframes nokj-recruit-breathe {

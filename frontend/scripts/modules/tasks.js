@@ -112,8 +112,13 @@
             '<div style="margin-top:8px;font-size:12px;color:var(--muted);">📊 ' + submittedCount + ' / ' +
             totalStudents + ' students submitted</div></div>' +
             '<div class="task-footer"><button class="secondary-button view-submissions-btn" data-task="' + task.id +
-            '">📋 View Submissions (' + submittedCount + ')</button><button class="action-btn delete" data-id="' +
-            task.id + '" data-type="task">🗑️ Delete</button></div>';
+            '">📋 View Submissions (' + submittedCount + ')</button>' +
+            (isTaskDraft(task) ? '<button class="action-btn deploy" data-deploy="' + task.id + '">🚀 ' + tr('Deploy') +
+              '</button><span class="task-state-badge draft">📝 ' + tr('Draft') + '</span>' :
+              '<span class="task-state-badge live">🟢 ' + tr('Deployed') + '</span>') +
+            '<button class="action-btn edit" data-edit="' + task.id + '">✏️ ' + tr('Edit') +
+            '</button><button class="action-btn delete" data-id="' + task.id + '" data-type="task">🗑️ ' + tr('Delete') +
+            '</button></div>';
           container.appendChild(card);
         });
         setLanguage(currentLang);
@@ -123,6 +128,7 @@
         var studentId = currentUser.id;
         var container = document.getElementById('student-task-list');
         var assignedTasks = tasks.filter(function(task) {
+          if (!isTaskPublished(task)) return false;
           if (task.assignedTo === 'all') {
             if (task.teacherId && typeof teacherEnrolledStudentIds === 'function') {
               return teacherEnrolledStudentIds().indexOf(studentId) !== -1;
@@ -348,8 +354,20 @@
         return maxId + 1;
       }
 
-      function createTask(title, type, description, deadline, priority, assignedTo, assignedIds, files, questions) {
-        tasks.push({
+      function isTaskPublished(task) {
+        return !!task && task.published !== false;
+      }
+      function isTaskDraft(task) {
+        return !!task && task.published === false;
+      }
+      function setTaskPublished(task, published) {
+        if (!task) return;
+        task.published = !!published;
+        task.publishedAt = published ? new Date().toISOString() : (task.publishedAt || null);
+      }
+
+      function createTask(title, type, description, deadline, priority, assignedTo, assignedIds, files, questions, published) {
+        var task = {
           id: nextTaskId(),
           title: title,
           type: type,
@@ -362,11 +380,20 @@
           questions: questions || [],
           teacherId: currentUser && currentUser.role === 'Teacher' ? currentUser.id : null,
           createdAt: new Date().toISOString().split('T')[0]
-        });
+        };
+        if (published === false) {
+          task.published = false;
+          task.publishedAt = null;
+        } else {
+          task.published = true;
+          task.publishedAt = new Date().toISOString();
+        }
+        tasks.push(task);
         saveData();
         renderTasks();
-        alert(tr('Task created successfully!'));
+        alert(published === false ? tr('Task saved as draft.') : tr('Task created and deployed to students!'));
         setLanguage(currentLang);
+        return task;
       }
 
       function canManageTaskById(taskId) {

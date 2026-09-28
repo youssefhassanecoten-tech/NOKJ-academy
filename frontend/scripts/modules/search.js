@@ -47,6 +47,9 @@
         });
 
         tasks.forEach(function(t) {
+          var role = currentUser ? currentUser.role : null;
+          var canSeeDrafts = role === 'Admin' || role === 'Teacher';
+          if (role === 'Student' && !isTaskPublished(t)) return;
           if ((t.title || '').toLowerCase().indexOf(q) !== -1) {
             html += searchItem('tasks', t.title, tr('Task'), '📝');
             count++;

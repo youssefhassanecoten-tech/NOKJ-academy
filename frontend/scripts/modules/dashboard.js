@@ -103,6 +103,7 @@ function updateAdminStats() {
         var today = new Date().toISOString().split('T')[0];
         var todays = meetings.filter(function(m) { return m.date === today; });
         var subTasks = tasks.filter(function(t) {
+          if (!isTaskPublished(t)) return false;
           if (t.assignedTo === 'specific') return (t.assignedIds || []).indexOf(currentUser.id) !== -1;
           return t.assignedTo === 'all';
         });
@@ -232,6 +233,7 @@ function updateAdminStats() {
 
       function courseProgress(courseId, studentId) {
         var relevant = tasks.filter(function(t) {
+          if (!isTaskPublished(t)) return false;
           if (t.assignedTo === 'course') return t.assignedIds && t.assignedIds.indexOf(courseId) !== -1;
           if (t.assignedTo === 'student') return t.assignedIds && t.assignedIds.indexOf(studentId) !== -1;
           if (t.assignedTo === 'all') return !t.teacherId;
@@ -511,6 +513,7 @@ function updateAdminStats() {
 
         var assigned = 0;
         tasks.forEach(function(t) {
+          if (!isTaskPublished(t)) return;
           if (t.assignedTo === 'all' || (t.assignedTo === 'specific' && (t.assignedIds || []).indexOf(studentId) !== -1)) assigned++;
         });
         var subCount = Object.keys(taskSubmissions).filter(function(k) { return k.split('-')[1] == studentId; }).length;

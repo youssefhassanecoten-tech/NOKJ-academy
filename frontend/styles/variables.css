@@ -15,6 +15,28 @@
       --danger: #dc2626;
       --radius: 18px;
       --shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+
+      /* Marketing + auth surfaces. These pages sit on full-bleed colour, so
+         they need their own tokens instead of reusing panel variables. */
+      --hero-from: #f0f4ff;
+      --hero-to: #e8edff;
+      --hero-ink: #182033;
+      --hero-muted: #5b6478;
+      --hero-surface: rgba(255, 255, 255, 0.8);
+      --hero-line: rgba(24, 32, 51, 0.08);
+      --auth-from: #312e81;
+      --auth-via: #4f46e5;
+      --auth-to: #7c3aed;
+      --auth-ink: #ffffff;
+      --auth-ink-soft: rgba(255, 255, 255, 0.82);
+      --auth-control: rgba(255, 255, 255, 0.15);
+      --auth-control-hover: rgba(255, 255, 255, 0.26);
+      --auth-control-line: rgba(255, 255, 255, 0.32);
+      --auth-option-ink: #0f172a;
+      --auth-option-bg: #ffffff;
+      /* Referenced by auth.css and modals.css with a light fallback. Defining
+         it here makes the tint follow the active theme instead. */
+      --primary-faint: #eef2ff;
     }
 
     /* admin = purple (default) */
@@ -40,12 +62,48 @@
       --white: #1b2230;
       --shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
     }
+    body.theme-dark {
+      --hero-from: #161b28;
+      --hero-to: #1b2130;
+      --hero-ink: #e7ecf3;
+      --hero-muted: #9aa6b6;
+      --hero-surface: rgba(27, 34, 48, 0.82);
+      --hero-line: rgba(231, 236, 243, 0.1);
+      --auth-from: #0b0f18;
+      --auth-via: #151b2b;
+      --auth-to: #241a3d;
+      --auth-ink: #e7ecf3;
+      --auth-ink-soft: rgba(231, 236, 243, 0.8);
+      --auth-control: rgba(231, 236, 243, 0.12);
+      --auth-control-hover: rgba(231, 236, 243, 0.2);
+      --auth-control-line: rgba(231, 236, 243, 0.26);
+      --auth-option-ink: #e7ecf3;
+      --auth-option-bg: #1b2230;
+      --primary-faint: #232b46;
+    }
     body.theme-dark[data-theme='admin'] { --primary-light: #3730a333; }
     body.theme-dark[data-theme='student'] { --primary-light: #1d4ed833; }
     body.theme-dark[data-theme='teacher'] { --primary-light: #991b1b33; }
 
     /* ==== SOFT THEME (warm sepia at ~65% brightness) ==== */
     body.theme-soft {
+      --hero-from: #d9d2ba;
+      --hero-to: #cfc6ab;
+      --hero-ink: #231f16;
+      --hero-muted: #5d5646;
+      --hero-surface: rgba(246, 242, 230, 0.86);
+      --hero-line: rgba(35, 31, 22, 0.12);
+      --auth-from: #4a4132;
+      --auth-via: #6b5f47;
+      --auth-to: #8a7c5e;
+      --auth-ink: #f6f2e6;
+      --auth-ink-soft: rgba(246, 242, 230, 0.86);
+      --auth-control: rgba(246, 242, 230, 0.18);
+      --auth-control-hover: rgba(246, 242, 230, 0.28);
+      --auth-control-line: rgba(246, 242, 230, 0.34);
+      --auth-option-ink: #231f16;
+      --auth-option-bg: #f6f2e6;
+      --primary-faint: #e9e2cd;
       --ink: #231f16;
       --muted: #6f6855;
       --line: #a2967d;

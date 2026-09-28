@@ -12,6 +12,7 @@
         var assigned = tasks.filter(function(t) {
           if (currentUser.role === 'Admin') return true;
           if (currentUser.role === 'Teacher') return true;
+          if (!isTaskPublished(t)) return false;
           var enrolledCourseIds = getEnrolledCourseIds(currentUser.id);
           if (t.courseId && enrolledCourseIds.indexOf(t.courseId) === -1) return t.assignedTo === 'all';
           if (t.assignedTo === 'specific') return (t.assignedIds || []).indexOf(currentUser.id) !== -1;

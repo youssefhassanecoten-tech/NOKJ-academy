@@ -703,6 +703,8 @@ const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
         document.getElementById('task-modal-overlay').classList.remove('open');
       });
 
+      bindTaskDesigner();
+
       document.getElementById('task-search').addEventListener('input', debounce(renderTasks, 180));
       document.getElementById('task-type-filter').addEventListener('change', renderTasks);
       document.getElementById('task-status-filter').addEventListener('change', renderTasks);
@@ -893,6 +895,24 @@ const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
       });
 
       document.getElementById('admin-task-list').addEventListener('click', function(e) {
+        var editTarget = e.target.closest('[data-edit]');
+        if (editTarget) {
+          openTaskDesigner(parseInt(editTarget.getAttribute('data-edit'), 10));
+          return;
+        }
+        var deployTarget = e.target.closest('[data-deploy]');
+        if (deployTarget) {
+          var deployId = parseInt(deployTarget.getAttribute('data-deploy'), 10);
+          var draft = tasks.find(function(t) { return t.id === deployId; });
+          if (draft && canManageTaskById(deployId)) {
+            setTaskPublished(draft, true);
+            saveData();
+            renderTasks();
+            alert(tr('Task deployed to students!'));
+            setLanguage(currentLang);
+          }
+          return;
+        }
         var target = e.target.closest('.delete');
         if (target && target.dataset.type === 'task') {
           var taskId = parseInt(target.dataset.id);

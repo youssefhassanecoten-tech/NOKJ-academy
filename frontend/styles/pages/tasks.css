@@ -211,3 +211,243 @@
       margin-top: 4px;
     }
 
+    /* === TASK DESIGNER (teacher-only) === */
+    .task-designer {
+      margin-top: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .task-designer-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--divider);
+      background: var(--divider);
+    }
+    .task-designer-head h2 {
+      margin: 0 0 4px 0;
+      font-size: 18px;
+    }
+    .task-designer-head .sub {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .task-designer-close {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .task-designer-close:hover {
+      background: var(--line);
+      color: var(--ink);
+    }
+    .task-designer-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(240px, 0.85fr);
+      gap: 22px;
+      padding: 20px;
+    }
+    .task-designer-main > label,
+    .task-designer-side > label {
+      display: block;
+      margin: 0 0 6px 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .task-designer-main input,
+    .task-designer-main select,
+    .task-designer-main textarea,
+    .task-designer-side input {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+    .task-designer-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .task-designer-row label {
+      display: block;
+      margin: 0 0 6px 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .task-designer-assign-options {
+      display: grid;
+      gap: 6px;
+      max-height: 190px;
+      overflow-y: auto;
+      margin: -6px 0 16px 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--input-bg);
+    }
+    .task-d-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .task-d-check input {
+      width: auto;
+      margin: 0;
+      flex-shrink: 0;
+    }
+    .task-d-empty {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .task-designer-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 4px 0 12px 0;
+    }
+    .task-d-question {
+      padding: 14px;
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--input-bg);
+    }
+    .task-d-q-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    .task-d-q-head select {
+      width: auto;
+      margin: 0;
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    .task-d-q-remove {
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .task-d-q-remove:hover {
+      background: var(--line);
+      color: var(--danger);
+    }
+    .task-d-q-text {
+      margin-bottom: 10px !important;
+    }
+    .task-d-options {
+      display: grid;
+      gap: 8px;
+    }
+    .task-d-option-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .task-d-radio {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+      width: 46px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .task-d-option-row input[type="text"] {
+      margin: 0;
+    }
+    .task-designer-side {
+      align-self: start;
+      padding: 16px;
+      border: 1px solid var(--divider);
+      border-radius: 14px;
+      background: var(--divider);
+    }
+    .task-designer-files {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .task-d-file {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--white);
+      font-size: 12px;
+      color: var(--ink);
+    }
+    .task-d-file span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .task-d-file-remove {
+      flex-shrink: 0;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .task-designer-actions {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .task-designer-actions button {
+      width: 100%;
+    }
+    .task-designer-hint {
+      margin: 0;
+      font-size: 11.5px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    .task-state-badge {
+      align-self: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .task-state-badge.draft {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+    }
+    .task-state-badge.live {
+      background: transparent;
+      color: var(--success);
+    }
+    .action-btn.deploy {
+      color: var(--success);
+    }

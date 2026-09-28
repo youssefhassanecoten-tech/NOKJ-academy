@@ -346,8 +346,91 @@
             <input type="text" id="task-search" placeholder="Search tasks..." />
             <select id="task-type-filter"><option value="all">All Types</option><option value="homework">Homework</option><option value="test">Test</option><option value="assignment">Assignment</option></select>
             <select id="task-status-filter"><option value="all">All Status</option><option value="pending">Pending</option><option value="submitted">Submitted</option><option value="graded">Graded</option></select>
-            <button class="primary-button" id="add-task-btn">+ Add Task</button>
+            <button class="primary-button" id="open-task-designer-btn" data-i18n="Task Designer"><span aria-hidden="true">🎨</span> Task Designer</button>
+            <button class="secondary-button" id="add-task-btn">+ Add Task</button>
           </div>
+
+          <div class="task-designer" id="task-designer-panel" style="display:none;">
+            <div class="task-designer-head">
+              <div>
+                <h2 id="task-designer-title">Design a Task</h2>
+                <p class="sub" id="task-designer-sub">Build your task, then save it as a draft or deploy it to students.</p>
+              </div>
+              <button type="button" class="task-designer-close" id="task-designer-close" aria-label="Close">✕</button>
+            </div>
+
+            <div class="task-designer-grid">
+              <div class="task-designer-main">
+                <label for="task-d-title" data-i18n="Task Title">Task Title</label>
+                <input type="text" id="task-d-title" placeholder="Enter task title" />
+
+                <div class="task-designer-row">
+                  <div>
+                    <label for="task-d-type" data-i18n="Task Type">Task Type</label>
+                    <select id="task-d-type">
+                      <option value="homework">Homework</option>
+                      <option value="test">Test</option>
+                      <option value="assignment">Assignment</option>
+                      <option value="interactive">Interactive Test</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="task-d-priority" data-i18n="Priority">Priority</label>
+                    <select id="task-d-priority">
+                      <option value="low">Low</option>
+                      <option value="medium" selected>Medium</option>
+                      <option value="high">High</option>
+                    </select>
+                  </div>
+                </div>
+
+                <label for="task-d-description" data-i18n="Description">Description</label>
+                <textarea id="task-d-description" placeholder="Describe the task..."></textarea>
+
+                <div class="task-designer-row">
+                  <div>
+                    <label for="task-d-deadline" data-i18n="Deadline">Deadline</label>
+                    <input type="date" id="task-d-deadline" />
+                  </div>
+                  <div>
+                    <label for="task-d-assign" data-i18n="Assign To">Assign To</label>
+                    <select id="task-d-assign">
+                      <option value="all">All Students</option>
+                      <option value="course">Course</option>
+                      <option value="student">Student</option>
+                    </select>
+                  </div>
+                </div>
+                <div id="task-d-assign-options" class="task-designer-assign-options" style="display:none;"></div>
+
+                <div id="task-d-questions" style="display:none;">
+                  <div class="task-designer-section-head">
+                    <strong data-i18n="Questions">Questions</strong>
+                    <button type="button" class="primary-button" id="task-d-add-question" style="padding:4px 12px;font-size:12px;">+ Add Question</button>
+                  </div>
+                  <div id="task-d-questions-list"></div>
+                </div>
+              </div>
+
+              <div class="task-designer-side">
+                <label data-i18n="Attach Files">Attach Files</label>
+                <div class="file-input-wrapper">
+                  <label for="task-d-file-input">📎 Choose Files</label>
+                  <input type="file" id="task-d-file-input" multiple />
+                </div>
+                <div id="task-d-files" class="task-designer-files"></div>
+
+                <div class="task-designer-actions">
+                  <button type="button" class="secondary-button" id="task-d-cancel" data-i18n="Cancel">Cancel</button>
+                  <button type="button" class="secondary-button" id="task-d-save" data-i18n="Save only"><span aria-hidden="true">💾</span> Save only</button>
+                  <button type="button" class="primary-button" id="task-d-deploy" data-i18n="Save and deploy"><span aria-hidden="true">🚀</span> Save and deploy</button>
+                </div>
+                <p class="task-designer-hint">💾 <strong>Save only</strong> keeps the task as a private draft.
+                  🚀 <strong>Save and deploy</strong> publishes it straight to your students.</p>
+              </div>
+            </div>
+          </div>
+
           <div class="task-grid" id="admin-task-list"></div>
         </div>
 
@@ -407,7 +490,7 @@
 
       <!-- ===== APPLICATIONS (TEACHER + ENROLLMENT) ===== -->
       <section class="page" id="approvals">
-        <div class="heading"><h1>Applications</h1><p>Review and approve or refuse teacher and student enrollment requests.</p></div>
+        <div class="heading"><h1>Applications</h1><p id="approvals-subheading">Review and approve or refuse teacher and student enrollment requests.</p></div>
         <div id="teacher-authkey-section" style="display:none;margin-bottom:26px;">
           <h3 style="margin:0 0 10px;">Teacher Authorisation Keys</h3>
           <div class="table-container">
@@ -1251,6 +1334,7 @@
   <script src="scripts/modules/budget.js" defer></script>
   <script src="scripts/modules/grades.js" defer></script>
   <script src="scripts/modules/tasks.js" defer></script>
+  <script src="scripts/modules/task-designer.js" defer></script>
   <script src="scripts/modules/tests.js" defer></script>
 <script src="scripts/modules/files.js" defer></script>
   <script src="scripts/modules/announcements.js" defer></script>

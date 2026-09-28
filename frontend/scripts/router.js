@@ -39,5 +39,8 @@
         if (pageName === 'classroom') renderMeetings();
         if (pageName === 'approvals') { renderApprovals(); renderTeacherAuthKeys(); }
         if (pageName === 'course-workspace') renderCourseStudio();
+        // A teacher reaches Grades from their dashboard, and it was only ever
+        // rendered for an admin at sign-in, so the table has to be drawn here.
+        if (pageName === 'grades') renderGrades();
         setLanguage(currentLang);
       }

@@ -97,13 +97,28 @@ function seedStorage(role) {
     { id: 7, title: 'Course test', type: 'test', courseId: 5, teacherId: 1, published: true, description: 'A test', deadline: soon, createdAt: past, blocks: [], questions: [{ text: 'Q1', type: 'mcq', options: ['a', 'b'], correct: 0 }] }
   ];
 
+  // Two courses so a student enrolled in more than one can be exercised: the
+  // grades table is one row per student with a per-course breakdown.
+  const course2 = {
+    id: 6, name: 'Statistics', teacherId: 1, emoji: '📊', code: 'STA-201',
+    description: 'Data and averages.', published: true, status: 'active',
+    createdAt: now.split('T')[0], updatedAt: now.split('T')[0],
+    modules: [{ id: 601, title: 'Averages', published: true, order: 0, description: 'Mean and median', lessons: [
+      { id: 6011, title: 'Mean', body: '<p>Add them up, divide by how many.</p>', published: true, order: 0, type: 'text' }
+    ] }],
+    materials: []
+  };
+
   const store = {
     'nokj-user': JSON.stringify(role === 'admin' ? admin : role === 'teacher' ? teacher : s1),
     'nokj-teachers': JSON.stringify([teacher]),
     'nokj-admins': JSON.stringify([admin]),
     'nokj-students': JSON.stringify([s1, s2]),
-    'nokj-courses': JSON.stringify([course]),
-    'nokj-enrollments': JSON.stringify([{ courseId: 5, studentId: 10 }, { courseId: 5, studentId: 11 }]),
+    'nokj-courses': JSON.stringify([course, course2]),
+    'nokj-enrollments': JSON.stringify([
+      { courseId: 5, studentId: 10 }, { courseId: 5, studentId: 11 },
+      { courseId: 6, studentId: 10 }
+    ]),
     'nokj-tasks': JSON.stringify(tasks),
     // A submission from the second student on task 1, so the teacher review
     // modal has something real to render. The first student's block task is
@@ -508,6 +523,51 @@ console.log('== Teacher portal ==');
   const ownOnly = win.document.getElementById('studio-course-list').textContent;
   check('a teacher sees only their own course', /Geometry/.test(ownOnly), ownOnly.slice(0, 100));
 
+  // Grades: one row per student, expanding to that student's courses.
+  win.openPage('grades');
+  const gtbody = win.document.getElementById('grade-table-body');
+  const studentRows = gtbody.querySelectorAll('tr.grade-student-row');
+  const courseRows = gtbody.querySelectorAll('tr.grade-course-row');
+  check('grades lists one row per student', studentRows.length === 2, 'student rows=' + studentRows.length);
+  check('grades has a course row per enrolment', courseRows.length === 3, 'course rows=' + courseRows.length);
+  check('the course rows start collapsed', Array.from(courseRows).every(r => r.classList.contains('hidden')),
+    'rows open on load');
+  const firstExpander = gtbody.querySelector('[data-grade-expand]');
+  check('a student row has an expander', !!firstExpander);
+  if (firstExpander) {
+    const gid = firstExpander.dataset.gradeExpand;
+    firstExpander.click();
+    const mine = gtbody.querySelectorAll('tr.grade-course-row[data-grade-for="' + gid + '"]');
+    check('clicking a student reveals their courses', mine.length > 0 && Array.from(mine).every(r => !r.classList.contains('hidden')),
+      'revealed=' + mine.length);
+    check('the expander reports its state', firstExpander.getAttribute('aria-expanded') === 'true');
+    firstExpander.click();
+    check('clicking again collapses it', Array.from(mine).every(r => r.classList.contains('hidden')));
+  }
+  check('each course row keeps a grade input', gtbody.querySelectorAll('tr.grade-course-row input.grade-input').length === 3,
+    'inputs=' + gtbody.querySelectorAll('tr.grade-course-row input.grade-input').length);
+  // Saving from a nested row must still work through the existing delegation.
+  const nestedSave = gtbody.querySelector('tr.grade-course-row .save-grade-btn');
+  check('a nested course row has a save button', !!nestedSave);
+  if (nestedSave) {
+    nestedSave.closest('tr').classList.remove('hidden');
+    const ginput = win.document.getElementById('grade-input-' + nestedSave.dataset.student + '-' + nestedSave.dataset.course);
+    if (ginput) ginput.value = '77';
+    nestedSave.click();
+    const stored = JSON.parse(win.localStorage.getItem('nokj-grades') || '{}');
+    const gkey = nestedSave.dataset.student + '-' + nestedSave.dataset.course;
+    check('saving from the nested row stores the grade', stored[gkey] === 77, JSON.stringify(stored));
+  }
+  // Grades must be scoped: a teacher sees their own courses, not everyone's.
+  const otherCourses = JSON.parse(win.localStorage.getItem('nokj-courses'));
+  otherCourses.push({ id: 78, name: 'Someone Elses Subject', teacherId: 99, published: true, status: 'active', modules: [], materials: [] });
+  win.localStorage.setItem('nokj-courses', JSON.stringify(otherCourses));
+  win.loadData();
+  win.openPage('grades');
+  const filterText = win.document.getElementById('grade-course-filter').textContent;
+  check('a teacher is only offered their own courses in Grades', !/Someone Elses Subject/.test(filterText), filterText.slice(0, 140));
+  check('a teacher still sees their own course in Grades', /Geometry/.test(filterText), filterText.slice(0, 140));
+
   win.openPage('course-workspace');
   check('studio opens', activePage(win) === 'course-workspace', activePage(win));
   const studio = win.document.getElementById('course-workspace');
@@ -597,10 +657,10 @@ console.log('== Teacher portal ==');
 
   // Ownership: the teacher must not manage another teacher's course.
   const other = JSON.parse(win.localStorage.getItem('nokj-courses'));
-  other.push({ id: 6, name: 'Not mine', teacherId: 99, published: true, status: 'active', modules: [], materials: [] });
+  other.push({ id: 77, name: 'Not mine', teacherId: 99, published: true, status: 'active', modules: [], materials: [] });
   win.localStorage.setItem('nokj-courses', JSON.stringify(other));
   win.loadData && win.loadData();
-  check('teacher cannot open another course in the studio', win.canManageCourse(6) === false);
+  check('teacher cannot open another course in the studio', win.canManageCourse(77) === false);
 
   // The submissions review and the basic test form used to hang off the
   // removed pages, so they must be reachable from the course sections.

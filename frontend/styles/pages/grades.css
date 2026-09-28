@@ -65,3 +65,52 @@
       font-size: 12px;
     }
 
+    /* === STUDENT > COURSES EXPANDER ===
+       One row per student; opening it reveals that student's courses and the
+       grade for each, so a teacher can drill in without losing the overview. */
+    .grade-expand-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 6px 4px 2px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: left;
+      min-height: 34px;
+    }
+    .grade-expand-btn:hover {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+    .grade-caret {
+      display: inline-block;
+      width: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      transition: transform 0.15s ease;
+    }
+    .grade-student-row {
+      background: var(--white);
+    }
+    .grade-student-row td {
+      border-bottom: 0;
+    }
+    .grade-student-row.open td {
+      border-bottom: 0;
+    }
+    .grade-course-row {
+      background: #f8fafc;
+    }
+    .grade-course-row.hidden {
+      display: none;
+    }
+    .grade-course-indent {
+      width: 22px;
+      border-left: 2px solid var(--primary-light);
+    }
+

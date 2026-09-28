@@ -352,6 +352,8 @@
       });
 
       document.getElementById('grade-table-body').addEventListener('click', function(e) {
+        var expander = e.target.closest('[data-grade-expand]');
+        if (expander) { toggleGradeStudent(expander.dataset.gradeExpand); return; }
         var target = e.target.closest('button');
         if (!target) return;
         if (target.classList.contains('save-grade-btn')) {

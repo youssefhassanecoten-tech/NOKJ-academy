@@ -438,6 +438,7 @@ const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
       });
       document.addEventListener('change', function(e) {
         var tok = e.target.closest('#github-token-input');
+        // Held in memory only; the field is never re-rendered with its value.
         if (tok) saveGithubToken(tok.value.trim());
       });
 

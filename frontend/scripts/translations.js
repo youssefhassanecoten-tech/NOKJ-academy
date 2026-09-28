@@ -720,6 +720,7 @@
           'Create your first course': 'Создайте первый курс',
           'Course materials': 'Материалы курса',
           'Join with a course code': 'Присоединиться по коду курса',
+          'GitHub token (this session only)': 'Токен GitHub (только для этой сессии)',
           'Private courses can only be joined with the code your teacher gives you.': 'К закрытым курсам можно присоединиться только по коду, который даёт преподаватель.',
           'Please enter a course code.': 'Введите код курса.',
           'No course matches that code.': 'Курс с таким кодом не найден.',

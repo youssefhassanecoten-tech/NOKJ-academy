@@ -385,12 +385,21 @@ function updateAdminStats() {
         localStorage.setItem('nokj-dev-feedback', JSON.stringify(list));
       }
 
+      // The token lives in memory for the current page only. It used to be
+      // written to localStorage in clear text and echoed back into the DOM on
+      // every dashboard render, which left a repo-scoped PAT readable by any
+      // script on the page and surviving on shared machines.
+      var nokjGithubToken = '';
+      // Drop any token written by an earlier version that persisted it.
+      try { localStorage.removeItem('nokj-github-token'); } catch (e) { /* storage disabled */ }
+
       function getGithubToken() {
-        return localStorage.getItem('nokj-github-token') || '';
+        return nokjGithubToken;
       }
 
       function saveGithubToken(token) {
-        localStorage.setItem('nokj-github-token', token);
+        nokjGithubToken = String(token || '').trim();
+        return nokjGithubToken;
       }
 
       function renderDeveloperFeedback() {
@@ -400,7 +409,7 @@ function updateAdminStats() {
           '<div class="feedback-compose"><input id="feedback-input" placeholder="' + tr('Write your feedback or request a feature...') + '" />' +
           '<button class="primary-button" id="feedback-submit">' + tr('Post') + '</button></div>' +
           '<div class="feedback-tools"><button class="secondary-button" id="feedback-refresh">⟳ ' + tr('Refresh GitHub') + '</button>' +
-          '<input class="github-token-input" id="github-token-input" type="password" placeholder="' + tr('GitHub token (optional)') + '" value="' + escapeHtml(getGithubToken()) + '" />' +
+          '<input class="github-token-input" id="github-token-input" type="password" placeholder="' + tr('GitHub token (this session only)') + '" />' +
           '<span class="feedback-status" id="feedback-status"></span></div>' +
           '<div class="feedback-list" id="feedback-list"></div>' +
           '</div>';

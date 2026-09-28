@@ -13,6 +13,8 @@
     "dev:api": "npm run dev --workspace backend",
     "start": "npm run start --workspace backend",
     "test": "node tests/run-tests.cjs",
+    "test:live": "node tests/run-live.cjs",
+    "test:all": "node tests/run-tests.cjs && node tests/run-live.cjs",
     "lint": "node tests/meta/lint.cjs",
     "build": "npm run build --workspace backend",
     "db:init": "npm run db:init --workspace backend"

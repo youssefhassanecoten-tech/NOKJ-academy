@@ -90,6 +90,241 @@ console.log('== Landing/entry markers ==');
 check('index.html loads app.js', html.includes('scripts/app.js'), '');
 check('index.html has styles/variables.css', html.includes('styles/variables.css'), '');
 
+console.log('== Course section merge ==');
+const studioJs = fs.readFileSync(path.join(SCRIPTS_DIR, 'modules', 'studio.js'), 'utf8');
+const routerJs = fs.readFileSync(path.join(SCRIPTS_DIR, 'router.js'), 'utf8');
+const courseWorkJs = fs.readFileSync(path.join(SCRIPTS_DIR, 'modules', 'course-work.js'), 'utf8');
+const suiteJs = fs.readFileSync(path.join(ROOT, 'frontend', 'suite', 'suite.js'), 'utf8');
+const suiteHtml = fs.readFileSync(path.join(ROOT, 'frontend', 'suite', 'index.html'), 'utf8');
+
+for (const pane of ['lessons', 'material', 'assignments', 'tests']) {
+  check('studio pane ' + pane, html.includes('id="studio-pane-' + pane + '"'), '');
+  check('studio tab ' + pane, html.includes('data-studio-tab="' + pane + '"'), '');
+}
+// The old curriculum/library split must not come back.
+check('studio has no curriculum tab', !html.includes('data-studio-tab="curriculum"'), '');
+check('studio has no library tab', !html.includes('data-studio-tab="library"'), '');
+check('studio tabs array matches markup', studioJs.includes("'lessons', 'material', 'assignments', 'tests', 'settings', 'analytics'"), '');
+
+check('standalone pages left the nav', !html.includes('data-page="tasks"') && !html.includes('data-page="tests"') && !html.includes('data-page="assignments"'), '');
+check('router redirects merged pages to courses', /MERGED_PAGES = \['assignments', 'tasks', 'tests'\]/.test(routerJs) && /MERGED_PAGES\.indexOf\(pageName\) !== -1\) pageName = 'courses'/.test(routerJs), '');
+// Rendered buttons are delegated through openPage too, so they must not aim
+// at the merged pages either.
+const staleLinks = [];
+for (const f of jsFiles) {
+  const src = fs.readFileSync(f, 'utf8');
+  for (const m of src.matchAll(/data-page=[\"']?(tasks|tests|assignments)[\"']?/g)) {
+    staleLinks.push(path.relative(ROOT, f) + ' -> ' + m[0]);
+  }
+  for (const m of src.matchAll(/searchItem\(['"](tasks|tests|assignments)['"]/g)) {
+    staleLinks.push(path.relative(ROOT, f) + ' -> ' + m[0]);
+  }
+}
+check('no rendered link points at a merged page', staleLinks.length === 0, staleLinks.join(' | '));
+
+check('build method chooser in markup', html.includes('id="build-method-overlay"') && html.includes('id="build-method-basic"') && html.includes('id="build-method-suite"'), '');
+check('studio renders the three work sections', /renderStudioWorkList\('material'\)/.test(studioJs) && /'studio-test-list'/.test(studioJs) && /'studio-assignment-list'/.test(studioJs), '');
+check('studio opens the suite with course context', /suite\/index\.html\?course=/.test(studioJs), '');
+
+check('course-work script loaded', html.includes('scripts/modules/course-work.js'), '');
+const blockScripts = ['task-blocks.js', 'task-blocks-core.js', 'task-blocks-geo.js', 'task-blocks-math.js', 'task-blocks-english.js'];
+const courseWorkPos = html.indexOf('scripts/modules/course-work.js');
+check('course-work loads after every block module', blockScripts.every(s => html.indexOf('scripts/modules/' + s) < courseWorkPos), '');
+check('student course view binds course work', /bindStudentCourseWork\(container\)/.test(fs.readFileSync(path.join(SCRIPTS_DIR, 'modules', 'courses.js'), 'utf8')), '');
+
+check('suite reads course from the query string', /params\.get\('course'\)/.test(suiteJs) && /params\.get\('kind'\)/.test(suiteJs), '');
+check('suite writes tests to nokj-tests', /writeTests\(list\)/.test(suiteJs) && /isTestDoc\(\) \? writeTests/.test(suiteJs), '');
+check('suite refuses another teacher course', /belongs to another teacher/.test(suiteJs), '');
+check('suite has a course context bar', suiteHtml.includes('id="suite-context"') && suiteHtml.includes('id="suite-back"'), '');
+check('suite blocks land in the course', /SUITE\.doc\.courseId = SUITE\.courseId/.test(suiteJs) && /SUITE\.doc\.assignedIds = \[SUITE\.courseId\]/.test(suiteJs), '');
+check('course work grades blocks on submit', /collectTaskAnswers\(host, item\.blocks\)/.test(courseWorkJs) && /gradeTaskAnswers\(item\.blocks, answers\)/.test(courseWorkJs), '');
+check('course work keeps the teacher grade', /`grade` is left alone/.test(courseWorkJs), '');
+check('course work tears blocks down', /stopStudentCourseWork/.test(courseWorkJs) && /stopTaskBlocks\(host\)/.test(courseWorkJs), '');
+
+console.log('== Block grading round trip (vm) ==');
+const vmRoundTrip = (() => {
+  try {
+    const vm = require('vm');
+    const context = vm.createContext({ window: {}, document: { getElementById: () => null } });
+    for (const s of ['task-blocks.js', 'task-blocks-core.js']) {
+      vm.runInContext(fs.readFileSync(path.join(SCRIPTS_DIR, 'modules', s), 'utf8'), context);
+    }
+    const out = vm.runInContext(`(function () {
+      var b = makeBlock('mcq');
+      b.props.question = '2 + 2?';
+      b.props.options = ['3', '4'];
+      b.props.correct = 1;
+      var right = gradeTaskAnswers([b], { [b.id]: 1 });
+      var wrong = gradeTaskAnswers([b], { [b.id]: 0 });
+      var blank = gradeTaskAnswers([b], {});
+      return JSON.stringify({
+        type: b.type, points: b.points,
+        right: right.score, wrong: wrong.score, blank: blank.score, max: right.max,
+        detail: !!right.detail[b.id]
+      });
+    })()`, context);
+    return JSON.parse(out);
+  } catch (err) {
+    return { error: err.message };
+  }
+})();
+check('block registry evaluates', !vmRoundTrip.error, vmRoundTrip.error || '');
+check('mcq block grades a correct answer', vmRoundTrip.right === vmRoundTrip.max, JSON.stringify(vmRoundTrip));
+check('mcq block grades a wrong answer as zero', vmRoundTrip.wrong === 0, JSON.stringify(vmRoundTrip));
+check('mcq block grades a blank answer as zero', vmRoundTrip.blank === 0, JSON.stringify(vmRoundTrip));
+check('mcq block carries a default point value', vmRoundTrip.points > 0, JSON.stringify(vmRoundTrip));
+check('grading returns per-block detail', vmRoundTrip.detail === true, JSON.stringify(vmRoundTrip));
+
+console.log('== Student course sections (vm) ==');
+// A small data world plus just enough DOM to render the three work sections
+// and run one block submission end to end.
+const vmStudent = (() => {
+  try {
+    const vm = require('vm');
+    const storage = {};
+    const doc = {
+      _byId: {},
+      getElementById(id) { return this._byId[id] || null; },
+      createElement() { return { className: '', textContent: '', style: {}, dataset: {}, addEventListener() {}, appendChild() {} }; },
+      querySelector() { return null; },
+      querySelectorAll() { return []; },
+      addEventListener() {}
+    };
+    const sandbox = {
+      console,
+      currentLang: 'en',
+      setLanguage() {},
+      storeGet() { return null; },
+      storeSet() {},
+      localStorage: { getItem: k => (k in storage ? storage[k] : null), setItem: (k, v) => { storage[k] = String(v); }, removeItem: k => { delete storage[k]; } },
+      sessionStorage: { getItem: () => null, setItem() {}, removeItem() {} },
+      document: doc,
+      window: { scrollY: 0, scrollX: 0, location: { search: '' } },
+      alert() {},
+      confirm() { return true; },
+      prompt() { return null; },
+      setTimeout, clearTimeout, setInterval, clearInterval, Date, Math, JSON,
+      URLSearchParams
+    };
+    sandbox.window.localStorage = sandbox.localStorage;
+    sandbox.globalThis = sandbox;
+    const context = vm.createContext(sandbox);
+
+    const run = f => vm.runInContext(fs.readFileSync(f, 'utf8'), context);
+    const m = n => path.join(SCRIPTS_DIR, 'modules', n);
+    // utils.js first: the section filters under test live there, so the real
+    // implementation is what gets exercised rather than a stand-in.
+    run(path.join(SCRIPTS_DIR, 'utils.js'));
+    run(m('task-blocks.js'));
+    run(m('task-blocks-core.js'));
+    run(m('course-work.js'));
+
+    const out = vm.runInContext(`(function () {
+      // --- arrange: a student in a course with one block task and one draft ---
+      var b = makeBlock('mcq');
+      b.props.question = '2 + 2?';
+      b.props.options = ['3', '4'];
+      b.props.correct = 1;
+      currentUser = { id: 7, role: 'Student' };
+      // The rest of the academy data set, so the real saveData() can snapshot
+      // normally. These are the exact globals NOKJ_STORE_READERS reads.
+      students = [{ id: 7, name: 'Stu' }];
+      teachers = [{ id: 1, name: 'Tea' }];
+      admins = [];
+      courses = [{ id: 5, name: 'Course', teacherId: 1 }];
+      enrollments = [{ courseId: 5, studentId: 7 }];
+      gradeData = [];
+      budgetEntries = [];
+      announcements = [];
+      pendingTeachers = [];
+      enrollRequests = [];
+      courseRequests = [];
+      courseMaterials = [];
+      teacherAuthKeys = [];
+      lessonProgress = [];
+      meetings = [];
+      tasks = [
+        { id: 1, title: 'Interactive task', type: 'interactive', courseId: 5, assignedTo: 'course', assignedIds: [5], published: true, blocks: [b] },
+        { id: 2, title: 'Assignment', type: 'assignment', courseId: 5, assignedTo: 'course', assignedIds: [5], published: true, blocks: [] },
+        { id: 3, title: 'Draft task', type: 'homework', courseId: 5, assignedTo: 'course', assignedIds: [5], published: false, blocks: [] },
+        { id: 4, title: 'Other course', type: 'homework', courseId: 9, assignedTo: 'course', assignedIds: [9], published: true, blocks: [] }
+      ];
+      tests = [];
+      taskSubmissions = {};
+      testSubmissions = {};
+      function teacherEnrolledStudentIds() { return [7]; }
+      tr = function(s) { return s; };
+      escapeHtml = function(s) { return String(s); };
+      getEnrolledCourseIds = function() { return [5]; };
+      isTaskPublished = function(t) { return !!t && t.published !== false; };
+      isTaskDraft = function(t) { return !!t && t.published === false; };
+      var alerts = [];
+      // --- act: render each section ---
+      var material = renderStudentCourseWork(5, 'material');
+      var assignments = renderStudentCourseWork(5, 'assignments');
+      var testsHtml = renderStudentCourseWork(5, 'tests');
+
+      // --- act: submit the block task through the real code path ---
+      // The stub host mirrors the real rendered shape: the collector looks for
+      // [data-tb-id="<id>"] .tb-block-body and the mcq collector then looks for
+      // the checked radio inside it.
+      var blockBody = {
+        querySelector: function(sel) { return sel === 'input:checked' ? { value: '1' } : null; },
+        querySelectorAll: function() { return []; }
+      };
+      var host = {
+        dataset: { mounted: '1', item: '1' },
+        innerHTML: '',
+        querySelector: function(sel) {
+          if (sel === '[data-tb-id="' + b.id + '"] .tb-block-body') return blockBody;
+          return null;
+        },
+        querySelectorAll: function() { return []; }
+      };
+      var originalGet = document.getElementById;
+      document.getElementById = function(id) { return id === 'cw-host-material-1' ? host : null; };
+      submitCourseWork(1, 'material', 'cw-host-material-1');
+      document.getElementById = originalGet;
+      var sub = taskSubmissions['1-7'];
+
+      // saveData() is the real one, so persistence shows up in the snapshot.
+      var snap = null;
+      try { snap = JSON.parse(localStorage.getItem('nokj-db-snapshot')); } catch (e) { snap = null; }
+      var snapSub = snap && snap.taskSubmissions ? snap.taskSubmissions['1-7'] : null;
+
+      return JSON.stringify({
+        materialHasTask: material.indexOf('Interactive task') !== -1,
+        materialHasDraft: material.indexOf('Draft task') !== -1,
+        materialHasOtherCourse: material.indexOf('Other course') !== -1,
+        materialHasHost: material.indexOf('cw-host-material-1') !== -1,
+        assignmentHasAssignment: assignments.indexOf('Assignment') !== -1,
+        assignmentHasTask: assignments.indexOf('Interactive task') !== -1,
+        testsEmpty: testsHtml.indexOf('No tests') !== -1,
+        snapshotWritten: !!snap,
+        snapshotHasSubmission: !!(snapSub && snapSub.score === 1),
+        score: sub && sub.score,
+        max: sub && sub.max,
+        hasBlockAnswers: !!(sub && sub.blockAnswers && sub.blockAnswers[b.id] === 1),
+        gradeUntouched: sub && sub.grade === null
+      });
+    })()`, context);
+    return JSON.parse(out);
+  } catch (err) {
+    return { error: err.message + '\n' + err.stack };
+  }
+})();
+check('student course sections evaluate', !vmStudent.error, vmStudent.error || '');
+check('material section shows a block task', vmStudent.materialHasTask === true, JSON.stringify(vmStudent));
+check('material section hides drafts', vmStudent.materialHasDraft === false, JSON.stringify(vmStudent));
+check('material section hides other courses', vmStudent.materialHasOtherCourse === false, JSON.stringify(vmStudent));
+check('material section mounts a block host', vmStudent.materialHasHost === true, JSON.stringify(vmStudent));
+check('assignments section shows only assignments', vmStudent.assignmentHasAssignment === true && vmStudent.assignmentHasTask === false, JSON.stringify(vmStudent));
+check('tests section reports empty', vmStudent.testsEmpty === true, JSON.stringify(vmStudent));
+check('block submit persists a snapshot', vmStudent.snapshotWritten === true && vmStudent.snapshotHasSubmission === true, JSON.stringify(vmStudent));
+check('block submit stores the graded score', vmStudent.score === 1 && vmStudent.max === 1, JSON.stringify(vmStudent));
+check('block submit stores per-block answers', vmStudent.hasBlockAnswers === true, JSON.stringify(vmStudent));
+check('block submit leaves the teacher grade alone', vmStudent.gradeUntouched === true, JSON.stringify(vmStudent));
+
 console.log('');
 console.log('Checks: ' + passed + ' passed, ' + failed + ' failed');
 if (failed > 0) process.exit(1);

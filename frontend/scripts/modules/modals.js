@@ -396,9 +396,14 @@
         if (courses.length === 0) html = '<p style="color:var(--muted);padding:20px;text-align:center;">No courses available.</p>';
         else courses.forEach(function(c) {
           var checked = enrolledIds.includes(c.id) ? 'checked' : '';
+          // A course at capacity can only stay checked if this student is in it.
+          var full = isCourseFull(c.id) && !checked;
+          var seats = c.capacity ? '<span class="pill warning">' + getCourseStudentCount(c.id) + ' / ' + c.capacity +
+            '</span>' : '';
           html += '<div class="enrollment-item"><input type="checkbox" id="enroll-course-' + c.id + '" value="' + c
-            .id + '" ' + checked + ' /><label for="enroll-course-' + c.id + '"><strong>' + c.name +
-            '</strong></label><span class="course-teacher">' + getTeacherName(c.teacherId) + '</span></div>';
+            .id + '" ' + checked + (full ? ' disabled' : '') + ' /><label for="enroll-course-' + c.id + '"><strong>' +
+            escapeHtml(c.name) + '</strong>' + (full ? ' <span class="pill danger">' + tr('Full') + '</span>' : '') +
+            '</label><span class="course-teacher">' + escapeHtml(getTeacherName(c.teacherId)) + '</span>' + seats + '</div>';
         });
         document.getElementById('enrollment-list').innerHTML = html;
         document.getElementById('enroll-modal-overlay').classList.add('open');
@@ -428,6 +433,15 @@
         var checkboxes = document.getElementById('enrollment-list').querySelectorAll('input[type="checkbox"]');
         var selectedIds = [];
         checkboxes.forEach(function(cb) { if (cb.checked) selectedIds.push(parseInt(cb.value)); });
+        // Re-check capacity at save time: the list may have gone stale.
+        var blocked = selectedIds.filter(function(id) {
+          var wasEnrolled = enrollments.some(function(e) { return e.studentId === enrollStudentId && e.courseId === id; });
+          return !wasEnrolled && isCourseFull(id);
+        });
+        if (blocked.length) {
+          alert(tr('These courses are already full: ') + blocked.map(getCourseName).join(', '));
+          return;
+        }
         enrollments = enrollments.filter(function(e) { return e.studentId !== enrollStudentId; });
         selectedIds.forEach(function(courseId) { enrollments.push({ studentId: enrollStudentId, courseId: courseId }); });
         saveData();
@@ -561,6 +575,15 @@
         if (!s) { refuseEnroll(id); return; }
         if (s.status !== 'Active') {
           alert(tr('This student cannot be enrolled while their status is Warning or Inactive.'));
+          return;
+        }
+        if (isCourseFull(r.courseId)) {
+          alert(tr('This course is full.'));
+          return;
+        }
+        // A private course is invite-only, so it is never granted by approval.
+        if (!isCoursePublic(r.courseId)) {
+          alert(tr('This course is invite-only. Refuse the request and ask the student to join with the course code.'));
           return;
         }
         enrollRequests = enrollRequests.filter(function(x) { return x.id !== id; });

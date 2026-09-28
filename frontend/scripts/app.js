@@ -231,8 +231,13 @@ const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
       // Enrollment applications: student "Apply" buttons.
       document.addEventListener('click', function(e) {
         var btn = e.target.closest('.apply-course-btn');
-        if (!btn) return;
-        applyCourse(parseInt(btn.dataset.course));
+        if (btn) { applyCourse(parseInt(btn.dataset.course)); return; }
+        if (e.target.closest('#course-join-btn')) joinCourseByCode();
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Enter') return;
+        if (e.target && e.target.id === 'course-join-code') { e.preventDefault(); joinCourseByCode(); }
       });
 
       document.getElementById('enroll-approval-table-body').addEventListener('click', function(e) {

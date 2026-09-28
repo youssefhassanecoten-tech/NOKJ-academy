@@ -250,7 +250,14 @@ function updateAdminStats() {
         var avgGrade = 0;
         graded.forEach(function(k) { avgGrade += taskSubmissions[k].grade; });
         var viaGrade = graded.length ? Math.round(avgGrade / graded.length) : 50;
-        return Math.max(base, Math.min(100, viaGrade));
+        var pct = Math.max(base, Math.min(100, viaGrade));
+        // A student below the course pass mark cannot show more progress than
+        // the mark itself, otherwise a failing student looks almost finished.
+        var finalGrade = getCourseGrade(studentId, courseId);
+        if (finalGrade !== null && finalGrade < getCoursePassingScore(courseId)) {
+          pct = Math.min(pct, Math.round(finalGrade));
+        }
+        return Math.max(0, Math.min(100, pct));
       }
 
       // ============================================================

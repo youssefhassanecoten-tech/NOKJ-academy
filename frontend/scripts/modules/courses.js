@@ -11,8 +11,9 @@
           row.className = 'expandable-row';
           row.dataset.expandId = 'course-' + c.id;
           row.innerHTML = '<td style="cursor:pointer;"><span class="expand-icon' + (isExpanded ? ' open' : '') + '">' + icon +
-            '</span> <strong>' + c.name + '</strong><br><span style="font-size:12px;color:var(--muted);">' + c.description +
-            '</span></td><td>' + getTeacherName(c.teacherId) + '</td><td>' + studentCount +
+            '</span> <strong>' + escapeHtml(c.name) + '</strong><br><span style="font-size:12px;color:var(--muted);">' +
+            escapeHtml(c.description || '') +
+            '</span></td><td>' + escapeHtml(getTeacherName(c.teacherId)) + '</td><td>' + studentCount +
             ' ' + tr('students') + '</td><td><button class="action-btn edit" data-id="' + c.id +
             '" data-type="course">✏️</button><button class="action-btn delete" data-id="' + c.id +
             '" data-type="course">🗑️</button></td>';
@@ -50,20 +51,18 @@
         var pendingCourseIds = enrollRequests.filter(function(r) {
           return r.studentId === studentId && r.status === 'pending';
         }).map(function(r) { return r.courseId; });
-        var available = courses.filter(function(c) { return enrolledIds.indexOf(c.id) === -1; });
+        var available = courses.filter(function(c) {
+          return enrolledIds.indexOf(c.id) === -1 && isCourseListableForEnrollment(c);
+        });
 
-        var html = '';
+        var html = renderCourseJoinByCode();
         if (enrolledCourses.length === 0 && available.length === 0) {
-          html += '<div class="detail-content" style="padding:40px;text-align:center;">' +
+          html += '<div class="detail-content" style="padding:30px;text-align:center;">' +
             '<h3>' + tr('No courses currently available') + '</h3>' +
-            '<p style="color:var(--muted);">' + tr('You are already enrolled in all available courses, or new courses have not been published yet. Check back soon!') + '</p>' +
-            '</div>';
-          container.innerHTML = html;
-          setCoursesHeading();
-          setLanguage(currentLang);
-          return;
-        }
-        if (enrolledCourses.length === 0) {
+            '<p style="color:var(--muted);">' +
+            tr('You are already enrolled in all available courses, or new courses have not been published yet. Check back soon!') +
+            '</p></div>';
+        } else if (enrolledCourses.length === 0) {
           html += '<p style="color:var(--muted);">' + tr('You are not enrolled in any courses yet.') + '</p>';
         } else {
           html += '<div class="course-grid">';
@@ -72,12 +71,24 @@
             var colorClass = colors[c.id % 3];
             var progress = courseProgress(c.id, studentId);
             var matCount = getCourseMaterials(c.id).filter(function(m) { return m.published; }).length;
-            html += '<article class="course"><div class="course-cover ' + colorClass + '">' + c.name +
-              '</div><div class="course-body"><h3>' + c.name + '</h3><p>' + tr('Teacher:') + ' ' + getTeacherName(c.teacherId) +
-              '</p><p style="font-size:12px;color:var(--muted);">' + matCount + ' ' + tr('materials') + '</p>' +
+            var grade = getCourseGrade(studentId, c.id);
+            var passed = isCoursePassed(studentId, c.id);
+            var gradePill = '';
+            if (passed === true) {
+              gradePill = '<span class="pill success">' + tr('Passed') + '</span>';
+            } else if (passed === false) {
+              gradePill = '<span class="pill danger">' + tr('Not passed') + '</span>';
+            }
+            html += '<article class="course"><div class="course-cover ' + colorClass + '">' + escapeHtml(c.name) +
+              '</div><div class="course-body"><h3>' + escapeHtml(c.name) + '</h3><p>' + tr('Teacher:') + ' ' +
+              escapeHtml(getTeacherName(c.teacherId)) +
+              '</p><p style="font-size:12px;color:var(--muted);">' + matCount + ' ' + tr('materials') +
+              (grade !== null ? ' &middot; ' + tr('Final grade') + ': ' + grade + ' / ' + getCoursePassingScore(c.id) : '') +
+              '</p>' +
               '<div class="track ' + progressColorClass(progress) + '"><div class="fill" style="width:' + Math.max(progress, 2) +
               '%"></div></div><div class="course-footer"><span class="' + progressColorClass(progress) + '">' + progress +
-              '% ' + tr('complete') + '</span><button class="link-button" onclick="openCourse(' + c.id + ')">' + tr('Open course') +
+              '% ' + tr('complete') + '</span>' + gradePill +
+              '<button class="link-button" onclick="openCourse(' + c.id + ')">' + tr('Open course') +
               '</button></div></div></article>';
           });
           html += '</div>';
@@ -91,11 +102,17 @@
           }
           html += '<div class="course-grid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr));">';
           available.forEach(function(c) {
-            html += '<article class="course"><div class="course-cover">' + c.name +
-              '</div><div class="course-body"><h3>' + c.name + '</h3><p>' + tr('Teacher:') + ' ' + getTeacherName(c.teacherId) +
+            var full = isCourseFull(c.id);
+            html += '<article class="course"><div class="course-cover">' + escapeHtml(c.name) +
+              '</div><div class="course-body"><h3>' + escapeHtml(c.name) + '</h3><p>' + tr('Teacher:') + ' ' +
+              escapeHtml(getTeacherName(c.teacherId)) +
+              (c.capacity ? '</p><p style="font-size:12px;color:var(--muted);">' + tr('Seats') + ': ' +
+                getCourseStudentCount(c.id) + ' / ' + c.capacity + '</p><p>' : '<p>') +
               '</p><div class="course-footer" style="justify-content:flex-start;">';
             if (blocked) {
               html += '<span class="pill danger">' + tr('Enrollment blocked') + '</span>';
+            } else if (full) {
+              html += '<span class="pill warning">' + tr('Course full') + '</span>';
             } else if (pendingCourseIds.indexOf(c.id) !== -1) {
               html += '<span class="pill warning">' + tr('Application pending') + '</span>';
             } else {
@@ -112,6 +129,42 @@
         setLanguage(currentLang);
       }
 
+      // A small box so a student can reach an invite-only course by its code.
+      function renderCourseJoinByCode() {
+        return '<div class="course-join-box"><label for="course-join-code">' + tr('Join with a course code') +
+          '</label><div class="course-join-row"><input type="text" id="course-join-code" ' +
+          'placeholder="' + tr('e.g. MATH-101') + '" data-i18n-ph="e.g. MATH-101" />' +
+          '<button class="secondary-button" id="course-join-btn">' + tr('Join') + '</button></div>' +
+          '<small>' + tr('Private courses can only be joined with the code your teacher gives you.') +
+          '</small></div>';
+      }
+
+      function joinCourseByCode() {
+        if (!currentUser || currentUser.role !== 'Student') return;
+        var input = document.getElementById('course-join-code');
+        var code = input ? input.value : '';
+        if (!String(code).trim()) { alert(tr('Please enter a course code.')); return; }
+        if (currentUser.status !== 'Active') {
+          alert(tr('You cannot enroll while your account has a Warning or Inactive status.'));
+          return;
+        }
+        var course = findCourseByCode(code);
+        if (!course) { alert(tr('No course matches that code.')); return; }
+        if (course.archived) { alert(tr('This course is archived and cannot be joined.')); return; }
+        if (getEnrolledCourseIds(currentUser.id).indexOf(course.id) !== -1) {
+          alert(tr('You are already enrolled in this course.'));
+          return;
+        }
+        if (isCourseFull(course.id)) { alert(tr('This course is full.')); return; }
+        // A code is an invitation, so it enrolls directly and skips approval.
+        enrollments.push({ studentId: currentUser.id, courseId: course.id });
+        saveData();
+        if (input) input.value = '';
+        renderStudentCourses();
+        openCourse(course.id);
+        setLanguage(currentLang);
+      }
+
       function applyCourse(courseId) {
         if (!currentUser || currentUser.role !== 'Student') return;
         if (currentUser.status !== 'Active') {
@@ -119,6 +172,10 @@
           return;
         }
         if (getEnrolledCourseIds(currentUser.id).indexOf(courseId) !== -1) return;
+        var course = courses.find(function(c) { return c.id === courseId; });
+        if (!course) return;
+        if (course.archived) { alert(tr('This course is archived and cannot be joined.')); return; }
+        if (isCourseFull(courseId)) { alert(tr('This course is full.')); return; }
         if (enrollRequests.some(function(r) { return r.studentId === currentUser.id && r.courseId === courseId; })) return;
         enrollRequests.push({ id: Date.now(), studentId: currentUser.id, courseId: courseId, status: 'pending',
           date: new Date().toISOString() });
@@ -273,7 +330,13 @@
         if (!c) return;
         if (currentUser && currentUser.role === 'Student') {
           var enrolled = getEnrolledCourseIds(currentUser.id);
-          if (enrolled.indexOf(courseId) === -1) { applyCourse(courseId); return; }
+          if (enrolled.indexOf(courseId) === -1) {
+            // Never hand a private course to the approval flow: it is invite-only.
+            if (isCoursePublic(courseId)) { applyCourse(courseId); return; }
+            alert(tr('This course is invite-only. Enter its course code to join.'));
+            renderStudentCourses();
+            return;
+          }
           if (c.materialsOpenState !== undefined) { /* reserved */ }
           renderStudentCourseDetail(c);
           return;
@@ -288,6 +351,14 @@
         var mats = getCourseMaterials(course.id).filter(function(m) { return m.published; });
         var enrolled = getEnrolledCourseIds(currentUser.id);
         if (enrolled.indexOf(course.id) === -1) {
+          if (!isCoursePublic(course.id)) {
+            container.innerHTML = '<div class="detail-content" style="margin-bottom:16px;"><button class="secondary-button" onclick="renderStudentCourses()">← ' +
+              tr('Back to My courses') + '</button></div><h3>' + escapeHtml(course.name) + '</h3>' +
+              '<p style="color:var(--muted);padding:18px;">' + tr('This course is invite-only. Enter its course code to join.') +
+              '</p>' + renderCourseJoinByCode();
+            setLanguage(currentLang);
+            return;
+          }
           container.innerHTML = '<p style="color:var(--muted);padding:20px;">' + tr('You are not enrolled in this course yet.') +
             ' <button class="secondary-button" onclick="applyCourse(' + course.id + ')">' + tr('Apply') + '</button></p>';
           setLanguage(currentLang);
@@ -296,7 +367,16 @@
         var html = '<div class="detail-content" style="margin-bottom:16px;"><button class="secondary-button" onclick="renderStudentCourses()">← ' +
           tr('Back to My courses') + '</button></div>';
         html += '<h3>' + escapeHtml(course.name) + '</h3>';
-        html += '<p>' + tr('Teacher:') + ' ' + getTeacherName(course.teacherId) + '</p>';
+        html += '<p>' + tr('Teacher:') + ' ' + escapeHtml(getTeacherName(course.teacherId)) + '</p>';
+        var detailGrade = getCourseGrade(currentUser.id, course.id);
+        var detailPassMark = getCoursePassingScore(course.id);
+        if (detailGrade !== null) {
+          html += '<p><span class="pill' + (detailGrade >= detailPassMark ? ' success' : ' danger') + '">' +
+            (detailGrade >= detailPassMark ? tr('Passed') : tr('Not passed')) + '</span> ' +
+            tr('Final grade') + ': ' + detailGrade + ' / ' + detailPassMark + '</p>';
+        } else {
+          html += '<p style="font-size:12px;color:var(--muted);">' + tr('Pass mark') + ': ' + detailPassMark + '%</p>';
+        }
         html += renderStudentCurriculum(course);
         if (mats.length === 0) {
           html += '<p style="color:var(--muted);padding:18px;">' + tr('No study material published yet for this course.') + '</p>';

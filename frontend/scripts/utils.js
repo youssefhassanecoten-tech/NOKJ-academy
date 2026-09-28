@@ -458,6 +458,61 @@
         return enrollments.filter(function(e) { return e.courseId === courseId; }).length;
       }
 
+      // ----- Course pass mark (Studio settings) -----
+      function getCoursePassingScore(courseId) {
+        var c = courses.find(function(x) { return x.id === courseId; });
+        if (!c || c.passingScore === undefined || c.passingScore === null) return 60;
+        return Math.min(100, Math.max(0, Number(c.passingScore) || 0));
+      }
+
+      // The course-level grade, or null when the teacher has not set one.
+      function getCourseGrade(studentId, courseId) {
+        var g = gradeData[studentId + '-' + courseId];
+        if (g === undefined || g === null || g === '') return null;
+        var n = Number(g);
+        return isNaN(n) ? null : n;
+      }
+
+      // null = not graded yet, so the pass mark cannot be judged either.
+      function isCoursePassed(studentId, courseId) {
+        var g = getCourseGrade(studentId, courseId);
+        if (g === null) return null;
+        return g >= getCoursePassingScore(courseId);
+      }
+
+      // ----- Course enrollment rules (Studio settings) -----
+      // capacity === 0 means unlimited.
+      function isCourseFull(courseId) {
+        var c = courses.find(function(x) { return x.id === courseId; });
+        if (!c || !c.capacity || c.capacity <= 0) return false;
+        return getCourseStudentCount(courseId) >= c.capacity;
+      }
+
+      // Private courses are invite-only: they never appear in the public
+      // enrollment list. A student can still reach one with its course code.
+      function isCoursePublic(courseId) {
+        var c = courses.find(function(x) { return x.id === courseId; });
+        return !!c && c.visibility !== 'private';
+      }
+
+      // A course is listable when it is public and not archived. Full courses
+      // stay listable so students can see them, but every action checks
+      // isCourseFull() before enrolling anyone.
+      function isCourseListableForEnrollment(course) {
+        if (!course) return false;
+        if (course.archived) return false;
+        return isCoursePublic(course.id);
+      }
+
+      // Case-insensitive, whitespace-tolerant course-code lookup.
+      function findCourseByCode(code) {
+        var needle = String(code || '').trim().toLowerCase();
+        if (!needle) return null;
+        return courses.find(function(c) {
+          return c.code && String(c.code).trim().toLowerCase() === needle;
+        }) || null;
+      }
+
       function getUserByEmail(email) {
         var user = students.find(function(s) { return s.email === email; });
         if (user) return user;

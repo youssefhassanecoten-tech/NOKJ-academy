@@ -1323,10 +1323,10 @@
 
       function bindStudioEvents() {
         var search = document.getElementById('studio-search');
-        if (search) search.addEventListener('input', function() {
-          studio.query = this.value;
+        if (search) search.addEventListener('input', debounce(function() {
+          studio.query = search.value;
           renderStudioSidebar();
-        });
+        }, 180));
         var filter = document.getElementById('studio-filter');
         if (filter) filter.addEventListener('change', function() {
           studio.filter = this.value;
@@ -1368,15 +1368,21 @@
 
         var titleInput = document.getElementById('studio-course-title-input');
         if (titleInput) {
-          titleInput.addEventListener('input', function() {
-            var c = studioCourse();
-            if (!c) return;
-            c.name = this.value || tr('Untitled course');
-            c.updatedAt = new Date().toISOString();
+          // This used to serialise and write the whole data set and rebuild the
+          // sidebar on every single keystroke.
+          var persistTitle = debounce(function() {
             studioMarkSaved();
             studioCommit();
             renderStudioSidebar();
+          }, 350);
+          titleInput.addEventListener('input', function() {
+            var c = studioCourse();
+            if (!c) return;
+            c.name = titleInput.value || tr('Untitled course');
+            c.updatedAt = new Date().toISOString();
+            persistTitle();
           });
+          titleInput.addEventListener('blur', persistTitle.flush);
         }
         var emojiBtn = document.getElementById('studio-emoji-btn');
         if (emojiBtn) emojiBtn.addEventListener('click', toggleStudioEmojiPicker);

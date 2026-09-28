@@ -702,7 +702,7 @@ const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
         document.getElementById('task-modal-overlay').classList.remove('open');
       });
 
-      document.getElementById('task-search').addEventListener('input', renderTasks);
+      document.getElementById('task-search').addEventListener('input', debounce(renderTasks, 180));
       document.getElementById('task-type-filter').addEventListener('change', renderTasks);
       document.getElementById('task-status-filter').addEventListener('change', renderTasks);
 
@@ -742,10 +742,15 @@ const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
           var key = draftKeyFor(t.id, studentId);
           var saved = loadDraft(key);
           if (saved && saved.answer && !input.value) input.value = saved.answer;
-          input.addEventListener('input', function() {
+          // localStorage writes are synchronous and block the main thread, so
+          // a long answer used to stall the browser on every keystroke.
+          var persist = debounce(function() {
             if (input.value.trim()) saveDraft(key, { answer: input.value, taskId: t.id });
             else clearDraft(key);
-          });
+          }, 400);
+          input.addEventListener('input', persist);
+          // Commit the pending write before the page can be closed.
+          input.addEventListener('blur', persist.flush);
         });
       }
 
@@ -930,7 +935,7 @@ const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
         else if (target.dataset.action === 'refuse') refuseTeacher(id);
       });
       var approvalSearch = document.getElementById('approval-search');
-      if (approvalSearch) approvalSearch.addEventListener('input', renderApprovals);
+      if (approvalSearch) approvalSearch.addEventListener('input', debounce(renderApprovals, 180));
 
       exportStudentsBtn.addEventListener('click', function() {
         var headers = ['Name', 'Email', 'Status', 'Enrolled Courses'];
@@ -967,11 +972,11 @@ const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
         URL.revokeObjectURL(url);
       });
 
-      studentSearch.addEventListener('input', renderStudents);
+      studentSearch.addEventListener('input', debounce(renderStudents, 180));
       studentFilter.addEventListener('change', renderStudents);
-      document.getElementById('budget-search').addEventListener('input', renderBudget);
+      document.getElementById('budget-search').addEventListener('input', debounce(renderBudget, 180));
       document.getElementById('budget-filter').addEventListener('change', renderBudget);
-      document.getElementById('course-search').addEventListener('input', renderCourses);
+      document.getElementById('course-search').addEventListener('input', debounce(renderCourses, 180));
 
       document.getElementById('modal-cancel').addEventListener('click', closeModal);
       document.getElementById('modal-overlay').addEventListener('click', function(e) {

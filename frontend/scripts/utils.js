@@ -108,6 +108,26 @@
       // ============================================================
       //  DRAFTS — in-progress work survives reloads and connectivity loss
       // ============================================================
+      // Collapses a burst of calls into one. Used for search-as-you-type and
+      // for autosaving drafts, where the old code did a full list re-render
+      // or a synchronous localStorage write on every single keystroke.
+      function debounce(fn, wait) {
+        var timer = null;
+        function wrapped() {
+          var args = arguments, self = this;
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(function() { timer = null; fn.apply(self, args); }, wait || 200);
+        }
+        // Lets a caller force the pending call, e.g. on submit or blur.
+        wrapped.flush = function() {
+          if (!timer) return;
+          clearTimeout(timer);
+          timer = null;
+          fn.apply(this, arguments);
+        };
+        return wrapped;
+      }
+
       function saveDraft(key, payload) {
         return storeSet('nokj-draft-' + key, JSON.stringify({
           savedAt: Date.now(),

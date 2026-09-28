@@ -6,14 +6,14 @@
         var resultsBox = document.getElementById('global-search-results');
         if (!input || !resultsBox) return;
 
-        input.addEventListener('input', function() {
+        input.addEventListener('input', debounce(function() {
           var q = input.value.trim().toLowerCase();
           if (!q) {
             resultsBox.style.display = 'none';
             return;
           }
           renderSearchResults(q);
-        });
+        }, 180));
 
         input.addEventListener('focus', function() {
           if (input.value.trim()) renderSearchResults(input.value.trim().toLowerCase());

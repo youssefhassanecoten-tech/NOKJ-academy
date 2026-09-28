@@ -54,6 +54,7 @@ const SUITE_SCRIPTS = [
   '../scripts/modules/task-blocks-geo.js',
   '../scripts/modules/task-blocks-math.js',
   '../scripts/modules/task-blocks-english.js',
+  '../scripts/modules/task-blocks-map.js',
   'suite.js'
 ];
 
@@ -838,6 +839,8 @@ console.log('== Task Designer Suite ==');
   check('suite shows the course context', ctx && !ctx.hidden && /Geometry/.test(ctx.textContent), ctx && ctx.textContent);
   check('suite shows a back-to-course control', win.document.getElementById('suite-back').hidden === false);
   check('palette is populated', win.document.querySelectorAll('#suite-palette [data-tb-type], #suite-palette button').length > 5, String(win.document.querySelectorAll('#suite-palette button').length));
+  check('the palette offers the world map', /World map/.test(win.document.getElementById('suite-palette').textContent),
+    win.document.getElementById('suite-palette').textContent.slice(0, 160));
 
   // Insert two blocks through the real palette, then preview and deploy.
   const palette = [...win.document.querySelectorAll('#suite-palette button')];

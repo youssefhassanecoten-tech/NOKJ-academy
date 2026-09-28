@@ -160,17 +160,35 @@
       // Score a document from an already-collected answers map. Kept
       // separate from the DOM so a teacher can re-grade a stored submission
       // later without the student's page being open.
+      //
+      // A block normally returns { correct: true|false } and is all or
+      // nothing. A block that can award part credit may also return
+      // { score: 0..1 } to be given that fraction of its points; blocks that
+      // do not are unaffected.
       function gradeTaskAnswers(blocks, answers) {
         var got = 0, max = 0, detail = {};
         (blocks || []).forEach(function(b) {
           var def = getBlockDef(b.type);
           if (!def || !def.grade) return;
-          max += (b.points || def.defaultPoints || 1);
+          var points = b.points || def.defaultPoints || 1;
+          max += points;
           var res = null;
           try { res = def.grade(b, answers ? answers[b.id] : null); } catch (e) { res = { correct: false }; }
           var full = !!(res && res.correct);
-          if (full) got += (b.points || def.defaultPoints || 1);
-          detail[b.id] = { correct: full, response: answers ? answers[b.id] : null };
+          var fraction = 0;
+          if (res && typeof res.score === 'number' && isFinite(res.score)) {
+            fraction = Math.max(0, Math.min(1, res.score));
+            // An explicit score is the authority, but a block that also sets
+            // correct and scores full marks must still count as correct.
+            if (fraction >= 1) full = true;
+          } else if (full) {
+            fraction = 1;
+          }
+          if (fraction > 0) {
+            // Round to a whole point so a stored grade stays tidy.
+            got += Math.round(points * fraction * 100) / 100;
+          }
+          detail[b.id] = { correct: full, fraction: fraction, response: answers ? answers[b.id] : null };
         });
         return { score: got, max: max, detail: detail, answers: answers || {} };
       }

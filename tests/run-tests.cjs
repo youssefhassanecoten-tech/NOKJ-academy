@@ -90,6 +90,76 @@ check('dynamic ids are built in JS', [...dynamicIds].filter(id => {
   });
 }).length === dynamicIds.size, ...dynamicIds.length ? ['unverified: ' + [...dynamicIds].join(', ')] : []);
 
+console.log('== World map block (vm) ==');
+const vmMap = (() => {
+  try {
+    const vm = require('vm');
+    const context = vm.createContext({ window: {}, document: { getElementById: () => null, head: { appendChild() {} } } });
+    for (const s of ['task-blocks.js', 'task-blocks-core.js', 'task-blocks-map.js']) {
+      vm.runInContext(fs.readFileSync(path.join(SCRIPTS_DIR, 'modules', s), 'utf8'), context);
+    }
+    const out = vm.runInContext(`(function () {
+      var b = makeBlock('worldmap');
+      var pts = [
+        { id: 'p1', lat: 48.85, lon: 2.35, label: 'Paris', correct: true, partial: false },
+        { id: 'p2', lat: 51.5, lon: -0.12, label: 'London', correct: true, partial: false },
+        { id: 'p3', lat: 40.7, lon: -74.0, label: 'New York', correct: false, partial: false }
+      ];
+      b.props.points = pts;
+      b.props.mode = '2d';
+      var def = getBlockDef('worldmap');
+      var html = renderTaskBlocks([b], {});
+      var geo = JSON.stringify(pointsToGeoJSON(pts));
+
+      // Grading: all correct points, or nothing.
+      b.props.answerMode = 'full';
+      var allRight = gradeTaskAnswers([b], { [b.id]: [0, 1] }).score === 2;
+      var oneRight = gradeTaskAnswers([b], { [b.id]: [0] }).score === 0;
+      var noneRight = gradeTaskAnswers([b], { [b.id]: [] }).score === 0;
+      var onlyWrong = gradeTaskAnswers([b], { [b.id]: [2] }).score === 0;
+      // Partial credit.
+      b.props.answerMode = 'partial';
+      var partialOne = gradeTaskAnswers([b], { [b.id]: [0] }).score === 1;
+      var partialNone = gradeTaskAnswers([b], { [b.id]: [] }).score === 0;
+      // No key at all must not award anything.
+      b.props.points = [];
+      b.props.answerMode = 'full';
+      var noKey = gradeTaskAnswers([b], { [b.id]: [0] }).score === 0;
+
+      return JSON.stringify({
+        registered: !!def,
+        graded: !!(def && def.graded),
+        hasPoints: def && def.graded && def.defaultPoints > 0,
+        hasMount: !!(def && def.mount), hasCollect: !!(def && def.collect), hasGrade: !!(def && def.grade),
+        fieldCount: def ? def.fields.length : 0,
+        modes: def ? def.fields.filter(function(f){return f.key==='mode';}).map(function(f){return f.options.map(function(o){return o[0];});})[0].join(',') : '',
+        hasCanvas: html.indexOf('data-tb-map=') !== -1,
+        hasTools: html.indexOf('tb-map-zoom-in') !== -1 && html.indexOf('tb-map-reset') !== -1,
+        has3d: html.indexOf('data-tb-map-3d') !== -1,
+        geoType: JSON.parse(geo).type, geoFeatures: JSON.parse(geo).features.length,
+        allRight: allRight, oneRight: oneRight, noneRight: noneRight, onlyWrong: onlyWrong,
+        partialOne: partialOne, partialNone: partialNone, noKey: noKey
+      });
+    })()`, context);
+    return JSON.parse(out);
+  } catch (err) {
+    return { error: err.message };
+  }
+})();
+check('the map block registers', vmMap.registered === true, JSON.stringify(vmMap));
+check('the map block is graded with points', vmMap.graded === true && vmMap.hasPoints === true, JSON.stringify(vmMap));
+check('the map block can mount, collect and grade', vmMap.hasMount && vmMap.hasCollect && vmMap.hasGrade, JSON.stringify(vmMap));
+check('the map block offers 2d, 3d and topographic modes', vmMap.modes === '2d,3d,topo', vmMap.modes);
+check('the map block has an inspector', vmMap.fieldCount >= 8, 'fields=' + vmMap.fieldCount);
+check('the map renders a canvas and tools', vmMap.hasCanvas === true && vmMap.hasTools === true, JSON.stringify(vmMap));
+check('the map offers a 3D toggle', vmMap.has3d === true, JSON.stringify(vmMap));
+check('teacher points become GeoJSON features', vmMap.geoType === 'FeatureCollection' && vmMap.geoFeatures === 3, JSON.stringify(vmMap));
+check('all correct points marked scores full marks', vmMap.allRight === true, JSON.stringify(vmMap));
+check('a partly correct answer scores zero in full mode', vmMap.oneRight === true && vmMap.noneRight === true, JSON.stringify(vmMap));
+check('marking only a wrong point scores zero', vmMap.onlyWrong === true, JSON.stringify(vmMap));
+check('partial mode scores per correct point', vmMap.partialOne === true && vmMap.partialNone === true, JSON.stringify(vmMap));
+check('a map with no key awards nothing', vmMap.noKey === true, JSON.stringify(vmMap));
+
 console.log('== Landing/entry markers ==');
 check('index.html loads app.js', html.includes('scripts/app.js'), '');
 check('index.html has styles/variables.css', html.includes('styles/variables.css'), '');

@@ -222,7 +222,8 @@
       equation: 'Шаги решения', fraction: 'Дроби', numberline: 'Числовая прямая',
       funcplot: 'График функции', shapemath: 'Геометрия', mathpairs: 'Пары', dice: 'Кубики',
       flashcards: 'Карточки', vocabmatch: 'Слова и значения', wordbuild: 'Собери слово',
-      unscramble: 'Собери предложение', grammar: 'Грамматика'
+      unscramble: 'Собери предложение', grammar: 'Грамматика',
+      worldmap: 'Карта мира'
     };
 
     function blockLabel(type) {

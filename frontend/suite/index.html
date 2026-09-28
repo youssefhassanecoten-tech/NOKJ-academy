@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>NOKJ Task Designer Suite</title>
+  <link rel="stylesheet" href="../styles/variables.css" />
+  <link rel="stylesheet" href="../styles/components/task-blocks.css" />
+  <link rel="stylesheet" href="suite.css" />
+</head>
+<body class="suite light">
+  <div class="suite-lock" id="suite-lock">
+    <div class="suite-lock-card">
+      <h1>🔒 NOKJ Task Designer Suite</h1>
+      <p id="suite-lock-msg">Sign in to the academy as a teacher or admin to build interactive tasks.</p>
+      <a href="../index.html">Go to the academy sign-in page</a>
+    </div>
+  </div>
+
+  <header class="suite-top">
+    <div class="suite-brand"><span>🧩</span> Task Designer Suite</div>
+    <input type="text" class="suite-title" id="suite-title" placeholder="Untitled task" />
+    <div class="suite-meta" id="suite-meta">0 points · 0 blocks</div>
+    <div class="suite-actions">
+      <button type="button" class="suite-btn" id="suite-back" hidden>← Back to course</button>
+      <button type="button" class="suite-btn" id="suite-theme">🌙</button>
+      <button type="button" class="suite-btn" id="suite-preview-btn">👁 Preview</button>
+      <button type="button" class="suite-btn" id="suite-new">✨ New</button>
+      <button type="button" class="suite-btn" id="suite-save">💾 Save draft</button>
+      <button type="button" class="suite-btn primary" id="suite-deploy">🚀 Deploy</button>
+    </div>
+  </header>
+
+  <div class="suite-context" id="suite-context" hidden></div>
+
+  <div class="suite-body">
+    <aside class="suite-side">
+      <div class="suite-side-head">
+        <span id="suite-list-head">My tasks</span>
+        <button type="button" class="suite-btn" id="suite-reload" title="Reload from storage">↻</button>
+      </div>
+      <div class="suite-side-body" id="suite-task-list"></div>
+      <div class="suite-side-head"><span>Blocks</span></div>
+      <div class="suite-side-body">
+        <input type="text" class="suite-search" id="suite-block-search" placeholder="Search blocks..." />
+        <div id="suite-palette"></div>
+      </div>
+    </aside>
+
+    <main class="suite-canvas" id="suite-canvas">
+      <div class="suite-page" id="suite-page">
+        <h1 class="suite-page-h" id="suite-page-h">Untitled task</h1>
+        <div id="suite-blocks"></div>
+        <div class="suite-drop">Drop a block here</div>
+      </div>
+    </main>
+
+    <aside class="suite-side right">
+      <div class="suite-side-head"><span id="suite-inspector-head">Task settings</span></div>
+
+      <div class="suite-side-body" id="suite-inspector"></div>
+      <div class="suite-side-body" style="border-top:1px solid var(--divider); flex:none;">
+        <div class="suite-status" id="suite-status"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="suite-preview" id="suite-preview" hidden>
+    <div class="suite-preview-card">
+      <div class="suite-preview-top">
+        <h2 id="suite-preview-h">Preview</h2>
+        <button type="button" class="suite-btn" id="suite-preview-close">Close</button>
+      </div>
+      <div id="suite-preview-body"></div>
+    </div>
+  </div>
+
+  <script src="../scripts/modules/task-blocks.js" defer></script>
+  <script src="../scripts/modules/task-blocks-core.js" defer></script>
+  <script src="../scripts/modules/task-blocks-geo.js" defer></script>
+  <script src="../scripts/modules/task-blocks-math.js" defer></script>
+  <script src="../scripts/modules/task-blocks-english.js" defer></script>
+  <script src="suite.js" defer></script>
+</body>
+</html>

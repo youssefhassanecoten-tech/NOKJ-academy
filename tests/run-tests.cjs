@@ -97,14 +97,23 @@ const courseWorkJs = fs.readFileSync(path.join(SCRIPTS_DIR, 'modules', 'course-w
 const suiteJs = fs.readFileSync(path.join(ROOT, 'frontend', 'suite', 'suite.js'), 'utf8');
 const suiteHtml = fs.readFileSync(path.join(ROOT, 'frontend', 'suite', 'index.html'), 'utf8');
 
-for (const pane of ['lessons', 'material', 'assignments', 'tests']) {
+// Level 1: Lessons / Library / Settings / Analytics.
+for (const pane of ['lessons', 'library', 'settings', 'analytics']) {
   check('studio pane ' + pane, html.includes('id="studio-pane-' + pane + '"'), '');
   check('studio tab ' + pane, html.includes('data-studio-tab="' + pane + '"'), '');
 }
-// The old curriculum/library split must not come back.
+// Level 2, under Lessons: Lesson / Task / Assignment / Test.
+for (const sub of ['lesson', 'task', 'assignment', 'test']) {
+  check('studio sub-pane ' + sub, html.includes('id="studio-subpane-' + sub + '"'), '');
+  check('studio sub-tab ' + sub, html.includes('data-studio-sub="' + sub + '"'), '');
+}
+// The old flat six-tab layout must not come back.
 check('studio has no curriculum tab', !html.includes('data-studio-tab="curriculum"'), '');
-check('studio has no library tab', !html.includes('data-studio-tab="library"'), '');
-check('studio tabs array matches markup', studioJs.includes("'lessons', 'material', 'assignments', 'tests', 'settings', 'analytics'"), '');
+check('studio has no top-level material tab', !html.includes('data-studio-tab="material"'), '');
+check('studio has no top-level assignments tab', !html.includes('data-studio-tab="assignments"'), '');
+check('studio has no top-level tests tab', !html.includes('data-studio-tab="tests"'), '');
+check('studio tabs array matches markup', studioJs.includes("'lessons', 'library', 'settings', 'analytics'"), '');
+check('studio subtabs array matches markup', studioJs.includes("['lesson', 'task', 'assignment', 'test']"), '');
 
 check('standalone pages left the nav', !html.includes('data-page="tasks"') && !html.includes('data-page="tests"') && !html.includes('data-page="assignments"'), '');
 check('router redirects merged pages to courses', /MERGED_PAGES = \['assignments', 'tasks', 'tests'\]/.test(routerJs) && /MERGED_PAGES\.indexOf\(pageName\) !== -1\) pageName = 'courses'/.test(routerJs), '');
@@ -123,7 +132,7 @@ for (const f of jsFiles) {
 check('no rendered link points at a merged page', staleLinks.length === 0, staleLinks.join(' | '));
 
 check('build method chooser in markup', html.includes('id="build-method-overlay"') && html.includes('id="build-method-basic"') && html.includes('id="build-method-suite"'), '');
-check('studio renders the three work sections', /renderStudioWorkList\('material'\)/.test(studioJs) && /'studio-test-list'/.test(studioJs) && /'studio-assignment-list'/.test(studioJs), '');
+check('studio renders the three work sub-sections', /renderStudioWorkList\('material'\)/.test(studioJs) && /'studio-test-list'/.test(studioJs) && /'studio-assignment-list'/.test(studioJs), '');
 check('studio opens the suite with course context', /suite\/index\.html\?course=/.test(studioJs), '');
 
 check('course-work script loaded', html.includes('scripts/modules/course-work.js'), '');

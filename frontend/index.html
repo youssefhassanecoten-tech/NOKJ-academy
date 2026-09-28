@@ -231,7 +231,7 @@
       <p class="nav-label">Menu</p>
       <button class="nav-button active" data-page="dashboard"><span class="nav-icon">⌂</span> <span class="nav-text">Dashboard</span></button>
       <button class="nav-button" data-page="timetable"><span class="nav-icon">▦</span> <span class="nav-text">Timetable</span></button>
-      <button class="nav-button" data-page="courses"><span class="nav-icon">▣</span> <span class="nav-text">My courses</span></button>
+      <button class="nav-button" data-page="courses" id="my-courses-btn"><span class="nav-icon">▣</span> <span class="nav-text">My courses</span></button>
       <button class="nav-button" data-page="announcements"><span class="nav-icon">◉</span> <span class="nav-text">Announcements</span></button>
       <button class="nav-button" data-page="classroom"><span class="nav-icon">🎥</span> <span class="nav-text">Classroom</span></button>
 
@@ -505,41 +505,83 @@
                 </div>
               </div>
 
-              <!-- The four course sections -->
+              <!-- Level 1: the four top tabs of a course -->
               <div class="studio-tabs" id="studio-tabs">
                 <button class="studio-tab active" data-studio-tab="lessons" id="studio-tab-lessons"><span aria-hidden="true">📘</span> <span id="studio-lessons-label">Lessons</span></button>
-                <button class="studio-tab" data-studio-tab="material" id="studio-tab-material"><span aria-hidden="true">📎</span> <span id="studio-material-label">Material &amp; Tasks</span></button>
-                <button class="studio-tab" data-studio-tab="assignments" id="studio-tab-assignments"><span aria-hidden="true">📝</span> <span id="studio-assignments-label">Assignments</span></button>
-                <button class="studio-tab" data-studio-tab="tests" id="studio-tab-tests"><span aria-hidden="true">📋</span> <span id="studio-tests-label">Tests</span></button>
+                <button class="studio-tab" data-studio-tab="library" id="studio-tab-library"><span aria-hidden="true">📎</span> <span id="studio-library-tab-label">Library</span></button>
                 <button class="studio-tab" data-studio-tab="settings" id="studio-tab-settings"><span id="studio-settings-tab-label">Settings</span></button>
                 <button class="studio-tab" data-studio-tab="analytics" id="studio-tab-analytics"><span id="studio-analytics-tab-label">Analytics</span></button>
               </div>
 
-              <!-- ===== SECTION 1: LESSONS ===== -->
+              <!-- ===== SECTION 1: LESSONS (with its own second level tabs) ===== -->
               <div class="studio-pane active" id="studio-pane-lessons">
-                <div class="studio-pane-head">
-                  <div>
-                    <h3 id="studio-curriculum-title">Lessons</h3>
-                    <p id="studio-curriculum-sub">Drag modules and lessons to reorder them.</p>
-                  </div>
-                  <button class="primary-button" id="studio-add-module-btn">＋ <span id="studio-add-module-label">Add module</span></button>
+                <div class="studio-subtabs" id="studio-subtabs" role="tablist">
+                  <button class="studio-subtab active" data-studio-sub="lesson" id="studio-subtab-lesson"><span aria-hidden="true">📄</span> <span id="studio-sub-lesson-label">Lesson</span></button>
+                  <button class="studio-subtab" data-studio-sub="task" id="studio-subtab-task"><span aria-hidden="true">📎</span> <span id="studio-sub-task-label">Task</span></button>
+                  <button class="studio-subtab" data-studio-sub="assignment" id="studio-subtab-assignment"><span aria-hidden="true">📝</span> <span id="studio-sub-assignment-label">Assignment</span></button>
+                  <button class="studio-subtab" data-studio-sub="test" id="studio-subtab-test"><span aria-hidden="true">📋</span> <span id="studio-sub-test-label">Test</span></button>
                 </div>
-                <div id="studio-module-list" class="studio-module-list"></div>
-                <div class="studio-empty-inline" id="studio-curriculum-empty" style="display:none;">
-                  <p id="studio-curriculum-empty-text">No modules yet. Add your first module to start building the curriculum.</p>
+
+                <!-- Second level 1: LESSON -->
+                <div class="studio-subpane active" id="studio-subpane-lesson">
+                  <div class="studio-pane-head">
+                    <div>
+                      <h3 id="studio-curriculum-title">Lessons</h3>
+                      <p id="studio-curriculum-sub">Drag modules and lessons to reorder them.</p>
+                    </div>
+                    <button class="primary-button" id="studio-add-module-btn">＋ <span id="studio-add-module-label">Add module</span></button>
+                  </div>
+                  <div id="studio-module-list" class="studio-module-list"></div>
+                  <div class="studio-empty-inline" id="studio-curriculum-empty" style="display:none;">
+                    <p id="studio-curriculum-empty-text">No modules yet. Add your first module to start building the curriculum.</p>
+                  </div>
+                </div>
+
+                <!-- Second level 2: TASK -->
+                <div class="studio-subpane" id="studio-subpane-task">
+                  <div class="studio-pane-head">
+                    <div>
+                      <h3 id="studio-task-title">Tasks</h3>
+                      <p id="studio-task-sub">Work for this course, hand in online.</p>
+                    </div>
+                    <button class="primary-button" id="studio-add-material-task-btn">＋ <span id="studio-add-material-task-label">Add task</span></button>
+                  </div>
+                  <div id="studio-material-tasks" class="studio-work-list"></div>
+                </div>
+
+                <!-- Second level 3: ASSIGNMENT -->
+                <div class="studio-subpane" id="studio-subpane-assignment">
+                  <div class="studio-pane-head">
+                    <div>
+                      <h3 id="studio-assignments-title">Assignments</h3>
+                      <p id="studio-assignments-sub">Coursework students hand in, built here or in the Task Designer Suite.</p>
+                    </div>
+                    <button class="primary-button" id="studio-add-assignment-btn">＋ <span id="studio-add-assignment-label">Add assignment</span></button>
+                  </div>
+                  <div id="studio-assignment-list" class="studio-work-list"></div>
+                </div>
+
+                <!-- Second level 4: TEST -->
+                <div class="studio-subpane" id="studio-subpane-test">
+                  <div class="studio-pane-head">
+                    <div>
+                      <h3 id="studio-tests-title">Tests</h3>
+                      <p id="studio-tests-sub">Graded quizzes for this course.</p>
+                    </div>
+                    <button class="primary-button" id="studio-add-test-btn">＋ <span id="studio-add-test-label">Add test</span></button>
+                  </div>
+                  <div id="studio-test-list" class="studio-work-list"></div>
                 </div>
               </div>
 
-              <!-- ===== SECTION 2: MATERIAL & TASKS ===== -->
-              <div class="studio-pane" id="studio-pane-material">
+              <!-- ===== SECTION 2: LIBRARY ===== -->
+              <div class="studio-pane" id="studio-pane-library">
                 <div class="studio-pane-head">
                   <div>
-                    <h3 id="studio-library-title">Material &amp; Tasks</h3>
-                    <p id="studio-library-sub">Shared material for everyone enrolled, plus the tasks for this course.</p>
+                    <h3 id="studio-library-title">Library</h3>
+                    <p id="studio-library-sub">Notes, links and files shared with everyone enrolled.</p>
                   </div>
-                  <button class="primary-button" id="studio-add-material-task-btn">＋ <span id="studio-add-material-task-label">Add task</span></button>
                 </div>
-                <div id="studio-material-tasks" class="studio-work-list"></div>
                 <div class="studio-lib-form" id="studio-lib-form">
                   <h4 id="studio-lib-form-title">Add material</h4>
                   <div class="studio-row">
@@ -580,30 +622,6 @@
                   <input type="hidden" id="studio-lib-edit-id" value="" />
                 </div>
                 <div id="studio-lib-list" class="studio-lib-list"></div>
-              </div>
-
-              <!-- ===== SECTION 3: ASSIGNMENTS ===== -->
-              <div class="studio-pane" id="studio-pane-assignments">
-                <div class="studio-pane-head">
-                  <div>
-                    <h3 id="studio-assignments-title">Assignments</h3>
-                    <p id="studio-assignments-sub">Coursework students hand in, built here or in the Task Designer Suite.</p>
-                  </div>
-                  <button class="primary-button" id="studio-add-assignment-btn">＋ <span id="studio-add-assignment-label">Add assignment</span></button>
-                </div>
-                <div id="studio-assignment-list" class="studio-work-list"></div>
-              </div>
-
-              <!-- ===== SECTION 4: TESTS ===== -->
-              <div class="studio-pane" id="studio-pane-tests">
-                <div class="studio-pane-head">
-                  <div>
-                    <h3 id="studio-tests-title">Tests</h3>
-                    <p id="studio-tests-sub">Graded quizzes for this course.</p>
-                  </div>
-                  <button class="primary-button" id="studio-add-test-btn">＋ <span id="studio-add-test-label">Add test</span></button>
-                </div>
-                <div id="studio-test-list" class="studio-work-list"></div>
               </div>
 
               <!-- ===== SETTINGS TAB ===== -->

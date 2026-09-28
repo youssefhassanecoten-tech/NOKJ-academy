@@ -488,36 +488,74 @@ console.log('== Teacher portal ==');
   check('teacher boot is error free', s.errors.length === 0, s.errors.join(' | '));
   check('teacher gets the Course Studio button', win.document.getElementById('course-workspace-btn').style.display !== 'none');
   check('teacher has no admin-only buttons', win.document.getElementById('admin-students-btn').style.display === 'none');
+  // Phase 2: no separate courses page for a teacher, and budget is admin-only.
+  check('teacher does not get the My courses page', win.document.getElementById('my-courses-btn').style.display === 'none',
+    'display=' + win.document.getElementById('my-courses-btn').style.display);
+  check('teacher does not get the budget nav', win.document.getElementById('admin-budget-btn').style.display === 'none');
+  win.openPage('courses');
+  check('a teacher asking for courses lands in Course Studio', activePage(win) === 'course-workspace', activePage(win));
+  win.openPage('courses-admin');
+  check('a teacher asking for the admin courses page is redirected', activePage(win) === 'course-workspace', activePage(win));
+  win.openPage('budget');
+  check('a teacher asking for budget is turned away', activePage(win) === 'course-workspace', activePage(win));
+  check('the teacher never sees budget data', !/\$/.test(win.document.getElementById('course-workspace').textContent),
+    'money on the teacher screen');
+  // Teachers do still manage grades, so that route must keep working.
+  win.openPage('grades');
+  check('a teacher can still open Grades', activePage(win) === 'grades', activePage(win));
+  // And they only ever see their own courses.
+  win.openPage('course-workspace');
+  const ownOnly = win.document.getElementById('studio-course-list').textContent;
+  check('a teacher sees only their own course', /Geometry/.test(ownOnly), ownOnly.slice(0, 100));
 
   win.openPage('course-workspace');
   check('studio opens', activePage(win) === 'course-workspace', activePage(win));
   const studio = win.document.getElementById('course-workspace');
   check('studio lists the teacher course', /Geometry/.test(studio.textContent));
 
-  // Select the course: every section must render.
+  // Select the course: level 1 is four tabs, Lessons carries the second level.
   win.studioSelectCourse(5);
   check('studio defaults to the lessons tab', win.document.getElementById('studio-pane-lessons').classList.contains('active'));
+  check('studio has exactly four level-1 tabs', win.document.querySelectorAll('#studio-tabs [data-studio-tab]').length === 4,
+    'tabs=' + win.document.querySelectorAll('#studio-tabs [data-studio-tab]').length);
+  check('studio has four level-2 tabs under lessons', win.document.querySelectorAll('#studio-subtabs [data-studio-sub]').length === 4,
+    'subtabs=' + win.document.querySelectorAll('#studio-subtabs [data-studio-sub]').length);
+  check('lessons opens on the Lesson sub-tab', win.document.getElementById('studio-subpane-lesson').classList.contains('active'));
   check('lessons pane shows the module', /Basics/.test(win.document.getElementById('studio-module-list').textContent));
   check('lessons pane shows the draft lesson to its teacher', /Lines/.test(win.document.getElementById('studio-module-list').textContent));
 
-  win.studioSetTab('material');
-  check('material tab activates', win.document.getElementById('studio-pane-material').classList.contains('active'));
+  // Only one sub-pane is visible at a time.
+  const visibleSubs = [...win.document.querySelectorAll('.studio-subpane')].filter(p => p.classList.contains('active')).map(p => p.id);
+  check('only one sub-pane is active', visibleSubs.length === 1 && visibleSubs[0] === 'studio-subpane-lesson', JSON.stringify(visibleSubs));
+
+  win.studioSetSubTab('task');
+  check('task sub-pane activates', win.document.getElementById('studio-subpane-task').classList.contains('active'));
   const matList = win.document.getElementById('studio-material-tasks').textContent;
-  check('material section lists the interactive task', /Interactive task/.test(matList), matList.slice(0, 200));
-  check('material section lists the plain task', /Plain task/.test(matList));
-  check('material section lists the draft for the teacher', /Draft task/.test(matList));
-  check('material section shows the existing library too', /Notes|Ref/.test(win.document.getElementById('studio-pane-material').textContent));
+  check('task sub-section lists the interactive task', /Interactive task/.test(matList), matList.slice(0, 200));
+  check('task sub-section lists the plain task', /Plain task/.test(matList));
+  check('task sub-section lists the draft for the teacher', /Draft task/.test(matList));
 
-  win.studioSetTab('assignments');
+  win.studioSetSubTab('assignment');
+  check('assignment sub-pane activates', win.document.getElementById('studio-subpane-assignment').classList.contains('active'));
   const asgList = win.document.getElementById('studio-assignment-list').textContent;
-  check('assignments section lists only assignments', /Assignment work/.test(asgList) && !/Interactive task/.test(asgList), asgList.slice(0, 200));
+  check('assignment sub-section lists only assignments', /Assignment work/.test(asgList) && !/Interactive task/.test(asgList), asgList.slice(0, 200));
 
-  win.studioSetTab('tests');
+  win.studioSetSubTab('test');
+  check('test sub-pane activates', win.document.getElementById('studio-subpane-test').classList.contains('active'));
   const testList = win.document.getElementById('studio-test-list').textContent;
-  check('tests section lists the course test', /Course test/.test(testList), testList.slice(0, 200));
+  check('test sub-section lists the course test', /Course test/.test(testList), testList.slice(0, 200));
+
+  // Library is its own level-1 tab and must hold only library items.
+  win.studioSetTab('library');
+  check('library tab activates', win.document.getElementById('studio-pane-library').classList.contains('active'));
+  check('the lessons tab is now hidden', !win.document.getElementById('studio-pane-lessons').classList.contains('active'));
+  check('library lists the existing notes and links', /Notes|Ref/.test(win.document.getElementById('studio-lib-list').textContent),
+    win.document.getElementById('studio-lib-list').textContent.slice(0, 120));
+  check('library holds no task list', !win.document.getElementById('studio-pane-library').contains(win.document.getElementById('studio-material-tasks')));
 
   // The build-method prompt.
-  win.studioSetTab('material');
+  win.studioSetTab('lessons');
+  win.studioSetSubTab('task');
   win.askBuildMethod('material');
   const overlay = win.document.getElementById('build-method-overlay');
   check('build method overlay opens', overlay.classList.contains('open'));
@@ -689,9 +727,20 @@ console.log('== Removed standalone pages ==');
 {
   const s = boot('teacher', { blocksPush: true });
   const win = s.win;
+  // A teacher is sent on to Course Studio, which owns their courses.
   for (const p of ['tasks', 'tests', 'assignments']) {
     win.openPage(p);
-    check(p + ' redirects to courses', activePage(win) === 'courses', activePage(win));
+    check(p + ' redirects a teacher into Course Studio', activePage(win) === 'course-workspace', activePage(win));
+  }
+  s.dom.window.close();
+}
+{
+  const s = boot('student');
+  const win = s.win;
+  // A student is sent to their course list.
+  for (const p of ['tasks', 'tests', 'assignments']) {
+    win.openPage(p);
+    check(p + ' redirects a student to their courses', activePage(win) === 'courses', activePage(win));
   }
   s.dom.window.close();
 }

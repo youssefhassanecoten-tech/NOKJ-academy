@@ -7,7 +7,9 @@
       // ============================================================
       var studio = {
         courseId: null,
-        tab: 'curriculum',
+        tab: 'lessons',
+        // Second level under Lessons: lesson | task | assignment | test
+        sub: 'lesson',
         query: '',
         filter: 'active',
         selected: {},
@@ -25,7 +27,10 @@
       };
 
       var STUDIO_EMOJI = ['📘', '📐', '🧬', '📖', '🧪', '🌍', '💻', '🎨', '🎵', '⚖️', '🩺', '💰', '🚀', '🗺️', '🏛️', '🧮', '🔬', '✍️'];
-      var STUDIO_TABS = ['lessons', 'material', 'assignments', 'tests', 'settings', 'analytics'];
+      // Level 1: the four top tabs of a course.
+      var STUDIO_TABS = ['lessons', 'library', 'settings', 'analytics'];
+      // Level 2: what lives under Lessons.
+      var STUDIO_SUBTABS = ['lesson', 'task', 'assignment', 'test'];
       var STUDIO_TYPE_LABELS = {
         text: 'Text', video: 'Video', link: 'Link', file: 'File',
         assignment: 'Assignment', quiz: 'Quiz', live: 'Live', embed: 'Embed'
@@ -228,6 +233,7 @@
         if (!canManageCourse(courseId)) return;
         studio.courseId = courseId;
         studio.tab = 'lessons';
+        studio.sub = 'lesson';
         studioSelectEmoji = false;
         renderStudioSidebar();
         renderStudioEditor();
@@ -338,16 +344,25 @@
         renderStudioCurrentSection();
       }
 
-      // The first four tabs are the course's own sections; the last two are
-      // course-level views that are not sections.
-      var STUDIO_SECTION_TABS = ['lessons', 'material', 'assignments', 'tests'];
-
+      // The first tab is Lessons and the second Library; the last two are
+      // course-level views that are not content sections.
       function studioRenderTabs() {
         STUDIO_TABS.forEach(function(name) {
           var tab = document.getElementById('studio-tab-' + name);
           var pane = document.getElementById('studio-pane-' + name);
           if (tab) tab.classList.toggle('active', studio.tab === name);
           if (pane) pane.classList.toggle('active', studio.tab === name);
+        });
+        studioRenderSubtabs();
+      }
+
+      function studioRenderSubtabs() {
+        // The second level only exists inside the Lessons tab.
+        STUDIO_SUBTABS.forEach(function(name) {
+          var tab = document.getElementById('studio-subtab-' + name);
+          var pane = document.getElementById('studio-subpane-' + name);
+          if (tab) tab.classList.toggle('active', studio.sub === name);
+          if (pane) pane.classList.toggle('active', studio.sub === name);
         });
       }
 
@@ -357,14 +372,25 @@
         renderStudioCurrentSection();
       }
 
+      function studioSetSubTab(name) {
+        studio.sub = name;
+        studioRenderSubtabs();
+        renderStudioCurrentSection();
+      }
+
       // Single entry point for "draw whatever the active section needs".
       // The basic form and the suite both come back to this after saving.
       function renderStudioCurrentSection() {
         if (!studio.courseId) return;
-        if (studio.tab === 'lessons') renderStudioCurriculum();
-        else if (studio.tab === 'material') renderStudioMaterial();
-        else if (studio.tab === 'assignments' || studio.tab === 'tests') renderStudioWork(studio.tab);
-        else if (studio.tab === 'settings') renderStudioSettings();
+        if (studio.tab === 'lessons') {
+          if (studio.sub === 'task') renderStudioWorkList('material');
+          else if (studio.sub === 'assignment') renderStudioWorkList('assignment');
+          else if (studio.sub === 'test') renderStudioWorkList('tests');
+          else renderStudioCurriculum();
+          return;
+        }
+        if (studio.tab === 'library') { renderStudioLibrary(); return; }
+        if (studio.tab === 'settings') renderStudioSettings();
         else if (studio.tab === 'analytics') renderStudioAnalytics();
       }
 
@@ -945,15 +971,6 @@
       //  They are now sections of the course, so everything a teacher
       //  hands out is created from inside the course.
       // ============================================================
-      function renderStudioMaterial() {
-        renderStudioWorkList('material');
-        renderStudioLibrary();
-      }
-
-      function renderStudioWork(tab) {
-        renderStudioWorkList(tab === 'tests' ? 'tests' : 'assignment');
-      }
-
       // One row renderer for all three work sections.
       function studioWorkRow(opts) {
         return '<div class="studio-work" data-work-id="' + opts.id + '" data-work-kind="' + opts.kind + '">' +
@@ -1666,6 +1683,9 @@
 
         document.querySelectorAll('[data-studio-tab]').forEach(function(btn) {
           btn.addEventListener('click', function() { studioSetTab(btn.dataset.studioTab); });
+        });
+        document.querySelectorAll('[data-studio-sub]').forEach(function(btn) {
+          btn.addEventListener('click', function() { studioSetSubTab(btn.dataset.studioSub); });
         });
 
         // Each work section opens the build-method prompt, not the form

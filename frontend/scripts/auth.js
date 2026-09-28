@@ -296,6 +296,7 @@
           adminCalendarBtn.style.display = 'flex';
           adminApprovalsBtn.style.display = 'flex';
           teacherApprovalsBtn.style.display = 'none';
+          myCoursesBtn.style.display = 'flex';
           adminStatsContainer.style.display = 'block';
           renderStudents();
           renderBudget();
@@ -313,6 +314,9 @@
           adminApprovalsBtn.style.display = 'none';
           teacherApprovalsBtn.style.display = 'flex';
           courseWorkspaceBtn.style.display = 'flex';
+          // A teacher works in Course Studio, which already shows only their
+          // own courses, so the separate courses page is hidden for them.
+          myCoursesBtn.style.display = 'none';
           adminStatsContainer.style.display = 'none';
           renderApprovals();
           renderTeacherAuthKeys();
@@ -326,10 +330,11 @@
           adminApprovalsBtn.style.display = 'none';
           teacherApprovalsBtn.style.display = 'none';
           courseWorkspaceBtn.style.display = 'none';
+          myCoursesBtn.style.display = 'flex';
           adminStatsContainer.style.display = 'none';
         }
 
-        if (user.role === 'Teacher') renderTeacherCourses(); else renderStudentCourses();
+        if (user.role === 'Teacher') renderCourseStudio(); else renderStudentCourses();
         renderMeetings();
         renderTasks();
         renderTests();

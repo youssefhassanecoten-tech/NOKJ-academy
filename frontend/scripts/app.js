@@ -40,7 +40,8 @@
       const adminStudentsBtn = document.getElementById('admin-students-btn');
       const adminBudgetBtn = document.getElementById('admin-budget-btn');
       const adminCoursesBtn = document.getElementById('admin-courses-btn');
-const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
+      const courseWorkspaceBtn = document.getElementById('course-workspace-btn');
+      const myCoursesBtn = document.getElementById('my-courses-btn');
       const adminGradesBtn = document.getElementById('admin-grades-btn');
       const adminCalendarBtn = document.getElementById('admin-calendar-btn');
       const adminApprovalsBtn = document.getElementById('admin-approvals-btn');

@@ -29,7 +29,9 @@
       var STUDIO_EMOJI = ['📘', '📐', '🧬', '📖', '🧪', '🌍', '💻', '🎨', '🎵', '⚖️', '🩺', '💰', '🚀', '🗺️', '🏛️', '🧮', '🔬', '✍️'];
       // Level 1: the four top tabs of a course.
       var STUDIO_TABS = ['lessons', 'library', 'settings', 'analytics'];
-      // Level 2: what lives under Lessons.
+      // Level 2: what lives under Lessons. The key `assignment` is a legacy
+      // name kept because it is already persisted in saved Studio state; it
+      // shows and creates homework.
       var STUDIO_SUBTABS = ['lesson', 'task', 'assignment', 'test'];
       var STUDIO_TYPE_LABELS = {
         text: 'Text', video: 'Video', link: 'Link', file: 'File',
@@ -384,7 +386,7 @@
         if (!studio.courseId) return;
         if (studio.tab === 'lessons') {
           if (studio.sub === 'task') renderStudioWorkList('material');
-          else if (studio.sub === 'assignment') renderStudioWorkList('assignment');
+          else if (studio.sub === 'assignment') renderStudioWorkList('homework');
           else if (studio.sub === 'test') renderStudioWorkList('tests');
           else renderStudioCurriculum();
           return;
@@ -995,8 +997,7 @@
       function renderStudioWorkList(kind) {
         var c = studioCourse();
         var hostId = kind === 'material' ? 'studio-material-tasks'
-          : (kind === 'tests' ? 'studio-test-list' : 'studio-assignment-list');
-        var listEl = document.getElementById(hostId);
+          : (kind === 'tests' ? 'studio-test-list' : 'studio-assignment-list');        var listEl = document.getElementById(hostId);
         if (!c || !listEl) return;
         if (!canManageCourse(c.id)) {
           listEl.innerHTML = '';
@@ -1012,7 +1013,10 @@
           // be visible drops out of the course. Drafts stay listed because the
           // teacher has to be able to deploy them.
           items = tasks.filter(function(t) {
-            if (kind === 'assignment' ? t.type !== 'assignment' : t.type === 'assignment') return false;
+            // `homework` is the individual work a student must finish alone;
+            // everything else is class or extra work.
+            var isHomework = t.type === 'homework';
+            if (kind === 'homework' ? !isHomework : isHomework) return false;
             return taskCourseId(t) === c.id;
           });
         }
@@ -1021,8 +1025,8 @@
           listEl.innerHTML = '<div class="studio-work-empty">' + escapeHtml(
             kind === 'tests'
               ? tr('No tests in this course yet. Use “Add test” to create one.')
-              : (kind === 'assignment'
-                ? tr('No assignments in this course yet. Use “Add assignment” to create one.')
+              : (kind === 'homework'
+                ? tr('No homework in this course yet. Use “Add homework” to create one.')
                 : tr('No tasks in this course yet. Use “Add task” to create one.'))) + '</div>';
           return;
         }
@@ -1188,6 +1192,8 @@
         document.getElementById('task-modal-priority').value = 'medium';
         document.getElementById('task-modal-description').value = '';
         document.getElementById('task-modal-deadline').value = '';
+        populateHomeworkLessonPicker();
+        syncHomeworkLessonField();
         document.getElementById('task-file-list').innerHTML = '';
         tempTaskFiles = [];
         studio.editingTaskId = editing ? editing.id : null;
@@ -1403,6 +1409,18 @@
         var pass = document.getElementById('studio-set-passing');
         if (pass && document.activeElement !== pass) pass.value = c.passingScore === undefined ? 60 : c.passingScore;
 
+        var semStart = document.getElementById('studio-set-semester-start');
+        if (semStart && document.activeElement !== semStart) semStart.value = c.semesterStart || '';
+        var semDays = document.getElementById('studio-set-semester-days');
+        if (semDays && document.activeElement !== semDays) semDays.value = semesterDaysFor(c);
+        var courseDaysEl = document.getElementById('studio-set-course-days');
+        if (courseDaysEl && document.activeElement !== courseDaysEl) courseDaysEl.value = courseDurationDaysFor(c);
+
+        renderStudioSemesterSummary(c);
+        renderStudioGroups(c);
+        renderStudioPauses(c);
+        renderStudioFlags(c);
+
         var sw = document.getElementById('studio-color-swatches');
         if (sw) {
           sw.innerHTML = STUDIO_ACCENTS.map(function(color) {
@@ -1421,6 +1439,253 @@
         }
       }
 
+      // ============================================================
+      //  SEMESTER, GROUPS AND OUTCOME CONFIRMATION
+      // ============================================================
+
+      // Which lesson does this homework belong to? Only lessons in the group
+      // the work is being created in, so a teacher can never gate material
+      // from a different group by accident.
+      function populateHomeworkLessonPicker() {
+        var sel = document.getElementById('task-modal-lesson');
+        if (!sel) return;
+        var c = studioCourse();
+        var current = sel.value;
+        sel.innerHTML = '<option value="">' + escapeHtml(tr('Not linked to a lesson')) + '</option>';
+        if (!c) return;
+        groupLessonSequence(c).forEach(function(lesson) {
+          var opt = document.createElement('option');
+          opt.value = lesson.id;
+          opt.textContent = lesson.title || tr('Untitled lesson');
+          sel.appendChild(opt);
+        });
+        if (current) sel.value = current;
+      }
+
+      // The lesson field only makes sense for homework. Anything else would
+      // imply gating that the rules do not apply to.
+      function syncHomeworkLessonField() {
+        var field = document.getElementById('task-modal-lesson-field');
+        var typeSel = document.getElementById('task-modal-type');
+        if (!field || !typeSel) return;
+        var isHomework = typeSel.value === 'homework';
+        field.style.display = isHomework ? '' : 'none';
+      }
+
+      function selectedHomeworkLessonId() {
+        var sel = document.getElementById('task-modal-lesson');
+        return sel ? sel.value : '';
+      }
+
+      function renderStudioSemesterSummary(c) {
+        var el = document.getElementById('studio-semester-summary');
+        if (!el) return;
+        var end = groupSemesterEnd(c);
+        if (!end) {
+          el.textContent = tr('Set a start date to begin the semester.');
+          return;
+        }
+        var activeLimit = studentActiveDayLimit(c);
+        el.textContent = trf('Semester ends {date}. A student may take at most {limit} days before the course ends for them.',
+          { date: formatDate(end), limit: activeLimit });
+      }
+
+      // Flags are produced by the rules, never invented here. This only reads
+      // them and offers the teacher the one decision they are allowed to make.
+      function renderStudioFlags(c) {
+        var host = document.getElementById('studio-flags-list');
+        if (!host) return;
+
+        // Running the rules here means a teacher sees a student the moment the
+        // semester lapses, without waiting for an unrelated page to open.
+        evaluateGroupOutcomes(c);
+        purgeExpiredProgress();
+
+        var flagged = homeworkOutcomes.filter(function(o) {
+          return o.courseId === c.id && o.status === 'flagged';
+        });
+        var failed = homeworkOutcomes.filter(function(o) {
+          return o.courseId === c.id && o.status === 'failed';
+        });
+
+        if (!flagged.length && !failed.length) {
+          host.innerHTML = '<div class="studio-work-empty">' +
+            escapeHtml(tr('Nothing needs your confirmation right now.')) + '</div>';
+          return;
+        }
+
+        var html = '';
+        flagged.forEach(function(o) {
+          var name = getStudentName(o.studentId);
+          var done = completedHomeworkCount(c.id, o.studentId);
+          var total = groupHomework(c.id).length;
+          html += '<div class="studio-flag-row flagged">' +
+            '<div class="studio-flag-main">' +
+            '<strong>' + escapeHtml(name) + '</strong>' +
+            '<span>' + escapeHtml(trf('{done} of {total} homework completed', { done: done, total: total })) + '</span>' +
+            '</div>' +
+            '<div class="studio-flag-actions">' +
+            '<button type="button" class="studio-btn danger" data-studio-flag-confirm="' + o.id + '">' +
+            escapeHtml(tr('Confirm not passed')) + '</button>' +
+            '<button type="button" class="studio-btn" data-studio-flag-dismiss="' + o.id + '">' +
+            escapeHtml(tr('Keep enrolled')) + '</button>' +
+            '</div></div>';
+        });
+
+        failed.forEach(function(o) {
+          var name = getStudentName(o.studentId);
+          var left = retentionDaysLeft(o);
+          html += '<div class="studio-flag-row failed">' +
+            '<div class="studio-flag-main">' +
+            '<strong>' + escapeHtml(name) + '</strong>' +
+            '<span>' + escapeHtml(trf('Not passed. Progress is kept for {days} more days.', { days: left })) + '</span>' +
+            '</div>' +
+            '<div class="studio-flag-actions"><span class="studio-flag-note">' +
+            escapeHtml(tr('Only an administrator can undo this.')) +
+            '</span></div></div>';
+        });
+
+        host.innerHTML = html;
+
+        host.querySelectorAll('[data-studio-flag-confirm]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            confirmOutcomeFailure(btn.dataset.studioFlagConfirm, currentUser.id);
+            renderStudioFlags(c);
+            renderStudioSidebar();
+          });
+        });
+        host.querySelectorAll('[data-studio-flag-dismiss]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            dismissOutcomeFlag(btn.dataset.studioFlagDismiss, currentUser.id);
+            renderStudioFlags(c);
+          });
+        });
+      }
+
+      function renderStudioGroups(c) {
+        var host = document.getElementById('studio-groups-list');
+        if (!host) return;
+        var family = courseSubjectFamily(c);
+        if (family.length <= 1) {
+          host.innerHTML = '<div class="studio-work-empty">' +
+            escapeHtml(tr('This group is the only one for this subject so far.')) + '</div>';
+          return;
+        }
+        host.innerHTML = family.map(function(g) {
+          var isCurrent = g.id === c.id;
+          var count = enrolledStudentIds(g.id).length;
+          return '<div class="studio-group-row' + (isCurrent ? ' current' : '') + '">' +
+            '<button type="button" class="studio-group-link" data-studio-open-group="' + g.id + '">' +
+            escapeHtml(courseLabel(g)) + '</button>' +
+            '<span class="studio-group-meta">' + escapeHtml(
+              trf('{count} students', { count: count })) + '</span>' +
+            (isCurrent ? '<span class="studio-group-badge">' + escapeHtml(tr('Current')) + '</span>' : '') +
+            '</div>';
+        }).join('');
+
+        host.querySelectorAll('[data-studio-open-group]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            studioSelectCourse(btn.dataset.studioOpenGroup);
+          });
+        });
+      }
+
+      // Pause requests waiting on a decision, plus the ones already accepted so
+      // a teacher can see whose clock is stopped and end it on their return.
+      function renderStudioPauses(c) {
+        var host = document.getElementById('studio-pauses-list');
+        if (!host) return;
+        var rows = pauseRequests.filter(function(p) {
+          return p.courseId === c.id && (p.status === 'pending' || p.status === 'accepted');
+        });
+        if (!rows.length) {
+          host.innerHTML = '<div class="studio-work-empty">' +
+            escapeHtml(tr('No pause requests.')) + '</div>';
+          return;
+        }
+
+        var family = courseSubjectFamily(c);
+        host.innerHTML = rows.map(function(p) {
+          var name = getStudentName(p.studentId);
+          var options = family.map(function(g) {
+            return '<option value="' + escapeHtml(g.id) + '"' +
+              (g.id === p.courseId ? ' selected' : '') + '>' +
+              escapeHtml(courseShortLabel(g)) + '</option>';
+          }).join('');
+          if (p.status === 'pending') {
+            return '<div class="studio-flag-row flagged">' +
+              '<div class="studio-flag-main"><strong>' + escapeHtml(name) + '</strong>' +
+              '<span>' + escapeHtml(p.note ? p.note : tr('No reason given.')) + '</span></div>' +
+              '<div class="studio-flag-actions">' +
+              '<button type="button" class="studio-btn" data-pause-accept="' + p.id + '">' +
+              escapeHtml(tr('Accept pause')) + '</button>' +
+              '<button type="button" class="studio-btn" data-pause-decline="' + p.id + '">' +
+              escapeHtml(tr('Decline')) + '</button>' +
+              '</div></div>';
+          }
+          return '<div class="studio-flag-row failed">' +
+            '<div class="studio-flag-main"><strong>' + escapeHtml(name) + '</strong>' +
+            '<span>' + escapeHtml(tr('Pause accepted. Clock stopped.')) + '</span></div>' +
+            '<div class="studio-flag-actions">' +
+            '<select class="table-input" data-pause-group="' + p.id + '">' + options + '</select>' +
+            '<button type="button" class="studio-btn" data-pause-resume="' + p.id + '">' +
+            escapeHtml(tr('Mark as returned')) + '</button>' +
+            '</div></div>';
+        }).join('');
+
+        host.querySelectorAll('[data-pause-accept]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            decidePause(btn.dataset.pauseAccept, true, currentUser.id);
+            renderStudioPauses(c);
+            renderStudioFlags(c);
+          });
+        });
+        host.querySelectorAll('[data-pause-decline]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            decidePause(btn.dataset.pauseDecline, false, currentUser.id);
+            renderStudioPauses(c);
+          });
+        });
+        host.querySelectorAll('[data-pause-resume]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var sel = host.querySelector('[data-pause-group="' + btn.dataset.pauseResume + '"]');
+            resumeFromPause(btn.dataset.pauseResume, sel ? sel.value : '');
+            renderStudioPauses(c);
+            renderStudioSettings();
+          });
+        });
+      }
+
+      // Wires the semester, group and flag controls once, when the Studio opens.
+      function bindStudioSettingsExtras() {
+        var addBtn = document.getElementById('studio-group-add-btn');
+        if (addBtn && addBtn.dataset.bound !== '1') {
+          addBtn.dataset.bound = '1';
+          addBtn.addEventListener('click', function() {
+            var c = studioCourse();
+            if (!c || !canManageCourse(c.id)) return;
+            var nameEl = document.getElementById('studio-group-name');
+            var name = nameEl ? nameEl.value.trim() : '';
+            if (!name) {
+              name = nextSuggestedGroupName(c);
+            }
+            var copyContent = document.getElementById('studio-group-copy-content');
+            var copyWork = document.getElementById('studio-group-copy-work');
+            var made = createCourseGroup(c, name, {
+              copyContent: copyContent ? copyContent.checked : true,
+              copyWork: copyWork ? copyWork.checked : true
+            });
+            if (!made) return;
+            saveData();
+            if (nameEl) nameEl.value = '';
+            studioSelectCourse(made.group.id);
+            studio.tab = 'settings';
+            renderStudioSettings();
+            renderStudioSidebar();
+          });
+        }
+      }
+
       function saveStudioSettings() {
         var c = studioCourse();
         if (!c || !canManageCourse(c.id)) return;
@@ -1429,6 +1694,11 @@
         c.visibility = document.getElementById('studio-set-visibility').value === 'public' ? 'public' : 'private';
         c.capacity = Math.max(0, parseInt(document.getElementById('studio-set-capacity').value, 10) || 0);
         c.passingScore = Math.min(100, Math.max(0, parseInt(document.getElementById('studio-set-passing').value, 10) || 0));
+        c.semesterStart = document.getElementById('studio-set-semester-start').value || '';
+        var days = parseInt(document.getElementById('studio-set-semester-days').value, 10);
+        c.semesterDays = isNaN(days) || days <= 0 ? SEMESTER_DEFAULT_DAYS : days;
+        var courseDays = parseInt(document.getElementById('studio-set-course-days').value, 10);
+        c.courseDurationDays = isNaN(courseDays) || courseDays <= 0 ? 365 : courseDays;
         c.updatedAt = new Date().toISOString();
         studioCommit();
         renderStudioSettings();
@@ -1467,8 +1737,8 @@
           kpis.innerHTML =
             studioKpi(tr('Enrolled students'), studentIds.length, c.capacity ? tr('Limit') + ': ' + c.capacity : tr('Unlimited')) +
             studioKpi(tr('Published lessons'), publishedLessons, totalLessons + ' ' + tr('total')) +
-            studioKpi(tr('Material &amp; Tasks'), work.material, tr('in this course')) +
-            studioKpi(tr('Assignments'), work.assignments, tr('in this course')) +
+            studioKpi(tr('Tasks'), work.material, tr('in this course')) +
+            studioKpi(tr('Homework'), work.assignments, tr('in this course')) +
             studioKpi(tr('Tests'), work.tests, tr('in this course')) +
             studioKpi(tr('Avg completion'), avgProgress + '%', studentIds.length ? tr('across enrolled') : tr('no students yet')) +
             studioKpi(tr('Average grade'), avgGrade ? avgGrade + '%' : '—', tr('graded work'));
@@ -1847,13 +2117,16 @@
         });
 
         var settingsInputs = ['studio-set-description', 'studio-set-code', 'studio-set-visibility',
-          'studio-set-capacity', 'studio-set-passing'];
+          'studio-set-capacity', 'studio-set-passing',
+          'studio-set-semester-start', 'studio-set-semester-days', 'studio-set-course-days'];
         settingsInputs.forEach(function(id) {
           var el = document.getElementById(id);
           if (!el) return;
           el.addEventListener('change', saveStudioSettings);
           el.addEventListener('blur', saveStudioSettings);
         });
+
+        bindStudioSettingsExtras();
 
         var previewClose = document.getElementById('studio-preview-close');
         if (previewClose) previewClose.addEventListener('click', function() {

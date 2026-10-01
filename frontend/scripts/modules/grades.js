@@ -1,6 +1,72 @@
+      // ============================================================
+      //  COURSE OUTCOMES
+      //
+      //  A teacher confirms a flag but may not clear a failure; only an
+      //  administrator can. So the undo control is rendered for admins alone
+      //  and the panel is hidden from teachers entirely rather than showing
+      //  them a button that would refuse.
+      // ============================================================
+
+      function renderOutcomesPanel(scope) {
+        var panel = document.getElementById('outcomes-panel');
+        var tbody = document.getElementById('outcomes-body');
+        var empty = document.getElementById('outcomes-empty');
+        if (!panel || !tbody) return;
+
+        var isAdmin = currentUser.role === 'Admin';
+        panel.style.display = isAdmin ? '' : 'none';
+        if (!isAdmin) return;
+
+        purgeExpiredProgress();
+
+        var allowed = {};
+        scope.forEach(function(c) { allowed[c.id] = true; });
+        var rows = homeworkOutcomes.filter(function(o) {
+          return allowed[o.courseId] &&
+            (o.status === 'flagged' || o.status === 'failed' || o.status === 'withdrawn');
+        });
+
+        if (!rows.length) {
+          tbody.innerHTML = '';
+          if (empty) empty.style.display = '';
+          return;
+        }
+        if (empty) empty.style.display = 'none';
+
+        tbody.innerHTML = rows.map(function(o) {
+          var course = courses.find(function(c) { return c.id === o.courseId; });
+          var name = getStudentName(o.studentId);
+          var statusText = o.status === 'flagged' ? tr('Awaiting teacher')
+            : (o.status === 'withdrawn' ? tr('Withdrawn') : tr('Not passed'));
+          var reasonText = o.reason === 'no-homework' ? tr('No homework completed')
+            : (o.reason === 'active-limit' ? tr('Passed the time limit')
+              : (o.reason === 'dropped-out' ? tr('Left the course') : tr('Other')));
+          var left = retentionDaysLeft(o);
+          var keepText = left === null ? tr('Not scheduled') : trf('{days} days', { days: left });
+          var action = o.status === 'failed'
+            ? '<button type="button" class="table-btn" data-outcome-restore="' + o.id + '">' +
+              escapeHtml(tr('Undo failure')) + '</button>'
+            : '<span class="muted">' + escapeHtml(tr('Waiting on teacher')) + '</span>';
+          return '<tr>' +
+            '<td>' + escapeHtml(name) + '</td>' +
+            '<td>' + escapeHtml(course ? courseLabel(course) : '—') + '</td>' +
+            '<td>' + escapeHtml(reasonText) + '</td>' +
+            '<td>' + escapeHtml(statusText) + '</td>' +
+            '<td>' + escapeHtml(keepText) + '</td>' +
+            '<td>' + action + '</td>' +
+            '</tr>';
+        }).join('');
+
+        tbody.querySelectorAll('[data-outcome-restore]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            restoreOutcome(btn.dataset.outcomeRestore, currentUser.id);
+            renderOutcomesPanel(scope);
+          });
+        });
+      }
+
       function renderGrades() {
-        if (!currentUser) return;
-        // A teacher manages the grades of their own students, so they get the
+        if (!currentUser) return;        // A teacher manages the grades of their own students, so they get the
         // same management table as an admin, scoped to their own courses. Only
         // a student sees the personal "my grades" view.
         var manages = currentUser.role === 'Admin' || currentUser.role === 'Teacher';
@@ -28,6 +94,7 @@
               'selected' : '') + '>' + escapeHtml(s.name) + '</option>';
           });
           renderGradeTable();
+          renderOutcomesPanel(scope);
         } else {
           adminView.style.display = 'none';
           studentView.style.display = 'block';

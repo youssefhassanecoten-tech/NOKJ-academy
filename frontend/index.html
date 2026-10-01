@@ -518,7 +518,7 @@
                 <div class="studio-subtabs" id="studio-subtabs" role="tablist">
                   <button class="studio-subtab active" data-studio-sub="lesson" id="studio-subtab-lesson"><span aria-hidden="true">📄</span> <span id="studio-sub-lesson-label">Lesson</span></button>
                   <button class="studio-subtab" data-studio-sub="task" id="studio-subtab-task"><span aria-hidden="true">📎</span> <span id="studio-sub-task-label">Task</span></button>
-                  <button class="studio-subtab" data-studio-sub="assignment" id="studio-subtab-assignment"><span aria-hidden="true">📝</span> <span id="studio-sub-assignment-label">Assignment</span></button>
+                  <button class="studio-subtab" data-studio-sub="assignment" id="studio-subtab-assignment"><span aria-hidden="true">📝</span> <span id="studio-sub-assignment-label">Homework</span></button>
                   <button class="studio-subtab" data-studio-sub="test" id="studio-subtab-test"><span aria-hidden="true">📋</span> <span id="studio-sub-test-label">Test</span></button>
                 </div>
 
@@ -556,7 +556,7 @@
                       <h3 id="studio-assignments-title">Assignments</h3>
                       <p id="studio-assignments-sub">Coursework students hand in, built here or in the Task Designer Suite.</p>
                     </div>
-                    <button class="primary-button" id="studio-add-assignment-btn">＋ <span id="studio-add-assignment-label">Add assignment</span></button>
+                    <button class="primary-button" id="studio-add-assignment-btn">＋ <span id="studio-add-assignment-label">Add homework</span></button>
                   </div>
                   <div id="studio-assignment-list" class="studio-work-list"></div>
                 </div>
@@ -663,6 +663,77 @@
                     <div class="studio-swatches" id="studio-color-swatches"></div>
                   </div>
                 </div>
+
+                <!-- Semester. Set per group, because each group runs its own. -->
+                <div class="studio-settings-block">
+                  <h4 id="studio-semester-title">Semester</h4>
+                  <p id="studio-semester-sub">
+                    Homework is required to pass. A student who completes no homework by
+                    the end of the semester is flagged for you to confirm.
+                  </p>
+                  <div class="studio-settings-grid">
+                    <div class="studio-field">
+                      <label for="studio-set-semester-start" class="studio-lbl">Semester start date</label>
+                      <input type="date" id="studio-set-semester-start" />
+                      <small id="studio-set-semester-start-hint">Leave empty until you are ready to run the semester.</small>
+                    </div>
+                    <div class="studio-field">
+                      <label for="studio-set-semester-days" class="studio-lbl">Semester length (days)</label>
+                      <input type="number" id="studio-set-semester-days" min="1" max="3650" step="1" placeholder="90" />
+                      <small id="studio-set-semester-days-hint">90 days by default.</small>
+                    </div>
+                    <div class="studio-field">
+                      <label for="studio-set-course-days" class="studio-lbl">Total course length (days)</label>
+                      <input type="number" id="studio-set-course-days" min="1" max="3650" step="1" placeholder="365" />
+                      <small id="studio-set-course-days-hint">
+                        A student may take at most this less three months. Passing that limit ends the course for them.
+                      </small>
+                    </div>
+                  </div>
+                  <div id="studio-semester-summary" class="studio-note"></div>
+                </div>
+
+                <!-- Groups of this subject, each managed on its own. -->
+                <div class="studio-settings-block">
+                  <h4 id="studio-groups-title">Groups</h4>
+                  <p id="studio-groups-sub">
+                    Run the same subject for more than one class. Each group keeps its own
+                    students, settings and semester.
+                  </p>
+                  <div id="studio-groups-list" class="studio-groups-list"></div>
+                  <div class="studio-groups-add">
+                    <input type="text" id="studio-group-name" placeholder="e.g. B" data-i18n-ph="e.g. B" />
+                    <label class="studio-check">
+                      <input type="checkbox" id="studio-group-copy-content" checked />
+                      <span id="studio-group-copy-content-label">Copy course content into the new group</span>
+                    </label>
+                    <label class="studio-check">
+                      <input type="checkbox" id="studio-group-copy-work" checked />
+                      <span id="studio-group-copy-work-label">Copy tasks and tests too</span>
+                    </label>
+                    <button type="button" class="primary-button" id="studio-group-add-btn">Add group</button>
+                  </div>
+                </div>
+
+                <!-- Pause requests. A pause stops the student's clock, so the
+                     teacher is the only one who can grant or refuse one. -->
+                <div class="studio-settings-block">
+                  <h4 id="studio-pauses-title">Pause requests</h4>
+                  <p id="studio-pauses-sub">
+                    A pause stops a student's semester clock for as long as it lasts.
+                  </p>
+                  <div id="studio-pauses-list" class="studio-flags-list"></div>
+                </div>
+
+                <!-- Students the semester rule has flagged for a decision. -->
+                <div class="studio-settings-block">
+                  <h4 id="studio-flags-title">Needs your confirmation</h4>
+                  <p id="studio-flags-sub">
+                    These students finished the semester without completing any homework.
+                    Nothing has been changed yet.
+                  </p>
+                  <div id="studio-flags-list" class="studio-flags-list"></div>
+                </div>
               </div>
 
               <!-- ===== ANALYTICS TAB ===== -->
@@ -706,6 +777,25 @@
             </div>
             <table><thead><tr><th>Student</th><th>Courses</th><th>Average</th><th>Status</th><th>Action</th></tr></thead><tbody id="grade-table-body"></tbody></table>
             <div class="table-summary"><span>Total Grades: <strong id="grade-total">0</strong></span><span>Passing: <strong class="total income" id="grade-passing-count">0</strong></span><span>Failing: <strong class="total expense" id="grade-failing-count">0</strong></span></div>
+          </div>
+
+          <!-- Course outcomes. Only an administrator may undo a failure, so
+               this panel is the one place that control is offered. -->
+          <div class="table-container" id="outcomes-panel" style="margin-top:16px;">
+            <div class="table-toolbar">
+              <div class="left"><strong id="outcomes-title">Course outcomes</strong></div>
+            </div>
+            <p id="outcomes-sub">
+              Students who did not complete any homework before their semester ended.
+              Their work is kept for 30 days so it can be restored if a failure was a mistake.
+            </p>
+            <table>
+              <thead>
+                <tr><th>Student</th><th>Group</th><th>Reason</th><th>Status</th><th>Progress kept for</th><th>Action</th></tr>
+              </thead>
+              <tbody id="outcomes-body"></tbody>
+            </table>
+            <div id="outcomes-empty" class="table-empty">No course outcomes to review.</div>
           </div>
         </div>
         <div id="student-grades-view" style="display:none;">
@@ -956,7 +1046,7 @@
         <label>Task Title</label>
         <input type="text" id="task-modal-title-input" placeholder="Enter task title" />
         <label>Task Type</label>
-        <select id="task-modal-type"><option value="homework">Homework</option><option value="test">Test</option><option value="assignment">Assignment</option><option value="interactive">Interactive Test</option></select>
+        <select id="task-modal-type"><option value="homework">Homework</option><option value="test">Test</option><option value="interactive">Interactive Test</option></select>
         <div id="task-questions-builder" style="display:none;">
           <div style="margin:16px 0 8px 0;display:flex;justify-content:space-between;align-items:center;">
             <strong>Questions</strong>
@@ -974,6 +1064,15 @@
         <select id="task-modal-priority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select>
         <label>Description</label>
         <textarea id="task-modal-description" placeholder="Describe the task..."></textarea>
+        <!-- Homework gates the next lesson, so it has to name the lesson it
+             belongs to. Hidden unless the work is homework. -->
+        <div id="task-modal-lesson-field" style="display:none;">
+          <label for="task-modal-lesson">Homework for lesson</label>
+          <select id="task-modal-lesson"><option value="">Not linked to a lesson</option></select>
+          <small id="task-modal-lesson-hint">
+            While this homework is unfinished, the next lesson stays locked.
+          </small>
+        </div>
         <label>Deadline</label>
         <input type="date" id="task-modal-deadline" />
         <label>Attach Files</label>

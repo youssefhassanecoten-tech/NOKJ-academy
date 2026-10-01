@@ -375,8 +375,8 @@
         // switched with a local tab strip, so a student never leaves the
         // course to find their work.
         var sectionTabs = [
-          ['material', '📎', tr('Material &amp; Tasks')],
-          ['assignments', '📝', tr('Assignments')],
+          ['material', '📎', tr('Tasks')],
+          ['assignments', '📝', tr('Homework')],
           ['tests', '📋', tr('Tests')]
         ];
         html += '<div class="course-sections" data-course-sections="' + course.id + '">';
@@ -417,11 +417,86 @@
 
       // Renders the published modules/lessons a student can work through.
       // Draft modules and draft lessons are never exposed to students.
+      // ============================================================
+      //  SEMESTER BAR
+      //
+      //  Deliberately calm. A student sees how long they have and what is
+      //  still outstanding, plus the option to ask for a pause. They are not
+      //  told they have failed: the semester rule only raises a case for their
+      //  teacher to look at, so warning them first would be inventing a
+      //  decision that has not been made.
+      // ============================================================
+
+      function renderStudentSemesterBar(course) {
+        var sid = currentUser.id;
+        var outcome = outcomeFor(sid, course.id);
+        var pause = openPauseRequest(sid, course.id);
+        var left = studentSemesterDaysLeft(course, sid);
+        var totalHw = groupHomework(course.id).length;
+        var doneHw = completedHomeworkCount(course.id, sid);
+        var end = studentSemesterEnd(course, sid);
+
+        if (!end && !outcome && !pause) return '';
+
+        var html = '<div class="student-semester-bar' + (outcome && outcome.status === 'failed' ? ' failed' : '') + '"';
+        html += ' data-semester-course="' + escapeHtml(course.id) + '">';
+
+        if (outcome && outcome.status === 'failed') {
+          html += '<div class="student-semester-main"><strong>' + tr('This course is not passed') + '</strong>' +
+            '<span>' + escapeHtml(tr('Your teacher or an administrator can change this.')) + '</span></div>';
+        } else if (outcome && outcome.status === 'flagged') {
+          html += '<div class="student-semester-main"><strong>' + tr('Waiting on your teacher') + '</strong>' +
+            '<span>' + escapeHtml(tr('Your teacher is reviewing your homework record for this course.')) + '</span></div>';
+        } else if (left !== null && left > 0) {
+          html += '<div class="student-semester-main"><strong>' +
+            escapeHtml(trf('{days} days left in this semester', { days: left })) + '</strong>' +
+            '<span>' + escapeHtml(tr('{done} of {total} homework completed', { done: doneHw, total: totalHw })) +
+            (end ? ' · ' + escapeHtml(tr('Ends {date}', { date: formatDate(end) })) : '') +
+            '</span></div>';
+        } else if (left !== null) {
+          html += '<div class="student-semester-main"><strong>' + tr('The semester has ended') + '</strong>' +
+            '<span>' + escapeHtml(tr('{done} of {total} homework completed', { done: doneHw, total: totalHw })) + '</span></div>';
+        }
+
+        // Pause: an open request, an accepted pause, or the option to ask.
+        if (pause && pause.status === 'pending') {
+          html += '<div class="student-semester-pause pending">' + escapeHtml(tr('Pause requested — waiting for your teacher.')) + '</div>';
+        } else if (pause && pause.status === 'accepted') {
+          html += '<div class="student-semester-pause accepted">' +
+            escapeHtml(tr('Your pause is accepted. Your deadline has moved.')) + '</div>';
+        } else if (!outcome || outcome.status === 'dismissed') {
+          html += '<div class="student-semester-actions">' +
+            '<button type="button" class="table-btn" data-request-pause="' + escapeHtml(course.id) + '">' +
+            escapeHtml(tr('Request a pause')) + '</button></div>';
+        }
+
+        html += '</div>';
+        return html;
+      }
+
+      // The pause request is a plain form: reason is optional, the dates
+      // default to today so a student in difficulty can send it immediately.
+      function bindStudentSemesterBar(course) {
+        var root = document.querySelector('[data-semester-course="' + course.id + '"]');
+        if (!root) return;
+        var btn = root.querySelector('[data-request-pause]');
+        if (!btn || btn.dataset.bound === '1') return;
+        btn.dataset.bound = '1';
+        btn.addEventListener('click', function() {
+          var reason = window.prompt(tr('Why do you need a pause? (optional)'), '');
+          if (reason === null) return;
+          var today = new Date().toISOString().split('T')[0];
+          requestPause(currentUser.id, course.id, today, '', reason);
+          renderStudentCourseDetail(course);
+        });
+      }
+
       function renderStudentCurriculum(course) {
         if (!course || !currentUser) return '';
         var mods = getCourseModules(course.id).filter(function(m) { return m.published; });
         var pct = courseCompletion(course.id, currentUser.id);
         var html = '<div class="student-curriculum" data-student-curriculum="' + course.id + '">';
+        html += renderStudentSemesterBar(course);
         html += '<div class="student-curriculum-head"><h4>' + tr('Curriculum') + '</h4>';
         html += '<div class="student-curriculum-progress"><div class="track ' + progressColorClass(pct) +
           '"><div class="fill" style="width:' + Math.max(pct, 2) + '%"></div></div><span class="' +
@@ -439,13 +514,26 @@
           html += '<ul class="student-lesson-list">';
           lessons.forEach(function(lesson) {
             var done = isLessonComplete(course.id, lesson.id, currentUser.id);
-            html += '<li class="student-lesson' + (done ? ' done' : '') + '">' +
-              '<label class="student-lesson-check"><input type="checkbox" data-lesson-complete="' +
-              escapeHtml(lesson.id) + '"' + (done ? ' checked' : '') + ' />' +
+            // A lesson stays locked until the homework of the lesson before it
+            // is finished, so the material cannot be skipped.
+            var lock = lessonLockState(course, lesson, currentUser.id);
+            var cls = 'student-lesson' + (done ? ' done' : '') + (lock.locked ? ' locked' : '');
+            var checkBox = lock.locked
+              ? '<span class="student-lesson-lock" title="' + escapeHtml(tr('Locked')) + '">🔒</span>'
+              : '<label class="student-lesson-check"><input type="checkbox" data-lesson-complete="' +
+                escapeHtml(lesson.id) + '"' + (done ? ' checked' : '') + ' /></label>';
+            var lockNote = lock.locked
+              ? '<span class="student-lesson-blocked">' + escapeHtml(trf(
+                  'Finish the homework for {lesson} to unlock this.',
+                  { lesson: lock.blockingLessonTitle || tr('the previous lesson') })) + '</span>'
+              : '';
+            html += '<li class="' + cls + '">' +
+              checkBox +
               '<span class="student-lesson-icon">' + studioLessonTypeIcon(lesson.type) + '</span>' +
-              '<span class="student-lesson-text">' + escapeHtml(lesson.title) + '</span></label>' +
+              '<span class="student-lesson-text">' + escapeHtml(lesson.title) + '</span>' +
               '<span class="student-lesson-meta">' + escapeHtml(tr(STUDIO_TYPE_LABELS[lesson.type] || lesson.type)) +
-              (lesson.duration ? ' · ' + lesson.duration + ' ' + tr('min') : '') + '</span></li>';
+              (lesson.duration ? ' · ' + lesson.duration + ' ' + tr('min') : '') + '</span>' +
+              lockNote + '</li>';
           });
           html += '</ul></section>';
         });
@@ -454,6 +542,7 @@
       }
 
       function bindStudentCurriculum(course) {
+        bindStudentSemesterBar(course);
         var root = document.querySelector('[data-student-curriculum="' + course.id + '"]');
         if (!root) return;
         root.querySelectorAll('[data-lesson-complete]').forEach(function(box) {

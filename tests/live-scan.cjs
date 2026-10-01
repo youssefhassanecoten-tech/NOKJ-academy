@@ -90,9 +90,9 @@ function seedStorage(role) {
 
   const tasks = [
     { id: 1, title: 'Interactive task', type: 'interactive', courseId: 5, teacherId: 1, assignedTo: 'course', assignedIds: [5], published: true, priority: 'medium', description: 'Do it', deadline: soon, createdAt: past, files: [], questions: [] },
-    { id: 2, title: 'Assignment work', type: 'assignment', courseId: 5, teacherId: 1, assignedTo: 'course', assignedIds: [5], published: true, priority: 'high', description: 'Write it', deadline: soon, createdAt: past, files: [], questions: [] },
-    { id: 3, title: 'Draft task', type: 'homework', courseId: 5, teacherId: 1, assignedTo: 'course', assignedIds: [5], published: false, priority: 'low', description: 'Hidden', deadline: soon, createdAt: past, files: [], questions: [] },
-    { id: 4, title: 'Plain task', type: 'homework', courseId: 5, teacherId: 1, assignedTo: 'course', assignedIds: [5], published: true, priority: 'medium', description: 'Type an answer', deadline: soon, createdAt: past, files: [], questions: [] }
+    { id: 2, title: 'Assignment work', type: 'homework', courseId: 5, teacherId: 1, assignedTo: 'course', assignedIds: [5], published: true, priority: 'high', description: 'Write it', deadline: soon, createdAt: past, files: [], questions: [] },
+    { id: 3, title: 'Draft task', type: 'interactive', courseId: 5, teacherId: 1, assignedTo: 'course', assignedIds: [5], published: false, priority: 'low', description: 'Hidden', deadline: soon, createdAt: past, files: [], questions: [] },
+    { id: 4, title: 'Plain task', type: 'interactive', courseId: 5, teacherId: 1, assignedTo: 'course', assignedIds: [5], published: true, priority: 'medium', description: 'Type an answer', deadline: soon, createdAt: past, files: [], questions: [] }
   ];
   const tests = [
     { id: 7, title: 'Course test', type: 'test', courseId: 5, teacherId: 1, published: true, description: 'A test', deadline: soon, createdAt: past, blocks: [], questions: [{ text: 'Q1', type: 'mcq', options: ['a', 'b'], correct: 0 }] }
@@ -424,7 +424,7 @@ try {
   check('course detail shows the curriculum', /Basics/.test(detail), detail.slice(0, 160));
   check('course detail shows lessons section', /Lessons|Curriculum/.test(detail));
   check('course detail shows a material section', /Material/i.test(detail));
-  check('course detail shows an assignments section', /Assignments/.test(detail));
+  check('course detail shows a homework section', /Homework/.test(detail), detail.slice(0, 200));
   check('course detail shows a tests section', /Tests/.test(detail));
   check('course detail hides the draft task', !/Draft task/.test(detail));
   check('course detail shows the assignment', /Assignment work/.test(detail));
@@ -599,9 +599,9 @@ console.log('== Teacher portal ==');
   check('task sub-section lists the draft for the teacher', /Draft task/.test(matList));
 
   win.studioSetSubTab('assignment');
-  check('assignment sub-pane activates', win.document.getElementById('studio-subpane-assignment').classList.contains('active'));
+  check('homework sub-pane activates', win.document.getElementById('studio-subpane-assignment').classList.contains('active'));
   const asgList = win.document.getElementById('studio-assignment-list').textContent;
-  check('assignment sub-section lists only assignments', /Assignment work/.test(asgList) && !/Interactive task/.test(asgList), asgList.slice(0, 200));
+  check('homework sub-section lists only homework', /Assignment work/.test(asgList) && !/Interactive task/.test(asgList), asgList.slice(0, 200));
 
   win.studioSetSubTab('test');
   check('test sub-pane activates', win.document.getElementById('studio-subpane-test').classList.contains('active'));
@@ -634,8 +634,12 @@ console.log('== Teacher portal ==');
   const checked = [...win.document.querySelectorAll('.task-assign-checkbox')].filter(c => c.checked).map(c => c.value);
   check('basic path pre-checks the current course', checked.length === 1 && checked[0] === '5', JSON.stringify(checked));
 
-  // Create a task through the real form submit.
+  // Create a task through the real form submit. The type is chosen
+  // explicitly: homework is the individual work a student must finish alone
+  // and lands in the Homework section, so an interactive block task is used
+  // here to exercise the Tasks section.
   win.document.getElementById('task-modal-title-input').value = 'Made in studio';
+  win.document.getElementById('task-modal-type').value = 'interactive';
   win.document.getElementById('task-modal-description').value = 'From the course section';
   win.document.getElementById('task-modal-deadline').value = '2030-01-01';
   win.document.getElementById('task-modal-form').dispatchEvent(new win.Event('submit', { bubbles: true, cancelable: true }));

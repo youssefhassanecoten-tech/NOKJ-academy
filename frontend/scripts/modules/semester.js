@@ -135,6 +135,26 @@
         return groupHomework(groupId).filter(function(t) { return t.lessonId === lessonId; });
       }
 
+      // Attaches homework to the lesson it belongs to, or detaches it. The
+      // lesson must belong to the same group, so gating can never reach across
+      // groups. Returns the task, or null when the link is not valid.
+      function linkHomeworkToLesson(taskId, lessonId) {
+        var t = tasks.find(function(x) { return x.id === taskId; });
+        if (!t) return null;
+        if (!lessonId) {
+          if (t.lessonId) delete t.lessonId;
+          saveData();
+          return t;
+        }
+        var groupId = taskCourseId(t);
+        var inGroup = groupLessonSequence(courses.find(function(c) { return c.id === groupId; }) || {})
+          .some(function(l) { return l.id === lessonId; });
+        if (!inGroup) return null;
+        t.lessonId = lessonId;
+        saveData();
+        return t;
+      }
+
       function hasHomeworkSubmission(taskId, studentId) {
         return !!taskSubmissions[taskId + '-' + studentId];
       }
@@ -215,6 +235,15 @@
         return record;
       }
 
+      // An outcome that has already been decided is terminal. Without this a
+      // flag the teacher chose to close would simply reappear on the next
+      // visit, and dismissing it would be impossible.
+      var TERMINAL_OUTCOMES = ['failed', 'passed', 'dismissed', 'withdrawn'];
+
+      function isOutcomeTerminal(status) {
+        return TERMINAL_OUTCOMES.indexOf(status) !== -1;
+      }
+
       // Runs the two fail rules for one student in one group.
       //   - no homework at all once the semester is over -> flagged, and a
       //     teacher has to confirm it;
@@ -223,7 +252,7 @@
       function evaluateStudentOutcome(group, studentId, now) {
         var at = now ? new Date(now) : new Date();
         var existing = outcomeFor(studentId, group.id);
-        if (existing && (existing.status === 'failed' || existing.status === 'passed')) return null;
+        if (existing && isOutcomeTerminal(existing.status)) return null;
         if (!isStudentEnrolledIn(studentId, group.id)) return null;
 
         if (hasPassedActiveLimit(group, studentId, at)) {
@@ -286,6 +315,19 @@
         o.confirmedBy = teacherId || null;
         o.confirmedAt = at.toISOString();
         o.retainUntil = addDays(at, PROGRESS_RETENTION_DAYS).toISOString();
+        saveData();
+        return o;
+      }
+
+      // A teacher may also decide the student is fine and leave them enrolled.
+      // That is neither a pass nor a failure: the case is closed, and because a
+      // closed outcome is terminal the rule will not raise it again.
+      function dismissOutcomeFlag(outcomeId, teacherId) {
+        var o = homeworkOutcomes.find(function(x) { return x.id === outcomeId; });
+        if (!o || o.status !== 'flagged') return null;
+        o.status = 'dismissed';
+        o.confirmedBy = teacherId || null;
+        o.confirmedAt = new Date().toISOString();
         saveData();
         return o;
       }

@@ -9,7 +9,6 @@
           'Dashboard': 'Главная',
           'Timetable': 'Расписание',
           'My courses': 'Мои курсы',
-          'Assignments': 'Задания',
           'Announcements': 'Объявления',
           'Classroom': 'Виртуальный класс',
           'Tasks': 'Задания',
@@ -255,7 +254,8 @@
           'All Types': 'Все типы',
           'Homework': 'Домашнее задание',
           'Test': 'Тест',
-          'Assignment': 'Задание',
+          'Assignment': 'Домашнее задание',
+          'Assignments': 'Домашние задания',
           'All Status': 'Все статусы',
           '+ Add Task': '+ Добавить задание',
           'No tasks found.': 'Заданий не найдено.',
@@ -743,12 +743,13 @@
           'Curriculum': 'Программа',
           // ----- Course sections (tasks, assignments and tests are now
           // sections of the course instead of separate pages) -----
-          'Material &amp; Tasks': 'Материалы и задания',
-          'Material & Tasks': 'Материалы и задания',
+          'Material &amp; Tasks': 'Задания',
+          'Material & Tasks': 'Задания',
           'How do you want to build this?': 'Как вы хотите это создать?',
           'Choose a starting point.': 'Выберите способ.',
           'Add task': 'Добавить задание',
-          'Add assignment': 'Добавить работу',
+          'Add assignment': 'Добавить домашнее задание',
+          'Add homework': 'Добавить домашнее задание',
           'Add test': 'Добавить тест',
           'blocks': 'блоков',
           'block': 'блок',
@@ -778,7 +779,9 @@
           'No assignments have been published for this course yet.': 'Для этого курса ещё не опубликовано ни одной работы.',
           'No tests have been published for this course yet.': 'Для этого курса ещё не опубликовано ни одного теста.',
           'No tasks in this course yet. Use “Add task” to create one.': 'В этом курсе пока нет заданий. Нажмите «Добавить задание», чтобы создать.',
-          'No assignments in this course yet. Use “Add assignment” to create one.': 'В этом курсе пока нет работ. Нажмите «Добавить работу», чтобы создать.',
+          'No assignments in this course yet. Use “Add assignment” to create one.': 'В этом курсе пока нет домашних заданий. Нажмите «Добавить домашнее задание», чтобы создать.',
+          'No homework in this course yet. Use “Add homework” to create one.': 'В этом курсе пока нет домашних заданий. Нажмите «Добавить домашнее задание», чтобы создать.',
+          'No homework has been published for this course yet.': 'Для этого курса пока не опубликовано ни одного домашнего задания.',
           'No tests in this course yet. Use “Add test” to create one.': 'В этом курсе пока нет тестов. Нажмите «Добавить тест», чтобы создать.',
           'Basic upload': 'Простая форма',
           'Task Designer Suite': 'Конструктор заданий',
@@ -974,7 +977,7 @@
           'Email': 'Эл. почта',
 
           // ----- Dashboard panels -----
-          'Assignment work': 'Задания',
+          'Assignment work': 'Домашние задания',
           'Draft task': 'Черновик',
           'Interactive task': 'Интерактивное задание',
 
@@ -990,7 +993,112 @@
           'Title, description, deadline and files. Fastest way to hand something over.':
             'Название, описание, срок и файлы. Самый быстрый способ сдать работу.',
           'Build it block by block: maps, 3D terrain, animations, flashcards, games and auto-graded questions.':
-            'Соберите из блоков: карты, объёмный рельеф, анимации, карточки, игры и вопросы с автоматической проверкой.'
+            'Соберите из блоков: карты, объёмный рельеф, анимации, карточки, игры и вопросы с автоматической проверкой.',
+
+          // ----- Semester, groups and course outcomes -----
+          'Semester': 'Семестр',
+          'Homework is required to pass. A student who completes no homework by the end of the semester is flagged for you to confirm.':
+            'Домашние задания обязательны для сдачи. Ученик, не выполнивший ни одного домашнего задания к концу семестра, попадает в список на ваше подтверждение.',
+          'Semester start date': 'Дата начала семестра',
+          'Leave empty until you are ready to run the semester.':
+            'Оставьте пустым, пока не будете готовы начать семестр.',
+          'Semester length (days)': 'Длительность семестра (дней)',
+          '90 days by default.': 'По умолчанию 90 дней.',
+          'Total course length (days)': 'Общая длительность курса (дней)',
+          'A student may take at most this less three months. Passing that limit ends the course for them.':
+            'Ученик может использовать не более этого срока за вычетом трёх месяцев. Превышение лимита завершает курс для него.',
+          'Set a start date to begin the semester.': 'Укажите дату начала, чтобы запустить семестр.',
+          'Semester ends {date}. A student may take at most {limit} days before the course ends for them.':
+            'Семестр заканчивается {date}. Ученик может использовать не более {limit} дней, прежде чем курс завершится для него.',
+
+          'Groups': 'Группы',
+          'Run the same subject for more than one class. Each group keeps its own students, settings and semester.':
+            'Ведите один и тот же предмет в нескольких группах. У каждой группы свои ученики, настройки и семестр.',
+          'e.g. B': 'например, B',
+          'Copy course content into the new group': 'Скопировать содержимое курса в новую группу',
+          'Copy tasks and tests too': 'Скопировать также задания и тесты',
+          'Add group': 'Добавить группу',
+          'This group is the only one for this subject so far.': 'Пока это единственная группа по этому предмету.',
+          '{count} students': 'Учеников: {count}',
+          'Current': 'Текущая',
+          'Group': 'Группа',
+
+          'Needs your confirmation': 'Требует вашего подтверждения',
+          'These students finished the semester without completing any homework. Nothing has been changed yet.':
+            'Эти ученики закончили семестр, не выполнив ни одного домашнего задания. Пока ничего не изменено.',
+          'Nothing needs your confirmation right now.': 'Сейчас ничего не требует подтверждения.',
+          '{done} of {total} homework completed': 'Выполнено домашних заданий: {done} из {total}',
+          'Confirm not passed': 'Подтвердить: не сдано',
+          'Keep enrolled': 'Оставить в группе',
+          'Not passed. Progress is kept for {days} more days.':
+            'Не сдано. Прогресс хранится ещё {days} дн.',
+          'Only an administrator can undo this.': 'Отменить это может только администратор.',
+
+          'Course outcomes': 'Итоги курсов',
+          'Students who did not complete any homework before their semester ended. Their work is kept for 30 days so it can be restored if a failure was a mistake.':
+            'Ученики, не выполнившие ни одного домашнего задания до конца семестра. Их работа хранится 30 дней, чтобы её можно было восстановить, если отказ был ошибкой.',
+          'No course outcomes to review.': 'Нет итогов курсов для проверки.',
+          'Progress kept for': 'Прогресс хранится',
+          'Reason': 'Причина',
+          'Undo failure': 'Отменить отказ',
+          'Waiting on teacher': 'Ожидает преподавателя',
+          'Awaiting teacher': 'Ожидает преподавателя',
+          'Not passed': 'Не сдано',
+          'Withdrawn': 'Покинул курс',
+          'No homework completed': 'Нет выполненных домашних заданий',
+          'Passed the time limit': 'Превышен лимит времени',
+          'Left the course': 'Покинул курс',
+          'Other': 'Другое',
+          'Not scheduled': 'Не запланировано',
+
+          'Locked': 'Закрыто',
+          'Finish the homework for {lesson} to unlock this.':
+            'Выполните домашнее задание к теме «{lesson}», чтобы открыть её.',
+          'the previous lesson': 'предыдущей теме',
+          '{days} days left in this semester': 'До конца семестра осталось {days} дн.',
+          'Ends {date}': 'Заканчивается {date}',
+          'The semester has ended': 'Семестр завершён',
+          'This course is not passed': 'Этот курс не сдан',
+          'Your teacher or an administrator can change this.':
+            'Это может изменить ваш преподаватель или администратор.',
+          'Waiting on your teacher': 'Ожидается решение преподавателя',
+          'Your teacher is reviewing your homework record for this course.':
+            'Преподаватель проверяет ваши домашние задания по этому курсу.',
+          'Pause requested — waiting for your teacher.':
+            'Запрос на паузу отправлен — ожидается преподаватель.',
+          'Your pause is accepted. Your deadline has moved.':
+            'Пауза принята. Срок сдвинут.',
+          'Request a pause': 'Запросить паузу',
+          'Why do you need a pause? (optional)': 'Укажите причину паузы (необязательно)',
+
+          // ----- Values that were being shown raw -----
+          // Lesson types are rendered from STUDIO_TYPE_LABELS, and a task's
+          // priority was written straight into the markup, so both reached the
+          // screen in English whatever the language.
+          'Text': 'Текст',
+          'Video': 'Видео',
+          'Quiz': 'Викторина',
+          'Live': 'Эфир',
+          'Embed': 'Встраивание',
+          'low': 'Низкий',
+          'medium': 'Средний',
+          'high': 'Высокий',
+
+          // ----- Pause requests and homework linked to a lesson -----
+          'Pause requests': 'Запросы на паузу',
+          'A pause stops a student\'s semester clock for as long as it lasts.':
+            'Пауза останавливает семестровые часы ученика на всё её время.',
+          'No pause requests.': 'Запросов на паузу нет.',
+          'No reason given.': 'Причина не указана.',
+          'Accept pause': 'Принять паузу',
+          'Decline': 'Отклонить',
+          'Pause accepted. Clock stopped.': 'Пауза принята. Часы остановлены.',
+          'Mark as returned': 'Отметить возвращение',
+          'Homework for lesson': 'Домашнее задание к теме',
+          'Not linked to a lesson': 'Не привязано к теме',
+          'Untitled lesson': 'Тема без названия',
+          'While this homework is unfinished, the next lesson stays locked.':
+            'Пока это домашнее задание не выполнено, следующая тема остаётся закрытой.'
         }
       };
 
@@ -1073,6 +1181,22 @@
       }
 
       // Resolve a text node value with role-aware overrides applied last
+      // Markup is often wrapped across lines, so the visible text of a node can
+      // contain a newline where the dictionary key has a single space. Looking
+      // the key up with its whitespace collapsed catches those without asking
+      // anyone to keep long sentences on one line.
+      var I18N_RU_COLLAPSED = null;
+      function collapsedRuLookup(trimmed) {
+        if (!I18N_RU_COLLAPSED) {
+          I18N_RU_COLLAPSED = {};
+          Object.keys(I18N.ru).forEach(function(k) {
+            var flat = k.replace(/\s+/g, ' ').trim();
+            if (flat && I18N_RU_COLLAPSED[flat] === undefined) I18N_RU_COLLAPSED[flat] = I18N.ru[k];
+          });
+        }
+        return I18N_RU_COLLAPSED[trimmed.replace(/\s+/g, ' ').trim()];
+      }
+
       function resolveRoleText(trimmed, lang) {
         var role = window.nokjRole || '';
         if (lang === 'en') {
@@ -1094,7 +1218,9 @@
         }
         if (roleRu !== undefined) return roleRu;
         var ru2 = I18N.ru[trimmed];
-        return ru2 !== undefined ? ru2 : trimmed;
+        if (ru2 !== undefined) return ru2;
+        var ru3 = collapsedRuLookup(trimmed);
+        return ru3 !== undefined ? ru3 : trimmed;
       }
 
       function applyTranslation(lang) {

@@ -60,7 +60,7 @@
         { id: 1, title: 'Quadratic Equations Practice', type: 'homework', description: 'Solve problems 1-20 from the textbook.',
           deadline: '2026-09-05', priority: 'high', assignedTo: 'all', assignedIds: [], files: [],
           createdAt: '2026-08-28' },
-        { id: 2, title: 'Macbeth Essay', type: 'assignment', description: 'Write a 500-word essay on ambition.',
+        { id: 2, title: 'Macbeth Essay', type: 'homework', description: 'Write a 500-word essay on ambition.',
           deadline: '2026-09-10', priority: 'medium', assignedTo: 'all', assignedIds: [], files: [],
           createdAt: '2026-08-28' },
         { id: 3, title: 'Cell Biology Quiz', type: 'test', description: 'Multiple choice quiz on cell structure.',

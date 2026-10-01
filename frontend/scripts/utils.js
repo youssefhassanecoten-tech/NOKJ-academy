@@ -239,6 +239,11 @@
         parseInto('pauseRequests', savedPauseRequests, function() { return []; },
           function(v) { pauseRequests = v; });
 
+        // Older data stored individual work under a second name for the same
+        // thing. Fold it into homework so no student loses a record, then keep
+        // the corrected data.
+        if (migrateAssignmentWorkToHomework()) saveData();
+
         // Repair pass: if an individual key was lost or corrupt, fall back to the
         // last consolidated snapshot so existing records are never dropped.
         var present = {
@@ -375,8 +380,8 @@
       // course itself, so one course is the single place a teacher works in.
       var COURSE_SECTIONS = [
         { key: 'lessons', icon: '📘', title: 'Lessons' },
-        { key: 'material-tasks', icon: '📎', title: 'Material & Tasks' },
-        { key: 'assignments', icon: '📝', title: 'Assignments' },
+        { key: 'material-tasks', icon: '📎', title: 'Tasks' },
+        { key: 'assignments', icon: '📝', title: 'Homework' },
         { key: 'tests', icon: '📋', title: 'Tests' }
       ];
 
@@ -581,6 +586,26 @@
         return true;
       }
 
+      // Work types. Assignment and Homework were two names for the same
+      // thing, which produced two identical options in the create menu and an
+      // empty section on one of them. Everything stored as an assignment is
+      // migrated to homework, and `assignment` is kept only as a legacy key
+      // for the course section and the Studio sub-tab, whose keys are already
+      // persisted in saved data.
+      var WORK_TYPE_HOMEWORK = 'homework';
+
+      // Runs once on load. Idempotent, so a second run costs nothing.
+      function migrateAssignmentWorkToHomework() {
+        var changed = 0;
+        tasks.forEach(function(t) {
+          if (t && t.type === 'assignment') {
+            t.type = WORK_TYPE_HOMEWORK;
+            changed++;
+          }
+        });
+        return changed;
+      }
+
       // What a given student can actually open in a course section.
       function courseWorkForStudent(courseId, section, studentId) {
         if (section === 'tests') {
@@ -589,11 +614,12 @@
           });
         }
         if (section === 'material' || section === 'assignments') {
-          var onlyAssignments = section === 'assignments';
+          var onlyHomework = section === 'assignments';
           return tasks.filter(function(t) {
-            // Legacy interactive tasks count as material, so nothing that
-            // used to be visible disappears from the course.
-            if (onlyAssignments ? t.type !== 'assignment' : t.type === 'assignment') return false;
+            // The homework section holds individual work the student must
+            // finish alone. Everything else is class or extra work.
+            var isHomework = t.type === WORK_TYPE_HOMEWORK;
+            if (onlyHomework ? !isHomework : isHomework) return false;
             if (taskCourseId(t) !== courseId) return false;
             return taskVisibleToStudent(t, studentId);
           });
@@ -614,8 +640,8 @@
         });
         if (!studentId) {
           return {
-            material: publishedTasks.filter(function(t) { return t.type !== 'assignment'; }).length,
-            assignments: publishedTasks.filter(function(t) { return t.type === 'assignment'; }).length,
+            material: publishedTasks.filter(function(t) { return t.type !== WORK_TYPE_HOMEWORK; }).length,
+            assignments: publishedTasks.filter(function(t) { return t.type === WORK_TYPE_HOMEWORK; }).length,
             tests: publishedTests.length,
             pending: 0
           };

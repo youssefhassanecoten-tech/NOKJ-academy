@@ -28,8 +28,8 @@
 
   function renderStudentWorkSection(courseId, section, innerHtml, count) {
     var labels = {
-      material: ['Material &amp; Tasks', '📎'],
-      assignments: ['Assignments', '📝'],
+      material: ['Tasks', '📎'],
+      assignments: ['Homework', '📝'],
       tests: ['Tests', '📋']
     };
     var pair = labels[section] || [section, '•'];
@@ -62,7 +62,7 @@
       meta.push('<span class="pill' + (overdue && !submitted ? ' danger' : '') + '">⏰ ' +
         escapeHtml(item.deadline) + '</span>');
     }
-    if (item.priority) meta.push('<span class="studio-meta-chip">' + escapeHtml(item.priority) + '</span>');
+    if (item.priority) meta.push('<span class="studio-meta-chip">' + escapeHtml(tr(item.priority)) + '</span>');
     if (hasBlocks) {
       meta.push('<span class="studio-meta-chip">🧩 ' + item.blocks.length + ' ' + escapeHtml(tr('blocks')) + '</span>');
     }
@@ -147,7 +147,7 @@
     var items = courseWorkTasks(courseId, section);
     if (!items.length) {
       var msg = section === 'assignments'
-        ? tr('No assignments have been published for this course yet.')
+        ? tr('No homework has been published for this course yet.')
         : tr('No tasks have been published for this course yet.');
       return renderStudentWorkSection(courseId, section, '<p class="empty-msg">' + escapeHtml(msg) + '</p>', 0);
     }

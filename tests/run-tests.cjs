@@ -392,7 +392,7 @@ const vmStudent = (() => {
       meetings = [];
       tasks = [
         { id: 1, title: 'Interactive task', type: 'interactive', courseId: 5, assignedTo: 'course', assignedIds: [5], published: true, blocks: [b] },
-        { id: 2, title: 'Assignment', type: 'assignment', courseId: 5, assignedTo: 'course', assignedIds: [5], published: true, blocks: [] },
+        { id: 2, title: 'Assignment', type: 'homework', courseId: 5, assignedTo: 'course', assignedIds: [5], published: true, blocks: [] },
         { id: 3, title: 'Draft task', type: 'homework', courseId: 5, assignedTo: 'course', assignedIds: [5], published: false, blocks: [] },
         { id: 4, title: 'Other course', type: 'homework', courseId: 9, assignedTo: 'course', assignedIds: [9], published: true, blocks: [] }
       ];

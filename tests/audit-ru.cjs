@@ -149,7 +149,9 @@ const ALLOWED = [
   /timetable for mid-term|mid-term assessment/i,
   /Extended library opening hours/,
   /Staff Salaries|Student Fees/,
-  /Shapes and space|Data and averages\.|^Statistics$|^Geometry$/
+  /Shapes and space|Data and averages\.|^Statistics$|^Geometry$/,
+  /Basics$|^Notes$|^Ref$|^Some notes$|^Start here$|Plain task|Type an answer/,
+  /Points, lines and planes|^Points$/
 ];
 
 function isLatinVisible(s) {
@@ -247,6 +249,23 @@ const PAGES = {
     'budget', 'courses-admin', 'course-workspace', 'grades', 'calendar', 'approvals', 'profile']
 };
 
+// Panels behind a tab or a click. Each entry is a named function that opens
+// that panel, so its text is inspected exactly as the user would meet it.
+const SUB_VIEWS = {
+  'teacher/course-workspace': [
+    function studioSettings(win) {
+      win.studioSetTab('settings');
+      win.setLanguage('ru');
+    }
+  ],
+  'student/courses': [
+    function firstCourse(win) {
+      win.openCourse(5);
+      win.setLanguage('ru');
+    }
+  ]
+};
+
 const untranslated = new Map();   // text -> Set of "role/page"
 let pagesChecked = 0;
 const roleConfirmed = [];
@@ -270,6 +289,21 @@ for (const role of Object.keys(PAGES)) {
     for (const [text, where] of found) {
       if (!untranslated.has(text)) untranslated.set(text, new Set());
       untranslated.get(text).add(role + '/' + p + (where === 'chrome' ? '' : '') + (where === 'chrome' ? '' : ' [' + where + ']'));
+    }
+
+    // Panels that only exist behind a tab or a click are still visible to the
+    // user, so they have to be opened or their text goes unchecked.
+    const subViews = SUB_VIEWS[role + '/' + p];
+    if (subViews) {
+      for (const open of subViews) {
+        try { open(win); } catch (e) { roleConfirmed.push(p + ' sub-view failed: ' + e.message); continue; }
+        pagesChecked++;
+        const more = visibleLatinOn(win);
+        for (const [text, where] of more) {
+          if (!untranslated.has(text)) untranslated.set(text, new Set());
+          untranslated.get(text).add(role + '/' + p + '/' + open.name + (where === 'chrome' ? '' : ' [' + where + ']'));
+        }
+      }
     }
   }
   s.dom.window.close();

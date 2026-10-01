@@ -597,10 +597,16 @@
           assignedIds = [studioCourseId];
         }
         var editingId = window.studio ? studio.editingTaskId : null;
+        // Only homework gates anything, so the lesson link is stored for
+        // homework and cleared for every other type.
+        var lessonId = type === 'homework' && typeof selectedHomeworkLessonId === 'function'
+          ? selectedHomeworkLessonId() : '';
         if (editingId) {
           updateTask(editingId, title, type, description, deadline, priority, assignTo, assignedIds, files, questions, studioCourseId);
+          linkHomeworkToLesson(editingId, lessonId);
         } else {
-          createTask(title, type, description, deadline, priority, assignTo, assignedIds, files, questions, true, studioCourseId);
+          var created = createTask(title, type, description, deadline, priority, assignTo, assignedIds, files, questions, true, studioCourseId);
+          linkHomeworkToLesson(created && created.id, lessonId);
         }
         if (window.studio) studio.editingTaskId = null;
         tempTaskFiles = [];

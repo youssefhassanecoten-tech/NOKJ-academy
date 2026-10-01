@@ -106,6 +106,16 @@ function seed(app) {
     saveData = function () {};
     tr = function (s) { return s; };
     escapeHtml = function (s) { return String(s); };
+    taskCourseId = function (t) {
+      if (t.courseId !== undefined && t.courseId !== null) return t.courseId;
+      if (t.assignedTo === 'course' && t.assignedIds && t.assignedIds.length) return t.assignedIds[0];
+      return null;
+    };
+    migrateAssignmentWorkToHomework = function () {
+      var changed = 0;
+      tasks.forEach(function (t) { if (t && t.type === 'assignment') { t.type = 'homework'; changed++; } });
+      return changed;
+    };
   `, g);
 }
 
@@ -466,6 +476,87 @@ console.log('== Course groups ==');
 }
 
 // ---------------------------------------------------------------
+
+console.log('== Linking homework to a lesson ==');
+{
+  const app = freshApp();
+  seed(app);
+  const c = makeGroup(app, {
+    id: 'g1',
+    modules: [{ id: 'm1', lessons: [lesson('l1', 'One', 0), lesson('l2', 'Two', 1)] }]
+  });
+  makeGroup(app, { id: 'g2', name: 'Other', modules: [{ id: 'm9', lessons: [lesson('z1', 'Zed', 0)] }] });
+  vm.runInContext(`
+    tasks = [{ id: 'h1', type: 'homework', courseId: 'g1', title: 'HW' }];
+    taskSubmissions = {};
+  `, app.context);
+
+  check('homework with no lesson link is accepted',
+    app.sandbox.linkHomeworkToLesson('h1', 'l1') !== null);
+  check('the lesson is recorded on the homework',
+    app.sandbox.tasks[0].lessonId === 'l1', app.sandbox.tasks[0].lessonId);
+
+  check('a lesson from another group is refused',
+    app.sandbox.linkHomeworkToLesson('h1', 'z1') === null);
+  check('the refused link left the original in place',
+    app.sandbox.tasks[0].lessonId === 'l1');
+
+  check('the link gates the following lesson',
+    app.sandbox.lessonLockState(c, app.sandbox.groupLessonSequence(c)[1], 10).locked === true);
+
+  app.sandbox.linkHomeworkToLesson('h1', '');
+  check('clearing the link removes it',
+    app.sandbox.tasks[0].lessonId === undefined);
+  check('without a link nothing is gated',
+    app.sandbox.lessonLockState(c, app.sandbox.groupLessonSequence(c)[1], 10).locked === false);
+
+  check('an unknown task is refused', app.sandbox.linkHomeworkToLesson('nope', 'l1') === null);
+}
+
+console.log('== A teacher may close a flag without failing the student ==');
+{
+  const app = freshApp();
+  seed(app);
+  const c = makeGroup(app, { courseDurationDays: 3650 });
+  vm.runInContext(`
+    tasks = []; taskSubmissions = {};
+    enrollments = [{ studentId: 10, courseId: 'g1' }];
+    homeworkOutcomes = [];
+    currentUser = { id: 1, role: 'Teacher' };
+  `, app.context);
+
+  const flagged = app.sandbox.evaluateStudentOutcome(c, 10, iso(91));
+  const closed = app.sandbox.dismissOutcomeFlag(flagged.id, 1);
+  check('the flag can be closed by the teacher', closed && closed.status === 'dismissed');
+  check('a closed flag is not a failure', app.sandbox.isGroupFailed(10, 'g1') === false);
+  check('a closed flag is not raised again',
+    app.sandbox.evaluateStudentOutcome(c, 10, iso(120)) === null);
+  check('a closed flag schedules no purge', app.sandbox.retentionDaysLeft(closed) === null);
+  check('a dismissed outcome cannot be dismissed twice',
+    app.sandbox.dismissOutcomeFlag(flagged.id, 1) === null);
+}
+
+console.log('== Assignment is folded into homework ==');
+{
+  const app = freshApp();
+  seed(app);
+  vm.runInContext(`
+    tasks = [
+      { id: 1, type: 'assignment', courseId: 'g1', title: 'Old assignment' },
+      { id: 2, type: 'homework', courseId: 'g1', title: 'Already homework' },
+      { id: 3, type: 'interactive', courseId: 'g1', title: 'Block task' }
+    ];
+  `, app.context);
+
+  const changed = app.sandbox.migrateAssignmentWorkToHomework();
+  check('one record was migrated', changed === 1, String(changed));
+  check('the assignment became homework', app.sandbox.tasks[0].type === 'homework');
+  check('the existing homework is untouched', app.sandbox.tasks[1].type === 'homework');
+  check('other types are untouched', app.sandbox.tasks[2].type === 'interactive');
+  check('no record is lost', app.sandbox.tasks.length === 3);
+  check('running it again changes nothing',
+    app.sandbox.migrateAssignmentWorkToHomework() === 0);
+}
 
 console.log('\nChecks: ' + passed + ' passed, ' + failed + ' failed');
 if (failed) {

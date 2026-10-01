@@ -37,7 +37,7 @@ function updateAdminStats() {
       function renderAdminDashboard() {
         var html = '';
         html += '<div class="hero">' +
-          '<div><p class="eyebrow">' + new Date().toLocaleDateString() + '</p><h2>' + tr('Manage Academy') +
+          '<div><p class="eyebrow">' + formatDate(new Date()) + '</p><h2>' + tr('Manage Academy') +
           '</h2><p class="hero-sub">' + tr('Here is everything you need to stay on track today.|admin') + '</p></div>' +
           '<button class="primary-button" data-page="students">' + tr('Add student') + '</button>' +
           '</div>';
@@ -72,7 +72,7 @@ function updateAdminStats() {
         var myMeetings = meetings.filter(function(m) { return m.teacherId === currentUser.id; });
         var html = '';
         html += '<div class="hero">' +
-          '<div><p class="eyebrow">' + new Date().toLocaleDateString() + '</p><h2>' + tr('Good day') + ' ' +
+          '<div><p class="eyebrow">' + formatDate(new Date()) + '</p><h2>' + tr('Good day') + ' ' +
           escapeHtml(currentUser.name.split(' ')[0]) + ' 👋</h2><p class="hero-sub">' +
           tr('Here is everything you need to stay on track today.|teacher') +
           '</p></div>' +
@@ -116,7 +116,7 @@ function updateAdminStats() {
 
         var html = '';
         html += '<div class="hero">' +
-          '<div><p class="eyebrow">' + new Date().toLocaleDateString() + '</p><h2>' + tr('Good morning') + ', ' +
+          '<div><p class="eyebrow">' + formatDate(new Date()) + '</p><h2>' + tr('Good morning') + ', ' +
           escapeHtml(currentUser.name.split(' ')[0]) + ' 👋</h2><p class="hero-sub">' +
           tr('Here is everything you need to stay on track today.|student') +
           '</p></div>' +
@@ -183,8 +183,8 @@ function updateAdminStats() {
             '<span class="pill warning">' + tr('Due soon') + '</span>';
           var icons = { homework: '✎', test: '✓', assignment: '📝' };
           html += '<div class="simple-row"><span class="round-icon">' + (icons[t.type] || '✎') +
-            '</span><div class="row-main"><strong>' + t.title + '</strong><span>' + tr('Due') + ' ' + new Date(t.deadline)
-            .toLocaleDateString() + '</span></div>' + pill + '</div>';
+            '</span><div class="row-main"><strong>' + t.title + '</strong><span>' + tr('Due') + ' ' + formatDate(t.deadline) +
+            '</span></div>' + pill + '</div>';
         });
         return html;
       }
@@ -298,7 +298,7 @@ function updateAdminStats() {
         var firstDow = new Date(year, month, 1).getDay();
         var daysInMonth = new Date(year, month + 1, 0).getDate();
         var todayKey = new Date().toISOString().slice(0, 10);
-        var monthLabel = new Date(year, month, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+        var monthLabel = formatMonthYear(new Date(year, month, 1));
 
         var html = '<div class="cal-head">' +
           '<button class="cal-nav" id="timetable-prev" title="' + tr('Previous month') + '">‹</button>' +
@@ -343,7 +343,7 @@ function updateAdminStats() {
           upcoming.forEach(function(m) {
             html += '<div class="lesson-row"><span class="time">' + escapeHtml(m.time) + '</span>' +
               '<span class="color-bar"></span><div class="row-main"><strong>' + escapeHtml(m.title) +
-              '</strong><span>' + new Date(m.date).toLocaleDateString() + ' · ' + escapeHtml(getTeacherName(m.teacherId)) +
+              '</strong><span>' + formatDate(m.date) + ' · ' + escapeHtml(getTeacherName(m.teacherId)) +
               ' · ' + m.duration + ' min</span></div></div>';
           });
         }
@@ -470,7 +470,7 @@ function updateAdminStats() {
         var text = input.value.trim();
         if (!text) return;
         var list = getDeveloperFeedback();
-        list.unshift({ id: String(Date.now()) + '-' + Math.random().toString(36).substr(2, 6), title: text, date: new Date().toLocaleDateString() });
+        list.unshift({ id: String(Date.now()) + '-' + Math.random().toString(36).substr(2, 6), title: text, date: formatDate(new Date()) });
         saveDeveloperFeedback(list);
         input.value = '';
         postToGithub(text);

@@ -901,7 +901,96 @@
           'Cancel': 'Отмена',
           'Save only': 'Только сохранить',
           'Save and deploy': 'Сохранить и опубликовать',
-          'Task Designer': 'Конструктор заданий'
+          'Task Designer': 'Конструктор заданий',
+
+          // ----- Complete coverage pass -----
+          // Project rule: when the interface language is Russian, everything
+          // the user reads is Russian. The only exceptions are values the user
+          // entered -- course names, personal names, file names and the like.
+          // Enforced by tests/audit-ru.cjs.
+
+          // ----- Landing and registration -----
+          'Get started in three steps': 'Начните за три шага',
+          'Setup headaches': 'Сложности с настройкой',
+          'Live teacher support': 'Живая поддержка преподавателя',
+          'Access to your coursework': 'Доступ к вашим работам',
+          'Steps: join, learn, track': 'Шаги: записаться, учиться, следить',
+          'Create your account': 'Создайте аккаунт',
+          'Sign up as a student in seconds, or use your teacher\'s auth key to join as a teacher.':
+            'Зарегистрируйтесь как ученик за несколько секунд или используйте ключ преподавателя, чтобы стать преподавателем.',
+          'Join your courses': 'Присоединяйтесь к курсам',
+          'Enroll in the subjects you need, attend live classes, and download the study material.':
+            'Запишитесь на нужные предметы, посещайте занятия в прямом эфире и скачивайте учебные материалы.',
+          'Track your progress': 'Следите за успехами',
+          'Submit assignments, take interactive tests, and watch your grades update in real time.':
+            'Сдавайте задания, проходите интерактивные тесты и следите за оценками в реальном времени.',
+          'Select courses for this student.': 'Выберите курсы для этого ученика.',
+
+          // ----- Presentation viewer and slide deck -----
+          'Welcome!': 'Добро пожаловать!',
+          'Press the arrow keys to navigate slides.': 'Используйте стрелки, чтобы переходить между слайдами.',
+          'Next ▶': 'Далее ▶',
+          '◀ Previous': '◀ Назад',
+          '+ Add Slide': '+ Добавить слайд',
+          'Slide {n} of {total}': 'Слайд {n} из {total}',
+          'Slide 1 of 5': 'Слайд 1 из 5',
+          'Presentation': 'Презентация',
+          'Files': 'Файлы',
+
+          // ----- Rich text toolbar (title attributes) -----
+          'Bold': 'Полужирный',
+          'Italic': 'Курсив',
+          'Underline': 'Подчёркивание',
+          'Bullet list': 'Маркированный список',
+          'Numbered list': 'Нумерованный список',
+          'Heading': 'Заголовок',
+          'Subheading': 'Подзаголовок',
+          'Paragraph': 'Абзац',
+          'Quote': 'Цитата',
+          'Clear formatting': 'Убрать форматирование',
+          'Toggle preview': 'Показать или скрыть предпросмотр',
+          'Fullscreen': 'Полный экран',
+          'Edit presentation': 'Редактировать презентацию',
+
+          // ----- Interface chrome -----
+          'Change language': 'Сменить язык',
+          'Theme': 'Тема',
+          'Select theme': 'Выбрать тему',
+          'Go to Dashboard': 'На главную',
+          'Notifications': 'Уведомления',
+          'Leave': 'Покинуть',
+
+          // ----- Tables -----
+          'Action': 'Действие',
+          'Actions': 'Действия',
+          'Average': 'Средний балл',
+          'Key': 'Ключ',
+          'Used by': 'Использован',
+          'Created': 'Создан',
+          'Requested': 'Запрошено',
+          'Course Requests': 'Запросы на курсы',
+          'Pending:': 'Ожидают:',
+          'Export as:': 'Экспорт в формат:',
+          'Email': 'Эл. почта',
+
+          // ----- Dashboard panels -----
+          'Assignment work': 'Задания',
+          'Draft task': 'Черновик',
+          'Interactive task': 'Интерактивное задание',
+
+          // ----- Classroom and live sessions -----
+          'Unknown': 'Неизвестно',
+          'Session ends': 'Занятие заканчивается',
+
+          // ----- Work chooser -----
+          'Submission': 'Сдача работы',
+          'Interactive Test': 'Интерактивный тест',
+          'Pick a starting point. You can change your mind later.':
+            'Выберите отправную точку. Решение можно изменить позже.',
+          'Title, description, deadline and files. Fastest way to hand something over.':
+            'Название, описание, срок и файлы. Самый быстрый способ сдать работу.',
+          'Build it block by block: maps, 3D terrain, animations, flashcards, games and auto-graded questions.':
+            'Соберите из блоков: карты, объёмный рельеф, анимации, карточки, игры и вопросы с автоматической проверкой.'
         }
       };
 
@@ -947,6 +1036,40 @@
         if (translated !== undefined) return translated;
         translated = I18N.ru[text];
         return translated !== undefined ? translated : text;
+      }
+
+      // Translate a pattern containing {placeholders}, then substitute.
+      // Used where a sentence is assembled from translated fragments.
+      function trf(pattern, vars) {
+        var out = tr(pattern);
+        Object.keys(vars).forEach(function(key) {
+          out = out.split('{' + key + '}').join(vars[key]);
+        });
+        return out;
+      }
+
+      // The interface language is independent of the browser locale, so dates
+      // and times must be formatted against the language the user chose.
+      function localeTag() {
+        return currentLang === 'ru' ? 'ru-RU' : 'en-GB';
+      }
+
+      function formatDateTime(value) {
+        var d = value instanceof Date ? value : new Date(value);
+        if (isNaN(d.getTime())) return '';
+        return d.toLocaleString(localeTag());
+      }
+
+      function formatDate(value) {
+        var d = value instanceof Date ? value : new Date(value);
+        if (isNaN(d.getTime())) return '';
+        return d.toLocaleDateString(localeTag());
+      }
+
+      function formatMonthYear(value) {
+        var d = value instanceof Date ? value : new Date(value);
+        if (isNaN(d.getTime())) return '';
+        return d.toLocaleDateString(localeTag(), { month: 'long', year: 'numeric' });
       }
 
       // Resolve a text node value with role-aware overrides applied last
@@ -1010,13 +1133,100 @@
 
         nodes.forEach(function(textNode) {
           var trimmed = textNode.nodeValue.trim();
+          if (isUserContent(textNode.parentElement)) return;
           var target = resolveRoleText(trimmed, lang);
           if (target !== trimmed) {
             textNode.nodeValue = textNode.nodeValue.replace(trimmed, target);
           }
         });
 
+        translateAttributes(document.body, lang);
+
         document.documentElement.lang = lang;
+      }
+
+      // Attributes carrying user-visible text. Without this pass a button
+      // labelled with title="Bold" stayed English forever, because the text
+      // node walker never sees attributes.
+      var I18N_ATTRS = ['title', 'aria-label', 'alt', 'placeholder', 'data-i18n-ph'];
+
+      function translateAttributes(root, lang) {
+        if (!root || !root.querySelectorAll) return;
+        var self = root.nodeType === 1 ? root : null;
+        if (self && isUserContent(self)) return;
+
+        I18N_ATTRS.forEach(function(attr) {
+          var list = [];
+          if (self && self.hasAttribute(attr)) list.push(self);
+          list.push.apply(list, root.querySelectorAll('[' + attr + ']'));
+          list.forEach(function(el) {
+            if (isUserContent(el)) return;
+            var key = el.getAttribute(attr);
+            if (!key) return;
+            var target = resolveRoleText(key, lang);
+            if (target !== key) el.setAttribute(attr, target);
+          });
+        });
+      }
+
+      // User-entered content must never be rewritten: a course really may be
+      // called "Files" or "Theme". Anything holding user data opts out with
+      // data-i18n-skip.
+      function isUserContent(el) {
+        for (var n = el; n && n.nodeType === 1; n = n.parentElement) {
+          if (n.hasAttribute && n.hasAttribute('data-i18n-skip')) return true;
+        }
+        return false;
+      }
+
+      // JavaScript rebuilds most of the interface after load, which discards
+      // whatever the initial pass translated. Watch for those insertions and
+      // translate them too, so runtime-built text is never left in English.
+      var observerStarted = false;
+      function startTranslationObserver() {
+        if (observerStarted || !window.MutationObserver) return;
+        observerStarted = true;
+        var observer = new MutationObserver(function(mutations) {
+          var roots = [];
+          mutations.forEach(function(m) {
+            for (var i = 0; i < m.addedNodes.length; i++) {
+              var n = m.addedNodes[i];
+              if (n.nodeType === 3) {
+                if (n.parentElement && !isUserContent(n.parentElement)) roots.push(n);
+              } else if (n.nodeType === 1 && !isUserContent(n)) {
+                roots.push(n);
+              }
+            }
+          });
+          if (!roots.length) return;
+          roots.forEach(function(n) {
+            if (n.nodeType === 3) {
+              var trimmed = n.nodeValue.trim();
+              if (!trimmed) return;
+              var target = resolveRoleText(trimmed, currentLang);
+              if (target !== trimmed) n.nodeValue = n.nodeValue.replace(trimmed, target);
+              return;
+            }
+            var walker = document.createTreeWalker(n, NodeFilter.SHOW_TEXT, {
+              acceptNode: function(node) {
+                var parent = node.parentElement;
+                if (!parent) return NodeFilter.FILTER_REJECT;
+                if (parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE') return NodeFilter.FILTER_REJECT;
+                if (isUserContent(parent)) return NodeFilter.FILTER_REJECT;
+                if (node.nodeValue.trim() === '') return NodeFilter.FILTER_REJECT;
+                return NodeFilter.FILTER_ACCEPT;
+              }
+            });
+            var node;
+            while ((node = walker.nextNode())) {
+              var trimmed2 = node.nodeValue.trim();
+              var t2 = resolveRoleText(trimmed2, currentLang);
+              if (t2 !== trimmed2) node.nodeValue = node.nodeValue.replace(trimmed2, t2);
+            }
+            translateAttributes(n, currentLang);
+          });
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
       }
 
       function setLanguage(lang) {
@@ -1035,6 +1245,7 @@
         }
 
         applyTranslation(lang);
+        startTranslationObserver();
         document.documentElement.lang = lang;
 
         if (typeof updateGreeting === 'function') {

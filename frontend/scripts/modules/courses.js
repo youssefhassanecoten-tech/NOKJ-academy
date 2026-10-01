@@ -404,7 +404,7 @@
             if (m.kind === 'file' && m.fileData) html += '<p><span class="file-link" onclick="window.openFilePreview(\'' +
               escapeHtml(m.fileName || 'file') + '\', \'' + String(m.fileData).replace(/'/g, "\\'") + '\')">' +
               escapeHtml(m.fileName || tr('Open file')) + '</span></p>';
-            html += '<p style="font-size:12px;color:var(--muted);">' + (m.createdAt ? new Date(m.createdAt).toLocaleDateString() : '') + '</p>';
+            html += '<p style="font-size:12px;color:var(--muted);">' + (m.createdAt ? formatDate(m.createdAt) : '') + '</p>';
             html += '</div></article>';
           });
           html += '</div>';

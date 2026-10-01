@@ -79,7 +79,7 @@
           course +
           '<div class="meeting-audience">' + audience + '</div>' +
           (currentUser.role !== 'Student' ? '<div style="font-size:11px;color:var(--muted);margin-top:4px;">' + tr(
-            'Session ends') + ' ' + new Date(meetingEndMs(meeting)).toLocaleString() + '</div>' : '') +
+            'Session ends') + ' ' + formatDateTime(meetingEndMs(meeting)) + '</div>' : '') +
           '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">' +
           '<button class="join-btn" data-meeting="' + meeting.id + '">' + tr('Join Meeting') + '</button>' +
           actions +
@@ -303,8 +303,9 @@
         var slide = presentationSlides[currentSlide];
         document.getElementById('presentation-slide-title').textContent = slide.title;
         document.getElementById('presentation-slide-text').textContent = slide.content;
-        document.getElementById('presentation-slide-counter').textContent = 'Slide ' + (currentSlide + 1) + ' of ' +
-          presentationSlides.length;
+        document.getElementById('presentation-slide-counter').textContent = trf(
+          'Slide {n} of {total}',
+          { n: currentSlide + 1, total: presentationSlides.length });
       }
 
       function closePresentation() {

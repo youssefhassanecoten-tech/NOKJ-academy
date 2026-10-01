@@ -74,5 +74,5 @@
       function unixToTitle(v) {
         var d = new Date(v);
         if (isNaN(d.getTime())) return v;
-        return d.toLocaleDateString();
+        return formatDate(d);
       }

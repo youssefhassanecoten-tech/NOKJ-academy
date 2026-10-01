@@ -477,7 +477,7 @@
             '<span class="pill">' + tr('Active') + '</span>';
           row.innerHTML = '<td><code style="font-weight:700;letter-spacing:1px;">' + escapeHtml(k.key) + '</code></td>' +
             '<td>' + statusHtml + '</td><td>' + escapeHtml(k.usedByName || '—') + '</td>' +
-            '<td>' + (k.createdAt ? new Date(k.createdAt).toLocaleDateString() : '—') + '</td>' +
+            '<td>' + (k.createdAt ? formatDate(k.createdAt) : '—') + '</td>' +
             '<td>' + (k.used ? '' : '<button class="action-btn delete" data-key-revoke="' + k.id + '" title="' +
               tr('Revoke') + '">🗑️</button>') + '</td>';
           body.appendChild(row);
@@ -525,7 +525,7 @@
           } else {
             body.innerHTML = list.map(function(p) {
               return '<tr><td>' + escapeHtml(p.name) + '</td><td>' + escapeHtml(p.email) + '</td><td>' +
-                (p.appliedAt ? new Date(p.appliedAt).toLocaleDateString() : (p.createdAt || '—')) +
+                (p.appliedAt ? formatDate(p.appliedAt) : (p.createdAt || '—')) +
                 '</td><td>' +
                 '<button class="approve-btn" data-id="' + p.id + '">✓ ' + tr('Approve') + '</button> ' +
                 '<button class="danger-button" data-action="refuse" data-id="' + p.id + '">✕ ' + tr('Refuse') +
@@ -561,7 +561,7 @@
             escapeHtml(s.warningNote) + '</div>';
           return '<tr><td>' + (s ? escapeHtml(s.name) : '—') + '</td><td>' + statusBadge + '</td><td>' +
             (c ? escapeHtml(c.name) : '—') + '</td><td>' +
-            (r.date ? new Date(r.date).toLocaleDateString() : '—') + '</td><td>' +
+            (r.date ? formatDate(r.date) : '—') + '</td><td>' +
             '<button class="approve-btn" data-id="' + r.id + '">✓ ' + tr('Approve') + '</button> ' +
             '<button class="danger-button" data-action="refuse" data-id="' + r.id + '">✕ ' + tr('Refuse') +
             '</button></td></tr>';
@@ -667,7 +667,7 @@
             var extra = (r.description && r.type !== 'delete') ?
               '<div style="font-size:12px;color:var(--muted);margin-top:4px;">' + escapeHtml(r.description) + '</div>' : '';
             return '<tr><td>' + escapeHtml(teacher) + '</td><td>' + typeLabel + '</td><td>' + escapeHtml(courseName) + extra +
-              '</td><td>' + (r.date ? new Date(r.date).toLocaleDateString() : '—') + '</td><td>' +
+              '</td><td>' + (r.date ? formatDate(r.date) : '—') + '</td><td>' +
               '<button class="approve-btn" data-id="' + r.id + '">✓ ' + tr('Approve') + '</button> ' +
               '<button class="danger-button" data-action="refuse" data-id="' + r.id + '">✕ ' + tr('Refuse') +
               '</button></td></tr>';

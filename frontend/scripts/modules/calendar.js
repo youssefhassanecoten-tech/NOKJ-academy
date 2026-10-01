@@ -4,8 +4,7 @@
         var today = new Date();
         var todayStr = today.toISOString().split('T')[0];
 
-        calendarMonthLabel.textContent = new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long',
-          year: 'numeric' });
+        calendarMonthLabel.textContent = formatMonthYear(new Date(currentYear, currentMonth));
         calendarGrid.innerHTML = '';
 
         var dayLabels = [tr('Sun'), tr('Mon'), tr('Tue'), tr('Wed'), tr('Thu'), tr('Fri'), tr('Sat')];

@@ -298,7 +298,7 @@
             html += '<div class="notification-item">' +
               '<div class="notification-icon">📌</div>' +
               '<div class="row-main"><strong>' + escapeHtml(a.title) + '</strong><span>' + escapeHtml(announcementSnippet(a)) +
-              '</span><em>' + (a.author || '') + ' · ' + (a.date ? new Date(a.date).toLocaleDateString() : '') +
+              '</span><em>' + (a.author || '') + ' · ' + (a.date ? formatDate(a.date) : '') +
               '</em></div></div>';
           });
         }

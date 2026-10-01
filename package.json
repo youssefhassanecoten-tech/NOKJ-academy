@@ -14,7 +14,9 @@
     "start": "npm run start --workspace backend",
     "test": "node tests/run-tests.cjs",
     "test:live": "node tests/run-live.cjs",
-    "test:all": "node tests/run-tests.cjs && node tests/run-live.cjs",
+    "test:i18n": "node tests/run-i18n.cjs",
+    "test:rules": "node tests/semester-rules.cjs",
+    "test:all": "node tests/run-tests.cjs && node tests/run-live.cjs && node tests/run-i18n.cjs && node tests/semester-rules.cjs",
     "lint": "node tests/meta/lint.cjs",
     "build": "npm run build --workspace backend",
     "db:init": "npm run db:init --workspace backend"

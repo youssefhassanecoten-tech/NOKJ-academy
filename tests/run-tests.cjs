@@ -387,6 +387,8 @@ const vmStudent = (() => {
       courseMaterials = [];
       teacherAuthKeys = [];
       lessonProgress = [];
+      homeworkOutcomes = [];
+      pauseRequests = [];
       meetings = [];
       tasks = [
         { id: 1, title: 'Interactive task', type: 'interactive', courseId: 5, assignedTo: 'course', assignedIds: [5], published: true, blocks: [b] },

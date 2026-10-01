@@ -23,7 +23,9 @@
         ['nokj-course-requests', 'courseRequests'],
         ['nokj-course-materials', 'courseMaterials'],
         ['nokj-teacher-auth-keys', 'teacherAuthKeys'],
-        ['nokj-lesson-progress', 'lessonProgress']
+        ['nokj-lesson-progress', 'lessonProgress'],
+        ['nokj-homework-outcomes', 'homeworkOutcomes'],
+        ['nokj-pause-requests', 'pauseRequests']
       ];
 
       function storeGet(key) {
@@ -77,7 +79,9 @@
         courseRequests: function() { return courseRequests; },
         courseMaterials: function() { return courseMaterials; },
         teacherAuthKeys: function() { return teacherAuthKeys; },
-        lessonProgress: function() { return lessonProgress; }
+        lessonProgress: function() { return lessonProgress; },
+        homeworkOutcomes: function() { return homeworkOutcomes; },
+        pauseRequests: function() { return pauseRequests; }
       };
 
       function currentSnapshot() {
@@ -228,6 +232,13 @@
         parseInto('lessonProgress', savedLessonProgress, function() { return {}; },
           function(v) { lessonProgress = v; });
 
+        var savedHomeworkOutcomes = storeGet('nokj-homework-outcomes');
+        var savedPauseRequests = storeGet('nokj-pause-requests');
+        parseInto('homeworkOutcomes', savedHomeworkOutcomes, function() { return []; },
+          function(v) { homeworkOutcomes = v; });
+        parseInto('pauseRequests', savedPauseRequests, function() { return []; },
+          function(v) { pauseRequests = v; });
+
         // Repair pass: if an individual key was lost or corrupt, fall back to the
         // last consolidated snapshot so existing records are never dropped.
         var present = {
@@ -238,7 +249,8 @@
           announcements: !!savedAnnouncements, pendingTeachers: !!savedPendingTeachers,
           enrollRequests: !!savedEnrollRequests, courseRequests: !!savedCourseRequests,
           courseMaterials: !!savedCourseMaterials, teacherAuthKeys: !!savedTeacherAuthKeys,
-          lessonProgress: !!savedLessonProgress
+          lessonProgress: !!savedLessonProgress,
+          homeworkOutcomes: !!savedHomeworkOutcomes, pauseRequests: !!savedPauseRequests
         };
         if (snap) {
           var repaired = false;
@@ -268,6 +280,8 @@
                 case 'courseMaterials': courseMaterials = val; break;
                 case 'teacherAuthKeys': teacherAuthKeys = val; break;
                 case 'lessonProgress': lessonProgress = val; break;
+                case 'homeworkOutcomes': homeworkOutcomes = val; break;
+                case 'pauseRequests': pauseRequests = val; break;
               }
               repaired = true;
             } catch (e) { /* ignore unparseable snapshot entry */ }
@@ -384,6 +398,17 @@
         if (course.passingScore === undefined) course.passingScore = 60;
         if (course.archived === undefined) course.archived = false;
         if (course.updatedAt === undefined) course.updatedAt = course.createdAt || new Date().toISOString();
+        // Group and semester fields. Older records predate groups, so they
+        // become a subject of one with no group name and no semester set.
+        if (course.groupName === undefined) course.groupName = '';
+        if (course.subjectName === undefined) course.subjectName = course.name || '';
+        if (course.semesterStart === undefined) course.semesterStart = '';
+        // semester.js holds the default; fall back to the literal so this
+        // normaliser still works when loaded without it.
+        if (course.semesterDays === undefined) {
+          course.semesterDays = (typeof SEMESTER_DEFAULT_DAYS === 'number') ? SEMESTER_DEFAULT_DAYS : 90;
+        }
+        if (course.courseDurationDays === undefined) course.courseDurationDays = 365;
         // Preloaded on first sight of the course, then left alone forever, so
         // a teacher can reorder or retitle sections without losing them.
         if (!Array.isArray(course.sections) || !course.sections.length) {
@@ -483,17 +508,17 @@
 
       function getTeacherName(id) {
         var t = teachers.find(function(tc) { return tc.id === id; });
-        return t ? t.name : 'Unknown';
+        return t ? t.name : tr('Unknown');
       }
 
       function getStudentName(id) {
         var s = students.find(function(st) { return st.id === id; });
-        return s ? s.name : 'Unknown';
+        return s ? s.name : tr('Unknown');
       }
 
       function getCourseName(id) {
         var c = courses.find(function(co) { return co.id === id; });
-        return c ? c.name : 'Unknown';
+        return c ? c.name : tr('Unknown');
       }
 
       function getEnrolledCourseIds(studentId) {

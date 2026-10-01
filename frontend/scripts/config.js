@@ -134,6 +134,11 @@
       let announcements = [];
       let pendingTeachers = [];
       let enrollRequests = [];
+      // Semester outcomes (flagged, failed, restored) and formal pause
+      // requests. Progress is never deleted on failure or drop-out; these
+      // records carry the date after which it may finally be purged.
+      let homeworkOutcomes = [];
+      let pauseRequests = [];
       let courseRequests = [];
       let courseMaterials = [];
       let teacherAuthKeys = [];

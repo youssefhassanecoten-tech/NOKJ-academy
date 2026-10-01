@@ -347,9 +347,22 @@
         setLanguage(currentLang);
       }
 
+      // The groups a student is currently in, read before enrolment is changed.
+      function enrolmentsBeforeRemoval(studentId) {
+        return enrollments.filter(function(e) { return e.studentId === studentId; })
+          .map(function(e) { return e.courseId; });
+      }
+
       function deleteEntry(type, id) {
         if (!confirm(tr('Are you sure you want to delete this entry?'))) return;
         if (type === 'student') {
+          // Leaving a course never deletes the work: it is kept for 30 days so
+          // a removal done by mistake can be put right. Each group the student
+          // was in needs its own retention record, or the work would be kept
+          // for ever.
+          enrolmentsBeforeRemoval(id).forEach(function(courseId) {
+            startProgressRetention(id, courseId);
+          });
           enrollments = enrollments.filter(function(e) { return e.studentId !== id; });
           students = students.filter(function(s) { return s.id !== id; });
           renderStudents();
@@ -442,6 +455,11 @@
           alert(tr('These courses are already full: ') + blocked.map(getCourseName).join(', '));
           return;
         }
+        // Moving a student between groups is a removal from the old one and an
+        // addition to the new one, so the old group's work is kept for 30 days.
+        enrolmentsBeforeRemoval(enrollStudentId).forEach(function(courseId) {
+          if (selectedIds.indexOf(courseId) === -1) startProgressRetention(enrollStudentId, courseId);
+        });
         enrollments = enrollments.filter(function(e) { return e.studentId !== enrollStudentId; });
         selectedIds.forEach(function(courseId) { enrollments.push({ studentId: enrollStudentId, courseId: courseId }); });
         saveData();

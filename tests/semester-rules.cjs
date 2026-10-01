@@ -106,6 +106,10 @@ function seed(app) {
     saveData = function () {};
     tr = function (s) { return s; };
     escapeHtml = function (s) { return String(s); };
+    enrolmentsBeforeRemoval = function (studentId) {
+      return enrollments.filter(function (e) { return e.studentId === studentId; })
+        .map(function (e) { return e.courseId; });
+    };
     taskCourseId = function (t) {
       if (t.courseId !== undefined && t.courseId !== null) return t.courseId;
       if (t.assignedTo === 'course' && t.assignedIds && t.assignedIds.length) return t.assignedIds[0];
@@ -412,6 +416,46 @@ console.log('== Dropping out also keeps progress ==');
   app.sandbox.purgeExpiredProgress(iso(41));
   check('progress is dropped once the window closes',
     !app.sandbox.lessonProgress['g1::l1::10']);
+}
+
+console.log('== Every group a student leaves gets its own retention ==');
+{
+  // A student enrolled in two groups who is moved to a different set must not
+  // keep the old work for ever, and must not lose it on the spot either.
+  const app = freshApp();
+  seed(app);
+  makeGroup(app, { id: 'g1', name: 'Algebra' });
+  makeGroup(app, { id: 'g2', name: 'Geometry', subjectName: 'Geometry' });
+  makeGroup(app, { id: 'g3', name: 'Algebra', subjectName: 'Algebra', groupName: 'B' });
+  vm.runInContext(`
+    tasks = [{ id: 'h1', type: 'homework', courseId: 'g1', lessonId: 'l1' }];
+    taskSubmissions = { 'h1-10': { answer: 'my work' } };
+    lessonProgress = { 'g1::l1::10': { completed: true } };
+    homeworkOutcomes = [];
+    enrollments = [{ studentId: 10, courseId: 'g1' }, { studentId: 10, courseId: 'g2' }];
+    currentUser = { id: 1, role: 'Teacher' };
+  `, app.context);
+
+  // Mirrors what the enrol dialog does before it rewrites enrolments: every
+  // group the student is leaving gets its own retention record.
+  const groups = JSON.parse(vm.runInContext(
+    'JSON.stringify(enrolmentsBeforeRemoval(10))', app.context));
+  check('both groups the student is in are found', groups.length === 2, JSON.stringify(groups));
+
+  groups.forEach(g => app.sandbox.startProgressRetention(10, g, iso(5)));
+  check('each group got its own retention record',
+    app.sandbox.homeworkOutcomes.filter(o => o.status === 'withdrawn').length === 2,
+    String(app.sandbox.homeworkOutcomes.length));
+
+  app.sandbox.purgeExpiredProgress(iso(20));
+  check('work is still inside the window',
+    !!app.sandbox.lessonProgress['g1::l1::10']);
+
+  app.sandbox.purgeExpiredProgress(iso(36));
+  check('work is released once every window has closed',
+    !app.sandbox.lessonProgress['g1::l1::10'] &&
+    !app.sandbox.taskSubmissions['h1-10']);
+  check('both records are cleared', app.sandbox.homeworkOutcomes.length === 0);
 }
 
 console.log('== Course groups ==');

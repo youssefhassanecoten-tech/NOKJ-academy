@@ -1044,6 +1044,11 @@
       initScheduleAttachment();
       initConnectivityBadge();
 
+      // Retention is honoured on load rather than only when a Grades or Studio
+      // page happens to open, so progress is not kept for ever simply because
+      // nobody visited those pages.
+      if (typeof purgeExpiredProgress === 'function') purgeExpiredProgress();
+
       // Flush any draft that was never confirmed, and re-sync drafts after reload.
       window.addEventListener('beforeunload', function() { saveData(); });
 

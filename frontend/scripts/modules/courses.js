@@ -429,6 +429,10 @@
 
       function renderStudentSemesterBar(course) {
         var sid = currentUser.id;
+        // Evaluate here as well as in the Studio. If the rule only ran when a
+        // teacher opened their own settings, a student whose semester had
+        // lapsed would see nothing until then.
+        evaluateGroupOutcomes(course);
         var outcome = outcomeFor(sid, course.id);
         var pause = openPauseRequest(sid, course.id);
         var left = studentSemesterDaysLeft(course, sid);

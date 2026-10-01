@@ -105,8 +105,15 @@ console.log('== Seeder produces a populated teacher studio ==');
   win.studioSetSubTab('task');
   const mat = win.document.getElementById('studio-material-tasks').textContent;
   check('material shows the block task', /Fractions checkpoint/.test(mat), mat.slice(0, 160));
-  check('material shows the plain task', /Homework: shape hunt/.test(mat));
   check('material shows the draft task', /Draft: end of unit quiz/.test(mat));
+  // Homework is the individual work a student must finish alone, so it lives
+  // in the homework section rather than alongside class and extra work.
+  check('material does not list homework', !/Homework: shape hunt/.test(mat), mat.slice(0, 160));
+  win.studioSetSubTab('assignment');
+  const hw = win.document.getElementById('studio-assignment-list').textContent;
+  check('homework shows the shape hunt', /Homework: shape hunt/.test(hw), hw.slice(0, 160));
+  check('homework shows the migrated worksheet', /Area worksheet/.test(hw), hw.slice(0, 160));
+  win.studioSetSubTab('task');
   win.studioSetTab('library');
   check('library shows the published items', /Formula sheet/.test(win.document.getElementById('studio-pane-library').textContent));
   check('library shows the draft note to its teacher', /Draft: exam tips/.test(win.document.getElementById('studio-pane-library').textContent));

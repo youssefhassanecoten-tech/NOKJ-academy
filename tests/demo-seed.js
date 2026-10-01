@@ -115,13 +115,13 @@
       deadline: plus(7), createdAt: iso, files: [], questions: []
     },
     {
-      id: 3, title: 'Draft: end of unit quiz', type: 'homework', courseId: 1, teacherId: 1,
+      id: 3, title: 'Draft: end of unit quiz', type: 'interactive', courseId: 1, teacherId: 1,
       assignedTo: 'course', assignedIds: [1], published: false, priority: 'low',
       description: 'Still building this one.', deadline: plus(14), createdAt: iso,
       files: [], questions: [], kind: 'suite'
     },
     {
-      id: 4, title: 'Area worksheet', type: 'assignment', courseId: 1, teacherId: 1,
+      id: 4, title: 'Area worksheet', type: 'homework', courseId: 1, teacherId: 1,
       assignedTo: 'course', assignedIds: [1], published: true, priority: 'high',
       description: 'Complete the worksheet and upload your working.',
       deadline: plus(9), createdAt: iso, questions: [],

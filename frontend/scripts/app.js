@@ -93,6 +93,21 @@
       document.getElementById('login-to-register').addEventListener('click', showRegisterScreen);
       document.getElementById('register-to-login').addEventListener('click', showLoginScreen);
 
+      // The demo accounts exist so the platform can be tried without setting
+      // anything up. Selecting one fills the form, which is quicker than
+      // retyping an address and removes the guesswork.
+      document.querySelectorAll('#login-demo-accounts [data-demo-email]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var email = document.getElementById('login-email');
+          var pass = document.getElementById('login-password');
+          if (email) email.value = btn.getAttribute('data-demo-email');
+          if (pass) pass.value = btn.getAttribute('data-demo-password');
+          var err = document.getElementById('login-error');
+          if (err) err.textContent = '';
+          setLanguage(currentLang);
+        });
+      });
+
       document.getElementById('register-choose-student').addEventListener('click', function() {
         showRegisterStep('student');
         setLanguage(currentLang);

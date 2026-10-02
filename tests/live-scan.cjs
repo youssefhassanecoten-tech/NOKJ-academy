@@ -205,8 +205,16 @@ function boot(role, opts) {
   const win = dom.window;
 
   const data = seedStorage(role);
+  // A brand-new visitor arrives with empty storage, so the app has to fall back
+  // to its own seeded accounts. That is the path the sign-in checks below use.
   for (const k of Object.keys(data.store)) {
-    win.localStorage.setItem(k, data.store[k]);
+    if (opts.noSeed) win.localStorage.removeItem(k);
+    else win.localStorage.setItem(k, data.store[k]);
+  }
+  // Anything a test needs present before the app reads its storage, such as a
+  // deliberately passwordless account.
+  if (opts.preStorage) {
+    for (const k of Object.keys(opts.preStorage)) win.localStorage.setItem(k, opts.preStorage[k]);
   }
   if (opts.blocksPush) {
     // Give the teacher a block task so the block paths are live.
@@ -720,6 +728,89 @@ console.log('== Admin portal ==');
     try { win.openPage(p); } catch (e) { s.errors.push('openPage(' + p + '): ' + e.message); }
     check('admin can open ' + p, s.errors.length === before && activePage(win) === p, 'active=' + activePage(win));
   }
+  s.dom.window.close();
+}
+
+console.log('== Signing in on a brand-new install ==');
+{
+  // This is the first thing a real visitor does. Every other section signs in
+  // by writing a session straight into storage, so nothing else here would
+  // notice a broken sign-in form.
+  const s = boot('student', { noSeed: true });
+  const win = s.win;
+  const doc = win.document;
+  const attempt = (email, password) => {
+    const btn = [...doc.querySelectorAll('#login-demo-accounts [data-demo-email]')]
+      .find(b => b.getAttribute('data-demo-email') === email);
+    return { hasButton: !!btn, ok: win.login(email, password) };
+  };
+
+  // Checked first, before anything signs in: signing in adds the class, so
+  // asking afterwards would be asking the wrong question.
+  const appEl = doc.getElementById('app');
+  check('a fresh install is signed out to begin with',
+    !appEl || !appEl.classList.contains('logged-in'),
+    appEl ? appEl.className : 'no app element');
+
+  const admin = attempt('admin@nokj.com', 'admin123');
+  check('the administrator can sign in on a fresh install', admin.ok === true);
+
+  const teacher = attempt('wilson@nokj.com', 'password123');
+  check('a seeded teacher can sign in', teacher.ok === true);
+
+  const student = attempt('student@nokj.com', 'password123');
+  check('a seeded student can sign in', student.ok === true);
+
+  check('signing in marks the app as signed in',
+    !!appEl && appEl.classList.contains('logged-in'), appEl && appEl.className);
+
+  check('the sign-in screen offers the demo accounts',
+    doc.querySelectorAll('#login-demo-accounts [data-demo-email]').length === 3,
+    String(doc.querySelectorAll('#login-demo-accounts [data-demo-email]').length));
+
+  // Selecting a demo account has to fill the form, password included.
+  win.showLoginScreen();
+  const firstDemo = doc.querySelector('#login-demo-accounts [data-demo-email]');
+  if (firstDemo) {
+    firstDemo.click();
+    check('selecting a demo account fills the form',
+      doc.getElementById('login-email').value === firstDemo.getAttribute('data-demo-email') &&
+      doc.getElementById('login-password').value === firstDemo.getAttribute('data-demo-password'),
+      JSON.stringify({
+        email: doc.getElementById('login-email').value,
+        passwordLength: doc.getElementById('login-password').value.length
+      }));
+  }
+
+  // Addresses are compared without regard to case or surrounding spaces, so a
+  // pasted address does not produce a wrong-password message.
+  check('an address in capitals still signs in',
+    win.login('STUDENT@NOKJ.COM', 'password123') === true);
+  check('an address with a trailing space still signs in',
+    win.login('  student@nokj.com  ', 'password123') === true);
+
+  check('a wrong password is refused', win.login('student@nokj.com', 'nope') === false);
+  check('an unknown address is refused', win.login('nobody@nokj.com', 'password123') === false);
+  s.dom.window.close();
+}
+
+console.log('== An account with no password set ==');
+{
+  // Records created by an import, or by an older version, can have no password
+  // at all. No password the user types could ever work, so the message has to
+  // say that rather than blaming their password.
+  const s = boot('student', {
+    noSeed: true,
+    preStorage: {
+      'nokj-teachers': JSON.stringify([{ id: 99, name: 'No Password', email: 'nopass@nokj.test', role: 'Teacher', status: 'Active' }])
+    }
+  });
+  const win = s.win;
+  const doc = win.document;
+  check('an account with no password is refused', win.login('nopass@nokj.test', 'anything') === false);
+  const err = doc.getElementById('login-error');
+  check('an account with no password explains itself',
+    !!err && /no password yet/i.test(err.textContent), err && err.textContent);
   s.dom.window.close();
 }
 

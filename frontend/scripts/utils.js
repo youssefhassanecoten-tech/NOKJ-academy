@@ -723,12 +723,15 @@
       }
 
       function getUserByEmail(email) {
-        var user = students.find(function(s) { return s.email === email; });
-        if (user) return user;
-        user = teachers.find(function(t) { return t.email === email; });
-        if (user) return user;
-        user = admins.find(function(a) { return a.email === email; });
-        return user || null;
+        // Compared case-insensitively and without surrounding whitespace, so
+        // the same account is always found by the same typed address.
+        var wanted = String(email === undefined || email === null ? '' : email).trim().toLowerCase();
+        var match = function(list) {
+          return list.find(function(u) {
+            return String(u.email || '').trim().toLowerCase() === wanted;
+          });
+        };
+        return match(students) || match(teachers) || match(admins) || null;
       }
 
       function getAllUsers() {

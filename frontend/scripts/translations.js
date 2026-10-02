@@ -1135,7 +1135,14 @@
           '🍂 Soft': '🍂 Мягкая',
           'Edit slides': 'Редактировать слайды',
           'Choose Presentation': 'Выбрать презентацию',
-          'Export backup': 'Выгрузить копию'
+          'Export backup': 'Выгрузить копию',
+          'This account has no password yet. Please ask an administrator to set one.':
+            'У этого аккаунта ещё нет пароля. Попросите администратора его установить.',
+          'Demo accounts': 'Демонстрационные аккаунты',
+          'Administrator': 'Администратор',
+          'Teacher': 'Преподаватель',
+          'Student': 'Ученик',
+          'Select an account to fill the form.': 'Выберите аккаунт, чтобы заполнить форму.'
         }
       };
 

@@ -310,3 +310,53 @@
       }
     }
 
+
+/* Demo accounts on the sign-in screen. Kept quiet so it reads as a helper
+   rather than part of the product, but obvious enough to stop anyone hunting
+   for a password. */
+.login-demo-accounts {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line, #dfe5ee);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.login-demo-accounts > strong {
+  font-size: 11.5px;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  color: var(--muted, #6b7a91);
+  font-weight: 700;
+}
+.login-demo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 10px;
+  font: inherit;
+  font-size: 12.5px;
+  text-align: left;
+  color: var(--body, #3d4a60);
+  background: var(--wash, #f5f8fd);
+  border: 1px solid var(--line, #dfe5ee);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.login-demo-row:hover {
+  border-color: var(--brand, #1d4ed8);
+  background: #fff;
+}
+.login-demo-row code {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 11.5px;
+  color: var(--muted, #6b7a91);
+  white-space: nowrap;
+}
+.login-demo-accounts small {
+  font-size: 11.5px;
+  color: var(--muted, #6b7a91);
+}
+

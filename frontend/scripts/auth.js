@@ -172,19 +172,40 @@
       // ============================================================
       //  LOGIN / REGISTER
       // ============================================================
+
+      // Email is compared without regard to case or surrounding whitespace.
+      // People paste addresses in capitals and phones add a trailing space,
+      // and neither should produce "invalid password" for a correct account.
+      // The password is deliberately not trimmed: leading and trailing spaces
+      // can be part of a real password.
+      function normaliseEmail(value) {
+        return String(value === undefined || value === null ? '' : value).trim().toLowerCase();
+      }
+
       function login(email, password) {
-        var user = getUserByEmail(email);
-        if (user && user.password === password) {
-          currentUser = user;
-          localStorage.setItem('nokj-user', JSON.stringify(user));
-          showApp(user);
-          loginError.textContent = '';
-          return true;
-        } else {
-          loginError.textContent = tr('Invalid email or password. Please try again.');
-          setLanguage(currentLang);
-          return false;
+        var wanted = normaliseEmail(email);
+        var given = String(password === undefined || password === null ? '' : password);
+        var user = getUserByEmail(wanted);
+        if (user) {
+          if (user.password === undefined || user.password === null || user.password === '') {
+            // The account exists but has never had a password, so no password
+            // the user could type would ever work. Saying so is far more use
+            // than a generic failure.
+            loginError.textContent = tr('This account has no password yet. Please ask an administrator to set one.');
+            setLanguage(currentLang);
+            return false;
+          }
+          if (user.password === given) {
+            currentUser = user;
+            localStorage.setItem('nokj-user', JSON.stringify(user));
+            showApp(user);
+            loginError.textContent = '';
+            return true;
+          }
         }
+        loginError.textContent = tr('Invalid email or password. Please try again.');
+        setLanguage(currentLang);
+        return false;
       }
 
       function register(name, email, password, role) {
@@ -201,7 +222,7 @@
         var newUser = {
           id: generateId(),
           name: name,
-          email: email,
+          email: normaliseEmail(email),
           password: password,
           role: role,
           createdAt: new Date().toISOString().split('T')[0],

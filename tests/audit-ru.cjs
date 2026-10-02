@@ -93,6 +93,15 @@ function boot(role) {
 
   const data = seedStorage(role);
   for (const k of Object.keys(data.store)) win.localStorage.setItem(k, data.store[k]);
+  // A clean boot for the signed-out surfaces: no session, so the app shows the
+  // welcome page instead of a portal.
+  if (role === 'nobody') {
+    win.localStorage.removeItem('nokj-user');
+    win.localStorage.removeItem('nokj-enrollments');
+    win.localStorage.removeItem('nokj-tasks');
+    win.localStorage.removeItem('nokj-submissions');
+    win.localStorage.removeItem('nokj-lesson-progress');
+  }
   // Select Russian before any script runs.
   win.localStorage.setItem('nokj-language', 'ru');
 
@@ -128,8 +137,11 @@ const ALLOWED = [
   /^[BIU]$/,
   // Heading levels
   /^H[1-6]$/,
-  // Emoji-only or symbol-only
-  /^[\p{Extended_Pictographic}\p{Emoji_Presentation}\s©·•→←▸◀▶✓✕✏📎📥📊📄📁🎤📷🖥💬⛶☀🌙🍂⚙]/u,
+  // Strings that are nothing but symbols, emoji or punctuation. This has to be
+  // anchored to the whole string: an earlier version was unanchored, which
+  // quietly exempted every string that merely started with a tick, so real
+  // English behind a check mark went unreported.
+  /^[\p{Extended_Pictographic}\p{Emoji_Presentation}\s©·•→←▸◀▶✓✕✏📎📥📊📄📁🎤📷🖥💬⛶☀🌙🍂⚙]+$/u,
   // Time and dates that JS formats numerically
   /^\d{1,2}[:.]\d{2}$/, /^\d{1,2}\/\d{1,2}\/\d{2,4}$/,
   // Units rendered in latin
@@ -151,7 +163,9 @@ const ALLOWED = [
   /Staff Salaries|Student Fees/,
   /Shapes and space|Data and averages\.|^Statistics$|^Geometry$/,
   /Basics$|^Notes$|^Ref$|^Some notes$|^Start here$|Plain task|Type an answer/,
-  /Points, lines and planes|^Points$/
+  /Points, lines and planes|^Points$/,
+  /· Admin User/,          // seeded announcement author
+  /Geometry|Statistics/    // seeded course names
 ];
 
 function isLatinVisible(s) {
@@ -310,6 +324,46 @@ for (const role of Object.keys(PAGES)) {
 }
 
 // ---------------------------------------------------------------
+// The signed-out surfaces
+//
+// The landing page and the sign-in and registration screens are hidden the
+// moment anybody signs in, so walking the portal with a user already loaded
+// never sees them. They are checked from a clean boot with nobody signed in,
+// and are always on screen, so every word counts.
+// ---------------------------------------------------------------
+
+function auditSignedOut() {
+  const s = boot('nobody');
+  const win = s.win;
+
+  // Nothing signed in: land on the welcome page.
+  const surfaces = [
+    ['landing', '#landing-page'],
+    ['sign in', '#login-screen'],
+    ['register', '#register-screen']
+  ];
+  const missingSurfaces = [];
+  surfaces.forEach(([name, sel]) => {
+    const el = win.document.querySelector(sel);
+    if (!el) { missingSurfaces.push(name + ' (' + sel + ')'); return; }
+    // Force it visible so the on-screen filter does not skip it.
+    el.style.display = 'block';
+    const found = visibleLatinOn(win);
+    if (!found.size) return;
+    for (const [text, where] of found) {
+      if (!signedOutUntranslated.has(text)) signedOutUntranslated.set(text, new Set());
+      signedOutUntranslated.get(text).add('signed-out/' + name + (where === 'chrome' ? '' : ' [' + where + ']'));
+    }
+  });
+  // A surface that cannot be found would report "clean" without checking
+  // anything, so a rename of the markup must fail the audit rather than pass it.
+  missingSurfaces.forEach(m => roleConfirmed.push('signed-out surface not found: ' + m));
+  s.dom.window.close();
+}
+
+const signedOutUntranslated = new Map();
+
+// ---------------------------------------------------------------
 // Report
 // ---------------------------------------------------------------
 
@@ -317,8 +371,10 @@ const lines = [];
 const say = s => lines.push(s);
 
 say('Russian coverage audit');
+auditSignedOut();
 say('  pages inspected: ' + pagesChecked);
-say('  untranslated strings: ' + untranslated.size);
+say('  signed-out surfaces: ' + signedOutUntranslated.size + ' untranslated');
+say('  untranslated strings: ' + (untranslated.size + signedOutUntranslated.size));
 
 // Split the two causes: a missing dictionary entry needs writing; an entry
 // that already exists but was never applied means the runtime path skips it.
@@ -350,10 +406,21 @@ function dump(title, rows) {
 dump('NO DICTIONARY ENTRY -- wording has to be written', missingEntry);
 dump('ENTRY EXISTS BUT NEVER APPLIED -- runtime path bug', notApplied);
 
+if (signedOutUntranslated.size) {
+  say('');
+  say('== SIGNED-OUT SURFACES STILL IN ENGLISH (' + signedOutUntranslated.size + ') ==');
+  const sorted = [...signedOutUntranslated.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  for (const [text, where] of sorted) {
+    say('   ' + JSON.stringify(text));
+    say('        seen on: ' + [...where].slice(0, 3).join('  '));
+  }
+}
+
+const totalGaps = untranslated.size + signedOutUntranslated.size;
 say('');
-say('RESULT: ' + (untranslated.size === 0 && roleConfirmed.length === 0
+say('RESULT: ' + (totalGaps === 0 && roleConfirmed.length === 0
   ? 'fully Russian.'
-  : untranslated.size + ' strings still in English (' +
+  : totalGaps + ' strings still in English (' +
     missingEntry.length + ' need wording, ' + notApplied.length + ' need wiring).'));
 
 const report = lines.join('\n');

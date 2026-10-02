@@ -1098,7 +1098,44 @@
           'Not linked to a lesson': 'Не привязано к теме',
           'Untitled lesson': 'Тема без названия',
           'While this homework is unfinished, the next lesson stays locked.':
-            'Пока это домашнее задание не выполнено, следующая тема остаётся закрытой.'
+            'Пока это домашнее задание не выполнено, следующая тема остаётся закрытой.',
+
+          // ----- Signed-out surfaces -----
+          // The landing page and the sign-in and registration screens are hidden
+          // the moment a student signs in, so a check that only walks the signed
+          // in portal never sees them. Found by loading the app in a real
+          // browser, not by the automated coverage test.
+          'NOKJ Academy is your all-in-one learning platform. Join live classes, complete homework, track your progress, and connect with teachers — all in one place.':
+            'NOKJ Academy — это единая учебная платформа. Посещайте занятия в прямом эфире, выполняйте домашние задания, следите за успехами и общайтесь с преподавателями — всё в одном месте.',
+          '✓ No card required': '✓ Без банковской карты',
+          '✓ Works offline': '✓ Работает без интернета',
+          '✓ Progress saved automatically': '✓ Прогресс сохраняется автоматически',
+          'Join classes, complete homework and track my progress':
+            'Посещайте занятия, выполняйте домашние задания и следите за успехами',
+          '© 2026 NOKJ Academy — Empowering learners worldwide.':
+            '© 2026 NOKJ Academy — помогаем учиться по всему миру.',
+          'Live Classes': 'Занятия в прямом эфире',
+          'Join interactive live sessions with your teachers. Share your screen, ask questions, and learn in real-time.':
+            'Участвуйте в интерактивных занятиях с преподавателями. Делитесь экраном, задавайте вопросы и учитесь в реальном времени.',
+          'Smart Tasks': 'Удобные задания',
+          'Submit homework, take tests, and get instant feedback. Track your progress across all your courses.':
+            'Сдавайте домашние задания, проходите тесты и сразу получайте обратную связь. Следите за успехами во всех курсах.',
+          'Track Progress': 'Следите за успехами',
+          'View your grades, attendance, and course progress at a glance. Stay on top of your learning journey.':
+            'Оценки, посещаемость и ход курса — на одном экране. Держите весь процесс обучения под контролем.',
+          'Student Portal': 'Портал ученика',
+          'Back to Welcome': 'Назад к началу',
+          "Don't have an account?": 'Ещё нет аккаунта?',
+          'Welcome back': 'С возвращением',
+          'Sign in to your account': 'Войдите в свой аккаунт',
+          'Email address': 'Электронная почта',
+          'Password': 'Пароль',
+          '☀️ Light': '☀️ Светлая',
+          '🌙 Dark': '🌙 Тёмная',
+          '🍂 Soft': '🍂 Мягкая',
+          'Edit slides': 'Редактировать слайды',
+          'Choose Presentation': 'Выбрать презентацию',
+          'Export backup': 'Выгрузить копию'
         }
       };
 
@@ -1197,6 +1234,19 @@
         return I18N_RU_COLLAPSED[trimmed.replace(/\s+/g, ' ').trim()];
       }
 
+      // A lot of controls are written as an emoji plus a word, such as
+      // "\u{1F4CE} Choose Files". The dictionary only needs the word, so
+      // everything up to the first letter is split off and put back on the
+      // translation. Matching on "not a letter and not a digit" rather than a
+      // list of known symbols means an emoji nobody anticipated still works.
+      var LEADING_SYMBOLS = /^[^\p{L}\p{N}]+/u;
+
+      function splitLeadingSymbols(trimmed) {
+        var m = trimmed.match(LEADING_SYMBOLS);
+        if (!m) return { prefix: '', rest: trimmed };
+        return { prefix: m[0], rest: trimmed.slice(m[0].length) };
+      }
+
       function resolveRoleText(trimmed, lang) {
         var role = window.nokjRole || '';
         if (lang === 'en') {
@@ -1220,7 +1270,14 @@
         var ru2 = I18N.ru[trimmed];
         if (ru2 !== undefined) return ru2;
         var ru3 = collapsedRuLookup(trimmed);
-        return ru3 !== undefined ? ru3 : trimmed;
+        if (ru3 !== undefined) return ru3;
+        // Finally try the same text with any leading emoji or symbol removed.
+        var parts = splitLeadingSymbols(trimmed);
+        if (parts.rest && parts.rest !== trimmed) {
+          var ru4 = collapsedRuLookup(parts.rest);
+          if (ru4 !== undefined) return parts.prefix + ru4;
+        }
+        return trimmed;
       }
 
       function applyTranslation(lang) {

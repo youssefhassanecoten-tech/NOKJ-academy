@@ -53,6 +53,30 @@
         setLanguage(currentLang);
       }
 
+      // A meeting stores its date and time as plain strings so a teacher can
+      // type anything sensible. When the value is a real date it is shown in
+      // the interface language; anything else is left exactly as it was typed
+      // rather than being mangled into a wrong date.
+      function formatMeetingDate(value) {
+        var raw = String(value || '').trim();
+        if (!raw) return '';
+        var d = new Date(raw);
+        if (isNaN(d.getTime())) return raw;
+        return formatDate(d);
+      }
+
+      function formatMeetingTime(value) {
+        var raw = String(value || '').trim();
+        if (!raw) return '';
+        // "15:30" style values are kept as typed. A value carrying am/pm is
+        // converted, because leaving "3:30 PM" in a Russian interface reads as
+        // an afternoon class shown in the morning.
+        if (!/am|pm/i.test(raw)) return raw;
+        var d = new Date(raw);
+        if (isNaN(d.getTime())) return raw;
+        return d.toLocaleTimeString(localeTag(), { hour: '2-digit', minute: '2-digit' });
+      }
+
       function buildMeetingCard(meeting) {
         var card = document.createElement('div');
         card.className = 'meeting-card';
@@ -75,7 +99,8 @@
           '<div class="meeting-header"><h3>' + escapeHtml(meeting.title) + '</h3><div class="teacher">👨‍🏫 ' +
           teacher + '</div></div>' +
           '<div class="meeting-body">' +
-          '<div class="time">📅 ' + meeting.date + ' • 🕐 ' + meeting.time + ' (' + meeting.duration + ' min)</div>' +
+          '<div class="time">📅 ' + formatMeetingDate(meeting.date) + ' • 🕐 ' + formatMeetingTime(meeting.time) +
+          ' (' + meeting.duration + ' ' + tr('min') + ')</div>' +
           course +
           '<div class="meeting-audience">' + audience + '</div>' +
           (currentUser.role !== 'Student' ? '<div style="font-size:11px;color:var(--muted);margin-top:4px;">' + tr(

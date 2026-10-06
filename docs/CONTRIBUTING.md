@@ -6,9 +6,16 @@
 2. Keep changes small and focused.
 3. Run the checks before pushing:
    ```bash
-   npm test          # integrity + syntax tests
-   npm run lint      # JS style checks
+   npm test           # integrity + syntax tests
+   npm run lint       # JS style checks
+   npm run test:live  # boots the app for real and drives every role
+   npm run test:guest # fresh-install walk: guest, then each portal in EN and RU
+   npm run test:rules # course rules: homework gating, semesters, pauses, retention
+   npm run test:i18n  # fails if any interface text stays English in Russian
    ```
+   Every one of these except `npm test` and `npm run lint` needs jsdom, which is
+   deliberately not a project dependency. If it is missing they explain how to
+   install it outside the repo. `npm run test:all` runs the whole gate.
 4. Open a pull request with a clear description.
 
 ## Conventions

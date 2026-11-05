@@ -21,10 +21,27 @@ All-in-one learning platform for schools: live classes, homework and tests, grad
 | Teacher | `wilson@nokj.com`  | `password123` |
 | Teacher | `evans@nokj.com`   | `password123` |
 
+## Current status
+
+- **The app runs entirely in the browser.** Everything is stored in
+  `localStorage`, so it works with no server — but the data belongs to one
+  browser on one device. Two people on two computers do not see each other's
+  courses, homework or grades.
+- **The backend is built but not connected.** `backend/` implements the API in
+  [docs/API.md](docs/API.md) (auth, users, courses, meetings, tasks, tests,
+  grades, budget) against PostgreSQL, including the WebRTC signalling hub. The
+  frontend does not call it yet; wiring it is the step that turns this into a
+  multi-user product.
+- **Live classrooms** use a WebRTC mesh with the signalling hub on `/ws`. They
+  need the backend running and `window.NOKJ_SIGNALING_URL` pointed at it.
+- **Verification:** 511 automated checks (static, live, course rules, seeded
+  course, guest walk) plus a Russian coverage audit. The world map still needs
+  one pass in a real browser because it draws with WebGL.
+
 ## Tech stack
 
 - **Frontend** - HTML, CSS, vanilla JavaScript (no build step required)
-- **Meetings** - WebRTC + Socket.io
+- **Meetings** - WebRTC + WebSocket signalling hub
 - **Backend** - Node.js, Express
 - **Database** - PostgreSQL (primary) / MongoDB (optional)
 - **Deployment** - Docker, Nginx

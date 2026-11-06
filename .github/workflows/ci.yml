@@ -1,4 +1,4 @@
-name: CI
+﻿name: CI
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
 
       - name: Live, rules, i18n and guest suites
         env:
-          NOKJ_JSDOM: ./.nokj-testdeps/node_modules/jsdom
+          NOKJ_JSDOM: ${{ github.workspace }}/.nokj-testdeps/node_modules/jsdom
         run: |
           node tests/run-live.cjs
           node tests/semester-rules.cjs
@@ -41,7 +41,7 @@ jobs:
 
       - name: Seeded course walkthrough
         env:
-          NOKJ_JSDOM: ./.nokj-testdeps/node_modules/jsdom
+          NOKJ_JSDOM: ${{ github.workspace }}/.nokj-testdeps/node_modules/jsdom
         run: node tests/verify-demo-seed.cjs
 
   backend:

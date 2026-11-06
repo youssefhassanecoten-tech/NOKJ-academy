@@ -21,11 +21,28 @@ jobs:
           set -e
           for f in $(find frontend/scripts -name '*.js'); do node --check "$f"; done
 
+      - name: Test-only dependency (jsdom)
+        run: npm install jsdom --prefix .nokj-testdeps
+
       - name: Integrity tests
         run: node tests/run-tests.cjs
 
       - name: Lint
         run: node tests/meta/lint.cjs
+
+      - name: Live, rules, i18n and guest suites
+        env:
+          NOKJ_JSDOM: ./.nokj-testdeps/node_modules/jsdom
+        run: |
+          node tests/run-live.cjs
+          node tests/semester-rules.cjs
+          node tests/run-i18n.cjs
+          node tests/run-guest.cjs
+
+      - name: Seeded course walkthrough
+        env:
+          NOKJ_JSDOM: ./.nokj-testdeps/node_modules/jsdom
+        run: node tests/verify-demo-seed.cjs
 
   backend:
     name: Backend syntax + build
@@ -47,16 +64,17 @@ jobs:
           set -e
           for f in $(find src scripts -name '*.js' -o -name '*.cjs'); do node --check "$f"; done
 
-      - name: CI smoke (boot, then exit)
+      - name: CI smoke (boot, then health check)
         working-directory: backend
         env:
           PORT: 3999
           NODE_ENV: test
+          JWT_SECRET: test-secret
         run: |
           node src/server.js &
           PID=$!
           sleep 2
-          curl -s http://localhost:3999/api/auth/login \
-            -H 'Content-Type: application/json' \
-            -d '{"email":"admin@nokj.com","password":"admin123"}' || true
+          # Health does not touch the database, so this fails if the server
+          # does not boot. `-f` makes curl exit non-zero on a bad status.
+          curl -sf http://localhost:3999/api/health
           kill $PID

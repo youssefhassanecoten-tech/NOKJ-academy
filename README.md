@@ -2,6 +2,8 @@
 
 All-in-one learning platform for schools: live classes, homework and tests, grades, classroom management, and budget tracking.
 
+**Live demo:** <https://youssefhassanecoten-tech.github.io/NOKJ-academy/> — the demo accounts are listed on the sign-in screen.
+
 ## Features
 
 - **Live classes** - Join teacher-hosted online sessions, screen sharing, real-time chat (WebRTC)

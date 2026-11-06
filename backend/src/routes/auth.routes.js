@@ -24,9 +24,6 @@ router.post("/login", async (req, res, next) => {
     } catch (err) {
       valid = false;
     }
-    if (!valid && body.password === user.password) {
-      valid = true;
-    }
     if (!valid) {
       return res.status(401).json({ error: "Invalid email or password" });
     }

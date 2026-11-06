@@ -62,6 +62,22 @@ const unloadedJs = jsFiles.filter(f => {
 });
 check('all js in frontend/scripts are loaded', unloadedJs.length === 0, unloadedJs.map(f => path.relative(ROOT, f).replace(/\\/g, '/')).join(', '));
 
+// Runtime config must run first, and the API client before anything that
+// calls it, so a deployment can switch the app into API mode by configuration.
+const posRuntime = html.indexOf('scripts/runtime-config.js');
+const posApi = html.indexOf('scripts/api.js');
+const posAuth = html.indexOf('scripts/auth.js');
+check('runtime config is the first script', posRuntime !== -1 && posRuntime < html.indexOf('scripts/config.js'), String(posRuntime));
+check('api client loads before auth', posApi !== -1 && posApi < posAuth, posApi + ' vs ' + posAuth);
+const apiSrc = fs.readFileSync(path.join(SCRIPTS_DIR, 'api.js'), 'utf8');
+check('api client exposes the auth calls', ['apiEnabled', 'apiRequest', 'apiLogin', 'apiRegister', 'apiMe'].every(n => apiSrc.includes('function ' + n)), '');
+check('api client sends the bearer token', /'Bearer ' \+ token/.test(apiSrc), '');
+
+// The world map's label layer needs a glyph source, otherwise MapLibre never
+// finishes loading the style and the block stays on "Loading the map...".
+const mapSrc = fs.readFileSync(path.join(SCRIPTS_DIR, 'modules', 'task-blocks-map.js'), 'utf8');
+check('world map style declares a glyph source', /glyphs:\s*p\.glyphs\s*\|\|/.test(mapSrc), '');
+
 console.log('== DOM id integrity ==');
 const ids = new Set();
 for (const m of html.matchAll(/\sid="([^"]+)"/g)) ids.add(m[1]);

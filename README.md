@@ -23,20 +23,21 @@ All-in-one learning platform for schools: live classes, homework and tests, grad
 
 ## Current status
 
-- **The app runs entirely in the browser.** Everything is stored in
+- **The app runs entirely in the browser by default.** Everything is stored in
   `localStorage`, so it works with no server — but the data belongs to one
   browser on one device. Two people on two computers do not see each other's
   courses, homework or grades.
-- **The backend is built but not connected.** `backend/` implements the API in
-  [docs/API.md](docs/API.md) (auth, users, courses, meetings, tasks, tests,
-  grades, budget) against PostgreSQL, including the WebRTC signalling hub. The
-  frontend does not call it yet; wiring it is the step that turns this into a
-  multi-user product.
+- **Accounts can already come from the backend.** Set `NOKJ_API_BASE` (or a
+  `<meta name="nokj-api-base">` tag) and sign-in, registration and sessions are
+  checked by the API with a JWT. Course, homework, test and grade data is still
+  local; wiring those endpoints is the remaining step to a multi-user product.
 - **Live classrooms** use a WebRTC mesh with the signalling hub on `/ws`. They
-  need the backend running and `window.NOKJ_SIGNALING_URL` pointed at it.
-- **Verification:** 511 automated checks (static, live, course rules, seeded
-  course, guest walk) plus a Russian coverage audit. The world map still needs
-  one pass in a real browser because it draws with WebGL.
+  need the backend running and `NOKJ_SIGNALING_URL` (derived from the API base
+  when unset) pointed at it.
+- **Verification:** 527 automated checks (static, live, course rules, seeded
+  course, guest walk, API mode) plus a Russian coverage audit. The world map now
+  loads in a real browser engine; that check found and fixed a missing glyph
+  source, and a visual pass is still recommended.
 
 ## Tech stack
 

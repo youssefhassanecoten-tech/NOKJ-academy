@@ -111,6 +111,10 @@
       }
 
       function registerTeacherWithKey(name, email, password, rawKey) {
+        if (apiEnabled()) {
+          setRegisterTeacherError(tr('Teacher accounts are created by an administrator.'));
+          return false;
+        }
         if (!currentUser && !isAdminContext()) { /* anyone may attempt, key is the gate */ }
         if (getUserByEmail(email)) {
           setRegisterTeacherError(tr('Email already registered. Please sign in.'));
@@ -182,7 +186,93 @@
         return String(value === undefined || value === null ? '' : value).trim().toLowerCase();
       }
 
+      // In API mode the server owns accounts, but the rest of the app still
+      // works against the local arrays. This maps a server user onto the local
+      // record with the same email (or adds one), so the portal keeps working
+      // while course data stays local.
+      function upsertApiUser(user) {
+        if (!user || !user.email) return user;
+        var email = normaliseEmail(user.email);
+        var pools = [students, teachers, admins];
+        for (var i = 0; i < pools.length; i++) {
+          for (var j = 0; j < pools[i].length; j++) {
+            if (normaliseEmail(pools[i][j].email) === email) {
+              var found = pools[i][j];
+              if (user.name) found.name = user.name;
+              if (user.role) found.role = user.role;
+              if (user.status) found.status = user.status;
+              found.serverId = user.id;
+              return found;
+            }
+          }
+        }
+        var role = user.role || 'Student';
+        var pool = role === 'Teacher' ? teachers : role === 'Admin' ? admins : students;
+        var created = {
+          id: generateId(),
+          name: user.name || email,
+          email: email,
+          role: role,
+          status: user.status || 'Active',
+          createdAt: new Date().toISOString().split('T')[0],
+          serverId: user.id
+        };
+        pool.push(created);
+        return created;
+      }
+
+      function apiLoginFlow(email, password) {
+        loginError.textContent = '';
+        return apiLogin(normaliseEmail(email), password).then(function(user) {
+          var local = upsertApiUser(user);
+          currentUser = local;
+          localStorage.setItem('nokj-user', JSON.stringify(local));
+          saveData();
+          showApp(local);
+          loginError.textContent = '';
+          return true;
+        }).catch(function(err) {
+          loginError.textContent = tr(err && err.status === 401
+            ? 'Invalid email or password. Please try again.'
+            : 'Could not reach the server. Please try again.');
+          setLanguage(currentLang);
+          return false;
+        });
+      }
+
+      function apiRegisterFlow(name, email, password, role) {
+        if (role === 'Teacher') {
+          registerError.textContent = tr('Teacher accounts are created by an administrator.');
+          setLanguage(currentLang);
+          return false;
+        }
+        if (String(password || '').length < 6) {
+          registerError.textContent = tr('Password must be at least 6 characters.');
+          setLanguage(currentLang);
+          return false;
+        }
+        return apiRegister({
+          name: name,
+          email: normaliseEmail(email),
+          password: password,
+          role: role || 'Student'
+        }).then(function() {
+          registerError.textContent = '';
+          showLoginScreen();
+          alert(tr('Account created! Please sign in.'));
+          setLanguage(currentLang);
+          return true;
+        }).catch(function(err) {
+          registerError.textContent = tr(err && err.status === 409
+            ? 'Email already registered. Please sign in.'
+            : 'Could not create the account. Please try again.');
+          setLanguage(currentLang);
+          return false;
+        });
+      }
+
       function login(email, password) {
+        if (apiEnabled()) return apiLoginFlow(email, password);
         var wanted = normaliseEmail(email);
         var given = String(password === undefined || password === null ? '' : password);
         var user = getUserByEmail(wanted);
@@ -209,6 +299,7 @@
       }
 
       function register(name, email, password, role) {
+        if (apiEnabled()) return apiRegisterFlow(name, email, password, role);
         if (getUserByEmail(email)) {
           registerError.textContent = tr('Email already registered. Please sign in.');
           setLanguage(currentLang);
@@ -378,6 +469,7 @@
       }
 
       function logout() {
+        apiSetToken('');
         localStorage.removeItem('nokj-user');
         currentUser = null;
         window.nokjRole = '';
@@ -392,6 +484,24 @@
 
       function checkSession() {
         var saved = localStorage.getItem('nokj-user');
+        if (apiEnabled()) {
+          if (!apiToken()) {
+            showLanding();
+            return;
+          }
+          apiMe().then(function(user) {
+            var local = upsertApiUser(user);
+            currentUser = local;
+            localStorage.setItem('nokj-user', JSON.stringify(local));
+            saveData();
+            showApp(local);
+          }).catch(function() {
+            apiSetToken('');
+            localStorage.removeItem('nokj-user');
+            showLanding();
+          });
+          return;
+        }
         if (saved) {
           try {
             var user = JSON.parse(saved);

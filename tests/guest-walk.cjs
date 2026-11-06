@@ -271,6 +271,55 @@ async function walkPortal(role) {
 }
 
 // ---------------------------------------------------------------
+// Phase F: API mode (server-owned accounts, local course data)
+// ---------------------------------------------------------------
+
+async function walkApiMode() {
+  console.log('== API mode ==');
+  const { w, errors } = boot('api');
+
+  const calls = [];
+  let mode = 'ok';
+  const user = { id: 99, name: 'Server Student', email: 'student@nokj.com', role: 'Student' };
+  w.NOKJ_API_BASE = 'http://api.test';
+  w.fetch = function (url, options) {
+    calls.push({
+      url: String(url),
+      method: (options && options.method) || 'GET',
+      auth: options && options.headers && options.headers.Authorization
+    });
+    if (mode === 'unauthorized') {
+      return Promise.resolve({ ok: false, status: 401, text: () => Promise.resolve(JSON.stringify({ error: 'Invalid email or password' })) });
+    }
+    if (String(url).endsWith('/api/auth/login')) {
+      return Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ token: 'tok-123', user: user })) });
+    }
+    return Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve(JSON.stringify({ user: user })) });
+  };
+
+  check('API mode is detected from the config', w.apiEnabled() === true);
+
+  const okLogin = await w.login('student@nokj.com', 'password123');
+  check('API login succeeds', okLogin === true);
+  check('API login stores the token', w.localStorage.getItem('nokj-token') === 'tok-123', String(w.localStorage.getItem('nokj-token')));
+  check('API login signs the user in', w.document.getElementById('app').classList.contains('logged-in'));
+  check('API login posts to /api/auth/login',
+    calls.some(c => c.url === 'http://api.test/api/auth/login' && c.method === 'POST'));
+  check('API login maps the server user onto the local record',
+    (w.localStorage.getItem('nokj-user') || '').indexOf('student@nokj.com') !== -1,
+    w.localStorage.getItem('nokj-user'));
+
+  mode = 'unauthorized';
+  const badLogin = await w.login('student@nokj.com', 'wrong');
+  check('API login rejects a wrong password', badLogin === false);
+  check('API login shows an error on rejection',
+    (w.document.getElementById('login-error').textContent || '').length > 0,
+    w.document.getElementById('login-error').textContent);
+
+  check('API mode raises no runtime errors', errors.length === 0, errors.join(' | '));
+}
+
+// ---------------------------------------------------------------
 // Phase E: every referenced asset must load over HTTP
 // ---------------------------------------------------------------
 
@@ -311,6 +360,7 @@ async function walkAssets() {
 (async () => {
   await walkGuest();
   for (const r of ROLES) await walkPortal(r);
+  await walkApiMode();
   await walkAssets();
   console.log('\nChecks: ' + passed + ' passed, ' + failed + ' failed');
   if (failures.length) {

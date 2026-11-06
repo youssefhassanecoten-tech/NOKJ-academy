@@ -205,6 +205,10 @@
       var terrain = p.terrainTiles || MAP_TILES.terrain.url;
       var base = {
         version: 8,
+        // Symbol layers (the point labels) need a glyph source or the style
+        // never finishes loading. OpenMapTiles hosts the Open Sans faces the
+        // default font stack asks for, and it is keyless.
+        glyphs: p.glyphs || 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
         sources: {
           base: { type: 'raster', tiles: [p.baseTiles || MAP_TILES.base.url], tileSize: 256, attribution: MAP_TILES.base.attribution },
           points: { type: 'geojson', data: pointsToGeoJSON(pointList()) }

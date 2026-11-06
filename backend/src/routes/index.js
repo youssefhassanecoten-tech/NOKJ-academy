@@ -10,6 +10,10 @@ const usersRoutes = require("./users.routes");
 
 const router = express.Router();
 
+// Liveness probe: does not touch the database, so it answers even when the
+// database is still starting. Deployments should check this, not a data route.
+router.get("/health", (req, res) => res.json({ ok: true }));
+
 router.use("/auth", authRoutes);
 router.use("/courses", coursesRoutes);
 router.use("/meetings", meetingsRoutes);

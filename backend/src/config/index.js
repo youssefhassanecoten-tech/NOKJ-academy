@@ -26,4 +26,8 @@ const config = {
   }
 };
 
+if (config.nodeEnv === "production" && config.jwt.secret === "change-me-in-production") {
+  console.warn("WARNING: JWT_SECRET is still the default. Set it before exposing the API.");
+}
+
 module.exports = config;

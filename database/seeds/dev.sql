@@ -1,14 +1,16 @@
 -- Seed data for local development.
--- Passwords are plaintext for demo only; use hashes in production.
+-- Passwords are bcrypt hashes; the demo sign-ins still use the documented
+-- passwords (admin123 / password123). Generate a fresh hash before adding an
+-- account: node -e "console.log(require('bcryptjs').hashSync('pw', 10))"
 
 -- Users
 INSERT INTO users (name, email, password, role, status) VALUES
-  ('Admin User',        'admin@nokj.com',   'admin123',    'Admin',   'Active'),
-  ('Alex Student',      'student@nokj.com', 'password123', 'Student', 'Active'),
-  ('Sarah Chen',        'sarah@example.com', 'password123', 'Student', 'Active'),
-  ('Marcus Webb',       'marcus@example.com', 'password123', 'Student', 'Warning'),
-  ('Dr. Wilson',        'wilson@nokj.com',  'password123', 'Teacher', 'Active'),
-  ('Ms. Evans',         'evans@nokj.com',   'password123', 'Teacher', 'Active')
+  ('Admin User',        'admin@nokj.com',   '$2a$10$Vdl9v18H22prXOz/OHZnAOJ5OkXAh3uxFTlOrFZ0K3nchVUVUuKiG', 'Admin',   'Active'),
+  ('Alex Student',      'student@nokj.com', '$2a$10$9oq8Yf9U3h2bXxLXAP9YqOYCDuA94BEMrPrMjmQO8dmiowgD8.OlO', 'Student', 'Active'),
+  ('Sarah Chen',        'sarah@example.com', '$2a$10$9oq8Yf9U3h2bXxLXAP9YqOYCDuA94BEMrPrMjmQO8dmiowgD8.OlO', 'Student', 'Active'),
+  ('Marcus Webb',       'marcus@example.com', '$2a$10$9oq8Yf9U3h2bXxLXAP9YqOYCDuA94BEMrPrMjmQO8dmiowgD8.OlO', 'Student', 'Warning'),
+  ('Dr. Wilson',        'wilson@nokj.com',  '$2a$10$9oq8Yf9U3h2bXxLXAP9YqOYCDuA94BEMrPrMjmQO8dmiowgD8.OlO', 'Teacher', 'Active'),
+  ('Ms. Evans',         'evans@nokj.com',   '$2a$10$9oq8Yf9U3h2bXxLXAP9YqOYCDuA94BEMrPrMjmQO8dmiowgD8.OlO', 'Teacher', 'Active')
 ON CONFLICT (email) DO NOTHING;
 
 -- Courses (teachers are 2: Wilson, 3: Evans by id order if fresh insert)

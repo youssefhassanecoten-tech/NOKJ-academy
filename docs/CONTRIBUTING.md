@@ -40,4 +40,6 @@ references to ids that do not exist — `tests/` verifies these invariants.
 
 ## License
 
-CC0 1.0 Universal — see `LICENSE`.
+Proprietary — all rights reserved. See `LICENSE` (English) and `LICENSE.ru.md`
+(Russian). By submitting a contribution you assign it to the copyright holder,
+as set out in the license.

@@ -2,7 +2,7 @@
   "name": "nokj-academy",
   "version": "2.0.0",
   "description": "NOKJ Academy - all-in-one learning platform (live classes, tasks, tests, grades, budget).",
-  "license": "CC0-1.0",
+  "license": "UNLICENSED",
   "private": true,
   "workspaces": [
     "backend"

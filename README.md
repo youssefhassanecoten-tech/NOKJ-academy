@@ -107,6 +107,13 @@ See [docs/SETUP.md](docs/SETUP.md) for details.
 - [Contributing](docs/CONTRIBUTING.md)
 - [Changelog](docs/CHANGELOG.md)
 
+## License
+
+Proprietary — all rights reserved. See [LICENSE](LICENSE) (English) and
+[LICENSE.ru.md](LICENSE.ru.md) (Russian). The work may not be copied, modified,
+distributed, sold, or used to create derivative or inspired works without prior
+written permission. Third-party components keep their own licenses.
+
 ## Version history
 
 - **v1.x** (single-file SPA) is preserved on the `v1-legacy` branch.
